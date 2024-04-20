@@ -1,0 +1,26 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+    {% with current_page=request.resolver_match.url_name %}
+
+        <ul class="nav nav-pills flex-column flex-md-row mb-4">
+            <li class="nav-item">
+                <a class="nav-link {% if current_page == 'profileSettings' %}active{% endif %}" href="{% url 'profileSettings' %}">
+                    <i class="ti-xs ti ti-users me-1"></i> Hesap
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if current_page == 'profileDelete' %}active{% endif %}" href="{% url 'profileDelete' %}">
+                    <i class="ti ti-trash-x"></i> Hesabı Sil
+                </a>
+            </li>
+        </ul>
+    {% endwith %}
+
+        {% block profileSettings %}
+    {% endblock %}
+    </div>
+</div>
+{% endblock %}
