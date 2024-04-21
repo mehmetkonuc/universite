@@ -8,7 +8,12 @@
         <ul class="nav nav-pills flex-column flex-md-row mb-4">
             <li class="nav-item">
                 <a class="nav-link {% if current_page == 'profileSettings' %}active{% endif %}" href="{% url 'profileSettings' %}">
-                    <i class="ti-xs ti ti-users me-1"></i> Hesap
+                    <i class="ti-xs ti ti-users me-1"></i> Hesap Ayarı
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if current_page == 'EducationSettings' %}active{% endif %}" href="{% url 'EducationSettings' %}">
+                    <i class="fa fa-solid fa-graduation-cap me-1"></i> Eğitim Ayarı
                 </a>
             </li>
             <li class="nav-item">

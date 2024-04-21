@@ -18,17 +18,41 @@ def register_view(request):
     
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)
+        EducationalInformationForm = forms.EducationalInformationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
+            return redirect('register_two_step')
+
     else:
         form = forms.RegisterForm()
+        EducationalInformationForm = forms.EducationalInformationForm()
+
     context = {
         'form': form,
+        'EducationalInformationForm' : EducationalInformationForm,
         'siteTitle': 'Kayıt Ol'
     }
     return render(request, 'guest/register.html', context)
 
+
+def register_two_step_view(request):
+    
+    if request.method == 'POST':
+        form = forms.EducationalInformationForm(request.POST)
+        if form.is_valid():
+            FormSave = form.save(commit=False)
+            FormSave.User = request.user
+            FormSave.save()
+            return redirect('profileSettings')
+    else:
+        form = forms.EducationalInformationForm()
+
+    context = {
+        'form': form,
+        'siteTitle': 'Kayıt Ol'
+    }
+    return render(request, 'guest/register_two_step.html', context)
 
 def login_view(request):
     if request.user.is_authenticated:

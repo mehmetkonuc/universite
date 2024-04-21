@@ -29,6 +29,7 @@ urlpatterns = [
     #MİSAFİR KULLANICI ALANI
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
+    path('register/two-step', views.register_two_step_view, name='register_two_step'),
     path('logout/', views.logout_view, name='logout'),
     path('password_reset/', views.CustomPasswordResetView.as_view(
         template_name='guest/password_reset.html'), name='password_reset'),

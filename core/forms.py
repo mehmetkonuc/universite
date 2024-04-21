@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from profiles import models as ProfilesModel
 
 
 class RegisterForm(UserCreationForm):
@@ -23,6 +24,14 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class EducationalInformationForm(forms.ModelForm):
+    
+    class Meta:
+        model = ProfilesModel.EducationalInformationModel
+        fields = ['Country', 'University', 'Department', 'Status']
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Kullanıcı Adı veya E-Posta Adresi")

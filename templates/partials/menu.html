@@ -35,6 +35,7 @@ id="layout-navbar">
       </ul>
     </div>
   </div>
+  {% with current_page=request.resolver_match.url_name %}
 
   <ul class="navbar-nav flex-row align-items-center ms-auto">
     <!-- User -->
@@ -46,7 +47,7 @@ id="layout-navbar">
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
         <li>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" href="{% url 'profile' %}">
             <div class="d-flex">
               <div class="flex-shrink-0 me-3">
                 <div class="avatar avatar-online">
@@ -68,13 +69,13 @@ id="layout-navbar">
         {% endif %}
         <div class="dropdown-divider"></div>
         <li>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item {% if current_page == 'profile' %}active{% endif %}" href="{% url 'profile' %}">
             <i class="ti ti-user-check me-2 ti-sm"></i>
-            <span class="align-middle">My Profile</span>
+            <span class="align-middle">Profil</span>
           </a>
         </li>
         <li>
-          <a class="dropdown-item" href="{% url 'profileSettings' %}">
+          <a class="dropdown-item {% if current_page == 'profileSettings' %}active{% endif %}" href="{% url 'profileSettings' %}">
             <i class="ti ti-settings me-2 ti-sm"></i>
             <span class="align-middle">Settings</span>
           </a>
@@ -92,6 +93,8 @@ id="layout-navbar">
     </li>
     <!--/ User -->
   </ul>
+  {% endwith %}
+
 </div>
 </nav>
 {% endblock %}
