@@ -18,4 +18,6 @@ class EducationalInformationModel(models.Model):
     #                          on_delete=models.CASCADE)
 
 class AdditionalInformationModel(models.Model):
+    User = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     About = models.TextField()
