@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
 from django.contrib.auth import logout
 import profiles.models as models
+from django.contrib.auth import get_user_model
 
 class ProfileSettingsView(LoginRequiredMixin, View):
     template_name = 'profile/profileSettings.html'
@@ -55,6 +56,32 @@ class EducationSettingsView(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
 
+class AdditionalInformationView(LoginRequiredMixin, View):
+    template_name = 'profile/AdditionalInformation.html'
+    model = models.AdditionalInformationModel
+    form = forms.AdditionalInformationForm
+    context = {
+        'siteTitle': 'Ek Bilgiler',
+    }
+    def get(self, request):
+        instance = self.model.objects.filter(User = request.user).first()
+        form = self.form(instance=instance) if instance else self.form()
+
+        self.context.update({'form': form,})
+        
+        return render(request, self.template_name, self.context)
+
+    def post(self, request):
+        instance = self.model.objects.filter(User = request.user).first()
+        form = self.form(request.POST, instance=instance) if instance else self.form(request.POST)
+        if form.is_valid():
+            FormSave = form.save(commit=False)
+            FormSave.User = request.user
+            FormSave.save()
+        self.context.update({'form': form,})
+
+        return render(request, self.template_name, self.context)
+
 class ProfileDeleteView(LoginRequiredMixin, View):
     template_name = 'profile/profileDelete.html'
     context = { 
@@ -82,8 +109,10 @@ class ProfileView(LoginRequiredMixin, View):
         'siteTitle' : 'Profil',
     }
 
-    def get(self, request):
-        model = self.model.objects.filter(User=request.user).first()
+    def get(self, request, username):
+        User = get_user_model()  # Varsayılan kullanıcı modelini al
+        user = get_object_or_404(User, username=username)
+        model = self.model.objects.filter(User=user).first()
         self.context.update(
             {'model': model,}
         )

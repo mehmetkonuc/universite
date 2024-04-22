@@ -1,8 +1,7 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
+
     {% with current_page=request.resolver_match.url_name %}
 
         <ul class="nav nav-pills flex-column flex-md-row mb-4">
@@ -17,6 +16,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {% if current_page == 'AdditionalSettings' %}active{% endif %}" href="{% url 'AdditionalSettings' %}">
+                    <i class="fa fa-solid fa-graduation-cap me-1"></i> Ek Bilgiler
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {% if current_page == 'profileDelete' %}active{% endif %}" href="{% url 'profileDelete' %}">
                     <i class="ti ti-trash-x"></i> Hesabı Sil
                 </a>
@@ -26,6 +30,5 @@
 
         {% block profileSettings %}
     {% endblock %}
-    </div>
-</div>
+
 {% endblock %}

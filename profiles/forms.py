@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 from django.contrib.auth.models import User
 from django import forms
 import profiles.models as models
-
+import inputs.models as inputsModel
 class ProfileEditForm(UserChangeForm):
     password = None
 
@@ -12,7 +12,13 @@ class ProfileEditForm(UserChangeForm):
 
 
 class EducationalInformationForm(forms.ModelForm):
-    
+
     class Meta:
         model = models.EducationalInformationModel
         fields = ['Country', 'University', 'Department', 'Status']
+
+class AdditionalInformationForm(forms.ModelForm):
+
+    class Meta:
+        model = models.AdditionalInformationModel
+        fields = ['About']

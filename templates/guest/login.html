@@ -1,7 +1,10 @@
 {% extends 'guest/partials/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-auth.css' %}" />
 
+{% endblock %}
 {% block content %}
 
 <div class="authentication-wrapper authentication-cover authentication-bg">
@@ -96,7 +99,10 @@
 </div>
 {% endblock content %}
 
+{% block extra_javascript %}
+<script src="{% static 'assets/js/pages-auth.js' %}"></script>
 
+{% endblock %}
 
 
 

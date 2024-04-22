@@ -16,3 +16,6 @@ class EducationalInformationModel(models.Model):
                              on_delete=models.CASCADE)
     # Grande = models.ForeignKey(inputs.GrandeModel,
     #                          on_delete=models.CASCADE)
+
+class AdditionalInformationModel(models.Model):
+    About = models.TextField()
