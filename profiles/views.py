@@ -9,10 +9,28 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
+class ProfileView(LoginRequiredMixin, View):
+    model = models.EducationalInformationModel
+    template = 'profile/profile.html'
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        User = get_user_model()  # Varsayılan kullanıcı modelini al
+        user = get_object_or_404(User, username=username)
+        model = self.model.objects.filter(User=user).first()
+        self.context.update(
+            {'model': model,
+             'profileUser' : user}
+        )
+        return render(request, self.template, self.context)
+    
+
 class ProfileSettingsView(LoginRequiredMixin, View):
     form_class = forms.ProfilePictureForm
     profile_form = forms.ProfileEditForm
-    template_name = 'profile/profileSettings.html'
+    template_name = 'profile/settings/profileSettings.html'
     context = {
         'siteTitle': 'Hesap Ayarları',
     }
@@ -39,10 +57,11 @@ class ProfileSettingsView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, self.context)
 
+
 class PictureSettingsView(LoginRequiredMixin, View):
     form_class = forms.ProfilePictureForm
     profile_form = forms.ProfileEditForm
-    template_name = 'profile/profileSettings.html'
+    template_name = 'profile/settings/profileSettings.html'
     context = {
         'siteTitle': 'Hesap Ayarları',
     }
@@ -66,7 +85,7 @@ class PictureSettingsView(LoginRequiredMixin, View):
     
     
 class EducationSettingsView(LoginRequiredMixin, View):
-    template_name = 'profile/EducationSettings.html'
+    template_name = 'profile/settings/EducationSettings.html'
     model = models.EducationalInformationModel
     form = forms.EducationalInformationForm
     context = {
@@ -93,7 +112,7 @@ class EducationSettingsView(LoginRequiredMixin, View):
 
 
 class AdditionalInformationView(LoginRequiredMixin, View):
-    template_name = 'profile/AdditionalInformation.html'
+    template_name = 'profile/settings/AdditionalInformation.html'
     model = models.AdditionalInformationModel
     form = forms.AdditionalInformationForm
     context = {
@@ -118,8 +137,9 @@ class AdditionalInformationView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, self.context)
 
+
 class ProfileDeleteView(LoginRequiredMixin, View):
-    template_name = 'profile/profileDelete.html'
+    template_name = 'profile/settings/profileDelete.html'
     context = { 
             'siteTitle' : 'Hesabı Sil'           
         }
@@ -136,21 +156,3 @@ class ProfileDeleteView(LoginRequiredMixin, View):
             return redirect('home')
         else:
             return render(request, self.template_name)
-
-
-class ProfileView(LoginRequiredMixin, View):
-    model = models.EducationalInformationModel
-    template = 'profile/profile.html'
-    context = {
-        'siteTitle' : 'Profil',
-    }
-
-    def get(self, request, username):
-        User = get_user_model()  # Varsayılan kullanıcı modelini al
-        user = get_object_or_404(User, username=username)
-        model = self.model.objects.filter(User=user).first()
-        self.context.update(
-            {'model': model,
-             'profileUser' : user}
-        )
-        return render(request, self.template, self.context)
