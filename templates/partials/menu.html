@@ -41,16 +41,38 @@ id="layout-navbar">
     <li class="nav-item navbar-dropdown dropdown-user dropdown">
       <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
         <div class="avatar avatar-online">
-          <img src="{% static 'assets/img/avatars/1.png' %}" alt class="h-auto rounded-circle" />
+
+          {% if user.profilepicturemodel.profile_photo %}
+          {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+          <img src="{{ profile_photo_url }}" alt class="h-auto rounded-circle" />
+          {% endwith %}
+          {% else %}
+          <img src="{% static 'assets/img/avatars/14.png' %}" alt class="h-auto rounded-circle" />
+          {% endif %}
+
+          
         </div>
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
         <li>
+          {% if user.is_authenticated %}
           <a class="dropdown-item" href="{% url 'profile' user.username %}">
+          {% else %}
+          <a class="dropdown-item" href="">
+          {% endif %}
+
             <div class="d-flex">
               <div class="flex-shrink-0 me-3">
                 <div class="avatar avatar-online">
-                  <img src="{% static 'assets/img/avatars/1.png' %}" alt class="h-auto rounded-circle" />
+                  {% if user.profilepicturemodel.profile_photo %}
+                  {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+                  <img src="{{ profile_photo_url }}" alt class="h-auto rounded-circle" />
+                  {% endwith %}
+                  {% else %}
+                  <img src="{% static 'assets/img/avatars/14.png' %}" alt class="h-auto rounded-circle" />
+                  {% endif %}
+
+
                 </div>
               </div>
               <div class="flex-grow-1">
@@ -68,7 +90,13 @@ id="layout-navbar">
         {% endif %}
         <div class="dropdown-divider"></div>
         <li>
+          {% if user.is_authenticated %}
           <a class="dropdown-item" href="{% url 'profile' user.username %}">
+            {% else %}
+          <a class="dropdown-item" href="">
+
+            {% endif %}
+
             <i class="ti ti-user-check me-2 ti-sm"></i>
             <span class="align-middle">Profil</span>
           </a>

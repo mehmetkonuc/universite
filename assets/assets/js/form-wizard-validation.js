@@ -29,7 +29,7 @@
     // Account details
     const FormValidation1 = FormValidation.formValidation(wizardValidationFormStep1, {
       fields: {
-        formValidationUsername: {
+        id_username: {
           validators: {
             notEmpty: {
               message: 'The name is required'

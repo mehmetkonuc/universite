@@ -5,30 +5,66 @@ from . import forms
 from django.contrib.auth import logout
 import profiles.models as models
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 class ProfileSettingsView(LoginRequiredMixin, View):
+    form_class = forms.ProfilePictureForm
+    profile_form = forms.ProfileEditForm
+    template_name = 'profile/profileSettings.html'
+    context = {
+        'siteTitle': 'Hesap Ayarları',
+    }
+    def get(self, request, *args, **kwargs):
+        profile_picture_instance = get_object_or_404(models.ProfilePictureModel, user=request.user)
+        picture = self.form_class(instance=profile_picture_instance)
+        profile = self.profile_form(instance=request.user)
+        self.context.update({'picture': picture, 'profile' : profile})
+
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        if 'remove_photo' in request.POST:
+            profile = request.user.profilepicturemodel
+            profile.profile_photo.delete(save=True)
+            return redirect('profileSettings')
+        profile_picture_instance = get_object_or_404(models.ProfilePictureModel, user=request.user)
+        picture = self.form_class(request.POST, request.FILES, instance=profile_picture_instance)
+        profile = self.profile_form(instance=request.user)
+        if profile.is_valid():          
+            profile.save()
+            
+        self.context.update({'picture': picture, 'profile' : profile})
+
+        return render(request, self.template_name, self.context)
+
+class PictureSettingsView(LoginRequiredMixin, View):
+    form_class = forms.ProfilePictureForm
+    profile_form = forms.ProfileEditForm
     template_name = 'profile/profileSettings.html'
     context = {
         'siteTitle': 'Hesap Ayarları',
     }
 
-    def get(self, request):
-        user = request.user
-        form = forms.ProfileEditForm(instance=user)
+    def post(self, request, *args, **kwargs):
+        profile_picture_instance = get_object_or_404(models.ProfilePictureModel, user=request.user)
+        picture = self.form_class(request.POST, request.FILES, instance=profile_picture_instance)
+        profile = self.profile_form(instance=request.user)
 
-        self.context.update({'form': form,})
-        
+        if picture.is_valid():
+            pictureDelete = request.user.profilepicturemodel
+            pictureDelete.profile_photo.delete(save=True)
+             
+            profile_picture_instance = picture.save(commit=False)
+            profile_picture_instance.user = request.user 
+            profile_picture_instance.save()
+            
+        self.context.update({'picture': picture, 'profile' : profile})
+
         return render(request, self.template_name, self.context)
-
-    def post(self, request):
-        form = forms.ProfileEditForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-        self.context.update({'form': form,})
-
-        return render(request, self.template_name, self.context)
-
-
+    
+    
 class EducationSettingsView(LoginRequiredMixin, View):
     template_name = 'profile/EducationSettings.html'
     model = models.EducationalInformationModel
@@ -114,6 +150,7 @@ class ProfileView(LoginRequiredMixin, View):
         user = get_object_or_404(User, username=username)
         model = self.model.objects.filter(User=user).first()
         self.context.update(
-            {'model': model,}
+            {'model': model,
+             'profileUser' : user}
         )
         return render(request, self.template, self.context)

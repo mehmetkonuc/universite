@@ -11,7 +11,7 @@
 
 
               <!-- Header -->
-              <div class="row">
+              <div class="row mt-4">
                 <div class="col-12">
                   <div class="card mb-4">
                     <!-- <div class="user-profile-header-banner">
@@ -19,10 +19,15 @@
                     </div> -->
                     <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                       <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                        <img
-                          src="{% static 'assets/img/avatars/14.png' %}"
-                          alt="user image"
-                          class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                        {% if profileUser.profilepicturemodel.profile_photo %}
+                        {% with profile_photo_url=profileUser.profilepicturemodel.profile_photo.url %}
+                        <img src="{{ profile_photo_url }}" alt="user image"
+                        class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                        {% endwith %}
+                        {% else %}
+                        <img src="{% static 'assets/img/avatars/14.png' %}" alt="user image"
+                        class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                        {% endif %}
                       </div>
                       <div class="flex-grow-1 mt-3 mt-sm-5">
                         <div
@@ -47,9 +52,15 @@
                               </li>
                             </ul>
                           </div>
-                          <a href="javascript:void(0)" class="btn btn-primary">
-                            <i class="ti ti-check me-1"></i>Connected
+                          {%if user.username == model.User.username %}
+                          <a href="{% url 'profileSettings' %}" class="btn btn-primary">
+                            <i class="ti ti-settings me-2 ti-sm"></i>Hesap Ayarları
                           </a>
+                          {%else%}
+                          <a href="javascript:void(0)" class="btn btn-primary">
+                            <i class="ti ti-check me-1"></i>Arkadaş Ekle
+                          </a>
+                          {% endif %}
                         </div>
                       </div>
                     </div>
@@ -97,7 +108,7 @@
                       <ul class="list-unstyled mb-4 mt-3">
                         <li class="d-flex align-items-center mb-3">
                           <i class="ti ti-user text-heading"></i
-                          ><span class="fw-medium mx-2 text-heading">Full Name:</span> <span>John Doe</span>
+                          ><span class="fw-medium mx-2 text-heading">Full Name:</span> <span>{{profileUser.EducationalInformationModel.Country}}</span>
                         </li>
                         <li class="d-flex align-items-center mb-3">
                           <i class="ti ti-check text-heading"></i

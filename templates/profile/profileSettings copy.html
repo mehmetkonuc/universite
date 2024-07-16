@@ -32,7 +32,8 @@
                   class="account-file-input"
                   hidden
                   accept="image/png, image/jpeg"
->
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalCenter">
                </label>
                <button type="submit" name="remove_photo" class="btn btn-label-secondary account-image-reset mb-3">
                <i class="ti ti-refresh-dot d-block d-sm-none"></i>
@@ -93,7 +94,6 @@
 
       <!-- /Account -->
    </div>
-
 {% endblock %}
 {% block extra_javascript %}
 <script src="{% static 'assets/js/cropper/cropper.js' %}"></script>
@@ -106,61 +106,42 @@
     const confirmBtn = document.getElementById('confirm-profile');
     const input = document.getElementById('id_{{ picture.profile_photo.name }}');
     const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    let cropper; // Cropper instance'ını global olarak tanımla
 
-    input.addEventListener('change', function() {
-    const img_data = input.files[0];
-    const url = URL.createObjectURL(img_data);
-    imageBox.innerHTML = `<img src="${url}" id="image" style="width: 50%;">`;
+    input.addEventListener('change', () => {
+        const img_data = input.files[0];
+        const url = URL.createObjectURL(img_data);
+        imageBox.innerHTML = `<img src="${url}" id="image" width="70%">`;
 
-    const modalElement = document.getElementById('modalCenter');
-    const modalInstance = new bootstrap.Modal(modalElement);
-    modalInstance.show();
-
-    modalElement.addEventListener('shown.bs.modal', function () {
-        if (cropper) {
-            cropper.destroy(); // Eski cropper instance'ını yok et
-        }
-        const image = document.getElementById('image');
-        cropper = new Cropper(image, {
+        const cropper = new Cropper(document.getElementById('image'), {
             aspectRatio: 1 / 1,
             crop(event) {
                 console.log(event.detail);
             }
         });
-    });
 
-    // Önceki event listener'ları kaldır
-    confirmBtn.removeEventListener('click', handleConfirmClick);
+        confirmBtn.addEventListener('click', () => {
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                const fd = new FormData();
+                fd.append('csrfmiddlewaretoken', csrf);
+                fd.append('{{ picture.profile_photo.name }}', blob, 'profile-image.png');
 
-    // Yeni event listener tanımla
-    confirmBtn.addEventListener('click', handleConfirmClick);
-});
-
-function handleConfirmClick() {
-    cropper.getCroppedCanvas().toBlob(function(blob) {
-        const fd = new FormData();
-        fd.append('csrfmiddlewaretoken', csrf);
-        fd.append('{{ picture.profile_photo.name }}', blob, input.files[0].name);
-
-        $.ajax({
-            type: 'POST',
-            url: '/profile/upload_image/',
-            enctype: 'multipart/form-data',
-            data: fd,
-            success: function(response) {
-                alertBox.innerHTML = `<div class="alert alert-success" role="alert">Başarılı</div>`;
-                location.reload();
-
-            },
-            error: function(error) {
-                alertBox.innerHTML = `<div class="alert alert-danger" role="alert">Hata: Lütfen Formata Uygun Resim Yükleyin.</div>`;
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
+                $.ajax({
+                    type: 'POST',
+                    url: '/profile/settings/',  // Sunucu tarafı URL'nizi buraya yazın
+                    enctype: 'multipart/form-data',
+                    data: fd,
+                    success: function(response) {
+                        alertBox.innerHTML = `<div class="alert alert-success" role="alert">Başarılı</div>`;
+                    },
+                    error: function(error) {
+                        alertBox.innerHTML = `<div class="alert alert-danger" role="alert">Hata: ${error}</div>`;
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                });
+            });
         });
     });
-}
 </script>
 {% endblock %}
