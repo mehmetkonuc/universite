@@ -20,7 +20,7 @@ body {
 
 // Navbar
 // ---------------------------------------------------------------------------
-@include template-navbar-style('.bg-navbar-theme', $card-bg, $color: $body-color, $active-color: $headings-color);
+@include template-navbar-style('.bg-navbar-theme', $card-bg, $color: $headings-color, $active-color: $headings-color);
 .layout-navbar {
   box-shadow: 0 1px 0 $border-color;
   backdrop-filter: saturate(200%) blur(6px);
@@ -29,7 +29,7 @@ body {
   backdrop-filter: saturate(200%) blur(6px);
 }
 .navbar-detached {
-  box-shadow: 0 0 0.375rem 0.25rem rgba($black, 0.15);
+  box-shadow: 0 0.125rem 0.5rem 0 rgba($shadow-bg, 0.18);
 }
 .layout-navbar-fixed .layout-page:before {
   backdrop-filter: saturate(200%) blur(10px);
@@ -42,11 +42,16 @@ body {
 // ---------------------------------------------------------------------------
 @include template-menu-style(
   '.bg-menu-theme',
-  #161931,
-  $color: rgba-to-hex($gray-300, $rgba-to-hex-bg),
-  $active-color: rgba-to-hex($gray-200, $rgba-to-hex-bg),
+  #2f3349,
+  $color: #cfcce4,
+  $active-color: $white,
   $active-bg: $primary-color
 );
+@include media-breakpoint-up($menu-collapsed-layout-breakpoint) {
+  .bg-menu-theme {
+    box-shadow: 0px 2px 8px 0px rgba(#131120, 0.18);
+  }
+}
 .bg-menu-theme {
   .menu-inner {
     .menu-item {
@@ -55,26 +60,26 @@ body {
         > .menu-link.menu-toggle {
           &,
           .layout-menu-hover.layout-menu-collapsed & {
-            background: #2d3253;
+            background: rgba(#e1def5, 0.08);
           }
         }
       }
       &:not(.active) > .menu-link:hover {
         html:not(.layout-menu-collapsed) &,
         .layout-menu-hover.layout-menu-collapsed & {
-          background: #2d3253;
+          background: rgba(#e1def5, 0.06);
         }
       }
     }
   }
   .menu-inner .menu-sub .menu-item:not(.active) > .menu-link::before {
-    color: rgba-to-hex($gray-500, $rgba-to-hex-bg) !important;
+    color: rgba(#e1def5, 0.7) !important;
   }
 }
 
 // Footer
 // ---------------------------------------------------------------------------
-@include template-footer-style('.bg-footer-theme', $card-bg, $color: $body-color, $active-color: $headings-color);
+@include template-footer-style('.bg-footer-theme', $card-bg, $color: $primary-color, $active-color: $primary-color);
 
 .layout-footer-fixed .layout-wrapper:not(.layout-horizontal) .content-footer .footer-container,
 .layout-footer-fixed .layout-wrapper.layout-horizontal .content-footer {

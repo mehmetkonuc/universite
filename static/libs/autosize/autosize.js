@@ -1,3 +1,7 @@
-import * as autosize from 'autosize/dist/autosize';
+import autosize from 'autosize';
+
+try {
+  window.autosize = autosize;
+} catch (e) {}
 
 export { autosize };

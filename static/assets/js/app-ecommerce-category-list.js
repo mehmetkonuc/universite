@@ -13,7 +13,7 @@ if (commentEditor) {
     modules: {
       toolbar: '.comment-toolbar'
     },
-    placeholder: 'Enter category description...',
+    placeholder: 'Write a Comment...',
     theme: 'snow'
   });
 }
@@ -121,16 +121,16 @@ $(function () {
             // Creates full output for Categories and Category Detail
             var $row_output =
               '<div class="d-flex align-items-center">' +
-              '<div class="avatar-wrapper me-2 rounded-2 bg-label-secondary">' +
+              '<div class="avatar-wrapper me-3 rounded-2 bg-label-secondary">' +
               '<div class="avatar">' +
               $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column justify-content-center">' +
-              '<span class="text-body text-wrap fw-medium">' +
+              '<span class="text-heading text-wrap fw-medium">' +
               $name +
               '</span>' +
-              '<span class="text-muted text-truncate mb-0 d-none d-sm-block"><small>' +
+              '<span class="text-truncate mb-0 d-none d-sm-block"><small>' +
               $category_detail +
               '</small></span>' +
               '</div>' +
@@ -153,7 +153,7 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             var $total_earnings = full['total_earnings'];
-            return "<div class='h6 mb-0 text-sm-end'>" + $total_earnings + '</div';
+            return "<div class='mb-0 text-sm-end'>" + $total_earnings + '</div';
           }
         },
         {
@@ -165,8 +165,12 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-sm-center justify-content-sm-center">' +
-              '<button class="btn btn-sm btn-icon delete-record me-2"><i class="ti ti-trash"></i></button>' +
-              '<button class="btn btn-sm btn-icon"><i class="ti ti-edit"></i></button>' +
+              '<button class="btn btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ti ti-edit"></i></button>' +
+              '<button class="btn btn-icon btn-text-secondary rounded-pill waves-effect waves-light dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              '<a href="javascript:0;" class="dropdown-item">View</a>' +
+              '<a href="javascript:0;" class="dropdown-item">Suspend</a>' +
+              '</div>' +
               '</div>'
             );
           }
@@ -174,11 +178,11 @@ $(function () {
       ],
       order: [2, 'desc'], //set any columns order asc/desc
       dom:
-        '<"card-header d-flex flex-wrap pb-2"' +
+        '<"card-header d-flex flex-wrap py-0 flex-column flex-sm-row"' +
         '<f>' +
-        '<"d-flex justify-content-center justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex justify-content-center flex-md-row mb-3 mb-md-0 ps-1 ms-1 align-items-baseline"lB>>' +
+        '<"d-flex justify-content-center justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex justify-content-center flex-md-row align-items-baseline"lB>>' +
         '>t' +
-        '<"row mx-2"' +
+        '<"row mx-1"' +
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
@@ -186,13 +190,17 @@ $(function () {
       language: {
         sLengthMenu: '_MENU_',
         search: '',
-        searchPlaceholder: 'Search Category'
+        searchPlaceholder: 'Search Category',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
       // Button for offcanvas
       buttons: [
         {
           text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Category</span>',
-          className: 'add-new btn btn-primary ms-2',
+          className: 'add-new btn btn-primary ms-2 waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
             'data-bs-target': '#offcanvasEcommerceCategoryList'
@@ -234,19 +242,16 @@ $(function () {
       }
     });
     $('.dt-action-buttons').addClass('pt-0');
-    $('.dataTables_filter').addClass('me-3 ps-0');
+    $('.dataTables_filter').addClass('me-3 mb-sm-6 mb-0 ps-0');
   }
-
-  // Delete Record
-  $('.datatables-category-list tbody').on('click', '.delete-record', function () {
-    dt_category.row($(this).parents('tr')).remove().draw();
-  });
 
   // Filter form control to default size
   // ? setTimeout used for multilingual table initialization
   setTimeout(() => {
     $('.dataTables_filter .form-control').removeClass('form-control-sm');
+    $('.dataTables_filter .form-control').addClass('ms-0');
     $('.dataTables_length .form-select').removeClass('form-select-sm');
+    $('.dataTables_length .form-select').addClass('ms-0');
   }, 300);
 });
 
@@ -279,7 +284,7 @@ $(function () {
         eleValidClass: 'is-valid',
         rowSelector: function (field, ele) {
           // field is the field name & ele is the field element
-          return '.mb-3';
+          return '.mb-6';
         }
       }),
       submitButton: new FormValidation.plugins.SubmitButton(),

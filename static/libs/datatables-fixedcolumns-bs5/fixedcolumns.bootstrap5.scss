@@ -1,7 +1,7 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
-@import '../../node_modules/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5';
+@import 'datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5';
 
 // Fixed column style
 div.dataTables_scrollBody thead tr,
@@ -16,12 +16,6 @@ div.dataTables_scrollBody {
   div.dataTables_scrollFootInner table.table-bordered tr th:first-child,
   div.dataTables_scrollHeadInner table.table-bordered tr th:first-child {
     border-left: 0 !important;
-  }
-}
-// border width override
-@include app-ltr(false) {
-  .dt-fixedcolumns.table-bordered > :not(caption) > * {
-    border-width: 0 !important;
   }
 }
 
@@ -53,6 +47,8 @@ div.dataTables_scrollBody {
     div.dtfc-right-top-blocker,
     div.dtfc-left-top-blocker {
       background-color: light.$card-bg;
+      margin-top: 1px !important;
+      height: 0px !important;
     }
     // To override BS5 css
     .dt-fixedcolumns thead {
@@ -62,7 +58,7 @@ div.dataTables_scrollBody {
       div.dataTables_scrollHead,
       div.dataTables_scrollBody {
         table {
-          border: 0;
+          border-width: 0;
         }
       }
       div.DTFC_LeftBodyLiner {
@@ -88,13 +84,15 @@ div.dataTables_scrollBody {
       border-color: dark.$table-border-color;
     }
     div.dataTables_scrollHead table,
-    div.DTFC_RightHeadWrapper table {
+    div.DTFC_RightHeadWrapper table,
+    table.dataTable.fixedHeader-floating,
+    table.dataTable.fixedHeader-locked {
       background-color: dark.$card-bg;
     }
     // fixed header and footer border
     div.dataTables_scrollFootInner table.table-bordered tr th:first-child,
     div.dataTables_scrollHeadInner table.table-bordered tr th:first-child {
-      border-left: 1px solid dark.$table-border-color;
+      border-left: 1px solid dark.$table-border-color !important;
     }
     // fixed column background color
     table.dataTable thead tr > .dtfc-fixed-left,
@@ -104,6 +102,8 @@ div.dataTables_scrollBody {
     div.dtfc-right-top-blocker,
     div.dtfc-left-top-blocker {
       background-color: dark.$card-bg;
+      margin-top: 1px !important;
+      height: 0px !important;
     }
     // To override BS5 css
     .dt-fixedcolumns thead {
@@ -113,7 +113,7 @@ div.dataTables_scrollBody {
       div.dataTables_scrollHead,
       div.dataTables_scrollBody {
         table {
-          border: 0;
+          border-width: 0;
         }
       }
       div.DTFC_LeftBodyLiner {

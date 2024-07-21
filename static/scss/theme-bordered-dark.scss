@@ -14,19 +14,96 @@ body {
   background: $body-bg !important;
 }
 
+.dropdown-menu,
+.popover,
+.toast,
+.flatpickr-calendar:not(.app-calendar-sidebar .flatpickr-calendar),
+.datepicker.datepicker-inline,
+.datepicker.datepicker-inline table,
+.daterangepicker,
+.pcr-app,
+.ui-timepicker-wrapper,
+.twitter-typeahead .tt-menu,
+.tagify__dropdown,
+.swal2-popup,
+.select2-dropdown,
+.select2-container--default .select2-dropdown.select2-dropdown--above,
+.shepherd-element,
+.menu-horizontal .menu-inner > .menu-item.open .menu-sub,
+div.dataTables_wrapper .dt-button-collection {
+  outline: none;
+  box-shadow: none !important;
+  border: 1px solid $border-color !important;
+}
+
+.flatpickr-days,
+.flatpickr-time {
+  border-width: 0 !important;
+}
+
+// Bootstrap select > double border fix
+.dropdown-menu .dropdown-menu {
+  border: none !important;
+}
+.datepicker.datepicker-inline {
+  width: fit-content;
+  border-radius: $border-radius;
+}
+.apexcharts-canvas .apexcharts-tooltip,
+.modal-content,
+.offcanvas,
+div.dataTables_wrapper .dt-button-collection > div[role='menu'] {
+  box-shadow: none !important;
+}
+.modal-content {
+  & {
+    border: $border-width solid $border-color !important;
+  }
+}
+.offcanvas.offcanvas-start,
+.offcanvas.offcanvas-end,
+.offcanvas.offcanvas-top,
+.offcanvas.offcanvas-bottom {
+  border-width: $border-width;
+}
+.select2-dropdown {
+  border-color: $border-color !important;
+}
+.bs-popover-start > .popover-arrow::before,
+.bs-popover-auto[data-popper-placement^='left'] > .popover-arrow::before {
+  border-left-color: $border-color !important;
+  right: -1px;
+}
+.bs-popover-end > .popover-arrow::before,
+.bs-popover-auto[data-popper-placement^='right'] > .popover-arrow::before {
+  border-right-color: $border-color !important;
+  left: -1px;
+}
+.bs-popover-top > .popover-arrow::before,
+.bs-popover-auto[data-popper-placement^='top'] > .popover-arrow::before {
+  border-top-color: $border-color !important;
+  bottom: -1px;
+}
+.bs-popover-bottom > .popover-arrow::before,
+.bs-popover-auto[data-popper-placement^='bottom'] > .popover-arrow::before {
+  border-bottom-color: $border-color !important;
+  top: -1px;
+}
+
 @include template-common-theme($primary-color);
 @include template-libs-dark-theme($primary-color);
 @include template-pages-theme($primary-color);
 
 // Navbar
 // ---------------------------------------------------------------------------
-@include template-navbar-style('.bg-navbar-theme', $card-bg, $color: $body-color, $active-color: $headings-color);
+@include template-navbar-style('.bg-navbar-theme', $card-bg, $color: $headings-color, $active-color: $headings-color);
 .layout-navbar,
 .menu-horizontal {
   backdrop-filter: saturate(200%) blur(6px);
 }
 .navbar-detached {
   border: 1px solid $border-color;
+  box-shadow: none;
 }
 .layout-navbar-fixed .layout-page:before {
   backdrop-filter: saturate(200%) blur(10px);
@@ -34,8 +111,14 @@ body {
   -webkit-mask: linear-gradient($card-bg, $card-bg 18%, transparent 100%);
   mask: linear-gradient($card-bg, $card-bg 18%, transparent 100%);
 }
-.layout-horizontal .layout-navbar {
-  box-shadow: 0 1px 0 $border-color;
+.layout-horizontal {
+  .layout-navbar {
+    box-shadow: 0 1px 0 $border-color;
+  }
+  .layout-page .menu-horizontal {
+    box-shadow: none;
+    border-bottom: 1px solid $border-color;
+  }
 }
 
 // Menu
@@ -43,7 +126,7 @@ body {
 @include template-menu-style(
   '.bg-menu-theme',
   $card-bg,
-  $color: $body-color,
+  $color: $headings-color,
   $active-color: $headings-color,
   $active-bg: $primary-color
 );
@@ -56,20 +139,20 @@ body {
         > .menu-link.menu-toggle {
           &,
           .layout-menu-hover.layout-menu-collapsed & {
-            background: rgba($base, 0.06);
+            background: $gray-75;
           }
         }
       }
       &:not(.active) > .menu-link:hover {
         html:not(.layout-menu-collapsed) &,
         .layout-menu-hover.layout-menu-collapsed & {
-          background: rgba($base, 0.06);
+          background: $gray-50;
         }
       }
     }
   }
   .menu-inner .menu-sub .menu-item:not(.active) > .menu-link::before {
-    color: $text-muted !important;
+    color: $body-color !important;
   }
 }
 
@@ -85,7 +168,7 @@ body {
 
 // Footer
 // ---------------------------------------------------------------------------
-@include template-footer-style('.bg-footer-theme', $card-bg, $color: $body-color, $active-color: $headings-color);
+@include template-footer-style('.bg-footer-theme', $card-bg, $color: $primary-color, $active-color: $primary-color);
 
 .content-footer .footer-container {
   .layout-footer-fixed .layout-wrapper:not(.layout-horizontal) & {
@@ -103,15 +186,28 @@ body {
 // ---------------------------------------------------------------------------
 
 // card
-.card {
+.card:not(.card-group .card),
+.card-group {
   box-shadow: none;
   border: $border-width solid $card-border-color;
 }
+// card border-shadow variant
+.card {
+  &[class*='card-border-shadow-'] {
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+}
 
-// Accordion
+//Accordion
 .accordion {
+  &:not(.accordion-custom-button):not(.accordion-arrow-left) {
+    .accordion-item {
+      border: $accordion-border-width solid $accordion-border-color;
+    }
+  }
   .accordion-item {
-    border-top: 1px solid $card-border-color;
     box-shadow: none !important;
   }
 }
@@ -132,6 +228,7 @@ body {
 .nav-align-top .nav-tabs {
   @include border-top-radius($border-radius);
   ~ .tab-content {
+    box-shadow: none;
     border-top-width: 0 !important;
     @include border-bottom-radius($border-radius);
   }
@@ -139,6 +236,7 @@ body {
 .nav-align-bottom .nav-tabs {
   @include border-bottom-radius($border-radius);
   ~ .tab-content {
+    box-shadow: none;
     border-bottom-width: 0 !important;
     @include border-top-radius($border-radius);
   }
@@ -151,6 +249,7 @@ body {
     @include border-end-radius($border-radius);
   }
   ~ .tab-content {
+    box-shadow: none;
     @include ltr-style {
       border-left-width: 0 !important;
       @include border-end-radius($border-radius);
@@ -169,6 +268,7 @@ body {
     @include border-start-radius($border-radius);
   }
   ~ .tab-content {
+    box-shadow: none;
     @include ltr-style {
       border-right-width: 0 !important;
       @include border-start-radius($border-radius);
@@ -207,37 +307,17 @@ body {
   }
 }
 // file upload (dropzone)
-.light-style .dz-preview {
+.dark-style .dz-preview {
   box-shadow: none;
   border: 1px solid $border-color;
 }
 
-//timeline
-
-.timeline-center {
-  .timeline-item .timeline-event:after {
-    position: absolute;
-    top: 0.75rem;
-    left: -17px;
-    width: 0;
-    height: 0;
-    border-top: 1rem solid transparent;
-    border-right: 1rem solid;
-    border-left: 0 solid;
-    border-bottom: 1rem solid transparent;
-    border-left-color: $timeline-item-bg-color;
-    border-right-color: $card-border-color;
-    z-index: -1;
-    content: '';
-  }
-}
+// timeline
 .timeline {
   .timeline-item {
     .timeline-indicator,
     .timeline-indicator-advanced {
-      i {
-        background-color: $card-bg;
-      }
+      box-shadow: 0 0 0 10px $card-bg;
     }
   }
 }
@@ -255,4 +335,9 @@ body {
       }
     }
   }
+}
+
+// authentication
+.authentication-wrapper .authentication-bg {
+  border-inline-start: 1px solid $border-color;
 }

@@ -1,7 +1,8 @@
-
 .tags-inline {
   .tagify__dropdown__wrapper {
     padding: 0 $tag-spacer $tag-spacer $tag-spacer;
+    border: none;
+    box-shadow: none;
   }
   .tagify__dropdown__item {
     display: inline-block;

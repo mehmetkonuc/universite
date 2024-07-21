@@ -24,10 +24,10 @@
   // Donut Chart Colors
   const chartColors = {
     donut: {
-      series1: config.colors.success,
-      series2: '#28c76fb3',
-      series3: '#28c76f80',
-      series4: config.colors_label.success
+      series1: '#24B364',
+      series2: '#53D28C',
+      series3: '#7EDDA9',
+      series4: '#A9E9C5'
     }
   };
 
@@ -36,7 +36,7 @@
   const expensesRadialChartEl = document.querySelector('#expensesChart'),
     expensesRadialChartConfig = {
       chart: {
-        height: 145,
+        height: 170,
         sparkline: {
           enabled: true
         },
@@ -62,7 +62,7 @@
               show: false
             },
             value: {
-              fontSize: '22px',
+              fontSize: '24px',
               color: headingColor,
               fontWeight: 500,
               offsetY: -5
@@ -183,7 +183,7 @@
   const profitLastMonthEl = document.querySelector('#profitLastMonth'),
     profitLastMonthConfig = {
       chart: {
-        height: 90,
+        height: 110,
         type: 'line',
         parentHeightOffset: 0,
         toolbar: {
@@ -302,8 +302,8 @@
   const generatedLeadsChartEl = document.querySelector('#generatedLeadsChart'),
     generatedLeadsChartConfig = {
       chart: {
-        height: 147,
-        width: 130,
+        height: 125,
+        width: 120,
         parentHeightOffset: 0,
         type: 'donut'
       },
@@ -351,7 +351,7 @@
             labels: {
               show: true,
               value: {
-                fontSize: '1.375rem',
+                fontSize: '1.5rem',
                 fontFamily: 'Public Sans',
                 color: headingColor,
                 fontWeight: 500,
@@ -459,16 +459,17 @@
         show: true,
         horizontalAlign: 'right',
         position: 'top',
+        fontSize: '13px',
         fontFamily: 'Public Sans',
         markers: {
           height: 12,
           width: 12,
           radius: 12,
-          offsetX: -3,
+          offsetX: -5,
           offsetY: 2
         },
         labels: {
-          colors: legendColor
+          colors: headingColor
         },
         itemMargin: {
           horizontal: 10,
@@ -806,6 +807,7 @@
 
   // Variable declaration for table
   var dt_invoice_table = $('.datatable-invoice');
+
   // Invoice datatable
   // --------------------------------------------------------------------
   if (dt_invoice_table.length) {
@@ -813,7 +815,8 @@
       ajax: assetsPath + 'json/invoice-list.json', // JSON file to add data
       columns: [
         // columns according to JSON
-        { data: '' },
+        { data: 'invoice_id' },
+        { data: 'invoice_id' },
         { data: 'invoice_id' },
         { data: 'invoice_status' },
         { data: 'total' },
@@ -826,42 +829,55 @@
           // For Responsive
           className: 'control',
           responsivePriority: 2,
+          searchable: false,
           targets: 0,
           render: function (data, type, full, meta) {
             return '';
           }
         },
         {
-          // Invoice ID
+          // For Checkboxes
           targets: 1,
+          orderable: false,
+          checkboxes: {
+            selectAllRender: '<input type="checkbox" class="form-check-input">'
+          },
+          render: function () {
+            return '<input type="checkbox" class="dt-checkboxes form-check-input" >';
+          },
+          searchable: false
+        },
+        {
+          // Invoice ID
+          targets: 2,
           render: function (data, type, full, meta) {
             var $invoice_id = full['invoice_id'];
             // Creates full output for row
-            var $row_output = '<a href="/app/invoice/preview/"><span>#' + $invoice_id + '</span></a>';
+            var $row_output = '<a href="app-invoice-preview.html">#' + $invoice_id + '</a>';
             return $row_output;
           }
         },
         {
           // Invoice status
-          targets: 2,
+          targets: 3,
           render: function (data, type, full, meta) {
             var $invoice_status = full['invoice_status'],
               $due_date = full['due_date'],
               $balance = full['balance'];
             var roleBadgeObj = {
-              Sent: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30"><i class="ti ti-circle-check ti-sm"></i></span>',
+              Sent: '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-secondary w-px-30 h-px-30"><i class="ti ti-circle-check ti-xs"></i></span>',
               Draft:
-                '<span class="badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30"><i class="ti ti-device-floppy ti-sm"></i></span>',
+                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-primary w-px-30 h-px-30"><i class="ti ti-device-floppy ti-xs"></i></span>',
               'Past Due':
-                '<span class="badge badge-center rounded-pill bg-label-danger w-px-30 h-px-30"><i class="ti ti-info-circle ti-sm"></i></span>',
+                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-danger w-px-30 h-px-30"><i class="ti ti-info-circle ti-xs"></i></span>',
               'Partial Payment':
-                '<span class="badge badge-center rounded-pill bg-label-success w-px-30 h-px-30"><i class="ti ti-circle-half-2 ti-sm"></i></span>',
-              Paid: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30"><i class="ti ti-chart-pie ti-sm"></i></span>',
+                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-success w-px-30 h-px-30"><i class="ti ti-circle-half-2 ti-xs"></i></span>',
+              Paid: '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-warning w-px-30 h-px-30"><i class="ti ti-chart-pie ti-xs"></i></span>',
               Downloaded:
-                '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30"><i class="ti ti-arrow-down-circle ti-sm"></i></span>'
+                '<span class="badge badge-center d-flex align-items-center justify-content-center rounded-pill bg-label-info w-px-30 h-px-30"><i class="ti ti-arrow-down-circle ti-xs"></i></span>'
             };
             return (
-              "<span data-bs-toggle='tooltip' data-bs-html='true' title='<span>" +
+              "<span class='d-inline-block' data-bs-toggle='tooltip' data-bs-html='true' title='<span>" +
               $invoice_status +
               '<br> <span class="fw-medium">Balance:</span> ' +
               $balance +
@@ -875,7 +891,7 @@
         },
         {
           // Total Invoice Amount
-          targets: 3,
+          targets: 4,
           render: function (data, type, full, meta) {
             var $total = full['total'];
             return '$' + $total;
@@ -885,20 +901,21 @@
           // Actions
           targets: -1,
           title: 'Actions',
+          searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center">' +
-              '<a href="javascript:;" class="text-body" data-bs-toggle="tooltip" title="Send Mail"><i class="ti ti-mail me-2 ti-sm"></i></a>' +
-              '<a href="/app/invoice/preview/" class="text-body" data-bs-toggle="tooltip" title="Preview"><i class="ti ti-eye mx-2 ti-sm"></i></a>' +
+              '<a href="javascript:;" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record" data-bs-toggle="tooltip" title="Delete record"><i class="ti ti-trash ti-md"></i></a>' +
+              '<a href="app-invoice-preview.html" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill" data-bs-toggle="tooltip" title="Preview"><i class="ti ti-eye ti-md"></i></a>' +
               '<div class="d-inline-block">' +
-              '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-sm lh-1"></i></a>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="javascript:;" class="dropdown-item">Details</a>' +
-              '<a href="javascript:;" class="dropdown-item">Archive</a>' +
+              '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md"></i></a>' +
+              '<ul class="dropdown-menu dropdown-menu-end m-0">' +
+              '<li><a href="javascript:;" class="dropdown-item">Details</a></li>' +
+              '<li><a href="javascript:;" class="dropdown-item">Archive</a></li>' +
               '<div class="dropdown-divider"></div>' +
-              '<a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a>' +
-              '</div>' +
+              '<li><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+              '</ul>' +
               '</div>' +
               '</div>'
             );
@@ -910,30 +927,34 @@
           visible: false
         }
       ],
-      order: [[1, 'asc']],
+      order: [[1, 'desc']],
       dom:
-        '<"row ms-2 me-3"' +
-        '<"col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2"l<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start mt-md-0 mt-3"B>>' +
-        '<"col-12 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-3 gap-md-2"f<"invoice_status mb-3 mb-md-0">>' +
+        '<"row"' +
+        '<"col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2"l<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start"B>>' +
+        '<"col-12 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-5 gap-md-4 mt-n5 mt-md-0"f<"invoice_status mb-6 mb-md-0">>' +
         '>t' +
-        '<"row d-flex align-items-center mx-2"' +
+        '<"row"' +
         '<"col-sm-12 col-md-6"i>' +
-        '<"col-sm-12 col-md-6 mt-1"p>' +
+        '<"col-sm-12 col-md-6"p>' +
         '>',
-      displayLength: 7,
-      lengthMenu: [7, 10, 25, 50, 75, 100],
+      displayLength: 6,
+      lengthMenu: [6, 10, 25, 50, 75, 100],
       language: {
-        sLengthMenu: '_MENU_',
+        sLengthMenu: 'Show _MENU_',
         search: '',
-        searchPlaceholder: 'Search Invoice'
+        searchPlaceholder: 'Search Invoice',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
-      // Buttons
+      // Buttons with Dropdown
       buttons: [
         {
-          text: '<i class="ti ti-plus me-md-2"></i><span class="d-md-inline-block d-none">Create Invoice</span>',
-          className: 'btn btn-primary',
+          text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Create Invoice</span>',
+          className: 'btn btn-primary waves-effect waves-light',
           action: function (e, dt, button, config) {
-            window.location = '/app/invoice/add/';
+            window.location = 'app-invoice-add.html';
           }
         }
       ],
@@ -973,7 +994,7 @@
       initComplete: function () {
         // Adding role filter once table initialized
         this.api()
-          .columns(5)
+          .columns(6)
           .every(function () {
             var column = this;
             var select = $(
@@ -996,6 +1017,7 @@
       }
     });
   }
+
   // On each datatable draw, initialize tooltip
   dt_invoice_table.on('draw.dt', function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -1006,6 +1028,10 @@
     });
   });
 
+  // Delete Record
+  $('.datatable-invoice tbody').on('click', '.delete-record', function () {
+    dt_invoice.row($(this).parents('tr')).remove().draw();
+  });
   // Filter form control to default size
   // ? setTimeout used for multilingual table initialization
   setTimeout(() => {

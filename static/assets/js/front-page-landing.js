@@ -59,7 +59,7 @@
   if (swiperReviews) {
     new Swiper(swiperReviews, {
       slidesPerView: 1,
-      spaceBetween: 5,
+      spaceBetween: 0,
       grabCursor: true,
       autoplay: {
         delay: 3000,
@@ -73,12 +73,10 @@
       },
       breakpoints: {
         1200: {
-          slidesPerView: 3,
-          spaceBetween: 26
+          slidesPerView: 3
         },
         992: {
-          slidesPerView: 2,
-          spaceBetween: 20
+          slidesPerView: 2
         }
       }
     });

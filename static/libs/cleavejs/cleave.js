@@ -1,3 +1,1 @@
-import * as Cleave from 'cleave.js/dist/cleave';
-
-export { Cleave };
+import 'cleave.js/dist/cleave';

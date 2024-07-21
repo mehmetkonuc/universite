@@ -22,14 +22,14 @@
   function radialBarChart(color, value, show) {
     const radialBarChartOpt = {
       chart: {
-        height: show == 'true' ? 58 : 53,
-        width: show == 'true' ? 58 : 43,
+        height: show == 'true' ? 58 : 48,
+        width: show == 'true' ? 58 : 38,
         type: 'radialBar'
       },
       plotOptions: {
         radialBar: {
           hollow: {
-            size: show == 'true' ? '50%' : '33%'
+            size: show == 'true' ? '50%' : '25%'
           },
           dataLabels: {
             show: show == 'true' ? true : false,

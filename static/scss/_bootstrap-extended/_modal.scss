@@ -4,11 +4,11 @@
 .modal {
   .btn-close {
     background-color: $card-bg;
-    border-radius: $border-radius;
+    border-radius: $border-radius-sm;
     background-image: str-replace(str-replace($btn-close-bg, '#{$btn-close-color}', $text-muted), '#', '%23');
     opacity: 1;
-    padding: 0.44rem;
-    box-shadow: $box-shadow-sm;
+    padding: 0.3757rem;
+    box-shadow: $box-shadow-xs;
     transition: all 0.23s ease 0.1s;
     @include ltr-style {
       transform: translate(23px, -25px);
@@ -39,9 +39,9 @@
     position: relative;
     .btn-close {
       position: absolute;
-      top: $modal-dialog-margin + 0.06rem;
+      top: $modal-dialog-margin + 0.1875rem;
       @include ltr-style() {
-        right: $modal-footer-margin-between;
+        right: $modal-footer-margin-between - 0.1875rem;
       }
       @include rtl-style {
         left: $modal-footer-margin-between + 0.3;
@@ -52,6 +52,25 @@
 //modal footer
 .modal-footer {
   padding: $modal-footer-padding;
+  > * {
+    margin-block: 0;
+    @include ltr-style {
+      &:last-child {
+        margin-right: 0;
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+    @include rtl-style {
+      &:last-child {
+        margin-left: 0;
+      }
+      &:first-child {
+        margin-right: 0;
+      }
+    }
+  }
 }
 
 // Modal Shadow
@@ -241,11 +260,12 @@
   .btn-close {
     position: absolute;
     top: 0;
-    right: $modal-header-padding-x;
+    right: $modal-inner-padding;
     opacity: 1;
     padding: $btn-close-padding-y $btn-close-padding-x;
     background-image: str-replace(str-replace($btn-close-bg, '#{$btn-close-color}', $white), '#', '%23');
     background-color: transparent !important;
+    box-shadow: none;
     @include rtl-style {
       right: auto;
       left: $modal-header-padding-x;
@@ -259,6 +279,12 @@
 .modal-simple {
   .modal-content {
     padding: $modal-simple-padding;
+    @include media-breakpoint-down(md) {
+      padding: 1rem;
+      .modal-body {
+        padding: 1rem;
+      }
+    }
   }
   .btn-close {
     position: absolute;
@@ -285,8 +311,8 @@
 // Refer & Earn Modal Example
 .modal-refer-and-earn {
   .modal-refer-and-earn-step {
-    width: 100px;
-    height: 100px;
+    width: 88px;
+    height: 88px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -294,6 +320,16 @@
     i {
       font-size: 2.5rem;
     }
+  }
+}
+
+// Add new address modal
+.modal-add-new-address {
+  .custom-option-icon:not(.checked) svg {
+    stroke: $headings-color;
+  }
+  .custom-option-icon.checked svg {
+    stroke: $primary;
   }
 }
 
@@ -332,10 +368,6 @@
 }
 @include media-breakpoint-down(md) {
   .modal {
-    .modal-dialog:not(.modal-fullscreen) {
-      padding: 0 0.75rem;
-      padding-left: 0.75rem !important;
-    }
     .carousel-control-prev,
     .carousel-control-next {
       display: none;

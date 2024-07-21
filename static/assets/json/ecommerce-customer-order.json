@@ -9,7 +9,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$73.98",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "5/16/2022",
       "time": "2:11 AM",
       "method_number": 6522
@@ -23,7 +23,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$100.39",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "5/3/2023",
       "time": "7:26 PM",
       "method_number": 7538
@@ -37,7 +37,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$809.26",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/15/2022",
       "time": "6:51 PM",
       "method_number": 5170
@@ -51,7 +51,7 @@
       "payment": 3,
       "status": 3,
       "spent": "$617.64",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "8/5/2022",
       "time": "9:18 PM",
       "method_number": 1748
@@ -65,7 +65,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$384.41",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "6/18/2022",
       "time": "3:34 AM",
       "method_number": 6425
@@ -79,7 +79,7 @@
       "payment": 3,
       "status": 2,
       "spent": "$162.85",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "10/14/2022",
       "time": "6:12 PM",
       "method_number": 1694
@@ -93,7 +93,7 @@
       "payment": 2,
       "status": 2,
       "spent": "$591.47",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/8/2022",
       "time": "6:09 PM",
       "method_number": 1883
@@ -107,7 +107,7 @@
       "payment": 4,
       "status": 1,
       "spent": "$664.51",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "6/10/2022",
       "time": "12:59 PM",
       "method_number": 5047
@@ -121,7 +121,7 @@
       "payment": 4,
       "status": 4,
       "spent": "$717.72",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "10/25/2022",
       "time": "10:48 AM",
       "method_number": 1945
@@ -135,7 +135,7 @@
       "payment": 3,
       "status": 3,
       "spent": "$477.42",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "11/2/2022",
       "time": "2:19 PM",
       "method_number": 3526
@@ -149,7 +149,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$71.42",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/25/2022",
       "time": "8:15 PM",
       "method_number": 8325
@@ -163,7 +163,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$894.55",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "11/3/2022",
       "time": "11:31 AM",
       "method_number": 2034
@@ -177,7 +177,7 @@
       "payment": 2,
       "status": 1,
       "spent": "$279.80",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "3/21/2023",
       "time": "3:28 PM",
       "method_number": 2751
@@ -191,7 +191,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$156.41",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "11/26/2022",
       "time": "9:16 PM",
       "method_number": 3234
@@ -205,7 +205,7 @@
       "payment": 2,
       "status": 1,
       "spent": "$614.39",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "11/20/2022",
       "time": "11:58 PM",
       "method_number": 5209
@@ -219,7 +219,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$203.72",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "4/22/2023",
       "time": "3:01 PM",
       "method_number": 1555
@@ -233,7 +233,7 @@
       "payment": 4,
       "status": 4,
       "spent": "$491.83",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "9/1/2022",
       "time": "10:31 PM",
       "method_number": 7013
@@ -247,7 +247,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$708.43",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/15/2022",
       "time": "11:03 AM",
       "method_number": 4636
@@ -261,7 +261,7 @@
       "payment": 2,
       "status": 2,
       "spent": "$849.78",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "8/31/2022",
       "time": "10:02 AM",
       "method_number": 6846
@@ -275,7 +275,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$855.31",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "1/2/2023",
       "time": "4:35 PM",
       "method_number": 4813
@@ -289,7 +289,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$458.76",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "9/17/2022",
       "time": "6:00 AM",
       "method_number": 8197
@@ -303,7 +303,7 @@
       "payment": 3,
       "status": 4,
       "spent": "$914.48",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "12/21/2022",
       "time": "8:35 PM",
       "method_number": 2844
@@ -317,7 +317,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$948.07",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "1/24/2023",
       "time": "12:01 AM",
       "method_number": 2562
@@ -331,7 +331,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$525.60",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "8/22/2022",
       "time": "6:36 PM",
       "method_number": 2030
@@ -345,7 +345,7 @@
       "payment": 1,
       "status": 2,
       "spent": "$100.18",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/23/2022",
       "time": "7:14 AM",
       "method_number": 4686
@@ -359,7 +359,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$463.32",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/20/2022",
       "time": "12:01 PM",
       "method_number": 6209
@@ -373,7 +373,7 @@
       "payment": 4,
       "status": 4,
       "spent": "$581.81",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "6/1/2022",
       "time": "2:31 AM",
       "method_number": 7031
@@ -387,7 +387,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$118.75",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "10/13/2022",
       "time": "12:57 AM",
       "method_number": 4387
@@ -401,7 +401,7 @@
       "payment": 3,
       "status": 2,
       "spent": "$774.91",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "4/17/2023",
       "time": "6:43 PM",
       "method_number": 2077
@@ -415,7 +415,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$212.75",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "3/23/2023",
       "time": "10:07 PM",
       "method_number": 2696
@@ -429,7 +429,7 @@
       "payment": 2,
       "status": 3,
       "spent": "$778.56",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "7/1/2022",
       "time": "10:37 PM",
       "method_number": 8071
@@ -443,7 +443,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$378.74",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "11/23/2022",
       "time": "6:45 AM",
       "method_number": 3993
@@ -457,7 +457,7 @@
       "payment": 2,
       "status": 2,
       "spent": "$595.84",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "4/15/2023",
       "time": "10:21 PM",
       "method_number": 2356
@@ -471,7 +471,7 @@
       "payment": 1,
       "status": 4,
       "spent": "$257.18",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "11/10/2022",
       "time": "8:12 PM",
       "method_number": 1776
@@ -485,7 +485,7 @@
       "payment": 1,
       "status": 3,
       "spent": "$368.26",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "11/17/2022",
       "time": "2:32 PM",
       "method_number": 6276
@@ -499,7 +499,7 @@
       "payment": 4,
       "status": 1,
       "spent": "$484.14",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/13/2022",
       "time": "9:36 PM",
       "method_number": 3876
@@ -513,7 +513,7 @@
       "payment": 2,
       "status": 1,
       "spent": "$135.04",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "10/14/2022",
       "time": "4:39 AM",
       "method_number": 2211
@@ -527,7 +527,7 @@
       "payment": 2,
       "status": 1,
       "spent": "$598.61",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "9/29/2022",
       "time": "10:31 AM",
       "method_number": 1979
@@ -541,7 +541,7 @@
       "payment": 1,
       "status": 2,
       "spent": "$612.56",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "11/29/2022",
       "time": "2:59 AM",
       "method_number": 8328
@@ -555,7 +555,7 @@
       "payment": 4,
       "status": 1,
       "spent": "$413.70",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "7/23/2022",
       "time": "3:15 PM",
       "method_number": 3901
@@ -569,7 +569,7 @@
       "payment": 1,
       "status": 3,
       "spent": "$67.26",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "11/1/2022",
       "time": "8:05 AM",
       "method_number": 7245
@@ -583,7 +583,7 @@
       "payment": 1,
       "status": 2,
       "spent": "$697.13",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "9/30/2022",
       "time": "8:03 PM",
       "method_number": 8102
@@ -597,7 +597,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$528.17",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/30/2022",
       "time": "12:21 AM",
       "method_number": 3075
@@ -611,7 +611,7 @@
       "payment": 2,
       "status": 1,
       "spent": "$662.07",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "12/29/2022",
       "time": "8:45 PM",
       "method_number": 5021
@@ -625,7 +625,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$65.73",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/11/2022",
       "time": "10:11 AM",
       "method_number": 3954
@@ -639,7 +639,7 @@
       "payment": 2,
       "status": 3,
       "spent": "$741.28",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/28/2022",
       "time": "3:45 PM",
       "method_number": 2128
@@ -653,7 +653,7 @@
       "payment": 2,
       "status": 3,
       "spent": "$161.30",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/8/2022",
       "time": "4:16 PM",
       "method_number": 6781
@@ -667,7 +667,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$644.90",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/23/2022",
       "time": "10:36 AM",
       "method_number": 5470
@@ -681,7 +681,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$462.45",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "11/10/2022",
       "time": "2:45 AM",
       "method_number": 4647
@@ -695,7 +695,7 @@
       "payment": 4,
       "status": 1,
       "spent": "$731.58",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "5/20/2022",
       "time": "8:09 PM",
       "method_number": 4113
@@ -709,7 +709,7 @@
       "payment": 1,
       "status": 3,
       "spent": "$556.94",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "6/10/2022",
       "time": "4:00 PM",
       "method_number": 6798
@@ -723,7 +723,7 @@
       "payment": 3,
       "status": 4,
       "spent": "$687.27",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/23/2022",
       "time": "6:41 PM",
       "method_number": 3529
@@ -737,7 +737,7 @@
       "payment": 1,
       "status": 2,
       "spent": "$309.15",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "10/18/2022",
       "time": "8:40 PM",
       "method_number": 1664
@@ -751,7 +751,7 @@
       "payment": 4,
       "status": 4,
       "spent": "$805.73",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/25/2022",
       "time": "8:01 AM",
       "method_number": 7931
@@ -765,7 +765,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$769.47",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "4/17/2023",
       "time": "8:05 AM",
       "method_number": 8412
@@ -779,7 +779,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$899.35",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "2/2/2023",
       "time": "6:13 PM",
       "method_number": 3946
@@ -793,7 +793,7 @@
       "payment": 3,
       "status": 2,
       "spent": "$201.84",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/11/2022",
       "time": "10:15 PM",
       "method_number": 3294
@@ -807,7 +807,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$547.07",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/1/2022",
       "time": "1:29 PM",
       "method_number": 5571
@@ -821,7 +821,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$89.46",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "9/26/2022",
       "time": "11:40 AM",
       "method_number": 4380
@@ -835,7 +835,7 @@
       "payment": 3,
       "status": 2,
       "spent": "$417.49",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "2/5/2023",
       "time": "11:42 PM",
       "method_number": 5856
@@ -849,7 +849,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$589.37",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "2/5/2023",
       "time": "8:46 AM",
       "method_number": 1923
@@ -863,7 +863,7 @@
       "payment": 2,
       "status": 3,
       "spent": "$62.71",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "9/11/2022",
       "time": "7:41 PM",
       "method_number": 4367
@@ -877,7 +877,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$54.45",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/2/2022",
       "time": "11:05 AM",
       "method_number": 8829
@@ -891,7 +891,7 @@
       "payment": 3,
       "status": 4,
       "spent": "$756.16",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "5/20/2022",
       "time": "12:39 PM",
       "method_number": 6971
@@ -905,7 +905,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$103.71",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "3/1/2023",
       "time": "10:25 PM",
       "method_number": 4305
@@ -919,7 +919,7 @@
       "payment": 1,
       "status": 3,
       "spent": "$357.17",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "2/1/2023",
       "time": "4:11 AM",
       "method_number": 7385
@@ -933,7 +933,7 @@
       "payment": 1,
       "status": 4,
       "spent": "$191.57",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "6/15/2022",
       "time": "7:28 PM",
       "method_number": 6469
@@ -947,7 +947,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$80.47",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "9/15/2022",
       "time": "9:35 PM",
       "method_number": 1464
@@ -961,7 +961,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$759.98",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "11/24/2022",
       "time": "12:51 PM",
       "method_number": 3957
@@ -975,7 +975,7 @@
       "payment": 4,
       "status": 1,
       "spent": "$333.83",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/20/2022",
       "time": "11:11 AM",
       "method_number": 3907
@@ -989,7 +989,7 @@
       "payment": 1,
       "status": 1,
       "spent": "$993.07",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "1/30/2023",
       "time": "8:13 AM",
       "method_number": 3210
@@ -1003,7 +1003,7 @@
       "payment": 4,
       "status": 4,
       "spent": "$651.14",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/1/2022",
       "time": "7:24 AM",
       "method_number": 3507
@@ -1017,7 +1017,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$483.86",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "5/10/2022",
       "time": "7:51 PM",
       "method_number": 7538
@@ -1031,7 +1031,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$609.47",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/20/2022",
       "time": "3:21 AM",
       "method_number": 5851
@@ -1045,7 +1045,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$593.65",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "9/19/2022",
       "time": "5:23 AM",
       "method_number": 8332
@@ -1059,7 +1059,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$897.84",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "1/13/2023",
       "time": "1:41 PM",
       "method_number": 8564
@@ -1073,7 +1073,7 @@
       "payment": 3,
       "status": 3,
       "spent": "$856.58",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "1/23/2023",
       "time": "6:10 AM",
       "method_number": 2150
@@ -1087,7 +1087,7 @@
       "payment": 2,
       "status": 3,
       "spent": "$191.99",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "8/24/2022",
       "time": "2:01 PM",
       "method_number": 4148
@@ -1101,7 +1101,7 @@
       "payment": 2,
       "status": 2,
       "spent": "$790.09",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "6/25/2022",
       "time": "12:54 AM",
       "method_number": 4538
@@ -1115,7 +1115,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$121.21",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "1/11/2023",
       "time": "4:33 PM",
       "method_number": 1974
@@ -1129,7 +1129,7 @@
       "payment": 4,
       "status": 1,
       "spent": "$783.05",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "7/12/2022",
       "time": "1:54 AM",
       "method_number": 6563
@@ -1143,7 +1143,7 @@
       "payment": 2,
       "status": 4,
       "spent": "$905.31",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "9/7/2022",
       "time": "5:58 AM",
       "method_number": 7367
@@ -1157,7 +1157,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$670.50",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/9/2022",
       "time": "4:22 AM",
       "method_number": 4789
@@ -1171,7 +1171,7 @@
       "payment": 2,
       "status": 2,
       "spent": "$520.17",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "5/26/2022",
       "time": "3:15 PM",
       "method_number": 2733
@@ -1185,7 +1185,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$77.59",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "9/10/2022",
       "time": "11:40 AM",
       "method_number": 3822
@@ -1199,7 +1199,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$429.80",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "9/22/2022",
       "time": "11:52 PM",
       "method_number": 2925
@@ -1213,7 +1213,7 @@
       "payment": 3,
       "status": 3,
       "spent": "$838.25",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/4/2022",
       "time": "9:12 PM",
       "method_number": 6240
@@ -1227,7 +1227,7 @@
       "payment": 3,
       "status": 2,
       "spent": "$308.07",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "3/2/2023",
       "time": "10:00 AM",
       "method_number": 7909
@@ -1241,7 +1241,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$447.29",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "4/29/2023",
       "time": "9:52 AM",
       "method_number": 5475
@@ -1255,7 +1255,7 @@
       "payment": 4,
       "status": 4,
       "spent": "$59.28",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "11/29/2022",
       "time": "6:53 PM",
       "method_number": 4371
@@ -1269,7 +1269,7 @@
       "payment": 2,
       "status": 1,
       "spent": "$62.62",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "6/29/2022",
       "time": "6:51 AM",
       "method_number": 8321
@@ -1283,7 +1283,7 @@
       "payment": 1,
       "status": 3,
       "spent": "$554.91",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/6/2022",
       "time": "2:11 AM",
       "method_number": 8535
@@ -1297,7 +1297,7 @@
       "payment": 3,
       "status": 4,
       "spent": "$383.52",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "12/26/2022",
       "time": "9:49 AM",
       "method_number": 8585
@@ -1311,7 +1311,7 @@
       "payment": 3,
       "status": 3,
       "spent": "$738.42",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "8/29/2022",
       "time": "5:24 AM",
       "method_number": 3432
@@ -1325,7 +1325,7 @@
       "payment": 4,
       "status": 3,
       "spent": "$669.45",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "3/11/2023",
       "time": "10:43 AM",
       "method_number": 1014
@@ -1339,7 +1339,7 @@
       "payment": 4,
       "status": 2,
       "spent": "$237.91",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "8/14/2022",
       "time": "3:26 PM",
       "method_number": 3196
@@ -1353,7 +1353,7 @@
       "payment": 3,
       "status": 1,
       "spent": "$595.25",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "3/20/2023",
       "time": "3:11 PM",
       "method_number": 4892
@@ -1367,7 +1367,7 @@
       "payment": 3,
       "status": 3,
       "spent": "$746.38",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "4/8/2023",
       "time": "3:39 AM",
       "method_number": 4509
@@ -1381,7 +1381,7 @@
       "payment": 3,
       "status": 2,
       "spent": "$704.86",
-      "method": "paypal_logo",
+      "method": "paypal",
       "date": "1/2/2023",
       "time": "8:55 PM",
       "method_number": 6424
@@ -1395,7 +1395,7 @@
       "payment": 2,
       "status": 3,
       "spent": "$815.77",
-      "method": "mastercard",
+      "method": "mastercard-cc",
       "date": "2/1/2023",
       "time": "4:12 PM",
       "method_number": 3949

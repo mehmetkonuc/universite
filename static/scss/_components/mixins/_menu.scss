@@ -12,9 +12,9 @@
     );
   }
 
-  $menu-active-bg: linear-gradient(72.47deg, $active-bg 22.16%, rgba($active-bg, 0.7) 76.47%);
-  $menu-active-bg-rtl: linear-gradient(72.47deg, rgba($active-bg, 0.7) 22.16%, $active-bg 76.47%);
-  $horizontal-active-bg: rgba-to-hex(rgba($active-bg, 0.08), $bg);
+  $menu-active-bg: linear-gradient(270deg, rgba($active-bg, 0.7) 0%, $active-bg 100%);
+  $menu-active-bg-rtl: linear-gradient(-270deg, rgba($active-bg, 0.7) 0%, $active-bg 100%);
+  $horizontal-active-bg: rgba-to-hex(rgba($active-bg, 0.16), $bg);
 
   #{$parent} {
     background-color: map-get($colors, bg) !important;
@@ -36,6 +36,9 @@
         color: map-get($colors, active-color);
       }
     }
+    .menu-toggle::after {
+      color: map-get($colors, color);
+    }
 
     .menu-item.disabled .menu-link,
     .menu-horizontal-prev.disabled,
@@ -51,8 +54,11 @@
     //vertical menu active item bg color
     &.menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) {
       background: $menu-active-bg;
-      box-shadow: 0px 2px 6px 0px rgba($active-bg, 0.48);
+      box-shadow: 0px 2px 6px 0px rgba($active-bg, 0.3);
       color: color-contrast($active-bg) !important;
+      &.menu-toggle::after {
+        color: color-contrast($active-bg) !important;
+      }
       @if $rtl-support {
         [dir='rtl'] & {
           background: $menu-active-bg-rtl !important;
@@ -65,11 +71,14 @@
       .menu-inner > .menu-item.active > .menu-link.menu-toggle {
         background: $menu-active-bg;
         color: color-contrast($active-bg) !important;
-        box-shadow: 0px 2px 6px 0px rgba($active-bg, 0.48);
+        box-shadow: 0px 2px 6px 0px rgba($active-bg, 0.3);
+        &.menu-toggle::after {
+          color: color-contrast($active-bg) !important;
+        }
         @if $rtl-support {
           [dir='rtl'] & {
             background: $menu-active-bg-rtl;
-            box-shadow: 0px 2px 6px 0px rgba($active-bg, 0.48);
+            box-shadow: 0px 2px 6px 0px rgba($active-bg, 0.3);
             color: color-contrast($active-bg) !important;
           }
         }

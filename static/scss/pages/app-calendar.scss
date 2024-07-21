@@ -5,7 +5,7 @@
 @use '../_bootstrap-extended/include-dark' as dark;
 @import '../_custom-variables/pages';
 
-$calender-sidebar-width: 18.25rem !default;
+$calender-sidebar-width: 18.75rem !default;
 
 // App Calendar specific
 .app-calendar-wrapper {
@@ -23,9 +23,6 @@ $calender-sidebar-width: 18.25rem !default;
     z-index: 4;
     &.show {
       left: 0;
-    }
-    .flatpickr-month {
-      border: 0;
     }
 
     .flatpickr-calendar {
@@ -48,16 +45,22 @@ $calender-sidebar-width: 18.25rem !default;
   }
   .fc-toolbar {
     h2 {
-      font-size: light.$h5-font-size;
+      font-size: light.$h4-font-size;
+      line-height: light.$h4-line-height;
       @include light.media-breakpoint-down(md) {
         font-size: 1rem;
       }
     }
   }
+
+  .fc-toolbar-chunk {
+    overflow: auto;
+  }
   // Set border 0 to app calender page only
   table.fc-scrollgrid {
     border-left: 0;
     border-right: 0;
+    th,
     td {
       border-right: 0;
     }
@@ -77,12 +80,12 @@ $calender-sidebar-width: 18.25rem !default;
   .fc-dayGridMonth-view {
     table.fc-scrollgrid {
       td {
-        border-bottom: 0;
+        border-bottom: 0 !important;
       }
     }
   }
   .fc-header-toolbar {
-    margin-bottom: 1.55rem !important;
+    margin-bottom: 1.5rem !important;
   }
   .fc-view-container {
     margin: 0 -1.6rem;
@@ -144,28 +147,6 @@ $calender-sidebar-width: 18.25rem !default;
     .app-calendar-wrapper {
       .app-calendar-sidebar {
         background-color: light.$white;
-        border-right: light.$border-width solid light.$border-color;
-
-        .flatpickr-calendar {
-          .flatpickr-month,
-          .flatpickr-weekday,
-          .flatpickr-weekdays {
-            color: light.$body-color;
-          }
-          .flatpickr-months {
-            svg {
-              fill: light.$body-color;
-            }
-          }
-        }
-      }
-    }
-    @if $enable-rtl-support {
-      &[dir='rtl'] {
-        .app-calendar-sidebar {
-          border-right: 0;
-          border-left: light.$border-width solid light.$border-color;
-        }
       }
     }
   }
@@ -177,21 +158,6 @@ $calender-sidebar-width: 18.25rem !default;
     .app-calendar-wrapper {
       .app-calendar-sidebar {
         background-color: dark.$card-bg;
-        border-right: dark.$border-width solid dark.$border-color;
-        .flatpickr-calendar {
-          background-color: dark.$card-bg;
-          .flatpickr-days {
-            background-color: dark.$card-bg;
-          }
-        }
-      }
-    }
-    @if $enable-rtl-support {
-      &[dir='rtl'] {
-        .app-calendar-sidebar {
-          border-right: 0;
-          border-left: dark.$border-width solid dark.$border-color;
-        }
       }
     }
   }

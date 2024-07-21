@@ -26,20 +26,23 @@ module.exports = (conf, srcGlob) => {
             // If conf.minify == true, generate compressed style without sourcemap
             gulpIf(
               conf.minify,
-              `sass scss:${conf.distPath}/css fonts:${conf.distPath}/fonts libs:${conf.distPath}/libs --style compressed --no-source-map`,
+              `sass --load-path=node_modules/ scss:${conf.distPath}/css fonts:${conf.distPath}/fonts libs:${conf.distPath}/libs --style compressed --no-source-map`,
               gulpIf(
                 conf.fastDev,
-                `sass scss/rtl:${conf.distPath}/css/rtl scss/pages:${conf.distPath}/css/pages fonts:${conf.distPath}/fonts libs:${conf.distPath}/libs --no-source-map`,
-                `sass scss:${conf.distPath}/css fonts:${conf.distPath}/fonts libs:${conf.distPath}/libs --no-source-map`
+                `sass --load-path=node_modules/ scss/rtl:${conf.distPath}/css/rtl scss/pages:${conf.distPath}/css/pages fonts:${conf.distPath}/fonts libs:${conf.distPath}/libs --no-source-map`,
+                `sass --load-path=node_modules/ scss:${conf.distPath}/css fonts:${conf.distPath}/fonts libs:${conf.distPath}/libs --no-source-map`
               )
             ),
             function (err) {
               cb(err);
             }
           ),
-          sass({
-            outputStyle: conf.minify ? 'compressed' : 'expanded'
-          }).on('error', sass.logError)
+          sass
+            .sync({
+              includePaths: ['node_modules'], // Add this line to include node_modules
+              outputStyle: conf.minify ? 'compressed' : 'expanded'
+            })
+            .on('error', sass.logError)
         )
       )
       .pipe(gulpIf(conf.sourcemaps, sourcemaps.write()))
@@ -189,12 +192,8 @@ module.exports = (conf, srcGlob) => {
       )
     ).pipe(dest(conf.distPath));
   };
-  // Copy task for form validation plugin until we use npm packages
-  const buildPluginCopyTask = function () {
-    return src(srcGlob('libs/@form-validation/umd/**/*.*')).pipe(dest(`${conf.distPath}/libs/@form-validation/umd/`));
-  };
 
-  const buildAllTask = series(buildCssTask, buildJsTask, buildFontsTask, buildCopyTask, buildPluginCopyTask);
+  const buildAllTask = series(buildCssTask, buildJsTask, buildFontsTask, buildCopyTask);
 
   // Exports
   // ---------------------------------------------------------------------------
@@ -204,7 +203,6 @@ module.exports = (conf, srcGlob) => {
     js: buildJsTask,
     fonts: buildFontsTask,
     copy: buildCopyTask,
-    copyPlugins: buildPluginCopyTask,
     all: buildAllTask
   };
 };

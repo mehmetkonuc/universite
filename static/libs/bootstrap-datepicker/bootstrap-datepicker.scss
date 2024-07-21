@@ -3,8 +3,8 @@
 @import '../../scss/_custom-variables/libs';
 
 $datepicker-arrow-size: 0.45rem !default;
-$datepicker-item-width: 2.125rem !default;
-$datepicker-item-height: 2.125rem !default;
+$datepicker-item-width: 2.25rem !default;
+$datepicker-item-height: 2.25rem !default;
 $white: #fff;
 
 .datepicker {
@@ -15,7 +15,7 @@ $white: #fff;
     margin: 0;
   }
   .datepicker-days {
-    margin: 0.4rem 0.875rem 0.875rem;
+    margin: 0.875rem 0.875rem 0.875rem;
   }
 
   // Basic styles for next and prev arrows
@@ -24,8 +24,8 @@ $white: #fff;
     color: transparent !important;
     position: absolute;
     top: 0.65rem;
-    height: 1.75rem;
-    width: 1.75rem;
+    height: 1.875rem;
+    width: 1.875rem;
     border-radius: light.$border-radius-pill;
     display: table-caption;
   }
@@ -35,19 +35,33 @@ $white: #fff;
     &.next {
       @include app-ltr {
         float: right;
-        right: 0.5rem;
+        right: 0.125rem;
       }
       @include app-rtl {
         float: left;
-        left: 0.5rem;
+        left: 0.125rem;
       }
     }
     &.prev {
       @include app-ltr {
-        right: 3rem;
+        right: 2.75rem;
       }
       @include app-rtl {
-        left: 3rem;
+        left: 2.75rem;
+      }
+    }
+  }
+  &.datepicker-inline {
+    table {
+      thead tr th {
+        &.next {
+          inset-inline-end: 0.5rem !important;
+        }
+      }
+    }
+    .datepicker-days {
+      .datepicker-switch {
+        top: 0;
       }
     }
   }
@@ -58,7 +72,7 @@ $white: #fff;
     content: '';
     display: block;
     position: absolute;
-    left: 50%;
+    left: 46%;
     top: 46%;
     height: $datepicker-arrow-size;
     width: $datepicker-arrow-size;
@@ -70,21 +84,21 @@ $white: #fff;
 
   .next::after {
     margin-left: -$datepicker-arrow-size * 0.35;
-    border-width: 0 1px 1px 0;
+    border-width: 0 1.9px 1.9px 0;
 
     @include app-rtl {
       transform: rotate(-45deg);
-      border-width: 1px 0 0 1px;
+      border-width: 1.9px 0 0 1.9px;
       margin-left: 0;
     }
   }
 
   .prev::after {
-    border-width: 1px 0 0 1px;
+    border-width: 1.9px 0 0 1.9px;
 
     @include app-rtl {
       transform: rotate(-45deg);
-      border-width: 0 1px 1px 0;
+      border-width: 0 1.9px 1.9px 0;
       margin-left: -$datepicker-arrow-size * 0.5;
     }
   }
@@ -115,7 +129,6 @@ $white: #fff;
   // switch default styles
   .datepicker-switch {
     vertical-align: middle;
-    font-weight: 500;
     position: relative;
     @include app-ltr {
       text-align: left;
@@ -128,6 +141,7 @@ $white: #fff;
   // switch alignments datepicker-days
   .datepicker-days {
     .datepicker-switch {
+      top: -4px;
       @include app-ltr {
         left: -1.68rem;
       }
@@ -153,17 +167,9 @@ $white: #fff;
   }
 
   table thead tr:nth-child(2) {
-    height: 52px !important;
+    height: 60px !important;
     width: 80px;
     position: relative;
-  }
-  table tbody {
-    td.today {
-      &:not(.active) {
-        display: table-caption;
-        padding-top: 0.37rem;
-      }
-    }
   }
 
   &.datepicker-rtl {
@@ -197,19 +203,19 @@ $white: #fff;
 
 .datepicker table tr td,
 .datepicker table tr th {
-  width: $datepicker-item-width;
-  height: $datepicker-item-height;
+  font-weight: 400;
   text-align: center;
   border: none;
 
   &.dow {
-    font-weight: light.$font-weight-medium;
-    font-size: light.$small-font-size;
+    font-size: light.$font-size-sm;
   }
 }
 
 .datepicker table tr td {
   border-radius: light.$border-radius-pill;
+  width: $datepicker-item-width;
+  height: $datepicker-item-height;
   &.day:hover,
   &.focused {
     cursor: pointer;
@@ -268,9 +274,9 @@ $white: #fff;
 .datepicker table tr td span {
   display: block;
   float: left;
-  width: 3.375rem;
-  height: 2.4rem;
-  line-height: 2.375rem;
+  width: 3.625rem;
+  height: 2rem;
+  line-height: 2rem;
   cursor: pointer;
 
   &.disabled,
@@ -297,10 +303,10 @@ $white: #fff;
   width: (3.375rem * 3) + 2.625rem;
 
   td {
-    padding: 0 0 1.25rem 1.25rem;
+    padding: 0 0 0.5rem 0.8125rem;
 
     @include app-rtl {
-      padding: 0 1.25rem 1.25rem 0;
+      padding: 0 0.8125rem 0.5rem 0;
     }
   }
 }
@@ -320,6 +326,7 @@ $white: #fff;
   .light-style {
     .datepicker-dropdown {
       z-index: light.$zindex-popover !important;
+      box-shadow: light.$card-box-shadow;
     }
 
     .datepicker {
@@ -366,25 +373,7 @@ $white: #fff;
 
           &.day:hover,
           &.focused {
-            background: light.rgba-to-hex(rgba(light.$black, 0.08), light.$card-bg);
-          }
-
-          &.range,
-          &.range.highlighted,
-          &.range.today {
-            &.disabled {
-              background: light.rgba-to-hex(rgba(light.$black, 0.08), light.$card-bg) !important;
-            }
-          }
-
-          &.active,
-          &.active.highlighted,
-          &.active,
-          span.active,
-          span.active.disabled,
-          &.range-start,
-          &.range-end {
-            box-shadow: light.$box-shadow-sm;
+            background: light.rgba-to-hex(light.$gray-50, light.$card-bg);
           }
         }
       }
@@ -395,17 +384,17 @@ $white: #fff;
 
       &:hover,
       &.focused {
-        background: light.rgba-to-hex(rgba(light.$black, 0.08), light.$card-bg);
+        background: light.rgba-to-hex(light.$gray-50, light.$card-bg);
       }
 
       &.disabled,
       &.disabled:hover {
-        color: light.$text-light;
+        color: light.$text-muted;
       }
 
       &.old,
       &.new {
-        color: light.$text-light;
+        color: light.$text-muted;
       }
     }
   }
@@ -416,6 +405,7 @@ $white: #fff;
   .dark-style {
     .datepicker-dropdown {
       z-index: dark.$zindex-popover !important;
+      box-shadow: dark.$card-box-shadow;
     }
 
     .datepicker {
@@ -430,7 +420,7 @@ $white: #fff;
       }
       &.datepicker-inline {
         table {
-          box-shadow: dark.$box-shadow;
+          box-shadow: dark.$card-box-shadow;
         }
       }
 
@@ -464,25 +454,7 @@ $white: #fff;
 
           &.day:hover,
           &.focused {
-            background: dark.rgba-to-hex(rgba(dark.$base, 0.08), dark.$card-bg);
-          }
-
-          &.range,
-          &.range.highlighted,
-          &.range.today {
-            &.disabled {
-              background: dark.rgba-to-hex(rgba(dark.$base, 0.08), dark.$card-bg) !important;
-            }
-          }
-
-          &.active,
-          &.active.highlighted,
-          &.active,
-          span.active,
-          span.active.disabled,
-          &.range-start,
-          &.range-end {
-            box-shadow: dark.$box-shadow-sm;
+            background: dark.rgba-to-hex(dark.$gray-50, dark.$card-bg);
           }
         }
       }
@@ -493,7 +465,12 @@ $white: #fff;
 
       &:hover,
       &.focused {
-        background: dark.rgba-to-hex(rgba(dark.$base, 0.08), dark.$card-bg);
+        background: dark.rgba-to-hex(dark.$gray-50, dark.$card-bg);
+      }
+
+      &.disabled,
+      &.disabled:hover {
+        color: dark.$text-muted;
       }
 
       &.old,

@@ -6,7 +6,7 @@
 @import '../../scss/_custom-variables/libs';
 @import 'mixins';
 
-$select2-arrow-wrapper-width: 2rem !default;
+$select2-arrow-wrapper-width: 2.25rem !default;
 $select2-multiple-selection-line-height: 1.5rem !default;
 
 .select2-container {
@@ -17,20 +17,29 @@ $select2-multiple-selection-line-height: 1.5rem !default;
   vertical-align: middle;
   box-sizing: border-box;
 
-  @import '../../node_modules/select2/src/scss/single';
-  @import '../../node_modules/select2/src/scss/multiple';
+  @import 'select2/src/scss/single';
+  @import 'select2/src/scss/multiple';
+  .select2-search--inline {
+    .select2-search__field {
+      margin-top: 6px;
+    }
+  }
 }
 
-@import '../../node_modules/select2/src/scss/dropdown';
+@import 'select2/src/scss/dropdown';
 
-.select2-results__option[role='option'] {
-  margin: 0.25rem 0.5rem;
-  border-radius: light.$border-radius;
-  padding: 0.5rem light.$spacer;
+.select2-results__option {
+  &[role='option'] {
+    margin: 0.125rem 0.5rem;
+  }
+  &[role='option'] {
+    border-radius: light.$border-radius;
+    padding: 0.543rem light.$spacer;
 
-  &[aria-selected='true'] {
-    background-color: light.$primary;
-    color: light.$component-active-color;
+    &[aria-selected='true'] {
+      background-color: light.$primary;
+      color: light.$component-active-color;
+    }
   }
 }
 .select2-container--default .select2-results__option--highlighted:not([aria-selected='true']) {
@@ -73,14 +82,13 @@ $select2-multiple-selection-line-height: 1.5rem !default;
 
   .select2-selection--single {
     .select2-selection__rendered {
-      padding-right: $select2-arrow-wrapper-width + 0.6rem;
+      padding-right: $select2-arrow-wrapper-width - 0.0625rem;
     }
 
     .select2-selection__clear {
       cursor: pointer;
       font-weight: light.$font-weight-medium;
       float: right;
-      font-size: light.$font-size-xl;
     }
 
     .select2-selection__arrow {
@@ -93,17 +101,25 @@ $select2-multiple-selection-line-height: 1.5rem !default;
         position: absolute;
         height: 18px;
         width: 20px;
-        top: 22%;
+        top: 24%;
         background-repeat: no-repeat;
-        background-size: 20px 18px;
+        background-size: 20px 19px;
+        transform-origin: center;
+        transition: transform 0.3s ease;
       }
     }
+  }
+  &.select2-container--above.select2-container--open .select2-selection__arrow b {
+    transform: rotate(180deg);
   }
 
   // Remove outlines
   &,
   * {
     outline: 0 !important;
+  }
+  &.select2-container--disabled {
+    pointer-events: none;
   }
 
   &.select2-container--disabled .select2-selection--single {
@@ -164,22 +180,18 @@ $select2-multiple-selection-line-height: 1.5rem !default;
 
     .select2-selection__choice {
       position: relative;
-      font-size: light.$small-font-size;
+      font-size: light.$font-size-sm;
       border-radius: light.$border-radius-sm;
-      padding: 0.395rem 0.625rem;
+      padding: 0 0.5rem;
       cursor: default;
-      line-height: 0.875;
+      line-height: $select2-multiple-selection-line-height;
       float: left;
-      font-weight: light.$font-weight-medium;
-      color: light.$component-hover-color;
-      background-color: rgba(light.$primary, 0.16);
-
       @include app-ltr {
-        padding-right: 1.3rem;
+        padding-right: 1rem;
       }
 
       @include app-rtl {
-        padding-left: 1.3rem;
+        padding-left: 1rem;
       }
     }
 
@@ -188,18 +200,15 @@ $select2-multiple-selection-line-height: 1.5rem !default;
       color: inherit;
       display: inline-block;
       position: absolute;
-      margin-right: 0.25rem;
       cursor: pointer;
       opacity: 0.5;
-      font-size: 1.1875rem;
-      top: 0.25rem;
 
       @include app-ltr {
-        right: 0.1rem;
+        right: 0.3rem;
       }
 
       @include app-rtl {
-        left: 0.35rem;
+        left: 0.3rem;
       }
 
       &:hover {
@@ -231,6 +240,7 @@ $select2-multiple-selection-line-height: 1.5rem !default;
     }
 
     .select2-selection__clear {
+      margin-left: 0.625rem;
       float: left;
     }
   }
@@ -248,12 +258,19 @@ $select2-multiple-selection-line-height: 1.5rem !default;
     -webkit-appearance: textfield;
   }
 
+  &.select2-container--focus .select2-search--inline .select2-search__field {
+    margin-top: 5px;
+  }
   .select2-results > .select2-results__options {
     max-height: 15rem;
     overflow-y: auto;
+    margin-block: 0.5rem;
   }
 
   .select2-results__option {
+    &[role='group'] {
+      padding: 0;
+    }
     &[aria-disabled='true'] {
       color: #999;
     }
@@ -281,26 +298,23 @@ $select2-multiple-selection-line-height: 1.5rem !default;
   }
 }
 
-// alignment of icon
-.select2-container--default {
-  .select2-selection--single .select2-selection__rendered,
-  .select2-results__option .select2-results__option[role='option'] {
-    i.ti {
-      margin-top: -0.3125rem;
+.select2-hidden-accessible {
+  &.is-invalid {
+    + .select2-container--default {
+      &.select2-container--focus {
+        .select2-search--inline {
+          .select2-search__field {
+            margin-top: 6px;
+          }
+        }
+      }
     }
-  }
-}
-
-// Plus icon alignment
-.tagify-email-list + button {
-  .ti {
-    margin-top: -0.1875rem;
   }
 }
 
 @include app-rtl(false) {
   .select2-container--default .select2-selection--single .select2-selection__rendered {
-    padding-left: $select2-arrow-wrapper-width + 0.6rem !important;
+    padding-left: $select2-arrow-wrapper-width - 0.0625rem;
   }
 }
 
@@ -309,18 +323,40 @@ $select2-multiple-selection-line-height: 1.5rem !default;
     $select2-multiple-choice-spacer: px-to-rem(
       floor(rem-to-px((light.$input-height-inner - $select2-multiple-selection-line-height) * 0.5))
     );
+    .select2-hidden-accessible {
+      &.is-invalid {
+        + .select2-container--default {
+          &,
+          &.select2-container--open {
+            .select2-selection--multiple {
+              padding: calc(
+                  light.$form-select-padding-y -
+                    light.$input-border-width -
+                    $select2-multiple-choice-spacer -
+                    light.$input-border-width
+                )
+                calc(light.$form-select-padding-x - $input-focus-border-width);
+            }
+          }
+        }
+      }
+    }
 
     .select2-selection--multiple {
       .select2-selection__clear {
         margin-top: $select2-multiple-choice-spacer;
       }
       .select2-selection__rendered {
-        padding: 0 $select2-multiple-choice-spacer $select2-multiple-choice-spacer $select2-multiple-choice-spacer;
+        padding: 0;
       }
 
       .select2-selection__choice {
+        margin-top: calc($select2-multiple-choice-spacer - 1px);
         margin-right: $select2-multiple-choice-spacer;
-        margin-top: $select2-multiple-choice-spacer;
+        background-color: light.$gray-75;
+        &:nth-last-child(2) {
+          margin-bottom: calc($select2-multiple-choice-spacer - 1px);
+        }
       }
 
       .select2-selection__placeholder {
@@ -386,38 +422,84 @@ $select2-multiple-selection-line-height: 1.5rem !default;
           }
         }
         .select2-selection__rendered {
-          line-height: light.$input-height-inner;
+          line-height: calc(light.$input-height-inner - light.$input-border-width);
           color: light.$input-color;
-          padding-left: light.$input-padding-x;
+        }
+      }
+      &.select2-container--disabled .select2-selection__arrow {
+        b {
+          background-image: str-replace(
+            str-replace(light.$form-select-disabled-indicator, '#{$text-muted}', light.$text-muted),
+            '#',
+            '%23'
+          );
+        }
+      }
+      @include app-ltr-style {
+        .select2-selection--single .select2-selection__rendered {
+          padding-left: calc(light.$input-padding-x - light.$input-border-width);
         }
       }
 
       @include app-rtl-style {
         .select2-selection--single .select2-selection__rendered {
-          padding-right: light.$input-padding-x;
+          padding-right: calc(light.$input-padding-x - light.$input-border-width);
         }
       }
 
       &.select2-container--disabled .select2-selection--single {
         background-color: light.$input-disabled-bg;
         border-color: light.$input-border-color !important;
+        .select2-selection__rendered {
+          color: light.$text-muted;
+        }
       }
 
       // Multiple Selection
       // *******************************************************************************
 
       .select2-selection--multiple {
-        min-height: light.$input-height;
-
+        min-height: calc(light.$input-height - light.$input-focus-border-width);
+        // TODO: Improve the padding calculation
+        padding: calc(light.$form-select-padding-y - light.$input-border-width - $select2-multiple-choice-spacer)
+          calc(light.$form-select-padding-x - light.$input-border-width);
         .select2-selection__choice {
           color: light.$body-color;
-          background-color: light.$gray-200;
+          background-color: light.$gray-75;
+        }
+      }
+      &.select2-container--focus,
+      &.select2-container--open {
+        .select2-selection--single {
+          .select2-selection__rendered {
+            line-height: calc($input-height-inner - $input-border-width - $input-focus-border-width);
+            padding-inline-start: calc(light.$input-padding-x - $input-focus-border-width);
+            padding-inline-end: calc($select2-arrow-wrapper-width - $input-focus-border-width);
+          }
+        }
+        .select2-selection--multiple {
+          padding: calc(
+              light.$form-select-padding-y -
+                light.$input-border-width -
+                $select2-multiple-choice-spacer -
+                light.$input-border-width
+            )
+            calc(light.$form-select-padding-x - $input-focus-border-width);
+          .select2-selection__choice {
+            margin-top: calc($select2-multiple-choice-spacer - light.$input-focus-border-width);
+            &:nth-last-child(2) {
+              margin-bottom: calc($select2-multiple-choice-spacer - light.$input-focus-border-width);
+            }
+          }
         }
       }
 
       &.select2-container--disabled .select2-selection--multiple {
         border-color: light.$input-border-color !important;
         background-color: light.$input-disabled-bg;
+        .select2-selection__rendered {
+          color: light.$text-muted;
+        }
       }
 
       // Generic
@@ -443,6 +525,12 @@ $select2-multiple-selection-line-height: 1.5rem !default;
       }
 
       .select2-results__option {
+        color: light.$headings-color;
+        &[aria-selected='true'] {
+          color: light.$body-color;
+          background-color: light.$gray-100;
+        }
+
         .select2-results__option[role='option'] {
           width: calc(#{'100% - #{light.$input-padding-x}'});
           padding-left: light.$input-padding-x;
@@ -532,8 +620,12 @@ $select2-multiple-selection-line-height: 1.5rem !default;
 
     .select2-selection--multiple {
       .select2-selection__choice {
-        margin-top: $select2-multiple-choice-spacer;
+        margin-top: calc($select2-multiple-choice-spacer - 1px);
         margin-right: $select2-multiple-choice-spacer;
+        background-color: dark.$gray-75;
+        &:nth-last-child(2) {
+          margin-bottom: calc($select2-multiple-choice-spacer - 1px);
+        }
       }
       .select2-selection__clear {
         margin-top: $select2-multiple-choice-spacer;
@@ -543,7 +635,7 @@ $select2-multiple-selection-line-height: 1.5rem !default;
       }
 
       .select2-selection__rendered {
-        padding: 0 $select2-multiple-choice-spacer $select2-multiple-choice-spacer $select2-multiple-choice-spacer;
+        padding: 0;
       }
     }
 
@@ -594,41 +686,91 @@ $select2-multiple-selection-line-height: 1.5rem !default;
         }
 
         .select2-selection__rendered {
-          line-height: dark.$input-height-inner;
+          line-height: calc(dark.$input-height-inner - dark.$input-border-width);
           color: dark.$input-color;
-          padding-left: dark.$input-padding-x;
         }
 
         .select2-selection__clear {
-          color: dark.$form-select-indicator-color;
+          color: dark.$text-muted;
+        }
+      }
+      &.select2-container--disabled .select2-selection__arrow {
+        b {
+          background-image: str-replace(
+            str-replace(dark.$form-select-disabled-indicator, '#{$text-muted}', dark.$text-muted),
+            '#',
+            '%23'
+          );
+        }
+      }
+      @include app-ltr-style {
+        .select2-selection--single .select2-selection__rendered {
+          padding-left: calc(dark.$input-padding-x - dark.$input-border-width);
         }
       }
 
       // Multiple Selection
 
       .select2-selection--multiple {
-        min-height: dark.$input-height;
-
+        min-height: calc(dark.$input-height - dark.$input-focus-border-width);
+        // TODO: Improve the padding calculation
+        padding: calc(dark.$form-select-padding-y - dark.$input-border-width - $select2-multiple-choice-spacer)
+          calc(dark.$form-select-padding-x - dark.$input-border-width);
         .select2-selection__choice {
           color: dark.$body-color;
-          background-color: dark.$body-bg;
+          background-color: dark.$gray-75;
+        }
+      }
+      &.select2-container--focus,
+      &.select2-container--open {
+        .select2-selection--single {
+          .select2-selection__rendered {
+            line-height: calc(dark.$input-height-inner - dark.$input-border-width - dark.$input-focus-border-width);
+            padding-inline-start: calc(dark.$input-padding-x - dark.$input-focus-border-width) !important;
+            padding-inline-end: calc($select2-arrow-wrapper-width - dark.$input-focus-border-width);
+          }
+        }
+        .select2-selection--multiple {
+          padding: calc(
+              dark.$form-select-padding-y -
+                dark.$input-border-width -
+                $select2-multiple-choice-spacer -
+                dark.$input-border-width
+            )
+            calc(dark.$form-select-padding-x - dark.$input-focus-border-width);
+          .select2-selection__choice {
+            margin-top: calc($select2-multiple-choice-spacer - light.$input-focus-border-width);
+            &:nth-last-child(2) {
+              margin-bottom: calc($select2-multiple-choice-spacer - light.$input-focus-border-width);
+            }
+          }
         }
       }
 
       &.select2-container--disabled .select2-selection--multiple {
         border-color: dark.$input-border-color !important;
         background-color: dark.$input-disabled-bg;
+        .select2-selection__rendered {
+          color: dark.$text-muted;
+        }
       }
 
       @include app-rtl-style {
         .select2-selection--single .select2-selection__rendered {
-          padding-right: dark.$input-padding-x;
+          padding-right: calc(dark.$input-padding-x - dark.$input-border-width);
         }
+      }
+
+      &.select2-container--open .select2-selection--single .select2-selection__arrow b {
+        border-color: transparent transparent dark.$input-placeholder-color transparent;
       }
 
       &.select2-container--disabled .select2-selection--single {
         background-color: dark.$input-disabled-bg;
         border-color: dark.$input-border-color !important;
+        .select2-selection__rendered {
+          color: dark.$text-muted;
+        }
       }
 
       // Placeholder
@@ -651,11 +793,13 @@ $select2-multiple-selection-line-height: 1.5rem !default;
       }
 
       .select2-results__option {
-        .select2-results__option[role='option'] {
-          width: calc(#{'100% - #{light.$input-padding-x}'});
-          padding-left: dark.$input-padding-x;
-          padding-right: dark.$input-padding-x;
+        color: dark.$headings-color;
+        &[aria-selected='true'] {
+          color: dark.$body-color;
+          background-color: dark.$gray-100;
+        }
 
+        .select2-results__option {
           .select2-results__option[role='option'] {
             padding-left: dark.$input-padding-x;
 

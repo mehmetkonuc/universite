@@ -18,10 +18,13 @@
       white-space: nowrap;
       .website-analytics-text-bg {
         background-color: rgba-to-hex(rgba($primary, 0.85), $rgba-to-hex-bg-inverted);
-        padding: 0.25rem 0.65rem;
+        padding: 0.293rem 0.5rem;
         border-radius: $border-radius;
-        min-width: 46px;
+        min-width: 48px;
         text-align: center;
+      }
+      .card-website-analytics-img {
+        filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 4px 60px);
       }
     }
   }
@@ -57,7 +60,6 @@
       .swiper-slide {
         .card-website-analytics-img {
           position: absolute;
-          top: 14%;
           @include app-ltr() {
             right: 3%;
           }

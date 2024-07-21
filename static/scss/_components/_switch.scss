@@ -44,15 +44,16 @@
   position: absolute;
   overflow: hidden;
   border-radius: $switch-border-radius;
-  background: transparent;
-  border: 1px solid $switch-off-border !important;
+  background: $switch-off-bg;
   color: $switch-off-color;
   transition-duration: 0.2s;
   transition-property: left, right, background, box-shadow;
   cursor: pointer;
   user-select: none;
-  i {
-    top: -2.3px !important;
+  box-shadow: $form-switch-box-shadow;
+  &::after {
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -103,10 +104,6 @@
 
 // Checked state
 .switch-input:checked ~ .switch-toggle-slider {
-  border-color: $primary;
-  &:after {
-    background: $white;
-  }
   .switch-on {
     left: 0;
 
@@ -136,7 +133,7 @@
   left: 0;
   display: block;
   border-radius: 999px;
-  background: $switch-off-bg;
+  background: $switch-holder-bg;
   box-shadow: $switch-holder-shadow;
   transition-duration: 0.2s;
   transition-property: left, right, background;
@@ -187,27 +184,12 @@
   }
 }
 
-// Outlined
-//*******************************************************************************
-.switch.switch-outline {
-  .switch-toggle-slider {
-    &:after {
-      background: $switch-off-bg;
-    }
-  }
-}
-
 // Disabled
 // *******************************************************************************
 
 .switch-input:disabled {
   ~ .switch-toggle-slider {
     opacity: $switch-disabled-opacity;
-    background: $switch-off-disabled-bg;
-    border-color: transparent !important;
-    &::after {
-      box-shadow: none;
-    }
   }
 
   ~ .switch-label {
@@ -224,7 +206,8 @@
   $switch-height-sm,
   $switch-font-size,
   $switch-label-font-size-sm,
-  $switch-label-line-height-sm
+  $switch-label-line-height-sm,
+  $switch-inner-spacer-sm
 );
 @include template-switch-size(
   'lg',

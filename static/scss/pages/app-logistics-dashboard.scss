@@ -37,7 +37,8 @@
 #shipmentStatisticsChart,
 #carrierPerformance {
   .apexcharts-legend-series {
-    padding: 5px 15px;
+    padding: 4px 12px;
+    padding-inline-start: 17px;
     border-radius: light.$border-radius;
     height: 83%;
   }
@@ -54,8 +55,8 @@
       }
     }
     .vehicles-overview-progress {
-      .bg-gray-900 {
-        background-color: light.rgba-to-hex(light.$gray-900, light.$rgba-to-hex-bg);
+      .snackbar {
+        background-color: #2f2b3d;
       }
     }
 
@@ -79,8 +80,8 @@
       }
     }
     .vehicles-overview-progress {
-      .bg-gray-900 {
-        background-color: dark.rgba-to-hex(dark.$gray-800, dark.$rgba-to-hex-bg);
+      .snackbar {
+        background-color: #f7f4ff;
       }
     }
     #shipmentStatisticsChart,

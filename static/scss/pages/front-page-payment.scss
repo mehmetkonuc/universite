@@ -8,6 +8,7 @@
     .card-body {
       &.border-end {
         border: 0 !important;
+        border-bottom: 1px solid light.$border-color !important;
       }
     }
   }

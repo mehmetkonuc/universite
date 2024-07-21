@@ -14,18 +14,21 @@ $email-list-item-meta-padding-left: 2rem;
 $email-view-width: 16.2rem;
 $email-padding-x: 1rem;
 $email-padding-y: 0.875rem;
-$email-filter-padding-y: 0.4375rem;
+$email-filter-padding-y: 0.375rem;
 $email-filter-padding-x: 1.5rem;
 
 .app-email {
   position: relative;
   height: $email-app-height !important;
   overflow: hidden;
+  @include light.media-breakpoint-down('md') {
+    height: calc(100vh - 11rem) !important;
+  }
   .layout-navbar-hidden & {
     height: $email-app-height-with-no-navbar !important;
   }
   .layout-horizontal & {
-    height: calc($email-app-height + calc($email-app-horizontal-height-diff / 2)) !important;
+    height: calc($email-app-height + calc($email-app-horizontal-height-diff / 2.66)) !important;
     @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
       height: calc($email-app-height - $email-app-horizontal-height-diff) !important;
     }
@@ -42,7 +45,7 @@ $email-filter-padding-x: 1.5rem;
     transition: all 0.2s;
 
     .btn-compost-wrapper {
-      padding: 1.1rem 1.5rem;
+      padding: 1.5rem;
     }
 
     &.show {
@@ -77,15 +80,18 @@ $email-filter-padding-x: 1.5rem;
       }
       li {
         padding: $email-filter-padding-y $email-filter-padding-x;
-        border-left: 2px solid transparent;
-        a > span {
-          font-weight: 500;
-        }
+        padding-inline-start: calc($email-filter-padding-x - 3px);
+        border-left: 3px solid transparent;
 
         h6 {
           font-size: 1rem;
         }
       }
+    }
+
+    .email-filter-labels .badge-dot {
+      width: 11px;
+      height: 11px;
     }
   }
 
@@ -100,6 +106,7 @@ $email-filter-padding-x: 1.5rem;
     .email-compose-to {
       .select2-selection {
         border: none;
+        padding-inline: calc(light.$form-select-padding-x - light.$input-border-width);
         .select2-selection__choice {
           padding-top: 0.2rem;
           padding-bottom: 0.2rem;
@@ -111,6 +118,15 @@ $email-filter-padding-x: 1.5rem;
           top: unset;
         }
       }
+      .select2-container--default {
+        &.select2-container--focus {
+          .select2-search--inline {
+            .select2-search__field {
+              margin-top: 6px;
+            }
+          }
+        }
+      }
     }
 
     .email-compose-toggle-wrapper {
@@ -118,14 +134,18 @@ $email-filter-padding-x: 1.5rem;
     }
 
     .ql-editor {
+      height: 10rem;
       min-height: 10rem;
+      padding-inline: $email-filter-padding-x + 0.25;
     }
     .ql-snow.ql-toolbar {
       padding: 0.5rem 1rem;
     }
-    .ql-editor,
-    .ql-editor.ql-blank::before {
-      padding-left: 1.5rem;
+    .ql-editor.ql-blank {
+      padding-inline: 1.5rem;
+      &::before {
+        padding-left: 1.5rem;
+      }
     }
   }
 
@@ -133,37 +153,41 @@ $email-filter-padding-x: 1.5rem;
   .app-emails-list {
     .emails-list-header {
       .emails-list-header-hr {
-        margin-top: 0.3rem;
+        margin-top: 0rem;
       }
     }
     .email-list {
       @include light.media-breakpoint-up(lg) {
-        height: calc(100vh - 19.5rem);
+        height: calc(100vh - 19rem);
       }
       @include light.media-breakpoint-down(lg) {
-        height: calc(100vh - 17.5rem);
+        height: calc(100vh - 19rem);
+      }
+      @include light.media-breakpoint-down(md) {
+        height: calc(100vh - 18rem);
       }
       .layout-navbar-hidden & {
         @include light.media-breakpoint-up(lg) {
           height: calc(100vh - 15.5rem);
         }
         @include light.media-breakpoint-down(lg) {
-          height: calc(100vh - 13.5rem);
+          height: calc(100vh - 15.5rem);
         }
       }
       .layout-horizontal & {
-        height: calc(100vh - 17rem);
+        height: calc(100vh - 18.2rem);
         @include light.media-breakpoint-up(lg) {
-          height: calc(100vh - 18.5rem);
+          height: calc(100vh - 17.75rem);
         }
         @include light.media-breakpoint-up(xl) {
-          height: calc(100vh - 19.5rem - $email-app-horizontal-height-diff) !important;
+          height: calc(100vh - 18.75rem - $email-app-horizontal-height-diff) !important;
         }
       }
 
-      li {
+      li.email-list-item {
         padding: $email-padding-y $email-padding-x;
-        transition: all 0.15s ease-in-out;
+        min-height: 4.375rem;
+        transition: all 0.2s ease-in-out;
         cursor: pointer;
         z-index: 1;
 
@@ -185,6 +209,11 @@ $email-filter-padding-x: 1.5rem;
             }
           }
         }
+        .list-inline-item {
+          &:not(:last-child) {
+            margin-inline-end: 0.25rem;
+          }
+        }
 
         &.email-list-item:not(.list-inline-item):hover {
           z-index: 5;
@@ -203,13 +232,16 @@ $email-filter-padding-x: 1.5rem;
     height: $email-app-height;
     z-index: -1;
     transition: all 0.25s ease;
+    @include light.media-breakpoint-down(md) {
+      height: calc($email-app-height + 2rem);
+    }
     .layout-navbar-hidden & {
       height: $email-app-height-with-no-navbar;
     }
     .layout-horizontal & {
       height: calc($email-app-height + 1rem);
       @include light.media-breakpoint-up(lg) {
-        height: calc($email-app-height - 1rem);
+        height: calc($email-app-height + 1rem);
       }
       @include light.media-breakpoint-up(xl) {
         height: calc($email-app-height - $email-app-horizontal-height-diff) !important;
@@ -230,12 +262,12 @@ $email-filter-padding-x: 1.5rem;
         height: calc(100vh - 19.6rem);
       }
       @include light.media-breakpoint-down(md) {
-        height: calc(100vh - 17.15rem);
+        height: calc(100vh - 17.65rem);
       }
       .layout-horizontal & {
-        height: calc(100vh - 18.6rem);
+        height: calc(100vh - 18rem);
         @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
-          height: calc(100vh - 19.6rem - $email-app-horizontal-height-diff) !important;
+          height: calc(100vh - 19.2rem - $email-app-horizontal-height-diff) !important;
         }
       }
 
@@ -243,7 +275,8 @@ $email-filter-padding-x: 1.5rem;
         border: 0;
 
         .ql-editor {
-          min-height: 5rem;
+          height: 7rem;
+          min-height: 7rem;
         }
       }
       .ql-editor,
@@ -261,10 +294,10 @@ $email-filter-padding-x: 1.5rem;
         &:before {
           position: absolute;
           bottom: 1rem;
-          left: 1rem;
-          right: 1rem;
+          left: 2.5rem;
+          right: 2.5rem;
           top: -2rem;
-          border-radius: 0.25rem;
+          border-radius: 0.375rem;
           z-index: -1;
           content: '';
         }
@@ -272,10 +305,10 @@ $email-filter-padding-x: 1.5rem;
         &:after {
           position: absolute;
           bottom: 0.5rem;
-          left: 0.5rem;
-          right: 0.5rem;
+          left: 1rem;
+          right: 1rem;
           top: -1rem;
-          border-radius: 0.25rem;
+          border-radius: 0.375rem;
           z-index: -1;
           content: '';
         }
@@ -287,6 +320,18 @@ $email-filter-padding-x: 1.5rem;
           }
         }
       }
+    }
+  }
+
+  .app-email-compose .email-compose-actions .email-send-btn {
+    &::after {
+      display: none;
+    }
+  }
+
+  .email-compose-form {
+    .form-control {
+      padding: $input-padding-y $input-padding-x;
     }
   }
 
@@ -303,11 +348,10 @@ $email-filter-padding-x: 1.5rem;
     .app-email-sidebar {
       position: static;
       height: auto;
-      background-color: transparent !important;
     }
 
     .email-list {
-      li:hover {
+      li.email-list-item:hover {
         .email-list-item-meta {
           .email-list-item-attachment,
           .email-list-item-time,
@@ -334,7 +378,7 @@ $email-filter-padding-x: 1.5rem;
       }
 
       .email-list {
-        li {
+        li.email-list-item {
           padding: 1rem;
 
           .email-list-item-username {
@@ -367,7 +411,7 @@ $email-filter-padding-x: 1.5rem;
           li {
             &:not(.active) {
               a {
-                color: light.$body-color;
+                color: light.$headings-color;
               }
             }
           }
@@ -381,11 +425,12 @@ $email-filter-padding-x: 1.5rem;
             min-width: 12rem;
           }
           &.email-marked-read {
-            background-color: rgba(light.$black, 0.04);
+            background-color: light.$gray-50;
           }
 
           &:hover {
-            box-shadow: 0 2px 5px 0 rgba(light.$black, 0.15);
+            box-shadow: light.$box-shadow-sm;
+            border-bottom-color: transparent;
           }
 
           .email-list-item-actions li {
@@ -402,18 +447,32 @@ $email-filter-padding-x: 1.5rem;
 
       .app-email-view {
         .email-card-last {
+          border: 1px solid light.$card-border-color;
           &:before {
-            background-color: rgba(light.$card-bg, 0.5);
+            background-color: rgba(light.$card-bg, 0.4);
             box-shadow: light.$card-box-shadow;
+            border: 1px solid light.$card-border-color;
           }
 
           &:after {
-            background-color: rgba(light.$card-bg, 0.8);
+            background-color: rgba(light.$card-bg, 0.7);
             box-shadow: light.$card-box-shadow;
+            border: 1px solid light.$card-border-color;
           }
+        }
+        .email-reply {
+          border: 1px solid light.$card-border-color;
         }
         .email-attachment-title {
           font-weight: 500;
+        }
+      }
+      .app-email-compose .modal-dialog {
+        .modal-header {
+          background-color: light.$gray-50;
+        }
+        .modal-content {
+          box-shadow: light.$box-shadow-xl;
         }
       }
     }
@@ -430,7 +489,7 @@ $email-filter-padding-x: 1.5rem;
           li {
             &:not(.active) {
               a {
-                color: dark.$body-color;
+                color: dark.$headings-color;
               }
             }
           }
@@ -448,11 +507,12 @@ $email-filter-padding-x: 1.5rem;
         li.email-list-item {
           border-bottom: 1px solid dark.$border-color;
           &.email-marked-read {
-            background-color: rgba(dark.$base, 0.06);
+            background-color: dark.$gray-50;
           }
 
           &:hover {
-            box-shadow: 0 2px 5px 0 rgba(dark.$white, 0.15);
+            box-shadow: dark.$box-shadow-sm;
+            border-bottom-color: transparent;
           }
 
           .email-list-item-actions li {
@@ -468,15 +528,32 @@ $email-filter-padding-x: 1.5rem;
 
       .app-email-view {
         .email-card-last {
+          border: 1px solid dark.$card-border-color;
           &:before {
-            background-color: rgba(dark.$card-bg, 0.5);
+            background-color: rgba(dark.$card-bg, 0.4);
             box-shadow: dark.$card-box-shadow;
+            border: 1px solid dark.$card-border-color;
           }
 
           &:after {
-            background-color: rgba(dark.$card-bg, 0.8);
+            background-color: rgba(dark.$card-bg, 0.7);
             box-shadow: dark.$card-box-shadow;
+            border: 1px solid dark.$card-border-color;
           }
+        }
+        .email-reply {
+          border: 1px solid dark.$card-border-color;
+        }
+        .app-email-view-header {
+          background-color: dark.$card-bg;
+        }
+      }
+      .app-email-compose .modal-dialog {
+        .modal-header {
+          background-color: dark.$gray-50;
+        }
+        .modal-content {
+          box-shadow: dark.$box-shadow-xl;
         }
       }
     }
@@ -507,7 +584,7 @@ $email-filter-padding-x: 1.5rem;
         .email-filters {
           li {
             border-left: 0;
-            border-right: 2px solid transparent;
+            border-right: 3px solid transparent;
           }
         }
       }
@@ -548,7 +625,7 @@ $email-filter-padding-x: 1.5rem;
     @media (max-width: 576px) {
       .app-emails-list {
         .email-list {
-          li {
+          li.email-list-item {
             .email-list-item-user {
               margin-left: 1rem;
             }

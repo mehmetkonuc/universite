@@ -253,7 +253,7 @@ $(function () {
 
   // Variable declaration for table
   var dt_customer_review = $('.datatables-review'),
-    customerView = '/app/ecommerce/customer/details/overview/',
+    customerView = 'app-ecommerce-customer-details-overview.html',
     statusObj = {
       Pending: { title: 'Pending', class: 'bg-label-warning' },
       Published: { title: 'Published', class: 'bg-label-success' }
@@ -333,15 +333,15 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center customer-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2 rounded-2 bg-label-secondary">' +
+              '<div class="avatar me-4 rounded-2 bg-label-secondary">' +
               $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<span class="fw-medium text-nowrap">' +
+              '<span class="fw-medium text-nowrap text-heading">' +
               $product +
               '</span></a>' +
-              '<small class="text-muted">' +
+              '<small>' +
               $company_name +
               '</small>' +
               '</div>' +
@@ -376,7 +376,7 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center customer-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
+              '<div class="avatar avatar-sm me-4">' +
               $output +
               '</div>' +
               '</div>' +
@@ -386,7 +386,7 @@ $(function () {
               '"><span class="fw-medium">' +
               $name +
               '</span></a>' +
-              '<small class="text-muted text-nowrap">' +
+              '<small class="text-nowrap">' +
               $email +
               '</small>' +
               '</div>' +
@@ -403,7 +403,7 @@ $(function () {
             var $num = full['review'];
             var $heading = full['head'];
             var $comment = full['para'];
-            var $readOnlyRatings = $('<div class="read-only-ratings ps-0 mb-2"></div>');
+            var $readOnlyRatings = $('<div class="read-only-ratings ps-0 mb-1"></div>');
 
             function capitalizeFirstLetter(str) {
               if (typeof str !== 'string') {
@@ -423,7 +423,7 @@ $(function () {
               rating: $num,
               rtl: isRtl,
               readOnly: true, // Make the rating read-only
-              starWidth: '20px', // Set the width of each star
+              starWidth: '24px', // Set the width of each star
               spacing: '3px', // Spacing between the stars
               starSvg:
                 '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" stroke-width="0" /></svg>'
@@ -461,7 +461,7 @@ $(function () {
             return (
               '<span class="badge ' +
               statusObj[$status].class +
-              '">' +
+              '" text-capitalize>' +
               statusObj[$status].title +
               '</span>'
             );
@@ -478,7 +478,7 @@ $(function () {
             return (
               '<div class="text-xxl-center">' +
               '<div class="dropdown">' +
-              '<a href="javascript:;" class="btn dropdown-toggle hide-arrow text-body p-0" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></a>' +
+              '<a href="javascript:;" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md"></i></a>' +
               '<div class="dropdown-menu dropdown-menu-end">' +
               '<a href="javascript:;" class="dropdown-item">Download</a>' +
               '<a href="javascript:;" class="dropdown-item">Edit</a>' +
@@ -494,9 +494,9 @@ $(function () {
       ],
       order: [[2, 'asc']],
       dom:
-        '<"card-header d-flex align-items-md-center pb-md-2 flex-wrap"' +
-        '<"me-5 ms-n2"f>' +
-        '<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-end align-items-md-center justify-content-md-end pt-0 gap-2 flex-wrap"l<"review_filter"> <"mx-0 me-md-n3 mt-sm-0"B>>' +
+        '<"card-header d-flex align-items-md-center align-items-start py-0 flex-wrap flex-md-row flex-column"' +
+        '<"me-5 ms-n4"f>' +
+        '<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-start align-items-sm-center justify-content-md-end pt-0 gap-sm-2 gap-6 flex-wrap flex-sm-row flex-column mb-6 mb-sm-0"l<"review_filter"> <"mx-0 me-md-n3 mt-sm-0"B>>' +
         '>t' +
         '<"row mx-2"' +
         '<"col-sm-12 col-md-6"i>' +
@@ -506,14 +506,18 @@ $(function () {
       language: {
         sLengthMenu: '_MENU_',
         search: '',
-        searchPlaceholder: 'Search Review'
+        searchPlaceholder: 'Search Review',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
       // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle ms-2 me-3 mt-2 mt-sm-0',
-          text: '<i class="ti ti-download me-1"></i>Export',
+          className: 'btn btn-label-secondary dropdown-toggle ms-sm-2 me-3 waves-effect waves-light',
+          text: '<i class="ti ti-upload ti-xs me-2"></i>Export',
           buttons: [
             {
               extend: 'print',
@@ -707,7 +711,6 @@ $(function () {
           });
       }
     });
-    $('.dataTables_length').addClass('mt-0 mt-md-3');
   }
 
   // Delete Record
@@ -719,6 +722,8 @@ $(function () {
   // ? setTimeout used for multilingual table initialization
   setTimeout(() => {
     $('.dataTables_filter .form-control').removeClass('form-control-sm');
+    $('.dataTables_filter').addClass('mb-0 mb-md-6');
     $('.dataTables_length .form-select').removeClass('form-select-sm');
+    $('.dataTables_length').addClass('ms-n2 me-2 me-sm-0 mb-0 mb-sm-6');
   }, 300);
 });

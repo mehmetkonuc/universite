@@ -5,23 +5,27 @@
 'use strict';
 
 (function () {
-  let labelColor, headingColor;
+  let borderColor, labelColor, headingColor, legendColor;
 
   if (isDarkStyle) {
+    borderColor = config.colors_dark.borderColor;
     labelColor = config.colors_dark.textMuted;
     headingColor = config.colors_dark.headingColor;
+    legendColor = config.colors_dark.bodyColor;
   } else {
+    borderColor = config.colors.borderColor;
     labelColor = config.colors.textMuted;
     headingColor = config.colors.headingColor;
+    legendColor = config.colors.bodyColor;
   }
 
   // Chart Colors
   const chartColors = {
     donut: {
       series1: config.colors.success,
-      series2: '#28c76fb3',
-      series3: '#28c76f80',
-      series4: config.colors_label.success
+      series2: '#53D28C',
+      series3: '#7EDDA9',
+      series4: '#A9E9C5'
     },
     line: {
       series1: config.colors.warning,
@@ -47,24 +51,18 @@
         }
       ],
       chart: {
-        height: 270,
+        height: 320,
         type: 'line',
         stacked: false,
         parentHeightOffset: 0,
-        toolbar: {
-          show: false
-        },
-        zoom: {
-          enabled: false
-        }
+        toolbar: { show: false },
+        zoom: { enabled: false }
       },
       markers: {
-        size: 4,
+        size: 5,
         colors: [config.colors.white],
         strokeColors: chartColors.line.series2,
-        hover: {
-          size: 6
-        },
+        hover: { size: 6 },
         borderRadius: 4
       },
       stroke: {
@@ -81,7 +79,6 @@
           offsetX: -3
         },
         height: 40,
-        offsetY: 10,
         itemMargin: {
           horizontal: 10,
           vertical: 0
@@ -96,7 +93,8 @@
         offsetY: 10
       },
       grid: {
-        strokeDashArray: 8
+        strokeDashArray: 8,
+        borderColor
       },
       colors: [chartColors.line.series1, chartColors.line.series2],
       fill: {
@@ -110,9 +108,7 @@
           borderRadius: 4
         }
       },
-      dataLabels: {
-        enabled: false
-      },
+      dataLabels: { enabled: false },
       xaxis: {
         tickAmount: 10,
         categories: ['1 Jan', '2 Jan', '3 Jan', '4 Jan', '5 Jan', '6 Jan', '7 Jan', '8 Jan', '9 Jan', '10 Jan'],
@@ -120,20 +116,15 @@
           style: {
             colors: labelColor,
             fontSize: '13px',
-            fontFamily: 'Public Sans',
             fontWeight: 400
           }
         },
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
+        axisBorder: { show: false },
+        axisTicks: { show: false }
       },
       yaxis: {
         tickAmount: 4,
-        min: 10,
+        min: 0,
         max: 50,
         labels: {
           style: {
@@ -151,16 +142,8 @@
         {
           breakpoint: 1400,
           options: {
-            chart: {
-              height: 270
-            },
-            xaxis: {
-              labels: {
-                style: {
-                  fontSize: '10px'
-                }
-              }
-            },
+            chart: { height: 320 },
+            xaxis: { labels: { style: { fontSize: '10px' } } },
             legend: {
               itemMargin: {
                 vertical: 0,
@@ -172,37 +155,21 @@
           }
         },
         {
-          breakpoint: 1399,
+          breakpoint: 1025,
           options: {
-            chart: {
-              height: 415
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: '50%'
-              }
-            }
+            chart: { height: 415 },
+            plotOptions: { bar: { columnWidth: '50%' } }
           }
         },
         {
           breakpoint: 982,
-          options: {
-            plotOptions: {
-              bar: {
-                columnWidth: '30%'
-              }
-            }
-          }
+          options: { plotOptions: { bar: { columnWidth: '30%' } } }
         },
         {
           breakpoint: 480,
           options: {
-            chart: {
-              height: 250
-            },
-            legend: {
-              offsetY: 7
-            }
+            chart: { height: 250 },
+            legend: { offsetY: 7 }
           }
         }
       ]
@@ -267,13 +234,6 @@
           top: 15
         }
       },
-      states: {
-        hover: {
-          filter: {
-            type: 'none'
-          }
-        }
-      },
       plotOptions: {
         pie: {
           donut: {
@@ -281,24 +241,25 @@
             labels: {
               show: true,
               value: {
-                fontSize: '26px',
+                fontSize: '24px',
                 fontFamily: 'Public Sans',
                 color: headingColor,
                 fontWeight: 500,
-                offsetY: -30,
+                offsetY: -20,
                 formatter: function (val) {
                   return parseInt(val) + '%';
                 }
               },
               name: {
-                offsetY: 20,
+                offsetY: 30,
                 fontFamily: 'Public Sans'
               },
               total: {
                 show: true,
-                fontSize: '.75rem',
+                fontSize: '15px',
+                fontFamily: 'Public Sans',
+                color: legendColor,
                 label: 'AVG. Exceptions',
-                color: labelColor,
                 formatter: function (w) {
                   return '30%';
                 }
@@ -379,12 +340,12 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
-              '<span class="avatar-initial rounded-circle bg-label-secondary text-body"><i class="ti ti-truck"></i></span>' +
+              '<div class="avatar me-4">' +
+              '<span class="avatar-initial rounded-circle bg-label-secondary"><i class="ti ti-car ti-28px"></i></span>' +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<a class="text-body fw-medium" href="/app/logistics/fleet/">VOL-' +
+              '<a class="text-heading fw-medium" href="app-logistics-fleet.html">VOL-' +
               $location +
               '</a>' +
               '</div>' +
@@ -464,6 +425,12 @@ $(function () {
       order: [2, 'asc'],
       dom: '<"table-responsive"t><"row d-flex align-items-center"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
       displayLength: 5,
+      language: {
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
+      },
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({

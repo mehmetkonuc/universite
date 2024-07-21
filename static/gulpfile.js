@@ -92,7 +92,7 @@ module.exports = {
   'build:js': buildTasks.js,
   'build:css': buildTasks.css,
   'build:fonts': buildTasks.fonts,
-  'build:copy': parallel([buildTasks.copy, buildTasks.copyPlugins]),
+  'build:copy': parallel([buildTasks.copy]),
   watch: watchTask,
   serve: serveTask
 };

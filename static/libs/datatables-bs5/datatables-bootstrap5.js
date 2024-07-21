@@ -14,6 +14,11 @@ import 'datatables.net-responsive-bs5';
 import 'datatables.net-rowgroup-bs5';
 import 'jquery-datatables-checkboxes';
 
-$.fn.dataTable.ext.buttons.jszip = JSZip;
 $.fn.dataTable.ext.buttons.pdfMake = pdfMake;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+try {
+  window.JSZip = JSZip;
+} catch (e) {}
+
+export { JSZip };

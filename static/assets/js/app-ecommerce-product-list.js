@@ -20,7 +20,7 @@ $(function () {
 
   // Variable declaration for table
   var dt_product_table = $('.datatables-products'),
-    productAdd = '/app/ecommerce/product/add/',
+    productAdd = 'app-ecommerce-product-add.html',
     statusObj = {
       1: { title: 'Scheduled', class: 'bg-label-warning' },
       2: { title: 'Publish', class: 'bg-label-success' },
@@ -119,15 +119,15 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center product-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar avatar me-2 rounded-2 bg-label-secondary">' +
+              '<div class="avatar avatar me-4 rounded-2 bg-label-secondary">' +
               $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<h6 class="text-body text-nowrap mb-0">' +
+              '<h6 class="text-nowrap mb-0">' +
               $name +
               '</h6>' +
-              '<small class="text-muted text-truncate d-none d-sm-block">' +
+              '<small class="text-truncate d-none d-sm-block">' +
               $product_brand +
               '</small>' +
               '</div>' +
@@ -144,19 +144,19 @@ $(function () {
             var $category = categoryObj[full['category']].title;
             var categoryBadgeObj = {
               Household:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-2 p-3"><i class="ti ti-home-2 ti-xs"></i></span>',
+                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-warning me-4 p-3"><i class="ti ti-home-2 ti-sm"></i></span>',
               Office:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-info me-2 p-3"><i class="ti ti-briefcase ti-xs"></i></span>',
+                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-info me-4 p-3"><i class="ti ti-briefcase ti-sm"></i></span>',
               Electronics:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-danger me-2 p-3"><i class="ti ti-device-mobile ti-xs"></i></span>',
+                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-danger me-4 p-3"><i class="ti ti-device-mobile ti-sm"></i></span>',
               Shoes:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-success me-2"><i class="ti ti-shoe ti-xs"></i></span>',
+                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-success me-4"><i class="ti ti-shoe ti-sm"></i></span>',
               Accessories:
-                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-secondary me-2"><i class="ti ti-device-watch ti-xs"></i></span>',
-              Game: '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-primary me-2"><i class="ti ti-device-gamepad-2 ti-xs"></i></span>'
+                '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-secondary me-4"><i class="ti ti-device-watch ti-sm"></i></span>',
+              Game: '<span class="avatar-sm rounded-circle d-flex justify-content-center align-items-center bg-label-primary me-4"><i class="ti ti-device-gamepad-2 ti-sm"></i></span>'
             };
             return (
-              "<span class='text-truncate d-flex align-items-center'>" +
+              "<span class='text-truncate d-flex align-items-center text-heading'>" +
               categoryBadgeObj[$category] +
               $category +
               '</span>'
@@ -250,9 +250,8 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-inline-block text-nowrap">' +
-              '<button class="btn btn-sm btn-icon"><i class="ti ti-edit"></i></button>' +
-              '<button class="btn btn-sm btn-icon delete-record"><i class="ti ti-trash"></i></button>' +
-              '<button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>' +
+              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ti ti-edit ti-md"></i></button>' +
+              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-md"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="javascript:0;" class="dropdown-item">View</a>' +
               '<a href="javascript:0;" class="dropdown-item">Suspend</a>' +
@@ -264,11 +263,11 @@ $(function () {
       ],
       order: [2, 'asc'], //set any columns order asc/desc
       dom:
-        '<"card-header d-flex border-top rounded-0 flex-wrap py-2"' +
-        '<"me-5 ms-n2 pe-5"f>' +
-        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex flex-column align-items-start align-items-md-center justify-content-sm-center mb-3 mb-md-0 pt-0 gap-4 gap-sm-0 flex-sm-row"lB>>' +
+        '<"card-header d-flex border-top rounded-0 flex-wrap py-0 flex-column flex-md-row align-items-start"' +
+        '<"me-5 ms-n4 pe-5 mb-n6 mb-md-0"f>' +
+        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex flex-column align-items-start align-items-sm-center justify-content-sm-center pt-0 gap-sm-4 gap-sm-0 flex-sm-row"lB>>' +
         '>t' +
-        '<"row mx-2"' +
+        '<"row"' +
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
@@ -277,14 +276,18 @@ $(function () {
         sLengthMenu: '_MENU_',
         search: '',
         searchPlaceholder: 'Search Product',
-        info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
+        info: 'Displaying _START_ to _END_ of _TOTAL_ entries',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
       // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle me-3',
-          text: '<i class="ti ti-download me-1 ti-xs"></i>Export',
+          className: 'btn btn-label-secondary dropdown-toggle me-4 waves-effect waves-light',
+          text: '<i class="ti ti-upload me-1 ti-xs"></i>Export',
           buttons: [
             {
               extend: 'print',
@@ -418,7 +421,7 @@ $(function () {
         },
         {
           text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Product</span>',
-          className: 'add-new btn btn-primary ms-2 ms-sm-0',
+          className: 'add-new btn btn-primary ms-2 ms-sm-0 waves-effect waves-light',
           action: function () {
             window.location.href = productAdd;
           }
@@ -526,8 +529,8 @@ $(function () {
           });
       }
     });
-    $('.dataTables_length').addClass('mt-2 mt-sm-0 mt-md-3 me-2');
-    $('.dt-buttons').addClass('d-flex flex-wrap');
+    $('.dataTables_length').addClass('mx-n2');
+    $('.dt-buttons').addClass('d-flex flex-wrap mb-6 mb-sm-0');
   }
 
   // Delete Record

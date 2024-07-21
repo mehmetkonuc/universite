@@ -4,8 +4,7 @@
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
 
-$dz-box-padding-x: 1.15rem !default;
-$dz-box-padding-y: 1.5rem !default;
+$dz-box-padding: 1.25rem !default;
 $dz-icon-size: 1.875rem !default;
 $dz-thumbnail-width: 10rem !default;
 $dz-thumbnail-height: 7.5rem !default;
@@ -17,7 +16,6 @@ $dz-icon-block-size: 3.75rem !default;
 .dropzone {
   width: 100%;
   position: relative;
-  padding: $dz-box-padding-y;
   cursor: pointer;
   border-radius: light.$border-radius-lg;
 
@@ -38,16 +36,16 @@ $dz-icon-block-size: 3.75rem !default;
 }
 
 .dz-message {
-  font-size: light.$h3-font-size;
+  font-size: light.$h4-font-size;
   &:before {
     content: '';
-    border-radius: 8px;
+    border-radius: 6px;
     position: absolute;
     top: 5rem;
     left: calc(50% - 23px);
     display: inline-block;
-    height: 48px;
-    width: 48px;
+    height: 40px;
+    width: 40px;
     background-repeat: no-repeat !important;
     background-position: center !important;
   }
@@ -86,9 +84,18 @@ $dz-icon-block-size: 3.75rem !default;
   text-align: center;
 
   .note {
-    font-weight: 400;
     display: block;
-    margin-top: 0.625rem;
+    margin-top: 0.5rem;
+  }
+}
+
+// styles for dropzone in ecommerce
+.app-ecommerce {
+  .dz-message {
+    margin-top: 5rem;
+    &::before {
+      top: 3rem;
+    }
   }
 }
 
@@ -96,11 +103,15 @@ $dz-icon-block-size: 3.75rem !default;
 .dz-preview {
   position: relative;
   vertical-align: top;
-  margin: $dz-box-padding-y - 1;
   background: #fff;
   font-size: 0.8125rem;
+  margin: 1rem;
+  margin-right: $dz-box-padding - 1;
   box-sizing: content-box;
   cursor: default;
+  @include light.media-breakpoint-down(sm) {
+    margin: $dz-box-padding - 0.5;
+  }
 }
 
 // File information
@@ -295,10 +306,11 @@ $dz-icon-block-size: 3.75rem !default;
           '#',
           '%23'
         ) !important;
-        background: rgba(light.$black, 0.08);
+        background: #eeedf0;
       }
       .note {
         color: light.$body-color;
+        font-weight: light.$font-weight-normal;
       }
     }
 
@@ -380,10 +392,11 @@ $dz-icon-block-size: 3.75rem !default;
           '#',
           '%23'
         ) !important;
-        background: rgba(dark.$base, 0.08);
+        background: #373b50;
       }
       .note {
         color: dark.$body-color;
+        font-weight: dark.$font-weight-normal;
       }
     }
 

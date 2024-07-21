@@ -24,14 +24,14 @@
   const chartColors = {
     donut: {
       series1: config.colors.success,
-      series2: '#4fddaa',
-      series3: '#8ae8c7',
-      series4: '#c4f4e3'
+      series2: '#53D28C',
+      series3: '#7EDDA9',
+      series4: '#A9E9C5'
     },
     bar: {
       series1: config.colors.primary,
-      series2: '#7367F0CC',
-      series3: '#7367f099'
+      series2: '#8F85F3',
+      series3: '#ABA4F6'
     }
   };
 
@@ -40,7 +40,7 @@
   const weeklyEarningReportsEl = document.querySelector('#weeklyEarningReports'),
     weeklyEarningReportsConfig = {
       chart: {
-        height: 202,
+        height: 161,
         parentHeightOffset: 0,
         type: 'bar',
         toolbar: {
@@ -160,7 +160,7 @@
               offsetY: 10,
               color: headingColor,
               fontSize: '38px',
-              fontWeight: '500',
+              fontWeight: '400',
               fontFamily: 'Public Sans'
             }
           }
@@ -266,9 +266,9 @@
           useSeriesColors: false
         },
         markers: {
-          height: 10,
-          width: 10,
-          offsetX: -3
+          height: 12,
+          width: 12,
+          offsetX: -5
         },
         itemMargin: {
           horizontal: 10
@@ -379,16 +379,17 @@
         show: true,
         horizontalAlign: 'right',
         position: 'top',
+        fontSize: '13px',
         fontFamily: 'Public Sans',
         markers: {
           height: 12,
           width: 12,
           radius: 12,
-          offsetX: -3,
+          offsetX: -5,
           offsetY: 2
         },
         labels: {
-          colors: legendColor
+          colors: headingColor
         },
         itemMargin: {
           horizontal: 10,
@@ -698,7 +699,7 @@
 
     const earningReportBarChartOpt = {
       chart: {
-        height: 258,
+        height: 231,
         parentHeightOffset: 0,
         type: 'bar',
         toolbar: {
@@ -709,7 +710,7 @@
         bar: {
           columnWidth: '32%',
           startingShape: 'rounded',
-          borderRadius: 4,
+          borderRadius: 6,
           distributed: true,
           dataLabels: {
             position: 'top'
@@ -731,10 +732,10 @@
         formatter: function (val) {
           return val + 'k';
         },
-        offsetY: -20,
+        offsetY: -30,
         style: {
           fontSize: '15px',
-          colors: [legendColor],
+          colors: [headingColor],
           fontWeight: '500',
           fontFamily: 'Public Sans'
         }
@@ -894,7 +895,7 @@
         }
       ],
       chart: {
-        height: 215,
+        height: 175,
         parentHeightOffset: 0,
         stacked: true,
         type: 'bar',
@@ -909,13 +910,16 @@
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: '15%',
-          borderRadius: 4,
+          columnWidth: '20%',
+          borderRadius: 6,
           startingShape: 'rounded',
           endingShape: 'rounded'
         }
       },
-      colors: [config.colors.danger, config.colors.primary],
+      fill: {
+        opacity: [1, 1]
+      },
+      colors: [config.colors.primary, config.colors.secondary],
       dataLabels: {
         enabled: false
       },
@@ -1091,11 +1095,14 @@
         config.colors.danger,
         config.colors.warning
       ],
+      fill: {
+        opacity: [1, 1, 1, 1, 1, 1]
+      },
       dataLabels: {
         enabled: true,
         style: {
           colors: ['#fff'],
-          fontWeight: 200,
+          fontWeight: 400,
           fontSize: '13px',
           fontFamily: 'Public Sans'
         },
@@ -1166,7 +1173,7 @@
   const carrierPerformance = document.querySelector('#carrierPerformance'),
     carrierPerformanceChartConfig = {
       chart: {
-        height: 275,
+        height: 330,
         type: 'bar',
         parentHeightOffset: 0,
         stacked: false,
@@ -1183,7 +1190,7 @@
           columnWidth: '50%',
           startingShape: 'rounded',
           endingShape: 'flat',
-          borderRadius: 4
+          borderRadius: 6
         }
       },
       dataLabels: {
@@ -1246,7 +1253,7 @@
         markers: {
           width: 8,
           height: 8,
-          offsetX: -3,
+          offsetX: -5,
           radius: 12
         },
         height: 40,
@@ -1314,7 +1321,7 @@
   const deliveryExceptionsChartE1 = document.querySelector('#deliveryExceptionsChart'),
     deliveryExceptionsChartConfig = {
       chart: {
-        height: 400,
+        height: 396,
         parentHeightOffset: 0,
         type: 'donut'
       },
@@ -1352,7 +1359,7 @@
         fontFamily: 'Public Sans',
         fontWeight: 400,
         labels: {
-          colors: headingColor,
+          colors: legendColor,
           useSeriesColors: false
         }
       },
@@ -1371,24 +1378,25 @@
             labels: {
               show: true,
               value: {
-                fontSize: '26px',
+                fontSize: '38px',
                 fontFamily: 'Public Sans',
                 color: headingColor,
                 fontWeight: 500,
-                offsetY: -30,
+                offsetY: -20,
                 formatter: function (val) {
                   return parseInt(val) + '%';
                 }
               },
               name: {
-                offsetY: 20,
+                offsetY: 30,
                 fontFamily: 'Public Sans'
               },
               total: {
                 show: true,
-                fontSize: '0.9rem',
+                fontSize: '15px',
+                fontFamily: 'Public Sans',
+                color: legendColor,
                 label: 'AVG. Exceptions',
-                color: labelColor,
                 formatter: function (w) {
                   return '30%';
                 }
@@ -1403,14 +1411,6 @@
           options: {
             chart: {
               height: 380
-            }
-          }
-        },
-        {
-          breakpoint: 420,
-          options: {
-            chart: {
-              height: 300
             }
           }
         }

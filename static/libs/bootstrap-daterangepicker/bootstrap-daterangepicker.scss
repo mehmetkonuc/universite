@@ -2,10 +2,10 @@
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
 
-$daterangepicker-arrow-size: 0.5rem !default;
+$daterangepicker-arrow-size: 0.45rem !default;
 $daterangepicker-select-width: 3.125rem !default;
-$daterangepicker-cell-size: 2rem !default;
-$daterangepicker-padding: 0.2rem !default;
+$daterangepicker-cell-size: 2.25rem !default;
+$daterangepicker-padding: 0.8rem !default;
 
 // Calculate widths
 $daterangepicker-width: ($daterangepicker-cell-size * 7)+ ($daterangepicker-padding * 2);
@@ -14,9 +14,8 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 .daterangepicker {
   position: absolute;
   max-width: none;
-  padding: 0;
+  padding: 0.875rem 0 0.5rem;
   display: none;
-  margin: 0.4rem 0.875rem 0;
 
   tbody {
     //! FIX: padding or margin top will not work in table
@@ -90,7 +89,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
 .daterangepicker .drp-calendar {
   display: none;
-  padding: $daterangepicker-padding;
+  padding: 0 $daterangepicker-padding $daterangepicker-padding;
 
   &.single .calendar-table {
     border: 0;
@@ -116,8 +115,8 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
     position: absolute;
     top: 0.65rem;
     min-width: unset;
-    height: 1.75rem;
-    width: 1.75rem;
+    height: 1.875rem;
+    width: 1.875rem;
     border-radius: 50rem;
     display: flex;
     justify-content: center;
@@ -127,7 +126,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
   .next span,
   .prev span {
     display: inline-block;
-    border-width: 0 1px 1px 0;
+    border-width: 0 1.9px 1.9px 0;
     border-style: solid;
     border-radius: 0;
     height: $daterangepicker-arrow-size;
@@ -168,46 +167,54 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
   td {
     vertical-align: middle;
     min-width: $daterangepicker-cell-size;
-    height: $daterangepicker-cell-size;
-    width: $daterangepicker-cell-size;
     line-height: calc(#{$daterangepicker-cell-size} - 2px);
     white-space: nowrap;
     text-align: center;
     cursor: pointer;
   }
-}
-
-// daterangepicker single
-.daterangepicker .single {
-  // arrow alignments
-  .next {
-    float: right;
-    @include app-ltr {
-      right: 0.625rem;
-    }
-    @include app-rtl {
-      left: 0.625rem;
-    }
+  td {
+    height: $daterangepicker-cell-size;
+    width: $daterangepicker-cell-size;
   }
-  .prev {
-    @include app-ltr {
-      right: 3.125rem;
-    }
-    @include app-rtl {
-      left: 3.125rem;
-    }
+  th {
+    width: $daterangepicker-cell-size;
+    height: $daterangepicker-cell-size + 0.5rem;
   }
-  // month alignments
-  th.month {
-    position: absolute;
-    top: 0.5rem;
-    @include app-ltr {
-      text-align: left;
-      left: 0.562rem;
+  tr:first-child th:not(.prev):not(.next) {
+    height: $daterangepicker-cell-size;
+  }
+  // daterangepicker single
+  .daterangepicker .single {
+    // arrow alignments
+    .next {
+      float: right;
+      @include app-ltr {
+        right: 0.625rem;
+      }
+      @include app-rtl {
+        left: 0.625rem;
+      }
     }
-    @include app-rtl {
-      text-align: right;
-      right: 0.562rem;
+    .prev {
+      @include app-ltr {
+        right: 3.125rem;
+      }
+      @include app-rtl {
+        left: 3.125rem;
+      }
+    }
+    // month alignments
+    th.month {
+      position: absolute;
+      top: 0.5rem;
+      @include app-ltr {
+        text-align: left;
+        left: 0.562rem;
+      }
+      @include app-rtl {
+        text-align: right;
+        right: 0.562rem;
+      }
     }
   }
 }
@@ -286,6 +293,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
     width: $daterangepicker-select-width;
     padding: 2px;
     margin: 0 auto;
+    border-radius: light.$border-radius-sm;
   }
 }
 
@@ -301,15 +309,14 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 }
 
 .daterangepicker .drp-buttons {
-  padding: $daterangepicker-padding + 0.3rem;
+  padding: $daterangepicker-padding $daterangepicker-padding * 1.5;
   clear: both;
   display: none;
   text-align: right;
   vertical-align: middle;
-  border-top: 1px solid;
 
   .btn {
-    margin-left: $daterangepicker-padding + 0.4rem;
+    margin-left: $daterangepicker-padding * 1.2;
   }
 
   @include app-rtl {
@@ -317,7 +324,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
     .btn {
       margin-left: 0;
-      margin-right: $daterangepicker-padding + 0.4rem;
+      margin-right: $daterangepicker-padding * 1.2;
     }
   }
 }
@@ -335,14 +342,17 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
   // Daterangepicker Ranges spacing
   ul {
-    padding: 0.875rem 0;
+    padding: 0.5rem;
     margin: 0 auto;
     list-style: none;
     width: 100%;
   }
   li {
-    margin: 0.125rem 0.875rem;
-    padding: 0.25rem 1rem;
+    border-radius: light.$border-radius;
+    padding: light.$dropdown-item-padding-y light.$dropdown-item-padding-x;
+    &:not(:first-child) {
+      margin-top: 0.125rem;
+    }
   }
 
   @include app-rtl {
@@ -371,50 +381,64 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 @if $enable-light-style {
   .light-style {
     .daterangepicker {
-      margin-top: light.$dropdown-spacer;
       z-index: light.$zindex-popover !important;
       border: light.$dropdown-border-width solid light.$dropdown-border-color;
       border-radius: light.$border-radius;
-      width: calc(#{$daterangepicker-width} + #{light.$dropdown-border-width * 2});
-      box-shadow: light.$dropdown-box-shadow;
+      width: calc(#{$daterangepicker-width} + calc(#{light.$dropdown-border-width} * 2));
+      box-shadow: light.$card-box-shadow;
       background-color: light.$dropdown-bg;
 
       table thead {
-        color: light.$headings-color;
+        background: light.$dropdown-bg;
+        th,
+        td {
+          color: light.$headings-color;
+
+          &.prev,
+          &.next {
+            span {
+              border-color: light.$body-color !important;
+            }
+          }
+
+          select {
+            background-color: transparent;
+            color: light.$headings-color;
+          }
+        }
       }
       &.drop-up {
         margin-top: -(light.$dropdown-spacer);
       }
 
       &.with-week-numbers {
-        width: calc(#{$daterangepicker-width-with-weeks} + #{light.$dropdown-border-width * 2});
+        width: calc(#{$daterangepicker-width-with-weeks} + calc(#{light.$dropdown-border-width} * 2));
       }
     }
-    .daterangepicker td.active:not(.off) {
-      box-shadow: light.$box-shadow-sm;
+    .daterangepicker .calendar-table td {
+      border-radius: light.$border-radius-pill;
     }
 
     .daterangepicker .drp-selected {
       font-size: light.$font-size-sm;
     }
 
-    .daterangepicker .drp-buttons {
-      border-color: light.$border-color;
-    }
-
     .daterangepicker .calendar-table thead tr:last-child th {
       border-radius: 0 !important;
-      font-size: light.$small-font-size;
-      font-weight: light.$font-weight-medium;
+      color: light.$headings-color;
+      font-size: light.$font-size-sm;
+      font-weight: light.$font-weight-normal;
     }
 
     .daterangepicker th.month {
-      font-weight: light.$font-weight-medium;
+      color: light.$headings-color;
+      font-weight: light.$font-weight-normal;
     }
 
     .daterangepicker td.week,
     .daterangepicker th.week {
-      color: light.$body-color;
+      color: light.$headings-color;
+      font-weight: light.$font-weight-normal;
     }
 
     .daterangepicker td.disabled,
@@ -424,7 +448,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
     .daterangepicker td.available:not(.active):hover,
     .daterangepicker th.available:hover {
-      background-color: light.rgba-to-hex(rgba(light.$black, 0.08), light.$card-bg);
+      background-color: light.$gray-50;
     }
 
     .daterangepicker td.off {
@@ -433,24 +457,22 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
     .daterangepicker .ranges li {
       cursor: pointer;
-      border-radius: light.$dropdown-border-radius;
+      padding: light.$dropdown-item-padding-y light.$dropdown-item-padding-x;
 
       &:hover {
         background-color: light.$dropdown-link-hover-bg;
-        color: light.$component-hover-color;
       }
     }
 
     .daterangepicker .calendar-table .next,
     .daterangepicker .calendar-table .prev {
-      background-color: light.rgba-to-hex(rgba(light.$black, 0.08), light.$card-bg);
+      background-color: light.$gray-50;
       span {
         border-color: light.$body-color;
       }
     }
 
     .daterangepicker select {
-      color: light.$headings-color;
       &.hourselect,
       &.minuteselect,
       &.secondselect,
@@ -497,8 +519,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
           float: left;
 
           &.left {
-            padding-right: 0;
-            border-right: light.$border-width solid light.$border-color;
+            padding-right: 1rem;
           }
         }
       }
@@ -507,8 +528,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
         .daterangepicker:not(.single) .drp-calendar {
           float: right;
           &.left {
-            padding-left: 0;
-            border-left: light.$border-width solid light.$border-color;
+            padding-left: 1rem;
           }
         }
       }
@@ -542,8 +562,8 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 @if $enable-dark-style {
   .dark-style {
     .daterangepicker {
-      box-shadow: dark.$dropdown-box-shadow;
-      width: calc(#{$daterangepicker-width} + #{dark.$dropdown-border-width * 2});
+      box-shadow: dark.$card-box-shadow;
+      width: calc(#{$daterangepicker-width} + calc(#{dark.$dropdown-border-width} * 2));
       margin-top: dark.$dropdown-spacer;
       background-color: dark.$dropdown-bg;
       border: dark.$dropdown-border-width solid dark.$dropdown-border-color;
@@ -551,43 +571,58 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
       z-index: dark.$zindex-popover !important;
 
       table thead {
-        color: dark.$headings-color;
+        background: dark.$dropdown-bg;
+        th,
+        td {
+          color: dark.$headings-color;
+
+          &.prev,
+          &.next {
+            span {
+              border-color: dark.$headings-color !important;
+            }
+          }
+
+          select {
+            background-color: transparent;
+            color: dark.$headings-color;
+          }
+        }
       }
 
       &.with-week-numbers {
-        width: calc(#{$daterangepicker-width-with-weeks} + #{dark.$dropdown-border-width * 2});
+        width: calc(#{$daterangepicker-width-with-weeks} + calc(#{dark.$dropdown-border-width} * 2));
       }
 
       &.drop-up {
         margin-top: -(dark.$dropdown-spacer);
       }
     }
-    .daterangepicker td.active:not(.off) {
-      box-shadow: dark.$box-shadow-sm;
+
+    .daterangepicker .calendar-table td {
+      border-radius: dark.$border-radius-pill;
     }
 
     .daterangepicker .drp-selected {
       font-size: dark.$font-size-sm;
     }
 
-    .daterangepicker .drp-buttons,
-    .daterangepicker .ranges {
-      border-color: dark.$border-color;
-    }
-
     .daterangepicker .calendar-table thead tr:last-child th {
       border-radius: 0 !important;
-      font-size: dark.$small-font-size;
-      font-weight: dark.$font-weight-medium;
+      color: dark.$headings-color;
+      font-size: dark.$font-size-sm;
+      font-weight: dark.$font-weight-normal;
     }
 
     .daterangepicker th.month {
-      font-weight: dark.$font-weight-medium;
+      color: dark.$headings-color;
+      font-weight: dark.$font-weight-normal;
     }
 
     .daterangepicker td.week,
     .daterangepicker th.week {
-      color: dark.$body-color;
+      color: dark.$headings-color;
+      font-weight: dark.$font-weight-normal;
     }
 
     .daterangepicker td.disabled,
@@ -597,7 +632,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
     .daterangepicker td.available:not(.active):hover,
     .daterangepicker th.available:hover {
-      background-color: dark.rgba-to-hex(rgba(dark.$base, 0.08), dark.$card-bg);
+      background-color: dark.$gray-50;
     }
 
     .daterangepicker td.off {
@@ -606,29 +641,27 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
 
     .daterangepicker .ranges li {
       cursor: pointer;
-      border-radius: dark.$dropdown-border-radius;
+      padding: dark.$dropdown-item-padding-y dark.$dropdown-item-padding-x;
 
       &:hover {
         background-color: dark.$dropdown-link-hover-bg;
-        color: dark.$component-hover-color;
       }
     }
 
     .daterangepicker .calendar-table .next,
     .daterangepicker .calendar-table .prev {
-      background-color: dark.rgba-to-hex(rgba(dark.$base, 0.08), dark.$card-bg);
+      background-color: dark.$gray-50;
       span {
         border-color: dark.$body-color;
       }
     }
 
     .daterangepicker select {
-      color: dark.$headings-color;
       &.hourselect,
       &.minuteselect,
       &.secondselect,
       &.ampmselect {
-        background: rgba(dark.$base, 0.12);
+        background: dark.rgba-to-hex(dark.$gray-100, dark.$rgba-to-hex-bg);
         border: 1px solid transparent;
         font-size: dark.$font-size-sm;
         color: dark.$body-color;
@@ -642,7 +675,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
       &.yearselect {
         option {
           color: dark.$body-color;
-          background: dark.$input-bg;
+          background: dark.$card-bg;
           &:disabled {
             color: dark.$text-muted;
           }
@@ -670,8 +703,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
           float: left;
 
           &.left {
-            padding-right: 0;
-            border-right: dark.$border-width solid dark.$border-color;
+            padding-right: 1rem;
           }
         }
       }
@@ -681,8 +713,7 @@ $daterangepicker-width-with-weeks: $daterangepicker-width + $daterangepicker-cel
           float: right;
 
           &.left {
-            padding-left: 0;
-            border-left: dark.$border-width solid dark.$border-color;
+            padding-left: 1rem;
           }
         }
       }

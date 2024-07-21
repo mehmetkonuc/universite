@@ -103,7 +103,7 @@
 // *******************************************************************************
 
 // Return Nav opacity, contrast-percent, contrast-percent-inverted, bg, color, active-color, disabled-color, muted-color, border
-@function get-navbar-prop($bg, $active-color: null, $inactive-color: null, $border: null) {
+@function get-navbar-prop($bg, $active-color: null, $inactive-color: null, $border: null, $text-color: null) {
   $bg: rgba-to-hex($bg);
 
   $active-color: rgba-to-hex($active-color);
@@ -120,7 +120,7 @@
     rgba-to-hex(rgba($active-color, if($contrast-percent < 0.25, $opacity + 0.2, $opacity)), $bg)
   );
   $disabled-color: rgba-to-hex(rgba($color, 0.6), $bg);
-  $muted-color: rgba-to-hex(rgba($color, 0.75), $bg);
+  $muted-color: rgba-to-hex(rgba($color, 0.4), $bg);
   $border: if(
     $border,
     $border,
@@ -142,6 +142,7 @@
     active-color: $active-color,
     disabled-color: $disabled-color,
     muted-color: $muted-color,
-    border: $border
+    border: $border,
+    text-color: $text-color
   );
 }

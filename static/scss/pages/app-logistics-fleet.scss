@@ -7,9 +7,9 @@
 @import '../_custom-variables/pages';
 
 //Custom variables for Logistics-fleet page
-$logistics-fleet-sidebar-width: 21rem !default;
-$logistics-fleet-height: calc(100vh - 13.7rem);
-$logistics-fleet-sidebar-height: calc(100vh - 15.5rem);
+$logistics-fleet-sidebar-width: 21.5rem !default;
+$logistics-fleet-height: calc(100vh - 13.8rem);
+$logistics-fleet-sidebar-height: calc(100vh - 15.8rem);
 $logistics-fleet-horizontal-height-diff: 2rem;
 
 // App logistics-fleet wrapper for sidebar
@@ -30,7 +30,7 @@ $logistics-fleet-horizontal-height-diff: 2rem;
 
     //For Sidebar Map menu Scroll
     .logistics-fleet-sidebar-body {
-      height: calc($logistics-fleet-sidebar-height + 4rem);
+      height: calc($logistics-fleet-sidebar-height + 3rem) !important;
     }
   }
   //Sidebar functionality
@@ -60,7 +60,10 @@ $logistics-fleet-horizontal-height-diff: 2rem;
 
   //Setting sidebar height
   .logistics-fleet-sidebar-body {
-    height: $logistics-fleet-sidebar-height;
+    height: calc(100vh - 13rem);
+    @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
+      height: $logistics-fleet-sidebar-height !important;
+    }
   }
 
   @include light.media-breakpoint-down(md) {
@@ -69,16 +72,16 @@ $logistics-fleet-horizontal-height-diff: 2rem;
       height: calc(100vh - 11.5rem);
       //For Sidebar Map menu Scroll
       .logistics-fleet-sidebar-body {
-        height: calc($logistics-fleet-sidebar-height - 2rem);
+        height: calc($logistics-fleet-sidebar-height - 1rem);
       }
     }
     //setting wrapper height when navbar is hidden
     .layout-navbar-hidden & {
-      height: calc(100vh - 6.5rem);
+      height: calc(100vh - 7.5rem);
 
       //For Sidebar Map menu Scroll
       .logistics-fleet-sidebar-body {
-        height: calc($logistics-fleet-sidebar-height + 2.5rem);
+        height: calc($logistics-fleet-sidebar-height + 2.5rem) !important;
       }
     }
   }
@@ -114,12 +117,27 @@ $logistics-fleet-horizontal-height-diff: 2rem;
   }
 }
 
+//Light mode
+@if $enable-light-style {
+  .light-style {
+    .btn-white.btn-white-dark-variant {
+      color: light.$headings-color;
+      box-shadow: light.$box-shadow-xs !important;
+    }
+  }
+}
 //Dark mode
 @if $enable-dark-style {
   .dark-style {
     .app-logistics-fleet-wrapper {
       .app-logistics-fleet-sidebar {
         background-color: dark.$card-bg;
+      }
+      .btn-white.btn-white-dark-variant {
+        border-color: dark.$card-bg;
+        background-color: dark.$card-bg;
+        color: dark.$headings-color;
+        box-shadow: dark.$box-shadow-xs !important;
       }
     }
   }

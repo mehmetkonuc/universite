@@ -1,15 +1,16 @@
 // Progress
 // *******************************************************************************
 
-.progress-bar {
-  font-weight: $display-font-weight;
-  line-height: $line-height-sm;
+.progress:has(:only-child) {
+  overflow: visible;
 }
 
-@include ltr-only {
-  .progress-bar-striped {
-    @include gradient-striped(rgba($white, 0.1), 45deg);
+@each $color, $value in $theme-colors {
+  @if $color != primary {
+    @include template-progress-shadow-theme('.progress-bar.bg-#{$color}', $value);
   }
+}
+@include ltr-only {
   .progress {
     .progress-bar:last-child {
       border-top-right-radius: $progress-border-radius;

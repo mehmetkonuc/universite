@@ -1,8 +1,8 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
-@import '../../node_modules/jstree/dist/themes/default/style';
-@import '../../node_modules/jstree/dist/themes/default-dark/style';
+@import 'jstree/dist/themes/default/style';
+@import 'jstree/dist/themes/default-dark/style';
 @import './themes/theme';
 
 // Light Style
@@ -111,4 +111,5 @@
 }
 .jstree-default-dark .jstree-anchor {
   text-shadow: none !important;
+  color: dark.$body-color;
 }

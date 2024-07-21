@@ -11,36 +11,34 @@
 
 
               <!-- Header -->
-              <div class="row mt-4">
+              <div class="row mt-8">
                 <div class="col-12">
-                  <div class="card mb-4">
+                  <div class="card mb-6">
                     <!-- <div class="user-profile-header-banner">
                       <img src="{% static 'assets/img/pages/profile-banner.png' %}" alt="Banner image" class="rounded-top" />
                     </div> -->
-                    <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
+                    <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
                       <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
                         {% if profileUser.profilepicturemodel.profile_photo %}
                         {% with profile_photo_url=profileUser.profilepicturemodel.profile_photo.url %}
-                        <img src="{{ profile_photo_url }}" alt="user image"
-                        class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                        <img src="{{ profile_photo_url }}" 
+                        alt="user image"
+                        class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
                         {% endwith %}
                         {% else %}
-                        <img src="{% static 'assets/img/avatars/14.png' %}" alt="user image"
-                        class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                        <img src="{% static 'assets/img/avatars/14.png' %}"
+                        alt="user image"
+                        class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
                         {% endif %}
                       </div>
-                      <div class="flex-grow-1 mt-3 mt-sm-5">
+                      <div class="flex-grow-1 mt-3 mt-lg-5">
                         <div
-                          class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
-                          <div class="user-profile-info mb-0">
-                            <div class="mb-3">
-                            
-                            <h4 class="mb-0">{{model.User.first_name}} {{model.User.last_name}} <span class="badge badge-center bg-success bg-glow">8.2</span></h4>
+                          class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
+                          <div class="user-profile-info">
+                            <h4 class="mb-0 mt-lg-6">{{model.User.first_name}} {{model.User.last_name}} <span class="badge badge-center bg-success bg-glow">8.2</span></h4>
                               <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kullanıcı Adı">@{{model.User.username}}</span>
-                            </div>
-
                             <ul
-                              class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2">
+                              class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2 mt-2">
                               <li class="list-inline-item d-flex gap-1"  data-bs-toggle="tooltip" data-bs-placement="top" title="Üniversite">
                                 <i class="ti ti-building-bank"></i> {{model.University}}
                               </li>

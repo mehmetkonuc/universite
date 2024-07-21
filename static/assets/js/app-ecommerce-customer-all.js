@@ -21,7 +21,7 @@ $(function () {
   // Variable declaration for table
   var dt_customer_table = $('.datatables-customers'),
     select2 = $('.select2'),
-    customerView = '/app/ecommerce/customer/details/overview/';
+    customerView = 'app-ecommerce-customer-details-overview.html';
   if (select2.length) {
     var $this = select2;
     $this.wrap('<div class="position-relative"></div>').select2({
@@ -97,17 +97,17 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center customer-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
+              '<div class="avatar avatar-sm me-3">' +
               $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
               '<a href="' +
               customerView +
-              '" ><span class="fw-medium">' +
+              '" class="text-heading" ><span class="fw-medium">' +
               $name +
               '</span></a>' +
-              '<small class="text-muted">' +
+              '<small>' +
               $email +
               '</small>' +
               '</div>' +
@@ -121,7 +121,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var $id = full['customer_id'];
 
-            return "<span class='h6 mb-0'>#" + $id + '</span>';
+            return "<span class='text-heading'>#" + $id + '</span>';
           }
         },
         {
@@ -132,10 +132,10 @@ $(function () {
             var $code = full['country_code'];
 
             if ($code) {
-              var $output_code = `<i class ="fis fi fi-${$code} rounded-circle me-2 fs-3"></i>`;
+              var $output_code = `<i class ="fis fi fi-${$code} rounded-circle me-2 fs-4"></i>`;
             } else {
               // For Avatar badge
-              var $output_code = `<i class ="fis fi fi-xx rounded-circle me-2 fs-3"></i>`;
+              var $output_code = `<i class ="fis fi fi-xx rounded-circle me-2 fs-4"></i>`;
             }
 
             var $row_output =
@@ -167,17 +167,17 @@ $(function () {
           render: function (data, type, full, meta) {
             var $spent = full['total_spent'];
 
-            return '<span class="h6 mb-0">' + $spent + '</span>';
+            return '<span class="fw-medium text-heading">' + $spent + '</span>';
           }
         }
       ],
       order: [[2, 'desc']],
       dom:
-        '<"card-header d-flex flex-wrap pb-md-2"' +
+        '<"card-header d-flex flex-wrap flex-md-row flex-column align-items-start align-items-sm-center py-0"' +
         '<"d-flex align-items-center me-5"f>' +
-        '<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-md-end gap-3 gap-sm-0 flex-wrap flex-sm-nowrap"lB>' +
+        '<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-md-end flex-wrap flex-sm-nowrap mb-6 mb-sm-0"lB>' +
         '>t' +
-        '<"row mx-2"' +
+        '<"row mx-1"' +
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
@@ -185,14 +185,18 @@ $(function () {
       language: {
         sLengthMenu: '_MENU_',
         search: '',
-        searchPlaceholder: 'Search Order'
+        searchPlaceholder: 'Search Order',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
       // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle me-3',
-          text: '<i class="ti ti-download me-1"></i>Export',
+          className: 'btn btn-label-secondary dropdown-toggle me-4 waves-effect waves-light',
+          text: '<i class="ti ti-upload ti-xs me-2"></i>Export',
           buttons: [
             {
               extend: 'print',
@@ -331,7 +335,7 @@ $(function () {
         },
         {
           text: '<i class="ti ti-plus me-0 me-sm-1 mb-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Customer</span>',
-          className: 'add-new btn btn-primary py-2',
+          className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
             'data-bs-target': '#offcanvasEcommerceCustomerAdd'
@@ -372,9 +376,9 @@ $(function () {
         }
       }
     });
-    $('.dataTables_length').addClass('ms-n2 mt-0 mt-md-3 me-2');
+    $('.dataTables_length').addClass('ms-n2 me-2');
     $('.dt-action-buttons').addClass('pt-0');
-    $('.dataTables_filter').addClass('ms-n3');
+    $('.dataTables_filter').addClass('ms-n3 mb-0 mb-md-6');
     $('.dt-buttons').addClass('d-flex flex-wrap');
   }
 
@@ -433,7 +437,7 @@ $(function () {
         eleValidClass: '',
         rowSelector: function (field, ele) {
           // field is the field name & ele is the field element
-          return '.mb-3';
+          return '.mb-6';
         }
       }),
       submitButton: new FormValidation.plugins.SubmitButton(),

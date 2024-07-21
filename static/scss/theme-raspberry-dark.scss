@@ -21,7 +21,7 @@ body {
 // Navbar
 // ---------------------------------------------------------------------------
 
-@include template-navbar-style('.bg-navbar-theme', $card-bg, $color: $body-color, $active-color: $headings-color);
+@include template-navbar-style('.bg-navbar-theme', $card-bg, $color: $headings-color, $active-color: $headings-color);
 
 .layout-navbar {
   box-shadow: 0 1px 0 $border-color;
@@ -49,7 +49,7 @@ body {
 @include template-menu-style(
   '.bg-menu-theme',
   $card-bg,
-  $color: $body-color,
+  $color: $headings-color,
   $active-color: $body-color,
   $active-bg: $primary-color
 );
@@ -62,20 +62,20 @@ body {
         > .menu-link.menu-toggle {
           &,
           .layout-menu-hover.layout-menu-collapsed & {
-            background: rgba($base, 0.06);
+            background: $gray-75;
           }
         }
       }
       &:not(.active) > .menu-link:hover {
         html:not(.layout-menu-collapsed) &,
         .layout-menu-hover.layout-menu-collapsed & {
-          background: rgba($base, 0.06);
+          background: $gray-50;
         }
       }
     }
   }
   .menu-inner .menu-sub .menu-item:not(.active) > .menu-link::before {
-    color: $text-muted !important;
+    color: $body-color !important;
   }
 }
 
@@ -93,7 +93,7 @@ body {
 
 // Footer
 // ---------------------------------------------------------------------------
-@include template-footer-style('.bg-footer-theme', $body-bg, $color: $body-color, $active-color: $headings-color);
+@include template-footer-style('.bg-footer-theme', $card-bg, $color: $primary-color, $active-color: $primary-color);
 
 .layout-footer-fixed .layout-wrapper:not(.layout-horizontal) .content-footer .footer-container,
 .layout-footer-fixed .layout-wrapper.layout-horizontal .content-footer {

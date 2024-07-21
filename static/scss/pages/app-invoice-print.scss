@@ -23,7 +23,6 @@ body > :not(.invoice-print) {
 }
 
 .invoice-print * {
-  border-color: rgba($color: $black, $alpha: 0.5) !important;
   color: $body-color !important;
 }
 

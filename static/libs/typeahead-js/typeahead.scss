@@ -63,7 +63,7 @@
         font-size: light.$font-size-base;
         // border: light.$dropdown-border-width solid light.$dropdown-border-color;
         z-index: light.$zindex-dropdown;
-        margin: light.$dropdown-spacer 0;
+        margin: calc(light.$dropdown-spacer + light.$dropdown-spacer) 0;
         color: light.$body-color;
         box-shadow: light.$dropdown-box-shadow;
         background-color: light.$dropdown-bg;
@@ -85,6 +85,16 @@
         }
       }
     }
+    .tt-menu {
+      .suggestion {
+        &:hover,
+        &:focus {
+          text-decoration: none;
+          color: light.$dropdown-link-hover-color;
+          background-color: light.$dropdown-link-hover-bg;
+        }
+      }
+    }
   }
 }
 
@@ -96,7 +106,7 @@
         color: dark.$body-color;
         min-width: dark.$dropdown-min-width;
         padding: dark.$dropdown-padding-y 0;
-        margin: dark.$dropdown-spacer 0;
+        margin: calc(dark.$dropdown-spacer + dark.$dropdown-spacer) 0;
         box-shadow: dark.$dropdown-box-shadow;
         // border: dark.$dropdown-border-width solid dark.$dropdown-border-color;
         font-size: dark.$font-size-base;
@@ -118,6 +128,16 @@
       }
       .tt-hint {
         color: dark.$input-placeholder-color;
+      }
+    }
+    .tt-menu {
+      .suggestion {
+        &:hover,
+        &:focus {
+          text-decoration: none;
+          color: dark.$dropdown-link-hover-color;
+          background-color: dark.$dropdown-link-hover-bg;
+        }
       }
     }
   }

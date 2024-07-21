@@ -82,8 +82,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var $order_id = full['order'];
             // Creates full output for row
-            var $row_output =
-              '<a href="/app/ecommerce/order/details/"><span class="fw-medium">#' + $order_id + '</span></a>';
+            var $row_output = '<a href="app-ecommerce-order-details.html"><span>#' + $order_id + '</span></a>';
             return $row_output;
           }
         },
@@ -128,15 +127,15 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center order-name text-nowrap">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
+              '<div class="avatar avatar-sm me-3">' +
               $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<h6 class="m-0"><a href="/pages/profile/user/" class="text-body">' +
+              '<h6 class="m-0"><a href="pages-profile-user.html" class="text-heading">' +
               $name +
               '</a></h6>' +
-              '<small class="text-muted">' +
+              '<small>' +
               $email +
               '</small>' +
               '</div>' +
@@ -154,7 +153,7 @@ $(function () {
                 '<h6 class="mb-0 align-items-center d-flex w-px-100 ' +
                 $paymentObj.class +
                 '">' +
-                '<i class="ti ti-circle-filled fs-tiny me-2"></i>' +
+                '<i class="ti ti-circle-filled fs-tiny me-1"></i>' +
                 $paymentObj.title +
                 '</h6>'
               );
@@ -184,7 +183,7 @@ $(function () {
             var $method = full['method'];
             var $method_number = full['method_number'];
 
-            if ($method == 'paypal_logo') {
+            if ($method == 'paypal') {
               $method_number = '@gmail.com';
             }
             return (
@@ -195,8 +194,8 @@ $(function () {
               $method +
               '.png" alt="' +
               $method +
-              '"class="me-2" width="16">' +
-              '<span><i class="ti ti-dots me-1 mt-n1"></i>' +
+              '" width="29">' +
+              '<span><i class="ti ti-dots me-1 mt-1"></i>' +
               $method_number +
               '</span>' +
               '</div>'
@@ -211,10 +210,10 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             return (
-              '<div class="d-flex justify-content-sm-center align-items-sm-center">' +
-              '<button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>' +
+              '<div class="d-flex justify-content-sm-start align-items-sm-center">' +
+              '<button class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="/app/ecommerce/order/details/" class="dropdown-item">View</a>' +
+              '<a href="app-ecommerce-order-details.html" class="dropdown-item">View</a>' +
               '<a href="javascript:0;" class="dropdown-item delete-record">' +
               'Delete' +
               '</a>' +
@@ -226,9 +225,9 @@ $(function () {
       ],
       order: [3, 'asc'], //set any columns order asc/desc
       dom:
-        '<"card-header pb-md-2 d-flex flex-column flex-md-row align-items-start align-items-md-center"<f><"d-flex align-items-md-center justify-content-md-end mt-2 mt-md-0 gap-2"l<"dt-action-buttons"B>>' +
+        '<"card-header py-0 d-flex flex-column flex-md-row align-items-center"<f><"d-flex align-items-center justify-content-md-end gap-2 justify-content-center"l<"dt-action-buttons"B>>' +
         '>t' +
-        '<"row mx-2"' +
+        '<"row mx-1"' +
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
@@ -237,14 +236,18 @@ $(function () {
         sLengthMenu: '_MENU_',
         search: '',
         searchPlaceholder: 'Search Order',
-        info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
+        info: 'Displaying _START_ to _END_ of _TOTAL_ entries',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
       // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle',
-          text: '<i class="ti ti-download me-1"></i>Export',
+          className: 'btn btn-label-secondary dropdown-toggle waves-effect waves-light',
+          text: '<i class="ti ti-upload ti-xs me-2"></i>Export',
           buttons: [
             {
               extend: 'print',
@@ -411,9 +414,9 @@ $(function () {
         }
       }
     });
-    $('.dataTables_length').addClass('mt-0 mt-md-3 ms-n2');
+    $('.dataTables_length').addClass('ms-n2');
     $('.dt-action-buttons').addClass('pt-0');
-    $('.dataTables_filter').addClass('ms-n3');
+    $('.dataTables_filter').addClass('ms-n3 mb-0 mb-md-6');
   }
 
   // Delete Record

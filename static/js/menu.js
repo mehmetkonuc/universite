@@ -86,9 +86,11 @@ class Menu {
     el.setAttribute('data-bg-class', this._menuBgClass)
 
     // Switch to vertical menu on small screen for horizontal menu layout on page load
-    if (this._horizontal && window.innerWidth < window.Helpers.LAYOUT_BREAKPOINT) this.switchMenu('vertical')
-
-    this._bindEvents()
+    if (this._horizontal && window.innerWidth < window.Helpers.LAYOUT_BREAKPOINT) {
+      this.switchMenu('vertical')
+    } else {
+      this._bindEvents()
+    }
 
     // Link menu instance to element
     el.menuInstance = this
@@ -985,4 +987,5 @@ class Menu {
   }
 }
 
+window.Menu = Menu
 export { Menu }

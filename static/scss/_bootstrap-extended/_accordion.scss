@@ -31,6 +31,9 @@
         transform: none;
       }
     }
+    &.collapsed::before {
+      transform: rotate(-90deg);
+    }
     &::before {
       flex-shrink: 0;
       width: var(--#{$prefix}accordion-btn-icon-width);
@@ -46,11 +49,52 @@
     }
   }
 }
+
+// Solid variant icon color
+.accordion[class*='accordion-solid-'] {
+  .accordion-button::after {
+    background-image: str-replace(str-replace($accordion-button-icon, '#{$accordion-icon-color}', $white), '#', '%23');
+  }
+}
+
+// Solid Accordion With Active Border
+.accordion[class*='accordion-border-solid-'] {
+  .accordion-button.collapsed::after {
+    background-image: str-replace(str-replace($accordion-button-icon, '#{$accordion-icon-color}', $white), '#', '%23');
+  }
+}
+
+.accordion-header + .accordion-collapse .accordion-body {
+  padding-top: 0;
+  padding-bottom: 1.25rem;
+}
+
 // accordion without icon
 .accordion {
   &.accordion-without-arrow {
     .accordion-button::after {
       background-image: none !important;
+    }
+  }
+}
+
+.accordion-header {
+  line-height: $line-height-base;
+}
+
+.accordion:not(.accordion-custom-button):not(.accordion-arrow-left) .accordion-item {
+  box-shadow: $box-shadow-xs;
+  border: 0;
+  &:not(:first-child) {
+    margin-top: $spacer * 0.5;
+  }
+  &:last-child {
+    margin-bottom: $spacer * 0.5;
+  }
+  &.active {
+    box-shadow: $box-shadow;
+    & .accordion-button:not(.collapsed) {
+      box-shadow: none;
     }
   }
 }
@@ -63,24 +107,16 @@
   &.collapsed {
     @include border-radius($accordion-border-radius);
   }
-}
-
-// Default card styles of accordion
-.accordion {
-  &.accordion-bordered {
-    .card {
-      box-shadow: none;
+  &.collapsed {
+    &::after {
+      transform: rotate(-90deg);
     }
-  }
-  &:not(.accordion-bordered) > .card:not(:last-of-type) {
-    border-radius: $accordion-border-radius !important;
-    margin-bottom: 0.5rem;
   }
 }
 // added box shadow
 .accordion {
   &:not(.accordion-bordered) > .card.accordion-item {
-    box-shadow: $box-shadow-sm;
+    box-shadow: $box-shadow-xs;
     &.active {
       box-shadow: $card-box-shadow;
     }
@@ -90,20 +126,72 @@
   padding-top: 0;
 }
 
-// accordion with border
-.accordion {
-  &.accordion-bordered {
-    .accordion-item {
-      border-color: $border-color !important;
-      &:not(:first-of-type) {
+// Accordion custom button
+
+.accordion-custom-button {
+  .accordion-item {
+    transition: $accordion-transition;
+    transition-property: margin-top, margin-bottom, border-radius, border;
+    box-shadow: none;
+    border: $accordion-border-width solid $accordion-border-color;
+    &:not(:last-child) {
+      border-bottom: 0;
+    }
+    &:not(.active):not(:first-child) {
+      .accordion-header {
+        border: none;
+      }
+    }
+    .accordion-button {
+      border-color: $accordion-border-color;
+    }
+    &.active {
+      margin: 0;
+      box-shadow: none;
+      .accordion-header .accordion-button:focus {
+        border-bottom: $accordion-border-width solid $accordion-border-color;
+      }
+      & + .accordion-item {
         @include border-top-radius(0);
       }
-      &:not(:last-of-type) {
+      &:not(:first-child) {
+        @include border-top-radius(0);
+      }
+      &:not(:last-child) {
         @include border-bottom-radius(0);
       }
     }
+    .accordion-body {
+      padding-top: $accordion-body-padding-x;
+    }
+    &.previous-active {
+      @include border-bottom-radius(0);
+    }
+  }
+
+  .accordion-button {
+    border-radius: 0;
+    background-color: #fafafa;
+    &:not(.collapsed) {
+      &::after {
+        background-image: escape-svg($accordion-custom-button-active-icon);
+        transform: rotate(-180deg);
+      }
+    }
+    // Accordion icon
+    &::after {
+      background-image: escape-svg($accordion-custom-button-icon);
+    }
+  }
+
+  &:focus {
+    z-index: 3;
+    border-color: $border-color;
+    outline: 0;
+    box-shadow: var(--#{$prefix}accordion-btn-focus-box-shadow);
   }
 }
+
 // RTL
 // *******************************************************************************
 
@@ -113,10 +201,10 @@
       &::before {
         margin-left: 1.1rem;
         margin-right: 0;
-        transform: rotate(180deg);
+        transform: rotate(90deg);
       }
       &:not(.collapsed)::before {
-        transform: rotate(90deg);
+        transform: rotate(0deg);
       }
       // !- For RTL accordion icon rotation in other templates
       // &:not(.collapsed)::before {
@@ -130,10 +218,33 @@
     &::after {
       margin-left: 0;
       margin-right: auto;
+    }
+    &.collapsed {
+      &::after {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  .accordion-custom-button {
+    .accordion-button:not(.collapsed)::after {
       transform: rotate(180deg);
     }
-    &:not(.collapsed)::after {
-      transform: rotate(90deg);
+  }
+}
+
+//Dark style
+// *******************************************************************************
+
+@include dark-layout-only {
+  .accordion-custom-button {
+    .accordion-button {
+      background-color: #353a52;
+    }
+  }
+  .accordion:not(.accordion-custom-button):not(.accordion-arrow-left) .accordion-item {
+    box-shadow: $box-shadow-xs;
+    &.active {
+      box-shadow: $box-shadow;
     }
   }
 }

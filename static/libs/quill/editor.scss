@@ -49,9 +49,10 @@
   }
 
   &.ql-blank::before {
+    font-size: light.$font-size-root;
+    font-style: italic;
     position: absolute;
     content: attr(data-placeholder);
-    font-style: italic;
     left: 0;
     right: 0;
     pointer-events: none;
@@ -113,6 +114,8 @@
 
   &.ql-toolbar,
   & .ql-toolbar {
+    border-top-left-radius: light.$border-radius;
+    border-top-right-radius: light.$border-radius;
     box-sizing: border-box;
     padding: 0.5rem;
 
@@ -872,7 +875,7 @@
 
     .ql-snow {
       .ql-editor.ql-blank::before {
-        padding: 0 light.$input-btn-padding-x;
+        padding: 0 light.$input-padding-x;
       }
 
       &.ql-container {
@@ -880,7 +883,7 @@
       }
 
       .ql-editor {
-        padding: light.$input-btn-padding-x;
+        padding: light.$card-spacer-x-sm * 0.5 light.$input-padding-x;
       }
 
       &.ql-toolbar,
@@ -904,6 +907,10 @@
 
       &.ql-toolbar + .ql-container.ql-snow {
         border-top: 0;
+        .ql-editor,
+        & {
+          @include light.border-bottom-radius(light.$border-radius);
+        }
       }
 
       .ql-stroke {
@@ -1020,7 +1027,7 @@
 
     .ql-snow {
       .ql-editor.ql-blank::before {
-        padding: 0 dark.$input-btn-padding-x;
+        padding: 0 dark.$input-padding-x;
       }
 
       &.ql-container {
@@ -1028,7 +1035,7 @@
       }
 
       .ql-editor {
-        padding: dark.$input-btn-padding-x;
+        padding: dark.$card-spacer-x-sm * 0.5 dark.$input-padding-x;
         background: dark.$card-bg;
       }
 
@@ -1058,6 +1065,10 @@
 
       &.ql-toolbar + .ql-container.ql-snow {
         border-top: 0;
+        .ql-editor,
+        & {
+          @include dark.border-bottom-radius(dark.$border-radius);
+        }
       }
 
       .ql-stroke-miter {

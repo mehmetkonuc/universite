@@ -1,7 +1,7 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
-@import '../../node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5';
+@import 'datatables.net-buttons-bs5/css/buttons.bootstrap5';
 
 // remove 0.5em margin bottom from dt-buttons
 @media screen and (max-width: 767px) {
@@ -22,6 +22,7 @@ div.dataTables_wrapper .dt-button-collection {
 .dt-button-collection {
   margin-top: 0.2rem;
 }
+div.dropdown-menu.dt-button-collection,
 div.dt-button-collection .dt-button:not(.dt-btn-split-drop) {
   min-width: 8rem;
 }
@@ -31,7 +32,8 @@ div.dt-button-collection .dt-button:not(.dt-btn-split-drop) {
 }
 
 // override button radius
-div.dt-button-collection .dt-button {
+div.dt-button-collection .dt-button,
+div.dt-buttons div.dropdown-menu .dt-button {
   border-radius: light.$dropdown-border-radius;
 }
 // Light style
@@ -59,9 +61,6 @@ div.dt-button-collection .dt-button {
   .dark-style {
     div.dataTables_wrapper .dt-button-collection {
       background-color: dark.$dropdown-bg;
-      > div[role='menu'] {
-        box-shadow: dark.$dropdown-box-shadow;
-      }
     }
     .dataTable a:not([href]):not([tabindex]) {
       color: map-get(dark.$theme-colors, success);
@@ -92,8 +91,11 @@ div.dt-button-collection .dt-button {
   }
   &.btn-group {
     button {
-      border-color: transparent;
+      border-color: transparent !important;
       border-radius: light.$border-radius !important;
     }
   }
+}
+div.dt-buttons .dropdown-menu .dt-button {
+  border-radius: light.$border-radius;
 }

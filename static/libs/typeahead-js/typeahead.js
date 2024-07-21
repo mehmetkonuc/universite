@@ -1,3 +1,7 @@
-import typeahead from 'typeahead.js/dist/typeahead.bundle';
+import 'typeahead.js/dist/typeahead.bundle';
 
-export { typeahead };
+// try {
+//   window.typeahead = typeahead;
+// } catch (e) {}
+
+// export { typeahead };

@@ -1,9 +1,120 @@
 // Input groups
 // *******************************************************************************
 
+$validation-messages: '';
+@each $state in map-keys($form-validation-states) {
+  $validation-messages: $validation-messages +
+    ':not(.' +
+    unquote($state) +
+    '-tooltip)' +
+    ':not(.' +
+    unquote($state) +
+    '-feedback)';
+}
+
 // Using :focus-within to apply focus/validation border and shadow to default and merged input-group
 .input-group {
   border-radius: $input-border-radius;
+  // Input group (Default)
+  .input-group-text {
+    padding: calc($input-padding-y - $input-focus-border-width) calc($input-padding-x - $input-border-width);
+    @include transition($input-transition);
+  }
+
+  //? Info :focus-within to apply focus/validation border and shadow to default and merged input & input-group
+  &:focus-within {
+    .input-group-text {
+      border-width: $input-focus-border-width;
+      padding: calc($input-padding-y - calc($input-focus-border-width + $input-border-width))
+        calc($input-padding-x - $input-focus-border-width);
+      .was-validated &,
+      .fv-plugins-bootstrap5-row-invalid & {
+        padding: calc($input-padding-y - $input-focus-border-width) calc($input-padding-x - $input-border-width);
+      }
+    }
+    .form-control,
+    .form-select {
+      border-width: $input-focus-border-width;
+      padding: calc($input-padding-y - $input-focus-border-width) calc($input-padding-x - $input-border-width);
+      &:first-child {
+        padding-inline-start: calc($input-padding-x - $input-focus-border-width);
+      }
+    }
+  }
+  // Input group (lg)
+  &.input-group-lg {
+    .input-group-text {
+      padding: calc($input-padding-y-lg - $input-border-width) calc($input-padding-x-lg - $input-border-width);
+    }
+    &:focus-within {
+      .input-group-text {
+        padding: calc($input-padding-y-lg - $input-border-width) calc($input-padding-x-lg - $input-focus-border-width);
+      }
+      .form-control:not(:first-child),
+      .form-select:not(:first-child) {
+        padding: calc($input-padding-y-lg - $input-border-width) calc($input-padding-x-lg);
+      }
+    }
+  }
+  // Input group (sm)
+  &.input-group-sm {
+    .form-control,
+    .form-select {
+      padding-inline: calc($input-padding-x-sm - $input-border-width);
+    }
+    .input-group-text {
+      padding: calc($input-padding-y-sm - $input-border-width) calc($input-padding-x-sm - $input-border-width);
+    }
+    &:focus-within {
+      .input-group-text {
+        padding: calc($input-padding-y-sm - $input-focus-border-width)
+          calc($input-padding-x-sm - $input-focus-border-width);
+      }
+      .form-control,
+      .form-select {
+        padding: calc($input-padding-y-sm - $input-border-width) calc($input-padding-x-sm);
+      }
+    }
+  }
+
+  > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(
+      .btn + .form-control
+    )#{$validation-messages} {
+    margin-inline-start: calc($input-focus-border-width - 3px);
+  }
+
+  // Input group merge
+  &.input-group-merge {
+    > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(
+        .btn + .form-control
+      )#{$validation-messages} {
+      margin-inline-start: calc(($input-focus-border-width + $input-border-width) * -1);
+    }
+    &:focus-within {
+      > .form-control:first-child,
+      > .form-select:first-child {
+        padding-inline: calc($input-padding-x - $input-focus-border-width);
+      }
+    }
+    &.input-group-sm {
+      &:focus-within {
+        > .form-control:first-child,
+        > .form-select:first-child {
+          padding-inline: calc($input-padding-x - $input-focus-border-width);
+        }
+      }
+    }
+  }
+
+  // Input group on focus-within use margin-left same as as focus border width
+  &:focus-within {
+    > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(
+        .btn + .form-control
+      )#{$validation-messages} {
+      margin-inline-start: calc($input-focus-border-width * -1);
+    }
+  }
+
   // Rounded pill option
   &.rounded-pill {
     .input-group-text,
@@ -22,6 +133,23 @@
     box-shadow: $input-focus-box-shadow;
     .form-control,
     .input-group-text {
+      box-shadow: none;
+    }
+  }
+  .was-validated & {
+    &:has(.is-invalid),
+    &:has(.is-valid),
+    &:has(:valid),
+    &:has(:invalid) {
+      box-shadow: none;
+    }
+  }
+  &.has-validation,
+  &.is-invalid {
+    &:has(.is-invalid),
+    &:has(.is-valid),
+    &:has(:invalid),
+    &:has(.form-control.is-invalid) {
       box-shadow: none;
     }
   }
@@ -63,11 +191,6 @@
   }
 }
 
-// input-group-text padding
-.input-group-lg > .input-group-text {
-  padding-left: 1.125rem;
-  padding-right: 1.125rem;
-}
 // Merge input
 
 // Input group merge .form-control border & padding
@@ -88,11 +211,13 @@
         margin-left: 0 !important;
       }
     }
-    .form-control {
+    .form-control:not(textarea) {
       &:not(:first-child) {
+        padding-left: 0 !important;
         border-left: 0;
       }
       &:not(:last-child) {
+        padding-right: 0 !important;
         border-right: 0;
       }
     }
@@ -188,7 +313,7 @@
     }
 
     > :not(:first-child):not(.dropdown-menu)#{$validation-messages} {
-      margin-right: -$input-border-width;
+      margin-right: calc(#{$input-border-width} * -1);
       @include border-end-radius(0);
       margin-left: 0px;
       @include border-start-radius($input-border-radius);
@@ -237,11 +362,11 @@
     }
     .form-control {
       &:not(:first-child) {
-        padding-right: 0;
+        padding-right: 0 !important;
         border-right: 0;
       }
       &:not(:last-child) {
-        padding-left: 0;
+        padding-left: 0 !important;
         border-left: 0;
       }
     }

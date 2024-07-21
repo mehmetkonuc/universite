@@ -11,11 +11,11 @@
     shift-color($background, -$alert-border-scale, $card-bg),
     shift-color($background, $alert-border-scale, $card-bg)
   );
-  $color: if($dark-style, shift-color($background, -$alert-color-scale), shift-color($background, $alert-color-scale));
+  $color: $background;
   $background: if(
     $dark-style,
-    shift-color($background, -$alert-bg-scale, $card-bg),
-    shift-color($background, $alert-bg-scale, $card-bg)
+    shade-color($background, $alert-bg-scale, $card-bg),
+    tint-color($background, $alert-bg-tint-scale, $card-bg)
   );
 
   #{$parent} {
@@ -33,7 +33,69 @@
 
   #{$parent} {
     hr {
-      background-color: $color !important;
+      color: $color !important;
+    }
+    .alert-icon {
+      background-color: $color;
+    }
+  }
+}
+
+// Solid Alerts
+@mixin template-alert-solid-variant($parent, $background, $color: null) {
+  $color: if($color, $color, color-contrast($background));
+
+  #{$parent} {
+    @include gradient-bg($background);
+    color: $color;
+
+    .btn-close {
+      background-image: str-replace(str-replace($btn-close-bg, '#{$btn-close-color}', $color), '#', '%23');
+    }
+
+    .alert-link {
+      color: $color;
+    }
+  }
+
+  #{$parent} {
+    hr {
+      color: $color !important;
+    }
+    .alert-icon {
+      color: $background !important;
+    }
+  }
+}
+
+// Outline Alerts
+@mixin template-alert-outline-variant($parent, $background, $color: null) {
+  $color: $background;
+  $icon-bg: if(
+    $dark-style,
+    shade-color($background, $alert-bg-scale, $card-bg),
+    tint-color($background, $alert-bg-tint-scale, $card-bg)
+  );
+
+  #{$parent} {
+    border-color: $background;
+    color: $color;
+    .btn-close {
+      background-image: str-replace(str-replace($btn-close-bg, '#{$btn-close-color}', $background), '#', '%23');
+    }
+
+    .alert-link {
+      color: $color;
+    }
+  }
+
+  #{$parent} {
+    hr {
+      color: $color !important;
+    }
+    .alert-icon {
+      color: $color !important;
+      background-color: $icon-bg !important;
     }
   }
 }

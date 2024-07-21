@@ -2,7 +2,7 @@
 
 @mixin bs-datepicker-theme($background, $color: null) {
   $color: if($color, $color, color-contrast($background));
-  $range-bg: rgba-to-hex(rgba($background, 0.16), #fff);
+  $range-bg: rgba-to-hex(rgba($background, 0.16), $card-bg);
   $range-color: $background;
 
   .datepicker {
@@ -17,6 +17,7 @@
         &.range-end {
           background: $background !important;
           color: $color !important;
+          box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
         }
 
         &.range,
@@ -26,7 +27,7 @@
           background: $range-bg !important;
 
           &.focused {
-            background: rgba-to-hex(rgba($background, 0.24), #fff) !important;
+            background: rgba-to-hex(rgba($background, 0.24), $card-bg) !important;
           }
 
           &.disabled {
@@ -35,8 +36,10 @@
           }
         }
 
-        &.today:not(.active) {
-          box-shadow: 0 0 0 1px $background inset;
+        &.today:not(.active),
+        &.today:not(.active):hover {
+          color: $background;
+          background-color: rgba-to-hex(rgba($background, 0.16), $card-bg);
         }
       }
     }
@@ -45,7 +48,7 @@
 
 @mixin bs-datepicker-dark-theme($background, $color: null) {
   $color: if($color, $color, color-contrast($background));
-  $range-bg: rgba-to-hex(rgba($background, 0.24), #2f3349);
+  $range-bg: rgba-to-hex(rgba($background, 0.24), $card-bg);
   $range-color: $background;
 
   .datepicker {
@@ -60,6 +63,7 @@
         &.range-end {
           color: $color !important;
           background: $background !important;
+          box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
         }
 
         &.range,
@@ -74,12 +78,14 @@
           }
 
           &.focused {
-            background: rgba-to-hex(rgba($background, 0.24), #2f3349) !important;
+            background: rgba-to-hex(rgba($background, 0.24), $card-bg) !important;
           }
         }
 
-        &.today:not(.active) {
-          box-shadow: 0 0 0 1px $background inset;
+        &.today:not(.active),
+        &.today:not(.active):hover {
+          color: $background;
+          background-color: rgba-to-hex(rgba($background, 0.16), $card-bg);
         }
       }
     }
