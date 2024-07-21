@@ -7,20 +7,8 @@
  *
  * Date: 2024-04-21T07:43:02.731Z
  */
- .modal-content {
-  overflow: hidden;
-}
 
- .modal-body img {
-  max-width: 50%;
-  height: auto;
-}
 .cropper-container {
-  max-width: 100%;
-  max-height: 80vh;
-  margin: auto;
-  overflow: hidden;
-  position: relative;
   direction: ltr;
   font-size: 0;
   line-height: 0;
@@ -33,16 +21,7 @@
       -ms-user-select: none;
           user-select: none;
 }
-.cropper-view-box,
-.cropper-face,
-.cropper-line,
-.cropper-point {
-    overflow: visible !important;
-}
 
-.modal-body {
-    text-align: center; /* To center the cropper within the modal */
-}
 .cropper-container img {
     backface-visibility: hidden;
     display: block;
@@ -65,19 +44,16 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 100%;
 }
 
 .cropper-wrap-box,
 .cropper-canvas {
   overflow: hidden;
-  
 }
 
 .cropper-drag-box {
   background-color: #fff;
   opacity: 0;
-
 }
 
 .cropper-modal {

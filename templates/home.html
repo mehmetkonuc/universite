@@ -1,1 +1,5 @@
-{% extends 'partials/base.html' %}
+{% if user.is_authenticated %}
+{% include 'post/post.html' %}
+{% else %}
+{% include 'home/guest.html' %}
+{% endif %}

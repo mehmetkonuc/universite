@@ -37,15 +37,14 @@
         <i class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
       </a>
     </div>
-
     <div class="menu-inner-shadow"></div>
-
+    {% with current_page=request.resolver_match.url_name %}
     <ul class="menu-inner py-1">
       <!-- Page -->
-      <li class="menu-item active">
-        <a href="index.html" class="menu-link">
+      <li class="menu-item {% if current_page == 'home' %} active{% endif %}">
+        <a href="{% url 'home' %}" class="menu-link">
           <i class="menu-icon tf-icons ti ti-smart-home"></i>
-          <div data-i18n="Page 1">Page 1</div>
+          <div data-i18n="Page 1">Ana Sayfa</div>
         </a>
       </li>
       <li class="menu-item">
@@ -55,5 +54,6 @@
         </a>
       </li>
     </ul>
+    {% endwith %}
   </aside>
   {% endblock %}

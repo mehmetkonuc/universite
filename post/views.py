@@ -7,38 +7,40 @@ class PostView(View):
     form_class = forms.PostsForm
     model = models.PostsModel
     
-    template_name = 'post/post.html'
+    template_name = 'home.html'
     context = {
         'siteTitle': 'Paylaşımlar',
     }
     
     def get(self, request):
-        form = self.form_class()
-        posts = self.model.objects.filter().order_by('-PublishDate')
-        
-        self.context.update({'form': form,
-                             'posts': posts})
+        if 'AnonymousUser' not in str(request.user):
+            form = self.form_class()
+            posts = self.model.objects.filter().order_by('-PublishDate')
+            
+            self.context.update({'form': form,
+                                    'posts': posts})
         
         return render(request, self.template_name, self.context)
 
     def post(self, request):
-        form = self.form_class(request.POST)
+        if 'AnonymousUser' not in str(request.user):
+            form = self.form_class(request.POST)
 
-        if form.is_valid():
-            FormSave = form.save(commit=False)
-            FormSave.User = request.user
-            FormSave.save()
-            
-        posts = self.model.objects.filter().order_by('-PublishDate')
-        self.context.update({'form': form,
-                             'posts': posts}) 
+            if form.is_valid():
+                FormSave = form.save(commit=False)
+                FormSave.User = request.user
+                FormSave.save()
+                
+            posts = self.model.objects.filter().order_by('-PublishDate')
+            self.context.update({'form': form,
+                                'posts': posts}) 
         return render(request, self.template_name, self.context)
 
 
 def DeletePost(request, PostID):
     DeletePost = models.PostsModel.objects.get(id=PostID)
     
-    if DeletePost.User == request.user:
+    if DeletePost.User == request.user or request.user.is_superuser:
         DeletePost.delete()
         
     return redirect('post')
