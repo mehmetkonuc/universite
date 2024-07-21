@@ -5,7 +5,6 @@ from . import views
 
 urlpatterns = [
     path('settings/', views.ProfileSettingsView.as_view(), name='profileSettings'),
-    path('upload_image/', views.PictureSettingsView.as_view(), name='upload_image'),
     path('settings/additional/', views.AdditionalInformationView.as_view(), name='AdditionalSettings'),
     path('settings/education/', views.EducationSettingsView.as_view(), name='EducationSettings'),
     path('delete/', views.ProfileDeleteView.as_view(), name='profileDelete'),

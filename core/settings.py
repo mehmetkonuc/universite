@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'settings',
     'profiles',
+    'post',
     'inputs',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"

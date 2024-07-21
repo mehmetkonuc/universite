@@ -40,5 +40,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='guest/password_reset_complete.html'), name='password_reset_complete'),
     #UYGULAMALARIM
-    path('profile/', include('profiles.urls'))
+    path('profile/', include('profiles.urls')),
+    path('post/', include('post.urls')),
 ]

@@ -1,0 +1,123 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-3">
+      <div class="card">
+         Sol Blok
+      </div>
+   </div>
+   <div class="col-lg-9">
+      <div class="col-12">
+         <div class="card mb-4">
+            <div class="card-body">
+               <form method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <textarea name="Content" id="autosize-demo" rows="3" class="form-control" placeholder="Hadi aklındakini Fakula!!!"></textarea>
+                  <div class="d-flex justify-content-end align-items-center">
+                     <div class="me-3">
+                        <label class="cursor-pointer" for="attach-file-1"
+                           ><i class="ti ti-paperclip me-2"></i
+                           ><span class="align-middle">Attachments</span></label
+                           >
+                        <input type="file" name="file-input" class="d-none" id="attach-file-1" />
+                     </div>
+                     <button type="submit" class="btn btn-primary mt-1">
+                     <i class="ti ti-send ti-xs me-1"></i>
+                     <span class="align-middle">Send</span>
+                     </button>
+                  </div>
+               </form>
+            </div>
+         </div>
+         {% for post in posts %}
+         <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between mb-0">
+               <div class="card-title mb-0">
+                  <div class="d-flex">
+                     <div class="d-flex">
+                        <a href="{% url 'profile' post.User.username %}">
+                           <div class="avatar avatar-md me-2">
+                              {% if post.User.profilepicturemodel.profile_photo %}
+                              {% with profile_photo_url=post.User.profilepicturemodel.profile_photo.url %}
+                              <img
+                                 src="{{ profile_photo_url }}"
+                                 alt="Avatar"
+                                 class="rounded-circle" />
+                              {% endwith %}
+                              {% else %}
+                              <img
+                                 src="{% static 'assets/img/avatars/14.png' %}"
+                                 alt="Avatar"
+                                 class="rounded-circle" />
+                              {% endif %}
+                           </div>
+                     </div>
+                     <div class="flex-grow-1 ms-1">
+                     <div class="me-2 text-body h5 mb-0">{{ post.User.first_name }} {{ post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                     <small class="text-muted">{{ post.PublishDate }}</small>
+                     </div>
+                  </div>
+               </div>
+               <div class="dropdown">
+                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                     <a class="dropdown-item text-danger" href="{% url 'DeletePost' post.id %}"
+                  onclick="return confirmDelete();"><i class="ti ti-trash font-size-18"></i>Sil</a>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               {{ post.Content }}
+               <hr />
+               <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center">
+                  <a href="javascript:void(0);" class="text-body me-3"
+                    ><i class="ti ti-heart-plus"></i> 15</a
+                  >
+                  <a href="javascript:void(0);" class="text-body me-3"
+                  ><i class="ti ti-message-plus"></i> 15</a
+                >
+                <div class="dropdown">
+                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ti ti-share"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                     <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                  </div>
+               </div>
+                </div>
+                <div class="ms-auto">
+ 
+                </div>
+              </div>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+
+</div>
+
+{%endblock%}
+{% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/cleavejs/cleave.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/cleavejs/cleave-phone.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
+
+
+<script type="text/javascript">
+  function confirmDelete() {
+    return confirm("Silmek istediğinizden emin misiniz?");
+  }
+</script>
+{% endblock %}

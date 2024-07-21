@@ -35,7 +35,7 @@ class ProfileSettingsView(LoginRequiredMixin, View):
         'siteTitle': 'Hesap Ayarları',
     }
     def get(self, request, *args, **kwargs):
-        profile_picture_instance = get_object_or_404(models.ProfilePictureModel, user=request.user)
+        profile_picture_instance = models.ProfilePictureModel.objects.filter(user=request.user).first()
         picture = self.form_class(instance=profile_picture_instance)
         profile = self.profile_form(instance=request.user)
         self.context.update({'picture': picture, 'profile' : profile})
@@ -47,7 +47,7 @@ class ProfileSettingsView(LoginRequiredMixin, View):
             profile = request.user.profilepicturemodel
             profile.profile_photo.delete(save=True)
             return redirect('profileSettings')
-        profile_picture_instance = get_object_or_404(models.ProfilePictureModel, user=request.user)
+        profile_picture_instance = models.ProfilePictureModel.objects.filter(user=request.user).first()
         picture = self.form_class(request.POST, request.FILES, instance=profile_picture_instance)
         profile = self.profile_form(instance=request.user)
         if profile.is_valid():          
@@ -57,32 +57,6 @@ class ProfileSettingsView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, self.context)
 
-
-class PictureSettingsView(LoginRequiredMixin, View):
-    form_class = forms.ProfilePictureForm
-    profile_form = forms.ProfileEditForm
-    template_name = 'profile/settings/profileSettings.html'
-    context = {
-        'siteTitle': 'Hesap Ayarları',
-    }
-
-    def post(self, request, *args, **kwargs):
-        profile_picture_instance = get_object_or_404(models.ProfilePictureModel, user=request.user)
-        picture = self.form_class(request.POST, request.FILES, instance=profile_picture_instance)
-        profile = self.profile_form(instance=request.user)
-
-        if picture.is_valid():
-            pictureDelete = request.user.profilepicturemodel
-            pictureDelete.profile_photo.delete(save=True)
-             
-            profile_picture_instance = picture.save(commit=False)
-            profile_picture_instance.user = request.user 
-            profile_picture_instance.save()
-            
-        self.context.update({'picture': picture, 'profile' : profile})
-
-        return render(request, self.template_name, self.context)
-    
     
 class EducationSettingsView(LoginRequiredMixin, View):
     template_name = 'profile/settings/EducationSettings.html'
