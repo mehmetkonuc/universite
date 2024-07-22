@@ -25,7 +25,7 @@ class PostView(View):
     def post(self, request):
         if 'AnonymousUser' not in str(request.user):
             form = self.form_class(request.POST)
-
+            
             if form.is_valid():
                 FormSave = form.save(commit=False)
                 FormSave.User = request.user

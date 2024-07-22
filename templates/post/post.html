@@ -2,257 +2,273 @@
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/app-academy-details.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/dropzone/dropzone.css' %}" />
+<style>
+.image-thumbnail {
+    position: relative;
+    margin: 5px;
+    display: inline-block;
+}
+
+.image-thumbnail img {
+    max-width: 100px;
+    max-height: 100px;
+    display: block;
+}
+
+.image-thumbnail .remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+</style>
+
+
+
 {% endblock %}
 {% block content %}
 <div class="row">
    <div class="col-lg-3">
-
-
-
-
       <div class="accordion stick-top accordion-custom-button" id="courseContent">
          <div class="accordion-item active mb-0">
-           <div class="accordion-header" id="headingOne">
-             <button
-               type="button"
-               class="accordion-button"
-               data-bs-toggle="collapse"
-               data-bs-target="#chapterOne"
-               aria-expanded="true"
-               aria-controls="chapterOne">
+            <div class="accordion-header" id="headingOne">
+               <button
+                  type="button"
+                  class="accordion-button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterOne"
+                  aria-expanded="true"
+                  aria-controls="chapterOne">
                <span class="d-flex flex-column">
-                 <span class="h5 mb-0">Course Content</span>
-                 <span class="text-body fw-normal">2 / 5 | 4.4 min</span>
+               <span class="h5 mb-0">Course Content</span>
+               <span class="text-body fw-normal">2 / 5 | 4.4 min</span>
                </span>
-             </button>
-           </div>
-           <div id="chapterOne" class="accordion-collapse collapse show" data-bs-parent="#courseContent">
-             <div class="accordion-body py-4">
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defaultCheck1" checked="" />
-                 <label for="defaultCheck1" class="form-check-label ms-4">
-                   <span class="mb-0 h6">1. Welcome to this course</span>
-                   <small class="text-body d-block">2.4 min</small>
-                 </label>
+               </button>
+            </div>
+            <div id="chapterOne" class="accordion-collapse collapse show" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck1" checked="" />
+                     <label for="defaultCheck1" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. Welcome to this course</span>
+                     <small class="text-body d-block">2.4 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck2" checked="" />
+                     <label for="defaultCheck2" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. Watch before you start</span>
+                     <small class="text-body d-block">4.8 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck3" />
+                     <label for="defaultCheck3" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. Basic design theory</span>
+                     <small class="text-body d-block">5.9 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck4" />
+                     <label for="defaultCheck4" class="form-check-label ms-4">
+                     <span class="mb-0 h6">4. Basic fundamentals</span>
+                     <small class="text-body d-block">3.6 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck5" />
+                     <label for="defaultCheck5" class="form-check-label ms-4">
+                     <span class="mb-0 h6">5. What is ui/ux</span>
+                     <small class="text-body d-block">10.6 min</small>
+                     </label>
+                  </div>
                </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defaultCheck2" checked="" />
-                 <label for="defaultCheck2" class="form-check-label ms-4">
-                   <span class="mb-0 h6">2. Watch before you start</span>
-                   <small class="text-body d-block">4.8 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defaultCheck3" />
-                 <label for="defaultCheck3" class="form-check-label ms-4">
-                   <span class="mb-0 h6">3. Basic design theory</span>
-                   <small class="text-body d-block">5.9 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defaultCheck4" />
-                 <label for="defaultCheck4" class="form-check-label ms-4">
-                   <span class="mb-0 h6">4. Basic fundamentals</span>
-                   <small class="text-body d-block">3.6 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-0">
-                 <input class="form-check-input" type="checkbox" id="defaultCheck5" />
-                 <label for="defaultCheck5" class="form-check-label ms-4">
-                   <span class="mb-0 h6">5. What is ui/ux</span>
-                   <small class="text-body d-block">10.6 min</small>
-                 </label>
-               </div>
-             </div>
-           </div>
+            </div>
          </div>
          <div class="accordion-item">
-           <div class="accordion-header" id="headingTwo">
-             <button
-               type="button"
-               class="accordion-button collapsed"
-               data-bs-toggle="collapse"
-               data-bs-target="#chapterTwo"
-               aria-expanded="false"
-               aria-controls="chapterTwo">
+            <div class="accordion-header" id="headingTwo">
+               <button
+                  type="button"
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterTwo"
+                  aria-expanded="false"
+                  aria-controls="chapterTwo">
                <span class="d-flex flex-column">
-                 <span class="h5 mb-0">Web Design for Web Developers</span>
-                 <span class="text-body fw-normal">1 / 4 | 4.4 min</span>
+               <span class="h5 mb-0">Web Design for Web Developers</span>
+               <span class="text-body fw-normal">1 / 4 | 4.4 min</span>
                </span>
-             </button>
-           </div>
-           <div id="chapterTwo" class="accordion-collapse collapse" data-bs-parent="#courseContent">
-             <div class="accordion-body py-4">
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck1" checked="" />
-                 <label for="defCheck1" class="form-check-label ms-4">
-                   <span class="mb-0 h6">1. How to use Pages in Figma</span>
-                   <small class="text-body d-block">8:31 min</small>
-                 </label>
+               </button>
+            </div>
+            <div id="chapterTwo" class="accordion-collapse collapse" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck1" checked="" />
+                     <label for="defCheck1" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. How to use Pages in Figma</span>
+                     <small class="text-body d-block">8:31 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck2" />
+                     <label for="defCheck2" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. What is Lo Fi Wireframe</span>
+                     <small class="text-body d-block">2 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck3" />
+                     <label for="defCheck3" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. How to use color in Figma</span>
+                     <small class="text-body d-block">5.9 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defCheck4" />
+                     <label for="defCheck4" class="form-check-label ms-4">
+                     <span class="mb-0 h6">4. Frames vs Groups in Figma</span>
+                     <small class="text-body d-block">3.6 min</small>
+                     </label>
+                  </div>
                </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck2" />
-                 <label for="defCheck2" class="form-check-label ms-4">
-                   <span class="mb-0 h6">2. What is Lo Fi Wireframe</span>
-                   <small class="text-body d-block">2 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck3" />
-                 <label for="defCheck3" class="form-check-label ms-4">
-                   <span class="mb-0 h6">3. How to use color in Figma</span>
-                   <small class="text-body d-block">5.9 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-0">
-                 <input class="form-check-input" type="checkbox" id="defCheck4" />
-                 <label for="defCheck4" class="form-check-label ms-4">
-                   <span class="mb-0 h6">4. Frames vs Groups in Figma</span>
-                   <small class="text-body d-block">3.6 min</small>
-                 </label>
-               </div>
-             </div>
-           </div>
+            </div>
          </div>
          <div class="accordion-item">
-           <div class="accordion-header" id="headingThree">
-             <button
-               type="button"
-               class="accordion-button collapsed"
-               data-bs-toggle="collapse"
-               data-bs-target="#chapterThree"
-               aria-expanded="false"
-               aria-controls="chapterThree">
+            <div class="accordion-header" id="headingThree">
+               <button
+                  type="button"
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterThree"
+                  aria-expanded="false"
+                  aria-controls="chapterThree">
                <span class="d-flex flex-column">
-                 <span class="h5 mb-0">Build Beautiful Websites!</span>
-                 <span class="text-body fw-normal">0 / 6 | 4.4 min</span>
+               <span class="h5 mb-0">Build Beautiful Websites!</span>
+               <span class="text-body fw-normal">0 / 6 | 4.4 min</span>
                </span>
-             </button>
-           </div>
-           <div id="chapterThree" class="accordion-collapse collapse" data-bs-parent="#courseContent">
-             <div class="accordion-body py-4">
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-01" />
-                 <label for="defCheck-01" class="form-check-label ms-4">
-                   <span class="mb-0 h6">1. Section & Div Block</span>
-                   <small class="text-body d-block">8:31 min</small>
-                 </label>
+               </button>
+            </div>
+            <div id="chapterThree" class="accordion-collapse collapse" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-01" />
+                     <label for="defCheck-01" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. Section & Div Block</span>
+                     <small class="text-body d-block">8:31 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-02" />
+                     <label for="defCheck-02" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. Read-Only Version of Chat App</span>
+                     <small class="text-body d-block">8 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-03" />
+                     <label for="defCheck-03" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. Webflow Autosave</span>
+                     <small class="text-body d-block">2.9 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-04" />
+                     <label for="defCheck-04" class="form-check-label ms-4">
+                     <span class="mb-0 h6">4. Canvas Settings</span>
+                     <small class="text-body d-block">7.6 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-05" />
+                     <label for="defCheck-05" class="form-check-label ms-4">
+                     <span class="mb-0 h6">5. HTML Tags</span>
+                     <small class="text-body d-block">10 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defCheck-06" />
+                     <label for="defCheck-06" class="form-check-label ms-4">
+                     <span class="mb-0 h6">6. Footer (Chat App)</span>
+                     <small class="text-body d-block">9.10 min</small>
+                     </label>
+                  </div>
                </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-02" />
-                 <label for="defCheck-02" class="form-check-label ms-4">
-                   <span class="mb-0 h6">2. Read-Only Version of Chat App</span>
-                   <small class="text-body d-block">8 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-03" />
-                 <label for="defCheck-03" class="form-check-label ms-4">
-                   <span class="mb-0 h6">3. Webflow Autosave</span>
-                   <small class="text-body d-block">2.9 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-04" />
-                 <label for="defCheck-04" class="form-check-label ms-4">
-                   <span class="mb-0 h6">4. Canvas Settings</span>
-                   <small class="text-body d-block">7.6 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-05" />
-                 <label for="defCheck-05" class="form-check-label ms-4">
-                   <span class="mb-0 h6">5. HTML Tags</span>
-                   <small class="text-body d-block">10 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-0">
-                 <input class="form-check-input" type="checkbox" id="defCheck-06" />
-                 <label for="defCheck-06" class="form-check-label ms-4">
-                   <span class="mb-0 h6">6. Footer (Chat App)</span>
-                   <small class="text-body d-block">9.10 min</small>
-                 </label>
-               </div>
-             </div>
-           </div>
+            </div>
          </div>
          <div class="accordion-item">
-           <div class="accordion-header" id="headingFour">
-             <button
-               type="button"
-               class="accordion-button collapsed"
-               data-bs-toggle="collapse"
-               data-bs-target="#chapterFour"
-               aria-expanded="false"
-               aria-controls="chapterFour">
+            <div class="accordion-header" id="headingFour">
+               <button
+                  type="button"
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterFour"
+                  aria-expanded="false"
+                  aria-controls="chapterFour">
                <span class="d-flex flex-column">
-                 <span class="h5 mb-0">Final Project</span>
-                 <span class="text-body fw-normal">2 / 3 | 4.4 min</span>
+               <span class="h5 mb-0">Final Project</span>
+               <span class="text-body fw-normal">2 / 3 | 4.4 min</span>
                </span>
-             </button>
-           </div>
-           <div id="chapterFour" class="accordion-collapse collapse" data-bs-parent="#courseContent">
-             <div class="accordion-body py-4">
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-101" checked="" />
-                 <label for="defCheck-101" class="form-check-label ms-4">
-                   <span class="mb-0 h6">1. Responsive Blog Site</span>
-                   <small class="text-body d-block">10:0 min</small>
-                 </label>
+               </button>
+            </div>
+            <div id="chapterFour" class="accordion-collapse collapse" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-101" checked="" />
+                     <label for="defCheck-101" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. Responsive Blog Site</span>
+                     <small class="text-body d-block">10:0 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-102" checked="" />
+                     <label for="defCheck-102" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. Responsive Portfolio</span>
+                     <small class="text-body d-block">13:00 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defCheck-103" />
+                     <label for="defCheck-103" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. Responsive eCommerce Website</span>
+                     <small class="text-body d-block">15 min</small>
+                     </label>
+                  </div>
                </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-4">
-                 <input class="form-check-input" type="checkbox" id="defCheck-102" checked="" />
-                 <label for="defCheck-102" class="form-check-label ms-4">
-                   <span class="mb-0 h6">2. Responsive Portfolio</span>
-                   <small class="text-body d-block">13:00 min</small>
-                 </label>
-               </div>
-               <div class="form-check d-flex align-items-center gap-1 mb-0">
-                 <input class="form-check-input" type="checkbox" id="defCheck-103" />
-                 <label for="defCheck-103" class="form-check-label ms-4">
-                   <span class="mb-0 h6">3. Responsive eCommerce Website</span>
-                   <small class="text-body d-block">15 min</small>
-                 </label>
-               </div>
-             </div>
-           </div>
+            </div>
          </div>
-       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+      </div>
    </div>
    <div class="col-lg-9">
       <div class="col-12">
          <div class="card mb-4">
             <div class="card-body">
-               <form method="POST" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  <textarea name="Content" id="autosize-demo" rows="3" class="form-control" placeholder="Hadi aklındakini Fakula!!!"></textarea>
-                  <div class="d-flex justify-content-end align-items-center">
-                     <div class="me-3">
-                        <label class="cursor-pointer" for="attach-file-1"
-                           ><i class="ti ti-paperclip me-2"></i
-                           ><span class="align-middle">Attachments</span></label
-                           >
-                        <input type="file" name="file-input" class="d-none" id="attach-file-1" />
-                     </div>
-                     <button type="submit" class="btn btn-primary mt-1">
-                     <i class="ti ti-send ti-xs me-1"></i>
-                     <span class="align-middle">Send</span>
-                     </button>
-                  </div>
-               </form>
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <textarea name="Content" id="autosize-demo" rows="3" class="form-control" placeholder="Hadi aklındakini Fakula!!!"></textarea>
+                
+                <div id="image-preview-container" class="d-flex flex-wrap"></div>
+                
+                <div class="d-flex justify-content-end align-items-center mt-1">
+                    <div class="me-3">
+                        <input type="file" id="image-upload" name="images" accept="image/*" multiple style="display: none;">
+                        <label for="image-upload" class="btn btn-secondary">
+                            <i class="ti ti-photo"></i><span class="align-middle">Fotoğraf Ekle</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-send ti-xs me-1"></i>
+                        <span class="align-middle">Send</span>
+                    </button>
+                </div>
+            </form>
+            
+
             </div>
          </div>
          {% for post in posts %}
@@ -292,7 +308,7 @@
                      <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
                      {% if post.User.username == user.username or user.is_superuser %}
                      <a class="dropdown-item text-danger" href="#"
-                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
+                        data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
                      {%endif%}
                   </div>
                </div>
@@ -301,54 +317,51 @@
                {{ post.Content }}
                <hr />
                <div class="d-flex align-items-center">
-                <div class="d-flex align-items-center">
-                  <a href="javascript:void(0);" class="text-body me-3"
-                    ><i class="ti ti-heart-plus"></i> 15</a
-                  >
-                  <a href="javascript:void(0);" class="text-body me-3"
-                  ><i class="ti ti-message-plus"></i> 15</a
-                >
-                <div class="dropdown">
-                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="ti ti-share"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                     <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                  <div class="d-flex align-items-center">
+                     <a href="javascript:void(0);" class="text-body me-3"
+                        ><i class="ti ti-heart-plus"></i> 15</a
+                        >
+                     <a href="javascript:void(0);" class="text-body me-3"
+                        ><i class="ti ti-message-plus"></i> 15</a
+                        >
+                     <div class="dropdown">
+                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-share"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                           <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="ms-auto">
                   </div>
                </div>
-                </div>
-                <div class="ms-auto">
- 
-                </div>
-              </div>
             </div>
          </div>
          <div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            Paylaşımı Silmek İstediğinizden emin misiniz?
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-primary" href="{% url 'DeletePost' post.id %}">Sil</a>
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
-                    </div>
-                </div>
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <p>
+                        Paylaşımı Silmek İstediğinizden emin misiniz?
+                     </p>
+                  </div>
+                  <div class="modal-footer">
+                     <a class="btn btn-primary" href="{% url 'DeletePost' post.id %}">Sil</a>
+                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                  </div>
+               </div>
             </div>
-        </div>
+         </div>
          {% endfor %}
       </div>
    </div>
-
 </div>
-
 {%endblock%}
 {% block extra_javascript %}
 <script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
@@ -358,12 +371,67 @@
 <script src="{% static 'assets/vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
 <script src="{% static 'assets/js/forms-extras.js' %}"></script>
 <script src="{% static 'assets/js/ui-modals.js' %}"></script>
-
+<script src="{% static 'assets/vendor/libs/dropzone/dropzone.js' %}"></script>
+<script src="{% static 'assets/js/forms-file-upload.js' %}"></script>
 <script src="{% static 'assets/js/app-academy-course-details.js' %}"></script>
+<script>
+document.getElementById('image-upload').addEventListener('change', function(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('image-preview-container');
+    const currentThumbnails = previewContainer.children.length;
+    const maxFiles = 4;
 
-<script type="text/javascript">
-  function confirmDelete() {
-    return confirm("Silmek istediğinizden emin misiniz?");
-  }
+    if (files.length + currentThumbnails > maxFiles) {
+        alert(`En fazla ${maxFiles} fotoğraf seçebilirsiniz.`);
+        return;
+    }
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const thumbnail = document.createElement('div');
+            thumbnail.classList.add('image-thumbnail');
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            thumbnail.appendChild(img);
+            
+            const removeButton = document.createElement('button');
+            removeButton.innerText = 'X';
+            removeButton.classList.add('remove-image');
+            removeButton.addEventListener('click', () => {
+                thumbnail.remove();
+                updateFileInput(files, file);
+            });
+            thumbnail.appendChild(removeButton);
+            
+            previewContainer.appendChild(thumbnail);
+        };
+        
+        reader.readAsDataURL(file);
+    });
+});
+
+function updateFileInput(files, fileToRemove) {
+    const dataTransfer = new DataTransfer();
+    const existingFiles = document.getElementById('image-upload').files;
+
+    Array.from(existingFiles).forEach(file => {
+        dataTransfer.items.add(file);
+    });
+
+    Array.from(files).forEach(file => {
+        if (file !== fileToRemove) {
+            dataTransfer.items.add(file);
+        }
+    });
+
+    document.getElementById('image-upload').files = dataTransfer.files;
+}
+
+
 </script>
+
+
 {% endblock %}
