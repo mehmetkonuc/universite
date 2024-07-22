@@ -348,7 +348,7 @@
                <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center">
                     <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.post.id }}">
-                      <i class="ti ti-heart{% if user in item.post.postlike_set.all %}-filled{% endif %}"></i>
+                      <i class="ti ti-heart{% if item.post.id in user_liked_posts %}-filled{% endif %}"></i>
                       <span class="like-count text-body">{{ item.post.postlike_set.count }}</span>
                   </a>
                      <a href="javascript:void(0);" class="text-body me-3"

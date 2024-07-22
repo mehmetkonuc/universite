@@ -22,6 +22,7 @@ class PostView(View):
             posts = self.model.objects.all().order_by('-PublishDate')
             user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
 
+
             post_images = []
             for post in posts:
                 images = models.ImageModel.objects.filter(Post=post)
@@ -34,7 +35,7 @@ class PostView(View):
                 'form': form,
                 'posts': posts,
                 'post_images': post_images,
-                'user_liked_posts' : user_liked_posts
+                'user_liked_posts':user_liked_posts
 
             })
         
