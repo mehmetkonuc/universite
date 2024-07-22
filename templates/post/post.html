@@ -351,7 +351,7 @@
                       <i class="ti ti-heart{% if item.post.id in user_liked_posts %}-filled{% endif %}"></i>
                       <span class="like-count text-body">{{ item.post.postlike_set.count }}</span>
                   </a>
-                     <a href="javascript:void(0);" class="text-body me-3"
+                     <a href="{% url 'PostDetails' item.post.id %}" class="text-body me-3"
                         ><i class="ti ti-message-plus"></i> 15</a
                         >
                      <div class="dropdown">
@@ -395,13 +395,8 @@
 {%endblock%}
 {% block extra_javascript %}
 <script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/cleavejs/cleave.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/cleavejs/cleave-phone.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
 <script src="{% static 'assets/js/forms-extras.js' %}"></script>
 <script src="{% static 'assets/js/ui-modals.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/dropzone/dropzone.js' %}"></script>
 <script src="{% static 'assets/js/app-academy-course-details.js' %}"></script>
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script>

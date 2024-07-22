@@ -22,7 +22,6 @@ class PostView(View):
             posts = self.model.objects.all().order_by('-PublishDate')
             user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
 
-
             post_images = []
             for post in posts:
                 images = models.ImageModel.objects.filter(Post=post)
@@ -55,6 +54,8 @@ class PostView(View):
                 
 
             posts = self.model.objects.all().order_by('-PublishDate')
+            user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
+
             post_images = []
             for post in posts:
                 images = models.ImageModel.objects.filter(Post=post)
@@ -65,7 +66,9 @@ class PostView(View):
             self.context.update({
                 'form': form,
                 'posts': posts,
-                'post_images': post_images
+                'post_images': post_images,
+                'user_liked_posts':user_liked_posts
+
             })
         return render(request, self.template_name, self.context)
 
@@ -98,3 +101,12 @@ def like_post(request, post_id):
     like_count = post.postlike_set.count()
 
     return JsonResponse({'liked': liked, 'like_count': like_count})
+
+class PostDetails(View):
+    def get(self, request, PostID):
+        post = models.PostsModel.objects.filter(id=PostID).first()
+
+        context = {
+            'post' : post
+        }
+        return render(request, "post/PostDetails.html")
