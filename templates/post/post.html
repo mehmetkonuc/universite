@@ -316,7 +316,7 @@
                      </div>
                      <div class="flex-grow-1 ms-1">
                      <div class="me-2 text-body h5 mb-0">{{ item.post.User.first_name }} {{ item.post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-                     <small class="text-muted">{{ item.lpost.PublishDate }}</small>
+                     <small class="text-muted">{{ item.post.PublishDate }}</small>
                      </div>
                   </div>
                </div>
@@ -347,9 +347,10 @@
                <hr />
                <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center">
-                     <a href="javascript:void(0);" class="text-body me-3"
-                        ><i class="ti ti-heart-plus"></i> 15</a
-                        >
+                    <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.post.id }}">
+                      <i class="ti ti-heart{% if user in item.post.postlike_set.all %}-filled{% endif %}"></i>
+                      <span class="like-count text-body">{{ item.post.postlike_set.count }}</span>
+                  </a>
                      <a href="javascript:void(0);" class="text-body me-3"
                         ><i class="ti ti-message-plus"></i> 15</a
                         >
@@ -491,4 +492,55 @@
        });
    });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const likeButtons = document.querySelectorAll('.like-btn');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const postId = button.getAttribute('data-post-id');
+            const icon = button.querySelector('i');
+            const likeCountSpan = button.querySelector('.like-count');
+
+            fetch(`post/like/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ post_id: postId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    icon.classList.add('ti-heart-filled');
+                    icon.classList.remove('ti-heart');
+                } else {
+                    icon.classList.add('ti-heart');
+                    icon.classList.remove('ti-heart-filled');
+                }
+                likeCountSpan.textContent = data.like_count;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+
+</script>
+
 {% endblock %}
