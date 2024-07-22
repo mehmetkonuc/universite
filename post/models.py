@@ -7,3 +7,8 @@ class PostsModel(models.Model):
                              on_delete=models.CASCADE)
     Content = models.TextField()
     PublishDate = models.DateTimeField(auto_now_add=True)
+
+class ImageModel(models.Model):
+    Post = models.ForeignKey(PostsModel, on_delete=models.CASCADE, related_name='images')
+    Image = models.ImageField(upload_to='post_images/')
+    UploadDate = models.DateTimeField(auto_now_add=True)

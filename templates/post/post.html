@@ -2,35 +2,59 @@
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/app-academy-details.css' %}" />
-<link rel="stylesheet" href="{% static 'assets/vendor/libs/dropzone/dropzone.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
 <style>
-.image-thumbnail {
-    position: relative;
-    margin: 5px;
-    display: inline-block;
-}
-
-.image-thumbnail img {
-    max-width: 100px;
-    max-height: 100px;
-    display: block;
-}
-
-.image-thumbnail .remove-image {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
+   .gallery-container {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px; /* Resimler arasındaki boşluk */
+   }
+   .gallery-item {
+   flex: 1 1 calc(33.333% - 10px); /* Üç sütun düzeni */
+   box-sizing: border-box;
+   position: relative;
+   height: 200px; /* Sabit yükseklik */
+   overflow: hidden; /* Taşan kısımları gizle */
+   }
+   .gallery-item img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover; /* Resmi kapsayıcıya göre uygun şekilde kapla */
+   border-radius: 5px;
+   }
+   /* Özel durumlar için */
+   @media (max-width: 768px) {
+   .gallery-item {
+   flex: 1 1 calc(50% - 10px); /* Mobil cihazlar için iki sütun */
+   }
+   }
+   @media (max-width: 480px) {
+   .gallery-item {
+   flex: 1 1 100%; /* Tek sütun düzeni */
+   }
+   }
+   .thumbnail-container {
+   position: relative;
+   width: 100px; /* Kare boyutu */
+   height: 100px; /* Kare boyutu */
+   overflow: hidden; /* Taşan kısmı gizle */
+   margin: 5px;
+   }
+   .thumbnail-container img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover; /* Resmi kapsayıcıya göre kırp */
+   }
+   .remove-button {
+   position: absolute;
+   top: 5px;
+   right: 5px;
+   background: rgba(255, 255, 255, 0.7);
+   border: none;
+   border-radius: 25%;
+   cursor: pointer;
+   }
 </style>
-
-
-
 {% endblock %}
 {% block content %}
 <div class="row">
@@ -244,43 +268,39 @@
          </div>
       </div>
    </div>
-   <div class="col-lg-9">
+   <div class="col-lg-6">
       <div class="col-12">
          <div class="card mb-4">
             <div class="card-body">
-              <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <textarea name="Content" id="autosize-demo" rows="3" class="form-control" placeholder="Hadi aklındakini Fakula!!!"></textarea>
-                
-                <div id="image-preview-container" class="d-flex flex-wrap"></div>
-                
-                <div class="d-flex justify-content-end align-items-center mt-1">
-                    <div class="me-3">
-                        <input type="file" id="image-upload" name="images" accept="image/*" multiple style="display: none;">
-                        <label for="image-upload" class="btn btn-secondary">
-                            <i class="ti ti-photo"></i><span class="align-middle">Fotoğraf Ekle</span>
+               <form id="post-form" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <textarea name="Content" id="autosize-demo" rows="3" class="form-control" placeholder="Hadi aklındakini Fakula!!!"></textarea>
+                  <div id="preview-container" class="d-flex flex-wrap"></div>
+                  <div class="d-flex justify-content-end align-items-center mt-1">
+                     <div class="me-3">
+                        <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+                        <label for="id_images" class="btn btn-secondary">
+                        <i class="ti ti-photo"></i><span class="align-middle"></span>
                         </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="ti ti-send ti-xs me-1"></i>
-                        <span class="align-middle">Send</span>
-                    </button>
-                </div>
-            </form>
-            
-
+                     </div>
+                     <button type="submit" class="btn btn-primary">
+                     <i class="ti ti-send ti-xs me-1"></i>
+                     <span class="align-middle">Gönder</span>
+                     </button>
+                  </div>
+               </form>
             </div>
          </div>
-         {% for post in posts %}
+         {% for item in post_images %}
          <div class="card mb-4">
             <div class="card-header d-flex justify-content-between mb-0">
                <div class="card-title mb-0">
                   <div class="d-flex">
                      <div class="d-flex">
-                        <a href="{% url 'profile' post.User.username %}">
+                        <a href="{% url 'profile' item.post.User.username %}">
                            <div class="avatar avatar-md me-2">
-                              {% if post.User.profilepicturemodel.profile_photo %}
-                              {% with profile_photo_url=post.User.profilepicturemodel.profile_photo.url %}
+                              {% if item.post.User.profilepicturemodel.profile_photo %}
+                              {% with profile_photo_url=item.post.User.profilepicturemodel.profile_photo.url %}
                               <img
                                  src="{{ profile_photo_url }}"
                                  alt="Avatar"
@@ -295,8 +315,8 @@
                            </div>
                      </div>
                      <div class="flex-grow-1 ms-1">
-                     <div class="me-2 text-body h5 mb-0">{{ post.User.first_name }} {{ post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-                     <small class="text-muted">{{ post.PublishDate }}</small>
+                     <div class="me-2 text-body h5 mb-0">{{ item.post.User.first_name }} {{ item.post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                     <small class="text-muted">{{ item.lpost.PublishDate }}</small>
                      </div>
                   </div>
                </div>
@@ -306,15 +326,24 @@
                   </button>
                   <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                      <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                     {% if post.User.username == user.username or user.is_superuser %}
+                     {% if item.post.User.username == user.username or user.is_superuser %}
                      <a class="dropdown-item text-danger" href="#"
-                        data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
+                        data-bs-toggle="modal" data-bs-target="#modalCenter_{{item.post.id}}">Sil</a>
                      {%endif%}
                   </div>
                </div>
             </div>
             <div class="card-body">
-               {{ post.Content }}
+               {{ item.post.Content }}
+               <div class="gallery-container mt-4">
+                  {% for image in item.images %}
+                  <div class="gallery-item">
+                     <a href="{{ image.Image.url }}" data-fancybox="gallery-{{ item.post.id }}">
+                     <img src="{{ image.Image.url }}" alt="Post Image">
+                     </a>
+                  </div>
+                  {% endfor %}
+               </div>
                <hr />
                <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center">
@@ -339,7 +368,7 @@
                </div>
             </div>
          </div>
-         <div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
+         <div class="modal fade" id="modalCenter_{{item.post.id}}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                <div class="modal-content">
                   <div class="modal-header">
@@ -352,7 +381,7 @@
                      </p>
                   </div>
                   <div class="modal-footer">
-                     <a class="btn btn-primary" href="{% url 'DeletePost' post.id %}">Sil</a>
+                     <a class="btn btn-primary" href="{% url 'DeletePost' item.post.id %}">Sil</a>
                      <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
                   </div>
                </div>
@@ -372,66 +401,94 @@
 <script src="{% static 'assets/js/forms-extras.js' %}"></script>
 <script src="{% static 'assets/js/ui-modals.js' %}"></script>
 <script src="{% static 'assets/vendor/libs/dropzone/dropzone.js' %}"></script>
-<script src="{% static 'assets/js/forms-file-upload.js' %}"></script>
 <script src="{% static 'assets/js/app-academy-course-details.js' %}"></script>
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script>
-document.getElementById('image-upload').addEventListener('change', function(event) {
-    const files = event.target.files;
-    const previewContainer = document.getElementById('image-preview-container');
-    const currentThumbnails = previewContainer.children.length;
-    const maxFiles = 4;
-
-    if (files.length + currentThumbnails > maxFiles) {
-        alert(`En fazla ${maxFiles} fotoğraf seçebilirsiniz.`);
-        return;
-    }
-
-    Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            const thumbnail = document.createElement('div');
-            thumbnail.classList.add('image-thumbnail');
-            
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            thumbnail.appendChild(img);
-            
-            const removeButton = document.createElement('button');
-            removeButton.innerText = 'X';
-            removeButton.classList.add('remove-image');
-            removeButton.addEventListener('click', () => {
-                thumbnail.remove();
-                updateFileInput(files, file);
-            });
-            thumbnail.appendChild(removeButton);
-            
-            previewContainer.appendChild(thumbnail);
-        };
-        
-        reader.readAsDataURL(file);
-    });
-});
-
-function updateFileInput(files, fileToRemove) {
-    const dataTransfer = new DataTransfer();
-    const existingFiles = document.getElementById('image-upload').files;
-
-    Array.from(existingFiles).forEach(file => {
-        dataTransfer.items.add(file);
-    });
-
-    Array.from(files).forEach(file => {
-        if (file !== fileToRemove) {
-            dataTransfer.items.add(file);
-        }
-    });
-
-    document.getElementById('image-upload').files = dataTransfer.files;
-}
-
-
+   $(document).ready(function() {
+       $('[data-fancybox]').fancybox({
+           // Fancybox options
+           loop: true,
+           buttons: [
+               'zoom',
+               'slideShow',
+               'thumbs',
+               'close'
+           ],
+           transitionEffect: "fade",
+           transitionDuration: 300
+       });
+   });
 </script>
-
-
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+       const previewContainer = document.getElementById('preview-container');
+       const fileInput = document.getElementById('id_images');
+       const maxImages = 4;
+       let existingFiles = [];  // Saklamak için bir dizi
+   
+       fileInput.addEventListener('change', function(event) {
+           const files = Array.from(event.target.files);
+   
+           // Yeni dosyalar mevcut dosyalarla birleştirilir
+           const newFiles = files.filter(file => !existingFiles.some(existingFile => existingFile.name === file.name));
+           if (newFiles.length + existingFiles.length > maxImages) {
+               alert(`Maksimum ${maxImages} resim yükleyebilirsiniz.`);
+               return;
+           }
+   
+           existingFiles = existingFiles.concat(newFiles);
+   
+           // Mevcut thumbnail'ları temizle
+           previewContainer.innerHTML = '';
+   
+           existingFiles.forEach(file => {
+               if (file && file.type.startsWith('image/')) {
+                   const reader = new FileReader();
+   
+                   reader.onload = function(e) {
+                       // Thumbnail container
+                       const div = document.createElement('div');
+                       div.classList.add('thumbnail-container');
+                       
+                       // Thumbnail image
+                       const img = document.createElement('img');
+                       img.src = e.target.result;
+                       div.appendChild(img);
+   
+                       // Remove button
+                       const removeButton = document.createElement('button');
+                       removeButton.textContent = 'x';
+                       removeButton.classList.add('remove-button');
+                       removeButton.onclick = function() {
+                           // Silme işlemi
+                           previewContainer.removeChild(div);
+                           existingFiles = existingFiles.filter(existingFile => existingFile.name !== file.name);
+   
+                           // File input'ı güncelle
+                           updateFileInput();
+                       };
+                       div.appendChild(removeButton);
+   
+                       previewContainer.appendChild(div);
+                   };
+   
+                   reader.readAsDataURL(file);
+               }
+           });
+       });
+   
+       // File input'ı güncelleme işlevi
+       function updateFileInput() {
+           const dataTransfer = new DataTransfer();
+           existingFiles.forEach(file => dataTransfer.items.add(file));
+           fileInput.files = dataTransfer.files;
+       }
+   
+       // Form gönderiminde dosyaları güncelleme
+       const form = document.getElementById('post-form');
+       form.addEventListener('submit', function() {
+           updateFileInput();
+       });
+   });
+</script>
 {% endblock %}
