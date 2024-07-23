@@ -107,8 +107,31 @@ class PostDetails(View):
     }
     def get(self, request, PostID):
         form = forms.PostsComment()
-        PostComment = models.PostComment.objects.filter(id=PostID)
+        PostComment = models.PostComment.objects.filter(Post_id=PostID).order_by('-PublishDate')
         post = models.PostsModel.objects.filter(id=PostID).first()
+        post_images = models.ImageModel.objects.filter(Post=post)
+        user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
+
+        self.context.update({
+            'form': form,
+            'PostComment' : PostComment,
+            'post' : post,
+            'post_images' :post_images,
+            'user_liked_posts':user_liked_posts
+        })
+        return render(request, "post/PostDetails.html", self.context)
+    
+    def post(self, request, PostID):
+        form = forms.PostsComment(request.POST)
+        post = models.PostsModel.objects.filter(id=PostID).first()
+
+        if form.is_valid():
+            FormData = form.save(commit=False)
+            FormData.User = request.user
+            FormData.Post = post
+            FormData.save()
+
+        PostComment = models.PostComment.objects.filter(Post_id=PostID).order_by('-PublishDate')
         post_images = models.ImageModel.objects.filter(Post=post)
         user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
 
