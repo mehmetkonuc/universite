@@ -25,3 +25,9 @@ class PostLike(models.Model):
 
     def __str__(self):
         return f"{self.user} liked {self.post}"
+
+class PostComment(models.Model):
+    User = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    Post = models.ForeignKey(PostsModel, on_delete=models.CASCADE)
+    Comment = models.TextField()
+    PublishDate = models.DateTimeField(auto_now_add=True)

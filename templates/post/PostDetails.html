@@ -33,89 +33,130 @@
    flex: 1 1 100%; /* Tek sütun düzeni */
    }
    }
+   .thumbnail-container {
+   position: relative;
+   width: 100px; /* Kare boyutu */
+   height: 100px; /* Kare boyutu */
+   overflow: hidden; /* Taşan kısmı gizle */
+   margin: 5px;
+   }
+   .thumbnail-container img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover; /* Resmi kapsayıcıya göre kırp */
+   }
+   .remove-button {
+   position: absolute;
+   top: 5px;
+   right: 5px;
+   background: rgba(255, 255, 255, 0.7);
+   border: none;
+   border-radius: 25%;
+   cursor: pointer;
+   }
 </style>
 {%endblock%}
 {% block content %}
 <div class="row justify-content-center">
-<div class="col-lg-7">
-<div class="card mb-4">
-    <div class="card-header d-flex justify-content-between mb-0">
-       <div class="card-title mb-0">
-          <div class="d-flex">
-             <div class="d-flex">
-                <a href="{% url 'profile' post.User.username %}">
-                   <div class="avatar avatar-md me-2">
-                      {% if post.User.profilepicturemodel.profile_photo %}
-                      {% with profile_photo_url=post.User.profilepicturemodel.profile_photo.url %}
-                      <img
-                         src="{{ profile_photo_url }}"
-                         alt="Avatar"
-                         class="rounded-circle" />
-                      {% endwith %}
-                      {% else %}
-                      <img
-                         src="{% static 'assets/img/avatars/14.png' %}"
-                         alt="Avatar"
-                         class="rounded-circle" />
-                      {% endif %}
-                   </div>
-             </div>
-             <div class="flex-grow-1 ms-1">
-             <div class="me-2 text-body h5 mb-0">{{ post.User.first_name }} {{ post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-             <small class="text-muted">{{ post.PublishDate }}</small>
-             </div>
-          </div>
-       </div>
-       <div class="dropdown">
-          <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="ti ti-dots-vertical ti-sm text-muted"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-             <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-             {% if post.User.username == user.username or user.is_superuser %}
-             <a class="dropdown-item text-danger" href="#"
-                data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
-             {%endif%}
-          </div>
-       </div>
-    </div>
-    <div class="card-body">
-       {{ post.Content }}
-       <div class="gallery-container mt-4">
-          {% for image in post_images %}
-          <div class="gallery-item">
-             <a href="{{ image.Image.url }}" data-fancybox="gallery-{{ post.id }}">
-             <img src="{{ image.Image.url }}" alt="Post Image">
-             </a>
-          </div>
-          {% endfor %}
-       </div>
-       <hr />
-       <div class="d-flex align-items-center">
-          <div class="d-flex align-items-center">
-            <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ post.id }}">
-              <i class="ti ti-heart{% if post.id in user_liked_posts %}-filled{% endif %}"></i>
-              <span class="like-count text-body">{{ post.postlike_set.count }}</span>
-          </a>
-             <a href="#" class="text-body me-3"
-                ><i class="ti ti-message-plus"></i> 15</a
-                >
-             <div class="dropdown">
-                <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="ti ti-share"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                   <a class="dropdown-item" href="javascript:void(0);">Sil</a>
-                </div>
-             </div>
-          </div>
-          <div class="ms-auto">
-          </div>
-       </div>
-    </div>
- </div>
-</div>
+   <div class="col-lg-7">
+      <div class="card mb-4">
+         <div class="card-header d-flex justify-content-between mb-0">
+            <div class="card-title mb-0">
+               <div class="d-flex">
+                  <div class="d-flex">
+                     <a href="{% url 'profile' post.User.username %}">
+                        <div class="avatar avatar-md me-2">
+                           {% if post.User.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=post.User.profilepicturemodel.profile_photo.url %}
+                           <img
+                              src="{{ profile_photo_url }}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endwith %}
+                           {% else %}
+                           <img
+                              src="{% static 'assets/img/avatars/14.png' %}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endif %}
+                        </div>
+                  </div>
+                  <div class="flex-grow-1 ms-1">
+                  <div class="me-2 h5 mb-0">{{ post.User.first_name }} {{ post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                  <small class="text-muted">{{ post.PublishDate }}</small>
+                  </div>
+               </div>
+            </div>
+            <div class="dropdown">
+               <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+               </button>
+               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                  <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                  {% if post.User.username == user.username or user.is_superuser %}
+                  <a class="dropdown-item text-danger" href="#"
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
+                  {%endif%}
+               </div>
+            </div>
+         </div>
+         <div class="card-body">
+            {{ post.Content }}
+            <div class="gallery-container mt-4">
+               {% for image in post_images %}
+               <div class="gallery-item">
+                  <a href="{{ image.Image.url }}" data-fancybox="gallery-{{ post.id }}">
+                  <img src="{{ image.Image.url }}" alt="Post Image">
+                  </a>
+               </div>
+               {% endfor %}
+            </div>
+            <hr />
+            <div class="d-flex align-items-center">
+               <div class="d-flex align-items-center">
+                  <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ post.id }}">
+                  <i class="ti ti-heart{% if post.id in user_liked_posts %}-filled{% endif %}"></i>
+                  <span class="like-count text-body">{{ post.postlike_set.count }}</span>
+               </a>
+                  <a href="#" class="text-body me-3"
+                     ><i class="ti ti-message-plus"></i> 15</a
+                     >
+                  <div class="dropdown">
+                     <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <i class="ti ti-share"></i>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                        <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                        <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                     </div>
+                  </div>
+               </div>
+               <div class="ms-auto">
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="card mb-4">
+         <div class="card-body">
+            <form class="form-send-message" id="post-form" method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="d-flex justify-content-between align-items-center">
+               <textarea name="Content" id="autosize-demo" rows="3" class="form-control border-0 shadow-xs" placeholder="Yorumunu Fakula!!!"></textarea>
+               <div class="message-actions d-flex align-items-center">
+               <label for="id_images" class="form-label mb-0">
+                  <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i>
+                  <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+               </label>
+               <button class="btn btn-primary d-flex send-msg-btn waves-effect waves-light me-1">
+                  <i class="ti ti-send ti-xs cursor-pointer rounded-pill mx-1 waves-effect waves-light"></i>
+               </button>
+               </div>
+            </div>
+               <div id="preview-container" class="d-flex flex-wrap"></div>
+            </form>
+         </div>
+      </div>
+   </div>
 </div>
  {%endblock%}
 
@@ -187,4 +228,79 @@
   });
   
   </script>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+       const previewContainer = document.getElementById('preview-container');
+       const fileInput = document.getElementById('id_images');
+       const maxImages = 4;
+       let existingFiles = [];  // Saklamak için bir dizi
+   
+       fileInput.addEventListener('change', function(event) {
+           const files = Array.from(event.target.files);
+   
+           // Yeni dosyalar mevcut dosyalarla birleştirilir
+           const newFiles = files.filter(file => !existingFiles.some(existingFile => existingFile.name === file.name));
+           if (newFiles.length + existingFiles.length > maxImages) {
+               alert(`Maksimum ${maxImages} resim yükleyebilirsiniz.`);
+               return;
+           }
+   
+           existingFiles = existingFiles.concat(newFiles);
+   
+           // Mevcut thumbnail'ları temizle
+           previewContainer.innerHTML = '';
+   
+           existingFiles.forEach(file => {
+               if (file && file.type.startsWith('image/')) {
+                   const reader = new FileReader();
+   
+                   reader.onload = function(e) {
+                       // Thumbnail container
+                       const div = document.createElement('div');
+                       div.classList.add('thumbnail-container');
+                       
+                       // Thumbnail image
+                       const img = document.createElement('img');
+                       img.src = e.target.result;
+                       div.appendChild(img);
+   
+                       // Remove button
+                       const removeButton = document.createElement('button');
+                       removeButton.textContent = 'x';
+                       removeButton.classList.add('remove-button');
+                       removeButton.onclick = function() {
+                           // Silme işlemi
+                           previewContainer.removeChild(div);
+                           existingFiles = existingFiles.filter(existingFile => existingFile.name !== file.name);
+   
+                           // File input'ı güncelle
+                           updateFileInput();
+                       };
+                       div.appendChild(removeButton);
+   
+                       previewContainer.appendChild(div);
+                   };
+   
+                   reader.readAsDataURL(file);
+               }
+           });
+       });
+   
+       // File input'ı güncelleme işlevi
+       function updateFileInput() {
+           const dataTransfer = new DataTransfer();
+           existingFiles.forEach(file => dataTransfer.items.add(file));
+           fileInput.files = dataTransfer.files;
+       }
+   
+       // Form gönderiminde dosyaları güncelleme
+       const form = document.getElementById('post-form');
+       form.addEventListener('submit', function() {
+           updateFileInput();
+       });
+   });
+</script>
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
 {%endblock%}

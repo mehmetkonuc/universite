@@ -106,11 +106,15 @@ class PostDetails(View):
         'siteTitle': 'Paylaşımlar',
     }
     def get(self, request, PostID):
+        form = forms.PostsComment()
+        PostComment = models.PostComment.objects.filter(id=PostID)
         post = models.PostsModel.objects.filter(id=PostID).first()
         post_images = models.ImageModel.objects.filter(Post=post)
         user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
 
         self.context.update({
+            'form': form,
+            'PostComment' : PostComment,
             'post' : post,
             'post_images' :post_images,
             'user_liked_posts':user_liked_posts
