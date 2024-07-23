@@ -73,7 +73,6 @@ class PostView(View):
         return render(request, self.template_name, self.context)
 
 
-
 def DeletePost(request, PostID):
     DeletePost = models.PostsModel.objects.get(id=PostID)
     
@@ -103,10 +102,17 @@ def like_post(request, post_id):
     return JsonResponse({'liked': liked, 'like_count': like_count})
 
 class PostDetails(View):
+    context = {
+        'siteTitle': 'Paylaşımlar',
+    }
     def get(self, request, PostID):
         post = models.PostsModel.objects.filter(id=PostID).first()
+        post_images = models.ImageModel.objects.filter(Post=post)
+        user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
 
-        context = {
-            'post' : post
-        }
-        return render(request, "post/PostDetails.html")
+        self.context.update({
+            'post' : post,
+            'post_images' :post_images,
+            'user_liked_posts':user_liked_posts
+        })
+        return render(request, "post/PostDetails.html", self.context)
