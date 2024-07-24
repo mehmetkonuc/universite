@@ -156,38 +156,65 @@
             </form>
          </div>
       </div>
-      <div class="card mb-4">
-         <div class="card-header">
-            {% for comment in PostComment %}
 
-            <div class="d-flex">
+
+
+      {% for comment in PostComment %}
+
+
+      <div class="card mb-4">
+         <div class="card-header d-flex justify-content-between mb-0">
+            <div class="card-title mb-0">
                <div class="d-flex">
-                  <a href="{% url 'profile' comment.User.username %}">
-                     <div class="avatar avatar-md me-2">
-                        {% if comment.User.profilepicturemodel.profile_photo %}
-                        {% with profile_photo_url=comment.User.profilepicturemodel.profile_photo.url %}
-                        <img
-                           src="{{ profile_photo_url }}"
-                           alt="Avatar"
-                           class="rounded-circle" />
-                        {% endwith %}
-                        {% else %}
-                        <img
-                           src="{% static 'assets/img/avatars/14.png' %}"
-                           alt="Avatar"
-                           class="rounded-circle" />
-                        {% endif %}
-                     </div>
-               </div>
-               <div class="flex-grow-1 ms-1">
-               <div class="me-2 h5 mb-0">{{ comment.User.first_name }} {{ comment.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-               <small class="text-muted">{{ comment.PublishDate }}</small>
+                  <div class="d-flex">
+                     <a href="{% url 'profile' comment.User.username %}">
+                        <div class="avatar avatar-md me-2">
+                           {% if comment.User.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=comment.User.profilepicturemodel.profile_photo.url %}
+                           <img
+                              src="{{ profile_photo_url }}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endwith %}
+                           {% else %}
+                           <img
+                              src="{% static 'assets/img/avatars/14.png' %}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endif %}
+                        </div>
+                  </div>
+                  <div class="flex-grow-1 ms-1">
+                  <div class="me-2 h5 mb-0">{{ comment.User.first_name }} {{ comment.User.last_name }} <small class="text-muted h6"> yorum yaptı.</small></div></a>
+                  <small class="text-muted">{{ comment.PublishDate }}</small>
+                  </div>
                </div>
             </div>
-
-            {%endfor%}
+            <div class="dropdown">
+               <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+               </button>
+               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                  <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                  {% if comment.User.username == user.username or user.is_superuser %}
+                  <a class="dropdown-item text-danger" href="#"
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{comment.id}}">Sil</a>
+                  {%endif%}
+               </div>
+            </div>
+         </div>
+         <div class="card-body">
+            {{ comment.Comment }}
+            <hr />
          </div>
       </div>
+      {%endfor%}
+
+
+
+
+
+
 
 
 
