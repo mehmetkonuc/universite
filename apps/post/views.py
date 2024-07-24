@@ -12,8 +12,8 @@ from django.contrib.contenttypes.models import ContentType
 # Create your views here.
 class PostView(View):
     form_class = forms.PostsForm
-    model = models.PostsModel
-    
+    model_post = models.PostsModel
+    model_like = models.PostLike
     template_name = 'home.html'
     context = {
         'siteTitle': 'Paylaşımlar',
@@ -22,8 +22,8 @@ class PostView(View):
     def get(self, request):
         if 'AnonymousUser' not in str(request.user):
             form = self.form_class()
-            posts = self.model.objects.all().order_by('-PublishDate')
-            user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
+            posts = self.model_post.objects.all().order_by('-PublishDate')
+            user_liked_posts = self.model_like.objects.filter(user=request.user).values_list('post_id', flat=True)
 
             post_images = []
             for post in posts:
@@ -56,8 +56,8 @@ class PostView(View):
                     models.ImageModel.objects.create(Post=form_save, Image=image)
                 
 
-            posts = self.model.objects.all().order_by('-PublishDate')
-            user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
+            posts = self.model_post.objects.all().order_by('-PublishDate')
+            user_liked_posts = self.model_like.objects.filter(user=request.user).values_list('post_id', flat=True)
 
             post_images = []
             for post in posts:

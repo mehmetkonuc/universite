@@ -1,0 +1,43 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css%}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-xxl-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <h5 class="mb-1">Örnek Başlık</h5>
+                    <p class="card-subtitle">Alt Başlık</p>
+                  </div>
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
+                      type="button"
+                      id="MonthlyCampaign"
+                      data-bs-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false">
+                      <i class="ti ti-dots-vertical ti-md text-muted"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                      <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                      <a class="dropdown-item" href="javascript:void(0);">Download</a>
+                      <a class="dropdown-item" href="javascript:void(0);">View All</a>
+                    </div>
+                  </div>
+            </div>
+            <div class="card-body">
+                Card içeriği!!!
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+
