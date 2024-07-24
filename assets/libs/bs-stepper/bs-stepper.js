@@ -30,4 +30,8 @@ bsStepper.forEach(el => {
   });
 });
 
+try {
+  window.Stepper = Stepper;
+} catch (e) {}
+
 export { Stepper };

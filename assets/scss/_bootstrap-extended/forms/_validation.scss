@@ -5,7 +5,7 @@
   @include template-form-validation-state($state, $data...);
 }
 
-// Currently supported for formvalidation and jq-validation
+// Currently supported for form-validation and jq-validation
 form {
   .error:not(li):not(input) {
     color: $form-feedback-invalid-color;
@@ -16,12 +16,14 @@ form {
   .invalid,
   .is-invalid .invalid:before,
   .is-invalid::before {
+    border-width: $input-focus-border-width;
     border-color: $form-feedback-invalid-color !important;
   }
 
   .form-label {
     &.invalid,
     &.is-invalid {
+      border-width: $input-focus-border-width;
       border-color: $form-feedback-invalid-color;
       box-shadow: 0 0 0 2px rgba($form-feedback-invalid-color, 0.4) !important;
     }
@@ -31,6 +33,7 @@ form {
     &.invalid {
       & ~ .select2 {
         .select2-selection {
+          border-width: $input-focus-border-width;
           border-color: $form-feedback-invalid-color;
         }
       }
@@ -42,6 +45,7 @@ form {
     &.is-invalid {
       & ~ .select2 {
         .select2-selection {
+          border-width: $input-focus-border-width;
           border-color: $form-feedback-invalid-color !important;
         }
       }
@@ -50,6 +54,8 @@ form {
     &.selectpicker {
       &.is-invalid {
         ~ .btn {
+          padding: calc($input-padding-y - $input-focus-border-width) calc($input-padding-x - $input-border-width);
+          border-width: $input-focus-border-width;
           border-color: $form-feedback-invalid-color !important;
         }
       }
@@ -57,7 +63,45 @@ form {
   }
 }
 
-// ! Fix: Formvalidation: Set border color to .form-control in touch devices for HTML5 inputs of FlatPicker (FlatPicker converts to native for touch screen, refresh in touch screen to check)
+//!FIX: Input group form floating label .input-group-text border color on validation state
+//? Can't use form-validation-state-selector mixin due to :has selector
+.was-validated .input-group:has(.input-group-text):has(.form-control:invalid) .input-group-text,
+.was-validated .input-group:has(.input-group-text):has(.form-control:valid) .input-group-text,
+.input-group:has(.input-group-text):has(.form-control.is-valid) .input-group-text,
+.input-group:has(.input-group-text):has(.form-control.is-invalid) .input-group-text {
+  border-width: $input-focus-border-width;
+}
+//! FIX: Basic input (without floating) has shake effect due to padding
+.was-validated .form-control:invalid,
+.was-validated .form-control:valid,
+.form-control.is-invalid,
+.form-control.is-valid {
+  padding: calc($input-padding-y - $input-focus-border-width) calc($input-padding-x - $input-border-width);
+  ~ .input-group-text {
+    padding: calc($input-padding-y - $input-focus-border-width) calc($input-padding-x - $input-border-width);
+  }
+}
+.input-group {
+  > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(
+      .btn + .form-control
+    )#{$validation-messages}.form-control.is-invalid,
+  > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(
+      .btn + .form-control
+    )#{$validation-messages}.form-control.is-valid {
+    margin-inline-start: calc($input-focus-border-width - 4px);
+  }
+  .was-validated & .form-control:invalid,
+  .was-validated & .form-control:valid,
+  .form-control.is-invalid,
+  .form-control.is-valid,
+  .form-select.is-invalid,
+  .form-select.is-valid {
+    &:first-child {
+      padding-inline-start: calc($input-padding-x - $input-focus-border-width);
+    }
+  }
+}
+// ! Fix: FormValidation: Set border color to .form-control in touch devices for HTML5 inputs i.e date picker
 @media (hover: none) {
   .fv-plugins-bootstrap5-row-invalid {
     .form-control {
@@ -67,7 +111,7 @@ form {
     }
   }
 }
-// ! Fix: Formvalidation: Validation error message display fix for those inputs where .invalid-feedback/tooltip is not a sibling element
+// ! Fix: FormValidation: Validation error message display fix for those inputs where .invalid-feedback/tooltip is not a sibling element
 .fv-plugins-bootstrap5 {
   .invalid-feedback,
   .invalid-tooltip {
@@ -75,8 +119,9 @@ form {
   }
 }
 
-//! Fix: Formvalidation: Tagify validation error (border color)
+//! Fix: FormValidation: Tagify validation error (border color)
 .fv-plugins-bootstrap5-row-invalid .tagify.tagify--empty {
+  border-width: $input-focus-border-width;
   border-color: $form-feedback-invalid-color !important;
 }
 // ? Uncomment if required

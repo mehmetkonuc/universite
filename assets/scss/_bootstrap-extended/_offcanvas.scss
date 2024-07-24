@@ -5,10 +5,14 @@
   box-shadow: $offcanvas-box-shadow;
   .offcanvas-header {
     .btn-close {
-      background-color: rgba-to-hex(rgba($gray-500, 0.16), $card-bg);
       padding: 0.44rem;
       margin-right: 0;
-      background-image: str-replace(str-replace($btn-close-bg, '#{$btn-close-color}', $headings-color), '#', '%23');
+      background-size: 1.5rem;
+      background-image: str-replace(
+        str-replace($btn-close-bg, '#{$offcanvas-btn-close-color}', $headings-color),
+        '#',
+        '%23'
+      );
     }
   }
 }

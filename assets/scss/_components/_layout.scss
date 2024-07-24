@@ -32,6 +32,9 @@
   .layout-menu-fixed-offcanvas .layout-menu .layout-menu-toggle {
     display: none;
   }
+  .layout-horizontal .layout-page .menu-horizontal {
+    box-shadow: $menu-horizontal-box-shadow;
+  }
 }
 
 .layout-page,
@@ -89,8 +92,8 @@
 // *******************************************************************************
 .layout-navbar {
   position: relative;
-  padding-top: 0.25rem;
-  padding-bottom: 0.2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   height: $navbar-height;
   flex-wrap: nowrap;
   color: $body-color;
@@ -109,6 +112,11 @@
     $container-xxl: map-get($container-max-widths, xxl);
     &.container-xxl {
       max-width: calc(#{$container-xxl} - calc(#{$container-padding-x} * 2));
+    }
+    .layout-navbar-fixed & {
+      .search-input:focus {
+        padding-inline: $card-spacer-x;
+      }
     }
     // Navbar fixed
     .layout-navbar-fixed & {
@@ -156,7 +164,7 @@
 
         &:hover,
         &.active {
-          background: $body-bg;
+          background: $gray-50;
           color: $body-color;
         }
       }
@@ -170,7 +178,8 @@
   .search-input-wrapper {
     .search-toggler {
       position: absolute;
-      top: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
       right: 1rem;
       z-index: 1;
       @include rtl-style() {
@@ -217,15 +226,25 @@
     }
   }
 
+  .dropdown-menu[data-bs-popper] {
+    .layout-wrapper:not(.layout-horizontal) & {
+      top: 147%;
+    }
+  }
+
   // Navbar custom dropdown
   .navbar-dropdown {
     .badge-notifications {
-      top: 0.5rem;
-      padding: 0.2rem 0.4rem;
+      top: 3px;
+      inset-inline-end: -2px;
     }
     .dropdown-menu {
       min-width: $navbar-dropdown-width;
       overflow: hidden;
+      .dropdown-item {
+        padding-block: $navbar-toggler-padding-y;
+        min-height: 2.375rem;
+      }
       .last-login {
         white-space: normal;
       }
@@ -235,9 +254,15 @@
       .dropdown-notifications-list {
         max-height: $navbar-dropdown-content-height;
         .dropdown-notifications-item {
-          padding: $navbar-notifications-dropdown-item-padding;
+          padding: $navbar-notifications-dropdown-item-padding-y $navbar-notifications-dropdown-item-padding-x;
           cursor: pointer;
 
+          //! Fix: Dropdown notification read badge bg color
+          &:not(.mark-as-read) {
+            .dropdown-notifications-read span {
+              background-color: $primary;
+            }
+          }
           .dropdown-notifications-actions {
             text-align: center;
             > a {
@@ -247,7 +272,7 @@
 
           .dropdown-notifications-archive i,
           .dropdown-notifications-archive span {
-            color: $body-color;
+            color: $headings-color;
           }
 
           // Notification default marked as read/unread
@@ -291,13 +316,13 @@
       }
       .dropdown-shortcuts-item {
         text-align: center;
-        padding: 0.875rem;
+        padding: 1.5rem;
         &:hover {
           background-color: $navbar-dropdown-hover-bg;
         }
         .dropdown-shortcuts-icon {
-          height: 3rem;
-          width: 3rem;
+          height: 3.125rem;
+          width: 3.125rem;
           margin-left: auto;
           margin-right: auto;
           display: flex;
@@ -309,7 +334,7 @@
         a:hover {
           display: block;
           margin-bottom: 0;
-          color: $body-color !important;
+          color: $headings-color !important;
           font-weight: $font-weight-medium;
         }
       }
@@ -349,9 +374,6 @@
       .nav-item.dropdown {
         position: static;
         float: left;
-        .badge-notifications {
-          top: auto;
-        }
         .dropdown-menu {
           position: absolute;
           left: 0.9rem;
@@ -760,11 +782,12 @@ html:not(.layout-footer-fixed) .content-wrapper {
   .layout-menu-fixed .layout-horizontal .layout-page .menu-horizontal,
   .layout-menu-fixed-offcanvas .layout-horizontal .layout-page .menu-horizontal {
     position: fixed;
+    top: $navbar-height;
   }
 
   .layout-menu-fixed .layout-horizontal .layout-page .menu-horizontal + [class*='container-'],
   .layout-menu-fixed-offcanvas .layout-horizontal .layout-page .menu-horizontal + [class*='container-'] {
-    padding-top: 4.8rem !important;
+    padding-top: calc($container-padding-y + 3.9rem) !important;
   }
 
   @include rtl-only {
@@ -889,7 +912,9 @@ html:not(.layout-footer-fixed) .content-wrapper {
     margin-right: 0 !important;
     margin-left: 0 !important;
     transform: translate3d(-100%, 0, 0);
-    will-change: transform, -webkit-transform;
+    will-change:
+      transform,
+      -webkit-transform;
 
     @include rtl-style {
       right: 0 !important;
@@ -1069,7 +1094,9 @@ html:not(.layout-footer-fixed) .content-wrapper {
 
     .layout-menu {
       transition-duration: $menu-animation-duration;
-      transition-property: transform, -webkit-transform;
+      transition-property:
+        transform,
+        -webkit-transform;
     }
   }
 }
@@ -1086,7 +1113,11 @@ html:not(.layout-footer-fixed) .content-wrapper {
   .layout-transitioning {
     &.layout-menu-offcanvas .layout-menu {
       transition-duration: $menu-animation-duration;
-      transition-property: margin-left, margin-right, transform, -webkit-transform;
+      transition-property:
+        margin-left,
+        margin-right,
+        transform,
+        -webkit-transform;
     }
 
     &.layout-menu-fixed,
@@ -1106,7 +1137,9 @@ html:not(.layout-footer-fixed) .content-wrapper {
     &.layout-menu-fixed-offcanvas {
       .layout-menu {
         transition-duration: $menu-animation-duration;
-        transition-property: transform, -webkit-transform;
+        transition-property:
+          transform,
+          -webkit-transform;
       }
     }
 

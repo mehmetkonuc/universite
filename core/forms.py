@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from profiles import models as ProfilesModel
+from apps.profiles import models as ProfilesModel
 
 
 class RegisterForm(UserCreationForm):

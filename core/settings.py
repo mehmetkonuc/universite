@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "crispy_forms",
     "crispy_bootstrap5",
-    'settings',
-    'profiles',
-    'post',
-    'inputs',
+    'apps.settings',
+    'apps.profiles',
+    'apps.comments',
+    'apps.post',
+    'apps.inputs',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -69,7 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'settings.contextProcessors.processors',
+                'apps.settings.contextProcessors.processors',
             ],
         },
     },

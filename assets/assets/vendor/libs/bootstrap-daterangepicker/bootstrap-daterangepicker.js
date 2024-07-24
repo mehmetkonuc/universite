@@ -15,15 +15,15 @@
 		var a = typeof exports === 'object' ? factory(require("moment"), require("jQuery")) : factory(root["moment"], root["jQuery"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(self, (__WEBPACK_EXTERNAL_MODULE_moment__, __WEBPACK_EXTERNAL_MODULE_jquery__) => {
-return /******/ (() => { // webpackBootstrap
+})(self, function(__WEBPACK_EXTERNAL_MODULE_moment__, __WEBPACK_EXTERNAL_MODULE_jquery__) {
+return /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js":
 /*!*********************************************************************!*\
   !*** ./libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js ***!
   \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var bootstrap_daterangepicker_daterangepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap-daterangepicker/daterangepicker */ \"./node_modules/bootstrap-daterangepicker/daterangepicker.js\");\n/* harmony import */ var bootstrap_daterangepicker_daterangepicker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap_daterangepicker_daterangepicker__WEBPACK_IMPORTED_MODULE_0__);\n\n\n// Patch detect when weeks are shown\n\nvar fnDaterangepicker = $.fn.daterangepicker;\n$.fn.daterangepicker = function (options, callback) {\n  fnDaterangepicker.call(this, options, callback);\n  if (options && (options.showWeekNumbers || options.showISOWeekNumbers)) {\n    this.each(function () {\n      var instance = $(this).data('daterangepicker');\n      if (instance && instance.container) instance.container.addClass('with-week-numbers');\n    });\n  }\n  return this;\n};\n\n//# sourceURL=webpack://Vuexy/./libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js?");
@@ -44,7 +44,7 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**\r\n* @
 /*!*************************!*\
   !*** external "jQuery" ***!
   \*************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE_jquery__;
@@ -55,7 +55,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_jquery__;
 /*!*************************!*\
   !*** external "moment" ***!
   \*************************/
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE_moment__;
@@ -90,44 +90,44 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_moment__;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
+/******/ 		__webpack_require__.n = function(module) {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
+/******/ 				function() { return module['default']; } :
+/******/ 				function() { return module; };
 /******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 		__webpack_require__.d = function(exports, definition) {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
+/******/ 		__webpack_require__.r = function(exports) {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 /******/ 	

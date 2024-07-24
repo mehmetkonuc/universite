@@ -1,17 +1,17 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
-@import '../../node_modules/bs-stepper/dist/css/bs-stepper';
+@import 'bs-stepper/dist/css/bs-stepper';
 @import '../../scss/_custom-variables/libs';
 
 $bs-stepper-header-padding-y: 1.5rem !default;
 $bs-stepper-header-padding-x: $bs-stepper-header-padding-y !default;
 $bs-stepper-content-padding-x: 1.5rem !default;
 $bs-stepper-content-padding-y: $bs-stepper-content-padding-x !default;
-$bs-stepper-trigger-padding: 1rem !default;
-$bs-stepper-trigger-padding-vertical: 0.5rem !default;
+$bs-stepper-trigger-padding: 1.25rem !default;
+$bs-stepper-trigger-padding-vertical: 0.6rem !default;
 $bs-stepper-label-max-width: 224px !default;
-$bs-stepper-svg-icon-height: 3.125rem !default;
-$bs-stepper-svg-icon-width: 3.125rem !default;
+$bs-stepper-svg-icon-height: 3.75rem !default;
+$bs-stepper-svg-icon-width: 3.75rem !default;
 $bs-stepper-icon-font-size: 1.6rem !default;
 $bs-stepper-vertical-separator-height: 1.55rem !default;
 $bs-stepper-vertical-header-min-width: 18rem !default;
@@ -32,9 +32,9 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
     .step {
       .step-trigger {
-        padding: 0 $bs-stepper-trigger-padding;
+        padding: 0;
         flex-wrap: nowrap;
-        gap: 1rem;
+        gap: 0.5rem;
         font-weight: light.$font-weight-medium;
         .bs-stepper-label {
           margin: 0;
@@ -45,39 +45,20 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
           display: inline-grid;
           font-weight: light.$font-weight-medium;
           font-size: light.$font-size-base;
+          line-height: light.$h6-line-height;
           .bs-stepper-title {
-            line-height: 1;
             font-weight: light.$font-weight-medium;
           }
           .bs-stepper-subtitle {
             font-size: light.$small-font-size;
             font-weight: light.$font-weight-base;
-            margin-top: 0.25rem;
           }
         }
         &:hover {
           background-color: transparent;
         }
-      }
-
-      &:first-child {
-        .step-trigger {
-          @include app-ltr {
-            padding-left: 0;
-          }
-          @include app-rtl {
-            padding-right: 0;
-          }
-        }
-      }
-      &:last-child {
-        .step-trigger {
-          @include app-ltr {
-            padding-right: 0;
-          }
-          @include app-rtl {
-            padding-left: 0;
-          }
+        @include light.media-breakpoint-down(lg) {
+          padding: calc($bs-stepper-trigger-padding * 0.5) 0;
         }
       }
       .bs-stepper-circle {
@@ -85,10 +66,13 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
         align-items: center;
         justify-content: center;
         border-radius: light.$border-radius;
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.375rem;
+        height: 2.375rem;
         font-size: light.$h5-font-size;
         font-weight: light.$font-weight-medium;
+        i {
+          font-size: 1.375rem;
+        }
       }
     }
   }
@@ -139,8 +123,9 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
   &.wizard-icons {
     .bs-stepper-header {
-      justify-content: space-around;
+      justify-content: center;
       .step-trigger {
+        padding: $bs-stepper-trigger-padding;
         flex-direction: column;
         gap: 0.5rem;
         .bs-stepper-icon {
@@ -152,9 +137,10 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
             font-size: $bs-stepper-icon-font-size;
           }
         }
-        .bs-stepper-label {
-          font-weight: light.$font-weight-base;
-        }
+      }
+      @include light.media-breakpoint-up(lg) {
+        justify-content: space-around;
+        gap: 1rem;
       }
     }
   }
@@ -175,8 +161,28 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
       }
     }
   }
+
+  &:not(.vertical):not(.wizard-icons) .bs-stepper-header {
+    @include light.media-breakpoint-up(lg) {
+      gap: 1.25rem;
+    }
+  }
 }
 
+@include app-rtl(false) {
+  .bs-stepper.wizard-icons .bs-stepper-header .step-trigger {
+    @include light.media-breakpoint-down(lg) {
+      padding-right: 0;
+    }
+  }
+}
+@include app-ltr(false) {
+  .bs-stepper.wizard-icons .bs-stepper-header .step-trigger {
+    @include light.media-breakpoint-down(lg) {
+      padding-left: 0;
+    }
+  }
+}
 // Styles for Modal example Create App wizard
 #wizard-create-app {
   &.vertical {
@@ -199,7 +205,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
         .line {
           i {
-            color: light.$text-muted;
+            color: light.$body-color;
           }
         }
 
@@ -210,24 +216,19 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
         .bs-stepper-label {
           .bs-stepper-subtitle {
-            color: light.$text-muted !important;
+            color: light.$body-color;
           }
         }
 
         .step {
           &:not(.active) {
             .bs-stepper-circle {
-              background-color: light.rgba-to-hex(rgba(light.$black, 0.08), light.$card-bg);
-              color: light.$body-color;
+              background-color: light.$gray-50;
+              color: light.$headings-color;
             }
           }
-          &.active {
-            .bs-stepper-circle {
-              box-shadow: light.$box-shadow-sm;
-            }
-          }
-          &.crossed {
-            .bs-stepper-label,
+          &.crossed .step-trigger {
+            .bs-stepper-label .bs-stepper-subtitle,
             .bs-stepper-title {
               color: light.$text-muted;
             }
@@ -261,14 +262,14 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
         .bs-stepper-header {
           .bs-stepper-icon {
             svg {
-              fill: light.$body-color;
+              fill: light.$headings-color;
             }
             i {
-              fill: light.$body-color;
+              fill: light.$headings-color;
             }
           }
           .bs-stepper-label {
-            color: light.$body-color;
+            color: light.$headings-color;
           }
         }
       }
@@ -277,7 +278,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
   // ! FIX: Vertical border issue in rtl and ltr
   @include app-rtl(false) {
-    &.light-style {
+    .light-style {
       .bs-stepper {
         &.vertical {
           .bs-stepper-header {
@@ -288,7 +289,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
     }
   }
   @include app-ltr(false) {
-    &.light-style {
+    .light-style {
       .bs-stepper {
         &.vertical {
           .bs-stepper-header {
@@ -309,7 +310,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
         border-bottom: 1px solid dark.$border-color;
         .line {
           i {
-            color: dark.$text-muted;
+            color: dark.$body-color;
           }
         }
 
@@ -320,24 +321,19 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
         .bs-stepper-label {
           .bs-stepper-subtitle {
-            color: dark.$text-muted !important;
+            color: dark.$body-color;
           }
         }
 
         .step {
           &:not(.active) {
             .bs-stepper-circle {
-              background-color: dark.rgba-to-hex(rgba(dark.$base, 0.08), dark.$card-bg);
-              color: dark.$body-color;
+              background-color: dark.$gray-50;
+              color: dark.$headings-color;
             }
           }
-          &.active {
-            .bs-stepper-circle {
-              box-shadow: dark.$box-shadow-sm;
-            }
-          }
-          &.crossed {
-            .bs-stepper-label,
+          &.crossed .step-trigger {
+            .bs-stepper-label .bs-stepper-subtitle,
             .bs-stepper-title {
               color: dark.$text-muted;
             }
@@ -371,15 +367,15 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
         .bs-stepper-header {
           .bs-stepper-icon {
             i {
-              color: dark.$body-color;
+              color: dark.$headings-color;
             }
 
             svg {
-              fill: dark.$body-color;
+              fill: dark.$headings-color;
             }
           }
           .bs-stepper-label {
-            color: dark.$body-color;
+            color: dark.$headings-color;
           }
         }
       }
@@ -388,7 +384,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
 
   // ! FIX: Vertical border issue in rtl and ltr
   @include app-rtl(false) {
-    &.dark-style {
+    .dark-style {
       .bs-stepper {
         &.vertical {
           .bs-stepper-header {
@@ -399,7 +395,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
     }
   }
   @include app-ltr(false) {
-    &.dark-style {
+    .dark-style {
       .bs-stepper {
         &.vertical {
           .bs-stepper-header {
@@ -484,7 +480,6 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
       align-items: flex-start;
       .step {
         .step-trigger {
-          padding: 0.5rem 0;
           flex-direction: row;
           .bs-stepper-label {
             margin-left: 0.35rem;
@@ -527,7 +522,7 @@ $bs-stepper-vertical-header-min-width: 18rem !default;
       }
     }
     &.wizard-icons {
-      .bs-stepper-header {
+      .bs-stepper-header .step:not(:first-child) {
         .bs-stepper-icon {
           svg {
             margin-top: 0.5rem;

@@ -38,16 +38,16 @@
     tint-color($border, $btn-active-border-tint-amount)
   );
   $active-color: color-contrast($active-background);
-  $disabled-background: $background;
-  $disabled-border: $border;
-  $disabled-color: color-contrast($disabled-background);
 
   #{$parent} {
     color: $color;
     @include gradient-bg($background);
     border-color: $border;
-    @include box-shadow($btn-box-shadow);
-
+    &.btn[class*='btn-']:not([class*='btn-label-']):not([class*='btn-outline-']):not([class*='btn-text-']):not(
+        .btn-icon
+      ):not(:disabled):not(.disabled) {
+      box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
+    }
     &:hover {
       color: $hover-color !important;
       @include gradient-bg($hover-background !important);
@@ -60,7 +60,6 @@
       color: $hover-color;
       @include gradient-bg($hover-background);
       border-color: $hover-border;
-      box-shadow: none;
     }
 
     .btn-check:checked + &,
@@ -78,12 +77,11 @@
 
     &.disabled,
     &:disabled {
-      color: $disabled-color !important;
-      background-color: $disabled-background !important;
+      color: $color !important;
+      background-color: $background !important;
       // Remove CSS gradients if they're enabled
       background-image: if($enable-gradients, none !important, null);
-      border-color: $disabled-border !important;
-      box-shadow: none !important;
+      border-color: $border !important;
     }
   }
 
@@ -96,6 +94,84 @@
   .btn-group-vertical #{$parent} {
     border-top-color: $active-background;
     border-bottom-color: $active-background;
+  }
+}
+
+@mixin template-button-text-variant($parent, $background, $color: null, $border: null) {
+  $border: transparent;
+  $label-color: if($color, $color, $background);
+  $hover-color: $background;
+  $hover-background: $background;
+  $hover-background: if(
+    $hover-color == $color-contrast-light,
+    shade-color($background, $btn-text-hover-shade-amount, $card-bg),
+    tint-color($background, $btn-text-hover-tint-amount, $card-bg)
+  );
+
+  $focus-background: if(
+    $hover-color == $color-contrast-light,
+    shade-color($background, $btn-text-focus-shade-amount, $card-bg),
+    tint-color($background, $btn-text-focus-tint-amount, $card-bg)
+  );
+
+  $active-color: $hover-color;
+  $active-background: if(
+    $active-color == $color-contrast-light,
+    shade-color($background, $btn-text-active-shade-amount, $card-bg),
+    tint-color($background, $btn-text-active-tint-amount, $card-bg)
+  );
+
+  #{$parent} {
+    color: $label-color;
+    &.waves-effect {
+      .waves-ripple {
+        background: radial-gradient(
+          rgba($background, 0.2) 0,
+          rgba($background, 0.3) 40%,
+          rgba($background, 0.4) 50%,
+          rgba($background, 0.5) 60%,
+          rgba($white, 0) 70%
+        );
+      }
+    }
+
+    &:hover {
+      border-color: $border;
+      background: $hover-background;
+      color: $hover-color;
+    }
+
+    &:focus,
+    &.focus {
+      color: $hover-color;
+      background: $focus-background;
+    }
+
+    &:active,
+    &.active,
+    &.show.dropdown-toggle,
+    .show > &.dropdown-toggle {
+      color: $active-color !important;
+      background: $active-background !important;
+      // Remove CSS gradients if they're enabled
+      background-image: if($enable-gradients, none !important, null);
+      border-color: $border !important;
+    }
+    &:disabled,
+    &.disabled {
+      color: $label-color;
+    }
+  }
+
+  // Button groups
+  .btn-group #{$parent},
+  .input-group #{$parent} {
+    border-right: $input-btn-border-width solid $background !important;
+    border-left: $input-btn-border-width solid $background !important;
+  }
+  .btn-group-vertical #{$parent} {
+    border-top: $input-btn-border-width solid $background !important;
+    border-bottom: $input-btn-border-width solid $background !important;
   }
 }
 
@@ -133,10 +209,16 @@
     tint-color($background, $btn-label-disabled-bg-tint-amount, $card-bg)
   );
 
+  $border-color: if(
+    $dark-style,
+    shade-color($background, $btn-label-border-shade-amount, $card-bg),
+    tint-color($background, $btn-label-border-tint-amount, $card-bg)
+  );
+
   #{$parent} {
-    color: $label-color;
-    border-color: $border;
-    background: $label-background;
+    color: $label-color !important;
+    border-color: $border !important;
+    background: $label-background !important;
     @include box-shadow($btn-box-shadow);
     &.waves-effect {
       .waves-ripple {
@@ -160,7 +242,6 @@
     &.focus {
       color: $hover-color;
       background: $hover-background;
-      box-shadow: none !important;
     }
 
     &:active,
@@ -172,30 +253,25 @@
       // Remove CSS gradients if they're enabled
       background-image: if($enable-gradients, none !important, null);
       border-color: $border !important;
-
-      &:focus {
-        box-shadow: none;
-      }
     }
 
     &.disabled,
     &:disabled {
       color: $label-color !important;
       border-color: $border !important;
-      background: $disabled-background !important;
-      box-shadow: none;
+      background: $label-background !important;
     }
   }
 
   // Button groups
   .btn-group #{$parent},
   .input-group #{$parent} {
-    border-right: $input-btn-border-width solid $active-background;
-    border-left: $input-btn-border-width solid $active-background;
+    border-right: $input-btn-border-width solid $border-color !important;
+    border-left: $input-btn-border-width solid $border-color !important;
   }
   .btn-group-vertical #{$parent} {
-    border-top-color: $active-background;
-    border-bottom-color: $active-background;
+    border-top: $input-btn-border-width solid $border-color !important;
+    border-bottom: $input-btn-border-width solid $border-color !important;
   }
 }
 
@@ -249,7 +325,6 @@
       color: $color-hover;
       background-color: $hover-background;
       border-color: $active-border;
-      box-shadow: none;
     }
 
     .btn-check:checked + &,
@@ -260,16 +335,11 @@
       color: $active-color !important;
       background-color: $active-background !important;
       border-color: $active-border !important;
-
-      &:focus {
-        box-shadow: none;
-      }
     }
 
     &.disabled,
     &:disabled {
       color: $color !important;
-      background-color: transparent !important;
     }
   }
 

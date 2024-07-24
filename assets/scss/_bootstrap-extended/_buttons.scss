@@ -6,23 +6,46 @@
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  transition: all 0.135s ease-in-out;
-  transform: scale(1.001);
+  &:not(.dropdown-toggle):not([class*='btn-text-']) {
+    transition: all 0.135s ease-in-out;
+    transform: scale(1.001);
+  }
+
+  &[class*='btn-outline-'] {
+    &:disabled,
+    &.disabled {
+      background: transparent !important;
+    }
+  }
+  &[class*='btn-text-'] {
+    padding-inline: 0.75rem;
+    &[class*='btn-sm'] {
+      padding-inline: 0.5625rem;
+    }
+    &[class*='btn-lg'] {
+      padding-inline: 1rem;
+    }
+    &:disabled,
+    &.disabled {
+      background: transparent !important;
+      border-color: transparent !important;
+    }
+  }
+
   .ti {
     line-height: 0.9;
   }
-  &:not([class*='btn-label-']):not([class*='btn-outline-']) {
-    box-shadow: $btn-box-shadow;
-  }
-  &:not([class*='btn-']) {
-    box-shadow: none !important;
+  &.btn-text {
+    background: none;
+    box-shadow: none;
+    border: none;
   }
   &.disabled,
   &:disabled {
     cursor: default;
   }
-  &[class*='btn-']:active,
-  &[class*='btn-'].active {
+  &[class*='btn-']:active:not([class*='btn-text']):not(.dropdown-toggle),
+  &[class*='btn-'].active:not([class*='btn-text']):not(.dropdown-toggle) {
     transform: scale(0.98);
     transition: all 0.135s ease-in-out;
   }
@@ -61,18 +84,22 @@ label.btn {
       '.btn-outline-#{$color}',
       if($color== 'dark' and $dark-style, $dark, $value)
     );
+    @if $color == secondary {
+      $value: $body-color;
+    }
+    @include template-button-text-variant('.btn-text-#{$color}', $value);
   }
 }
 
 // Icon button
 
 .btn-icon {
-  $btn-icon-size: ($btn-font-size * $btn-line-height) + ($btn-padding-y * 2);
+  $btn-icon-size: ($btn-font-size * $btn-line-height) + ($btn-padding-y * 1.998);
   $btn-icon-size-xl: ($btn-font-size-xl * $btn-line-height-xl) + ($btn-padding-y-xl * 2);
   $btn-icon-size-lg: ($btn-font-size-lg * $btn-line-height-lg) + ($btn-padding-y-lg * 2);
-  $btn-icon-size-sm: ($btn-font-size-sm * $btn-line-height-sm) + ($btn-padding-y-sm * 2);
+  $btn-icon-size-sm: ($btn-font-size-sm * $btn-line-height-sm) + ($btn-padding-y-sm * 2.785);
   $btn-icon-size-xs: ($btn-font-size-xs * $btn-line-height-xs) + ($btn-padding-y-xs * 2);
-  $borders-width: $btn-border-width * 2;
+  $borders-width: calc(#{$btn-border-width} * 2);
   --#{$prefix}btn-active-border-color: transparent;
 
   padding: 0;
@@ -127,12 +154,12 @@ label.btn {
 
 .btn-pinned {
   position: absolute;
-  top: 0.75rem;
+  top: 1rem;
   @include ltr-style {
-    right: 0.75rem;
+    right: 1rem;
   }
   @include rtl-style {
-    left: 0.75rem;
+    left: 1rem;
   }
 }
 

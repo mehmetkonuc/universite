@@ -10,11 +10,12 @@
 
 // scss-docs-start gray-color-variables
 $white: #fff !default;
-$black: #4b465c !default;
+$black: #2f2b3d !default;
 $gray-25: rgba($black, 0.015) !default; // (C)
-$gray-50: rgba($black, 0.03) !default; // (C)
-$gray-100: rgba($black, 0.05) !default;
-$gray-200: rgba($black, 0.2) !default;
+$gray-50: rgba($black, 0.06) !default; // (C)
+$gray-75: rgba($black, 0.08) !default; // (C)
+$gray-100: rgba($black, 0.1) !default;
+$gray-200: rgba($black, 0.12) !default;
 $gray-300: rgba($black, 0.3) !default;
 $gray-400: rgba($black, 0.4) !default;
 $gray-500: rgba($black, 0.5) !default;
@@ -36,24 +37,24 @@ $blue: #007bff !default;
 $indigo: #6610f2 !default;
 $purple: #7367f0 !default;
 $pink: #e83e8c !default;
-$red: #ea5455 !default;
+$red: #ff4c51 !default;
 $orange: #fd7e14 !default;
 $yellow: #ff9f43 !default;
 $green: #28c76f !default;
 $teal: #20c997 !default;
-$cyan: #00cfe8 !default;
+$cyan: #00bad1 !default;
 // scss-docs-end color-variables
 
 // scss-docs-start theme-color-variables
 $primary: $purple !default;
-$secondary: #a8aaae !default;
+$secondary: #808390 !default;
 $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
 $light: #dfdfe3 !default;
 $dark: #4b4b4b !default;
-$gray: $gray-100 !default; // (C)
+$gray: $gray-500 !default; // (C)
 // scss-docs-end theme-color-variables
 
 // scss-docs-start theme-colors-map
@@ -75,19 +76,41 @@ $color-scheme: 'light' !default; // (C)
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
 $min-contrast-ratio: 1.7 !default;
 
+// Characters which are escaped by the escape-svg function
+$escaped-characters: (('<', '%3c'), ('>', '%3e'), ('#', '%23'), ('(', '%28'), (')', '%29')) !default;
+
 // * Options
 // *******************************************************************************
 
 $enable-negative-margins: true !default;
 $enable-validation-icons: false !default;
+$enable-dark-mode: false !default;
 
 // Prefix for :root CSS variables
 $variable-prefix: bs- !default;
+$prefix: $variable-prefix !default;
 
 // * Spacing
 // *******************************************************************************
 
 $spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  50: $spacer * 0.125,
+  1: $spacer * 0.25,
+  1_5: $spacer * 0.375,
+  2: $spacer * 0.5,
+  3: $spacer * 0.75,
+  4: $spacer,
+  5: $spacer * 1.25,
+  6: $spacer * 1.5,
+  7: $spacer * 1.75,
+  8: $spacer * 2,
+  9: $spacer * 2.25,
+  10: $spacer * 2.5,
+  11: $spacer * 2.75,
+  12: $spacer * 3
+) !default;
 
 $sizes-px: (
   px-14: 14px,
@@ -96,8 +119,10 @@ $sizes-px: (
   px-30: 30px,
   px-40: 40px,
   px-50: 50px,
+  px-52: 52px,
   px-75: 75px,
   px-100: 100px,
+  px-120: 120px,
   px-150: 150px,
   px-200: 200px,
   px-250: 250px,
@@ -116,7 +141,7 @@ $sizes-px: (
 
 $body-bg: #f8f7fa !default;
 $rgba-to-hex-bg: #fff !default; // (C)
-$body-color: rgba-to-hex($gray-800, $rgba-to-hex-bg) !default;
+$body-color: rgba-to-hex($gray-700, $rgba-to-hex-bg) !default;
 $rgba-to-hex-bg-inverted: #000 !default; // (C)
 
 // * Links
@@ -154,7 +179,6 @@ $container-padding-y: 1.5rem !default; // (C)
 // scss-docs-start border-variables
 $border-width: 1px !default;
 $border-color: rgba-to-hex($gray-200, $rgba-to-hex-bg) !default;
-$border-inner-color: rgba($black, 0.075) !default; // (C)
 // scss-docs-end border-variables
 
 // scss-docs-start border-radius-variables
@@ -163,19 +187,22 @@ $border-radius-xl: 0.625rem !default; // (C)
 $border-radius-lg: 0.5rem !default;
 $border-radius-sm: 0.25rem !default;
 $border-radius-xs: 0.125rem !default; // (C)
+$border-radius-pill: 50rem !default;
 // scss-docs-end border-radius-variables
 
 // scss-docs-start box-shadow-variables
-$box-shadow: 0 0.25rem 1rem rgba(rgba-to-hex($gray-500, $rgba-to-hex-bg), 0.45) !default;
-$box-shadow-sm: 0 0.125rem 0.25rem rgba(rgba-to-hex($gray-500, $rgba-to-hex-bg), 0.3) !default;
-$box-shadow-lg: 0 0.625rem 1.25rem rgba(rgba-to-hex($gray-500, $rgba-to-hex-bg), 0.4) !default;
+$box-shadow: 0 0.1875rem 0.75rem 0 rgba($black, 0.14) !default;
+$box-shadow-xs: 0 0.0625rem 0.375rem 0 rgba($black, 0.1) !default;
+$box-shadow-sm: 0 0.125rem 0.5rem 0 rgba($black, 0.12) !default;
+$box-shadow-lg: 0 0.25rem 1.125rem 0 rgba($black, 0.16) !default;
+$box-shadow-xl: 0 0.3125rem 1.875rem 0 rgba($black, 0.18) !default;
 // scss-docs-end box-shadow-variables
 
 $component-active-color: $white !default;
 $component-active-bg: $primary !default;
 
 $component-hover-color: $primary !default; // (C)
-$component-hover-bg: rgba($primary, 0.08) !default; // (C)
+$component-hover-bg: rgba($primary, 0.16) !default; // (C)
 
 $component-line-height: 1.54 !default; // (C)
 $component-focus-shadow-width: 2px !default; // (C)
@@ -187,8 +214,12 @@ $hr-color: $border-color !default;
 $hr-opacity: 1 !default;
 $bordered-row-border-color: $hr-color !default; // (C)
 
+$focus-ring-width: 0.15rem !default;
+$focus-ring-opacity: 0.75 !default;
+$focus-ring-color: rgba($gray-700, $focus-ring-opacity) !default;
+
 // scss-docs-start caret-variables
-$caret-width: 0.42em !default;
+$caret-width: 0.55em !default;
 $caret-vertical-align: middle !default;
 $caret-spacing: 0.5em !default;
 // scss-docs-end caret-variables
@@ -197,8 +228,18 @@ $caret-spacing: 0.5em !default;
 // *******************************************************************************
 
 // scss-docs-start font-variables
-$font-family-sans-serif: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell',
-  'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !default;
+$font-family-sans-serif:
+  'Public Sans',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  'Oxygen',
+  'Ubuntu',
+  'Cantarell',
+  'Fira Sans',
+  'Droid Sans',
+  'Helvetica Neue',
+  sans-serif !default;
 $font-family-serif: Georgia, 'Times New Roman', serif !default; // (C)
 $font-family-monospace: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !default;
 // stylelint-enable value-keyword-case
@@ -209,31 +250,39 @@ $font-family-code: var(--#{$variable-prefix}font-monospace) !default;
 // $font-size-base effects the font size of the body text
 $font-size-root: 16px !default;
 $font-size-base: 0.9375rem !default; // Assumes the browser default, typically `16px`
-$font-size-xl: 1.25rem !default; // (C)
+$font-size-xl: 1.1875rem !default; // (C)
 $font-size-lg: 1rem !default;
-$font-size-sm: 0.75rem !default;
-$font-size-xs: 0.69rem !default; // (C)
+$font-size-sm: 0.8125rem !default;
+$font-size-xs: 0.6875rem !default; // (C)
 
 $font-weight-lighter: lighter !default;
 $font-weight-light: 300 !default;
 $font-weight-normal: 400 !default;
-$font-weight-medium: 500 !default; // (C)
+$font-weight-medium: 500 !default;
 $font-weight-semibold: 600 !default;
 $font-weight-bold: 700 !default;
+$font-weight-extrabold: 800 !default;
 $font-weight-bolder: bolder !default;
 
-$line-height-base: 1.47 !default;
-$line-height-xl: 1.5 !default; // (C)
-$line-height-lg: 1.375 !default;
-$line-height-sm: 1 !default;
-$line-height-xs: 0.75 !default; // (C)
+$line-height-base: 1.375 !default;
+$line-height-xl: 1.75 !default; // (C)
+$line-height-lg: 1.625 !default;
+$line-height-sm: 1.125 !default;
+$line-height-xs: 1 !default; // (C)
 
-$h1-font-size: 2.375rem !default;
-$h2-font-size: 2rem !default;
-$h3-font-size: 1.625rem !default;
-$h4-font-size: 1.375rem !default;
+$h1-font-size: 2.875rem !default;
+$h2-font-size: 2.375rem !default;
+$h3-font-size: 1.75rem !default;
+$h4-font-size: 1.5rem !default;
 $h5-font-size: 1.125rem !default;
 $h6-font-size: $font-size-base !default;
+
+$h1-line-height: 4.25rem !default;
+$h2-line-height: 3.5rem !default;
+$h3-line-height: 2.625rem !default;
+$h4-line-height: 2.375rem !default;
+$h5-line-height: 1.75rem !default;
+$h6-line-height: 1.375rem !default;
 // scss-docs-end font-variables
 
 // scss-docs-start headings-variables
@@ -267,8 +316,10 @@ $big-font-size: 112% !default; // (C)
 $large-font-size: 150% !default; // (C)
 $xlarge-font-size: 170% !default; // (C)
 
-$text-muted: rgba-to-hex($gray-500, $rgba-to-hex-bg) !default;
+$text-muted: rgba-to-hex($gray-400, $rgba-to-hex-bg) !default;
 $text-muted-hover: rgba-to-hex($gray-600, $rgba-to-hex-bg) !default; // (C)
+
+$blockquote-font-size: $font-size-base !default;
 
 $text-light: rgba-to-hex($gray-400, $rgba-to-hex-bg) !default; // (C)
 $text-lighter: rgba-to-hex($gray-300, $rgba-to-hex-bg) !default; // (C)
@@ -292,38 +343,77 @@ $zindex-toast: 1095 !default; // (C)
 $zindex-tooltip: 1099 !default;
 $zindex-notification: 999999 !default; // (C)
 
+// scss-docs-start zindex-levels-map
+$zindex-levels: (
+  n1: -1,
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5
+) !default;
+// scss-docs-end zindex-levels-map
+
 // * Tables
 // *******************************************************************************
 
 // scss-docs-start table-variables
-$table-cell-padding-y: 0.55rem !default;
+$table-head-padding-y: 1.161rem !default; // (C)
+$table-head-padding-y-sm: 1.114rem !default; // (C)
+$table-cell-padding-y: 0.782rem !default;
 $table-cell-padding-x: 1.25rem !default;
-$table-cell-padding-y-sm: 0.25rem !default;
+$table-cell-padding-y-sm: 0.594rem !default;
 $table-cell-padding-x-sm: $table-cell-padding-x !default;
 
 $table-cell-vertical-align: middle !default;
 
+$table-th-color: $headings-color !default; // (C)
+$table-color: var(--#{$prefix}body-color) !default;
+$table-bg: transparent !default;
+
 $table-th-font-weight: $font-weight-medium !default;
 
-$table-striped-bg-factor: 0.02 !default;
+$table-striped-bg-factor: 0.06 !default;
 $table-striped-bg: rgba-to-hex(rgba($black, $table-striped-bg-factor), $rgba-to-hex-bg) !default;
 
+$table-active-color: $body-color !default;
 $table-active-bg-factor: 0.08 !default;
 $table-active-bg: rgba($primary, $table-active-bg-factor) !default;
 
-$table-hover-bg-factor: 0.04 !default;
+$table-hover-bg-factor: 0.06 !default;
+$table-hover-bg: rgba($black, $table-hover-bg-factor) !default;
 
-$table-border-factor: 0.2 !default;
+$table-border-factor: 0.12 !default;
+$table-border-color: rgba-to-hex(rgba($black, $table-border-factor), $rgba-to-hex-bg) !default;
 
-$table-bg-scale: -92% !default;
+$table-striped-order: even !default;
 
+$table-group-separator-color: $table-border-color !default;
+
+$table-caption-color: $text-muted !default;
+
+$table-bg-scale: -84% !default;
+
+// scss-docs-start table-loop
+$table-variants: (
+  'primary': shift-color($primary, $table-bg-scale),
+  'secondary': shift-color($secondary, $table-bg-scale),
+  'success': shift-color($success, $table-bg-scale),
+  'info': shift-color($info, $table-bg-scale),
+  'warning': shift-color($warning, $table-bg-scale),
+  'danger': shift-color($danger, $table-bg-scale),
+  'light': rgba-to-hex($gray-100, $rgba-to-hex-bg),
+  'dark': $dark
+) !default;
+// scss-docs-end table-loop
 // * Buttons + Forms
 // *******************************************************************************
 
 $input-btn-padding-y: 0.6rem !default;
 $input-btn-padding-x: 1.25rem !default;
 $input-btn-font-size: $font-size-base !default;
-$input-btn-line-height: 1.125 !default;
+$input-btn-line-height: $line-height-base !default;
 
 $input-btn-focus-width: 0.05rem !default;
 $input-btn-focus-color-opacity: 0.1 !default;
@@ -354,35 +444,47 @@ $input-btn-line-height-xl: $line-height-lg !default; // (C)
 // * Buttons
 // *******************************************************************************
 
-$btn-padding-y-xs: $input-btn-padding-y-xs !default; // (C)
+$btn-padding-y: 0.4812rem !default;
+$btn-padding-x: 1.25rem !default;
+
+$btn-padding-y-sm: 0.317rem !default;
+$btn-padding-x-sm: 0.875rem !default;
+
+$btn-padding-y-lg: 0.708rem !default;
+$btn-padding-x-lg: 1.625rem !default;
+
+$btn-padding-y-xs: 0.153rem !default; // (C)
 $btn-padding-x-xs: $input-btn-padding-x-xs !default; // (C)
-$btn-font-size-xs: $input-btn-font-size-xs !default; // (C)
+$btn-font-size-xs: $font-size-xs !default; // (C)
 
-$btn-padding-y-xl: $input-btn-padding-y-xl !default; // (C)
-$btn-padding-x-xl: $input-btn-padding-x-xl !default; // (C)
-$btn-font-size-xl: $input-btn-font-size-xl !default; // (C)
+$btn-padding-y-xl: 0.809rem !default; // (C)
+$btn-padding-x-xl: 1.75rem !default; // (C)
+$btn-font-size-xl: $font-size-xl !default; // (C)
 
-$btn-line-height-xs: $input-btn-line-height-xs !default; // (C)
-$btn-line-height-sm: $line-height-sm; //(C)
-$btn-line-height-lg: $line-height-lg; //(C)
-$btn-line-height-xl: $input-btn-line-height-xl !default; // (C)
+$btn-line-height-xs: $line-height-base !default; // (C)
+$btn-line-height-sm: $line-height-base !default; // (C)
+$btn-line-height-lg: $line-height-base !default; // (C)
+$btn-line-height-xl: $line-height-base !default; // (C)
 
 $btn-font-weight: 500 !default;
-$btn-box-shadow: $box-shadow-sm !default;
+$btn-box-shadow: none !default;
 $btn-focus-box-shadow: none !default;
+$btn-disabled-opacity: 0.45 !default;
 $btn-active-box-shadow: none !default;
 
-$btn-border-radius-xs: $border-radius-sm !default; // (C)
-$btn-border-radius-xl: $border-radius-lg !default; // (C)
+$btn-border-radius-xs: $border-radius-xs !default; // (C)
+$btn-border-radius-xl: $border-radius-xl !default; // (C)
 
 $btn-transition: all 0.2s ease-in-out !default;
 
 $btn-label-bg-shade-amount: 84% !default; // (C)
-$btn-label-bg-tint-amount: 85% !default; // (C)
-$btn-label-hover-shade-amount: 26% !default; // (C)
+$btn-label-bg-tint-amount: 84% !default; // (C)
+$btn-label-hover-shade-amount: 76% !default; // (C)
 $btn-label-hover-tint-amount: 76% !default; // (C)
 $btn-label-disabled-bg-shade-amount: 84% !default; // (C)
 $btn-label-disabled-bg-tint-amount: 85% !default; // (C)
+$btn-label-border-tint-amount: 68% !default; // (C)
+$btn-label-border-shade-amount: 68% !default; // (C)
 
 $btn-hover-bg-shade-amount: 10% !default;
 $btn-hover-bg-tint-amount: 25% !default;
@@ -394,16 +496,25 @@ $btn-active-border-shade-amount: 10% !default;
 $btn-active-border-tint-amount: 10% !default;
 
 // Outline buttons
-$btn-outline-hover-bg-shade-amount: 10% !default; // (C)
+$btn-outline-hover-bg-shade-amount: 8% !default; // (C)
 $btn-outline-hover-bg-tint-amount: 92% !default; // (C)
-$btn-outline-active-bg-shade-amount: 10% !default; // (C)
-$btn-outline-active-bg-tint-amount: 84% !default; // (C)
+$btn-outline-active-bg-shade-amount: 8% !default; // (C)
+$btn-outline-active-bg-tint-amount: 92% !default; // (C)
+
+// text buttons
+$btn-text-hover-shade-amount: 8% !default; // (C)
+$btn-text-hover-tint-amount: 92% !default; // (C)
+$btn-text-focus-shade-amount: 8% !default; // (C)
+$btn-text-focus-tint-amount: 92% !default; // (C)
+$btn-text-active-shade-amount: 8% !default; // (C)
+$btn-text-active-tint-amount: 92% !default; // (C)
 
 // * Forms
 // *******************************************************************************
 
 // scss-docs-start form-text-variables
 $form-text-font-size: $input-btn-font-size-sm !default;
+$form-text-color: $body-color !default;
 // scss-docs-end form-text-variables
 
 // scss-docs-start form-label-variables
@@ -415,29 +526,33 @@ $form-label-text-transform: inherit !default; //(C)
 // scss-docs-end form-label-variables
 
 // scss-docs-start form-input-variables
-$input-padding-y: 0.422rem !default;
-$input-padding-x: $input-btn-padding-x-sm !default;
-$input-line-height: $line-height-xl !default;
+$input-padding-y: 0.426rem !default;
+$input-padding-x: 0.9375rem !default;
+$input-line-height: $line-height-lg !default;
 $input-font-size: $input-btn-font-size !default;
 
-$input-padding-y-sm: 0.266rem !default;
-$input-padding-x-sm: 0.625rem !default;
+$input-padding-y-sm: 0.215rem !default;
+$input-padding-x-sm: 0.75rem !default;
 
-$input-padding-y-lg: 0.594rem !default;
+$input-padding-y-lg: 0.575rem !default;
 $input-padding-x-lg: $spacer !default;
-$input-font-size-lg: 1.125rem !default;
+$input-font-size-lg: 1.0625rem !default;
 
-$input-bg: $white !default;
-$input-disabled-bg: rgba($black, 0.08) !default;
+$input-bg: transparent !default;
+$input-disabled-color: $text-muted !default;
+$input-disabled-bg: rgba-to-hex($gray-50, $rgba-to-hex-bg) !default;
+$input-disabled-border-color: rgba-to-hex(rgba($black, 0.24), $rgba-to-hex-bg) !default;
 
-$input-color: $body-color !default;
-$input-border-color: $border-color !default;
-$input-border-hover-color: rgba-to-hex($gray-300, $rgba-to-hex-bg) !default; // (C)
+$input-color: $headings-color !default;
+$input-border-color: rgba-to-hex(rgba($black, 0.22), $rgba-to-hex-bg) !default;
+$input-border-hover-color: rgba-to-hex($gray-600, $rgba-to-hex-bg) !default; // (C)
 
+$input-focus-border-width: 2px !default; //(C)
 $input-focus-border-color: $component-active-bg !default;
-$input-focus-box-shadow: $box-shadow-sm !default;
+$input-focus-box-shadow: 0 2px 6px 0 rgba($component-active-bg, 0.3) !default;
 
-$input-placeholder-color: rgba-to-hex($gray-400, $rgba-to-hex-bg) !default;
+$input-placeholder-color: $text-muted !default;
+$input-plaintext-color: $headings-color !default;
 
 $input-height-inner: px-to-rem(
   floor(rem-to-px(($input-btn-font-size * $input-btn-line-height) + ($input-btn-padding-y * 2)))
@@ -453,42 +568,48 @@ $input-height-inner-lg: px-to-rem(
 // scss-docs-start form-check-variables
 $form-check-input-width: 1.2em !default;
 $form-datatables-check-input-size: 18px !default; // (C) For datatables with checkbox- update according to $form-check-input-width
-$form-check-min-height: $font-size-base * $line-height-base !default;
-$form-check-input-border: 2px solid $input-border-color !default;
+$form-check-min-height: $font-size-base * $line-height-base * 1.067 !default;
+$form-check-padding-start: $form-check-input-width + 0.6em !default;
+$form-check-margin-bottom: 0.5rem !default;
+$form-check-input-border: $input-focus-border-width solid $text-muted !default;
+$form-check-label-color: $headings-color !default;
+$form-check-input-focus-box-shadow: none !default;
 
 $form-check-label-cursor: pointer !default;
-$form-check-label-disabled-color: $text-muted !default; // (C)R
 
-$form-check-input-focus-box-shadow: $input-focus-box-shadow !default;
-
+$form-check-input-border-radius: 0.267em !default;
+$form-check-input-focus-border: $body-color !default;
 $form-check-input-checked-color: $component-active-color !default;
-$form-check-input-checked-bg-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='13' viewBox='0 0 15 14' fill='none'%3E%3Cpath d='M3.41667 7L6.33333 9.91667L12.1667 4.08333' stroke='#{$form-check-input-checked-color}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !default;
+$form-check-input-checked-bg-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='17' viewBox='0 0 15 14' fill='none'%3E%3Cpath d='M3.41667 7L6.33333 9.91667L12.1667 4.08333' stroke='#{$form-check-input-checked-color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !default;
 
-$form-check-radio-checked-bg-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='5' width='8' height='8' rx='4' fill='#{$form-check-input-checked-color}'/%3E%3C/svg%3E%0A") !default;
+$form-check-radio-checked-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='1.6' fill='#{$form-check-input-checked-color}'  /%3e%3c/svg%3e") !default;
 
 $form-check-input-indeterminate-color: $component-active-color !default;
-$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 9H12.5' stroke='#{$form-check-input-indeterminate-color}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A") !default;
+$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M2.5 6H9.5' stroke='#{$form-check-input-indeterminate-color}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") !default;
 
-$form-check-input-disabled-bg: rgba-to-hex($gray-200, $rgba-to-hex-bg) !default; // (C)
+$form-check-input-disabled-opacity: 0.45 !default;
+$form-check-input-disabled-bg: rgba-to-hex($gray-300, $rgba-to-hex-bg) !default; // (C)
+$form-check-label-disabled-color: $text-muted !default; // (C)
+
 // scss-docs-end form-check-variables
 
 // scss-docs-start form-switch-variables
-$form-switch-color: $gray-200 !default;
+$form-switch-color: $component-active-color !default;
 $form-switch-width: 2em !default;
-$form-switch-padding-start: $form-switch-width + 0.5em !default;
-$form-switch-bg-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9' cy='9' r='6' fill='#{$form-switch-color}'/%3E%3C/svg%3E%0A") !default;
+$form-switch-padding-start: $form-switch-width + 0.667em !default;
+$form-switch-focus-color: $component-active-color;
+$form-switch-bg-image: url("data:image/svg+xml,%3csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg filter='url(%23a)'%3e%3ccircle cx='12' cy='11' r='8.5' fill='#{$form-switch-color}'/%3e%3c/g%3e%3cdefs%3e%3cfilter id='a' x='0' y='0' width='22' height='22' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3e%3cfeOffset dy='2'/%3e%3cfeGaussianBlur stdDeviation='2'/%3e%3cfeColorMatrix values='0 0 0 0 0.180392 0 0 0 0 0.14902 0 0 0 0 0.239216 0 0 0 0.16 0'/%3e%3cfeBlend in2='BackgroundImageFix' result='effect1_dropShadow_6488_3264'/%3e%3cfeBlend in='SourceGraphic' in2='effect1_dropShadow_6488_3264' result='shape'/%3e%3c/filter%3e%3c/defs%3e%3c/svg%3e") !default;
 
-$form-switch-focus-color: $input-focus-border-color !default;
-$form-switch-focus-bg-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9' cy='9' r='6' fill='#{$form-switch-focus-color}'/%3E%3C/svg%3E%0A") !default;
-
-$form-switch-checked-color: $component-active-color !default;
-$form-switch-checked-bg-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9' cy='9' r='6' fill='#{$form-switch-checked-color}'/%3E%3C/svg%3E%0A") !default;
-
-$form-switch-checked-bg-position-rtl: left center !default; //(C)
+$form-switch-focus-bg-image: url("data:image/svg+xml,%3csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg filter='url(%23a)'%3e%3ccircle cx='12' cy='11' r='8.5' fill='#{$form-switch-color}'/%3e%3c/g%3e%3cdefs%3e%3cfilter id='a' x='0' y='0' width='22' height='22' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3e%3cfeOffset dy='2'/%3e%3cfeGaussianBlur stdDeviation='2'/%3e%3cfeColorMatrix values='0 0 0 0 0.180392 0 0 0 0 0.14902 0 0 0 0 0.239216 0 0 0 0.16 0'/%3e%3cfeBlend in2='BackgroundImageFix' result='effect1_dropShadow_6488_3264'/%3e%3cfeBlend in='SourceGraphic' in2='effect1_dropShadow_6488_3264' result='shape'/%3e%3c/filter%3e%3c/defs%3e%3c/svg%3e") !default;
+$form-switch-checked-bg-image: url("data:image/svg+xml,%3csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg filter='url(%23a)'%3e%3ccircle cx='12' cy='11' r='8.5' fill='#{$form-switch-color}'/%3e%3c/g%3e%3cdefs%3e%3cfilter id='a' x='0' y='0' width='22' height='22' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3e%3cfeOffset dy='2'/%3e%3cfeGaussianBlur stdDeviation='2'/%3e%3cfeColorMatrix values='0 0 0 0 0.180392 0 0 0 0 0.14902 0 0 0 0 0.239216 0 0 0 0.16 0'/%3e%3cfeBlend in2='BackgroundImageFix' result='effect1_dropShadow_6488_3264'/%3e%3cfeBlend in='SourceGraphic' in2='effect1_dropShadow_6488_3264' result='shape'/%3e%3c/filter%3e%3c/defs%3e%3c/svg%3e") !default;
+$form-switch-checked-bg-position: 95% center !default;
+$form-switch-checked-bg-position-rtl: 4% center !default; // (C)
+$form-switch-bg: rgba-to-hex($gray-100, $rgba-to-hex-bg) !default; // (C)
+$form-switch-box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.16) inset !default; // (C)
 // scss-docs-end form-switch-variables
 
 //input-group-variables
-$input-group-addon-padding-x: $input-btn-padding-x-xs !default;
+$input-group-addon-color: $headings-color !default;
 $input-group-addon-bg: $input-bg !default;
 // scss-docs-end input-group-variables
 
@@ -498,9 +619,10 @@ $form-select-padding-x: $input-padding-x !default;
 $form-select-indicator-padding: $form-select-padding-x * 2.8 !default;
 $form-select-disabled-color: $text-muted !default;
 $form-select-disabled-bg: $input-disabled-bg !default;
-$form-select-bg-size: 22px 20px !default;
-$form-select-indicator-color: $body-color !default;
-$form-select-indicator: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='#{$form-select-indicator-color}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='white' stroke-opacity='0.2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !default;
+$form-select-bg-size: 22px 24px !default;
+$form-select-indicator: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 22" fill="none"><path d="M10.9999 12.0743L15.5374 7.53676L16.8336 8.83292L10.9999 14.6666L5.16626 8.83292L6.46243 7.53676L10.9999 12.0743Z" fill="#{$black}" fill-opacity="0.9"/></svg>') !default;
+$form-select-disabled-indicator: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 22" fill="none"><path d="M10.9999 12.0743L15.5374 7.53676L16.8336 8.83292L10.9999 14.6666L5.16626 8.83292L6.46243 7.53676L10.9999 12.0743Z" fill="#{$text-muted}" fill-opacity="0.9"/></svg>') !default; // (C)
+$form-select-indicator-rtl: escape-svg($form-select-indicator) !default; // (C)
 
 $form-select-focus-box-shadow: $input-focus-box-shadow !default;
 
@@ -512,23 +634,27 @@ $form-select-padding-x-lg: $input-padding-x-lg !default;
 // scss-docs-end form-select-variables
 
 // scss-docs-start form-range-variables
-$form-range-track-height: 0.125rem !default;
-$form-range-track-bg: $gray-200 !default;
+$form-range-track-height: 0.375rem !default;
 $form-range-track-box-shadow: none !default;
-$form-range-track-disabled-bg: $gray-50 !default; // (C)
-
-$form-range-thumb-width: 0.75rem !default;
+$form-range-track-disabled-bg: rgba-to-hex($gray-400, $rgba-to-hex-bg) !default; // (C)
+$form-range-thumb-width: 1.375rem !default;
 $form-range-thumb-height: $form-range-thumb-width !default;
-$form-range-thumb-bg: $white !default;
-$form-range-thumb-box-shadow: 0 0 0 1px rgba($black, 0.1), $floating-component-shadow !default;
-$form-range-thumb-focus-box-shadow: 0 0 0 3px rgba($black, 0.1), $floating-component-shadow !default;
-$form-range-thumb-active-bg: $form-range-thumb-bg !default;
-$form-range-thumb-disabled-bg: rgba-to-hex($gray-200, $rgba-to-hex-bg) !default;
+$form-range-thumb-box-shadow: $box-shadow-sm !default;
+$form-range-thumb-bg: $primary !default;
+$form-range-thumb-active-bg: $primary !default;
+$form-range-thumb-disabled-bg: rgba-to-hex($gray-400, $rgba-to-hex-bg) !default;
 // scss-docs-end form-range-variables
+
+// scss-docs-start form-file-variables
+$form-file-button-bg: $input-group-addon-bg !default;
+$form-file-button-hover-bg: shade-color($form-file-button-bg, 5%) !default;
+// scss-docs-end form-file-variables
 
 // scss-docs-start form-floating-variables
 $form-floating-label-opacity: 0.75 !default;
-$form-floating-transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out !default;
+$form-floating-transition:
+  opacity 0.2s ease-in-out,
+  transform 0.2s ease-in-out !default;
 $form-floating-label-transform-rtl: scale(0.85) translateY(-0.5rem) translateX(-0.15rem) !default; // (C)
 // scss-docs-end form-floating-variables
 
@@ -546,13 +672,15 @@ $form-select-feedback-icon-padding-lg: $form-select-indicator-padding + $input-h
 // * Navs
 // *******************************************************************************
 
-$nav-spacer: 0.125rem !default; // (C)
+$nav-spacer: 0.25rem !default; // (C)
 
-$nav-link-padding-y: 0.543rem !default;
-$nav-link-padding-x: 1.25rem !default;
+$nav-link-padding-y: 0.5435rem !default;
+$nav-link-padding-x: 1.375rem !default;
+$nav-link-font-size: $font-size-base !default;
+$nav-link-font-weight: $font-weight-medium !default;
 $nav-link-color: $headings-color !default;
-$nav-link-disabled-color: $text-muted !default;
-$nav-link-line-height: $line-height-lg !default; // (C)
+$nav-link-disabled-color: $text-lighter !default;
+$nav-link-line-height: $line-height-base !default; // (C)
 
 $nav-link-padding-y-lg: 0.6rem !default; // (C)
 $nav-link-padding-x-lg: 1.5rem !default; // (C)
@@ -562,9 +690,20 @@ $nav-link-padding-y-sm: 0.376rem !default; // (C)
 $nav-link-padding-x-sm: 1rem !default; // (C)
 $nav-link-line-height-sm: $line-height-sm !default; // (C)
 
-$nav-tabs-border-color: transparent !default;
+$nav-tabs-border-color: $border-color !default;
+$nav-tabs-border-width: 0 !default;
+// $nav-tabs-link-hover-border-color: null !default;
 $nav-tabs-link-active-color: $component-active-bg !default;
 $nav-tabs-link-active-bg: $white !default;
+$nav-tabs-link-active-border-color: $component-active-bg !default;
+
+$nav-pills-padding-y: $nav-link-padding-y !default; // (C)
+$nav-pills-padding-x: $nav-link-padding-x !default; // (C)
+
+$nav-pills-link-hover-bg: rgba-to-hex(rgba($primary, 0.16), $rgba-to-hex-bg) !default; // (C)
+
+$nav-pills-link-active-color: $white !default;
+$nav-pills-link-active-bg: transparent !default;
 
 // * Navbar
 // *******************************************************************************
@@ -586,110 +725,140 @@ $navbar-light-disabled-color: $gray-300 !default;
 $navbar-light-toggler-icon-bg: url("data:image/svg+xml,%3Csvg width='14px' height='11px' viewBox='0 0 14 11' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cdefs%3E%3Cpath d='M0,0 L14,0 L14,1.75 L0,1.75 L0,0 Z M0,4.375 L14,4.375 L14,6.125 L0,6.125 L0,4.375 Z M0,8.75 L14,8.75 L14,10.5 L0,10.5 L0,8.75 Z' id='path-1'%3E%3C/path%3E%3C/defs%3E%3Cg id='💎-UI-Elements' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='12)-Navbar' transform='translate(-1174.000000, -1290.000000)'%3E%3Cg id='Group' transform='translate(1174.000000, 1288.000000)'%3E%3Cg id='Icon-Color' transform='translate(0.000000, 2.000000)'%3E%3Cuse fill='#{$navbar-light-color}' xlink:href='%23path-1'%3E%3C/use%3E%3Cuse fill-opacity='0.1' fill='#{$navbar-light-color}' xlink:href='%23path-1'%3E%3C/use%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E") !default;
 
 $navbar-light-toggler-border-color: rgba($black, 0.06) !default;
-$navbar-dropdown-hover-bg: rgba($black, 0.04) !default; // (C)
-$navbar-dropdown-icon-bg: rgba($black, 0.08) !default; // (C)
+$navbar-dropdown-hover-bg: rgba-to-hex(rgba($black, 0.06), $rgba-to-hex-bg) !default; // (C)
+$navbar-dropdown-icon-bg: rgba-to-hex(rgba($black, 0.08), $rgba-to-hex-bg) !default; // (C)
 
 // * Dropdowns
 // *******************************************************************************
 
-$dropdown-spacer: 0.25rem !default;
-$dropdown-border-width: 0px !default;
+$dropdown-padding-x: 0.5rem !default;
+$dropdown-bg: $white !default;
 $dropdown-border-color: $border-color !default;
-$dropdown-box-shadow: $box-shadow !default;
+$dropdown-border-width: 0 !default;
+$dropdown-box-shadow: $box-shadow-lg !default;
 
 $dropdown-inner-border-radius: 0px !default;
 
 $dropdown-link-color: $headings-color !default;
-$dropdown-link-hover-color: $component-hover-color !default;
-$dropdown-link-hover-bg: $component-hover-bg !default;
-$dropdown-link-line-height: $line-height-lg !default; // (C)
+$dropdown-link-hover-bg: rgba-to-hex($gray-50, $rgba-to-hex-bg) !default;
+$dropdown-link-line-height: $line-height-base !default; // (C)
 
-$dropdown-item-padding-y: 0.42rem !default;
+$dropdown-link-active-color: $primary !default;
+$dropdown-link-active-bg: rgba-to-hex(rgba($primary, 0.16), $rgba-to-hex-bg) !default;
+
+$dropdown-item-padding-y: 0.543rem !default;
 $dropdown-item-padding-x: 1rem !default;
 
-$dropdown-link-disabled-color: $text-lighter !default;
+$dropdown-link-disabled-color: $text-muted !default;
 $dropdown-header-color: $text-muted !default;
 
 // * Pagination
 // *******************************************************************************
 
-$pagination-padding-y: 0.745rem !default;
-$pagination-padding-x: 0.35rem !default;
-$pagination-padding-y-sm: 0.5rem !default;
-$pagination-padding-x-sm: 0.15rem !default;
-$pagination-padding-y-lg: 1rem !default;
-$pagination-padding-x-lg: 0.4rem !default;
+$pagination-padding-y: 0.4809rem !default;
+$pagination-padding-x: 0.5rem !default;
+$pagination-padding-y-sm: 0.3165rem !default;
+$pagination-padding-x-sm: 0.269rem !default;
+$pagination-padding-y-lg: 0.681rem !default;
+$pagination-padding-x-lg: 0.9826rem !default;
 
-$pagination-border-width: 0px !default;
+$pagination-font-size: $font-size-base !default;
 
-$pagination-line-height: 1 !default; // (c)
+$pagination-line-height: $line-height-base !default; // (c)
 
 $pagination-color: $headings-color !default;
-$pagination-bg: rgba($black, 0.08) !default;
-$pagination-margin-start: 0.25rem !default;
-$pagination-border-color: $pagination-bg !default;
+$pagination-bg: $gray-75 !default;
+$pagination-border-radius: 50% !default;
+$pagination-border-width: $border-width !default;
+$pagination-margin-start: 0.375rem !default;
+$pagination-border-color: rgba-to-hex(rgba($black, 0.22), $rgba-to-hex-bg) !default;
 
 $pagination-focus-color: $pagination-color !default;
-$pagination-focus-bg: rgba($black, 0.16) !default;
+$pagination-focus-bg: rgba-to-hex($gray-50, $rgba-to-hex-bg) !default;
 $pagination-focus-box-shadow: none !default;
 
-$pagination-hover-color: $pagination-focus-color !default;
+$pagination-hover-color: $pagination-color !default;
 $pagination-hover-bg: $pagination-focus-bg !default;
-$pagination-hover-border-color: $pagination-hover-bg !default;
+$pagination-hover-border-color: $pagination-border-color !default;
+$pagination-hover-bg-scale: 84% !default; // (c)
+
+$pagination-active-color: $component-active-color !default;
+$pagination-active-bg: $primary !default;
+$pagination-active-border-color: $pagination-active-bg !default;
 
 $pagination-disabled-color: $text-muted !default;
 $pagination-disabled-bg: $pagination-bg !default;
-$pagination-disabled-border-color: $pagination-disabled-bg !default;
+$pagination-disabled-border-color: $pagination-border-color !default;
+$pagination-disabled-opacity: $btn-disabled-opacity !default; // (c)
+
+$pagination-border-radius-sm: $pagination-border-radius !default;
+$pagination-border-radius-lg: $pagination-border-radius-sm !default;
 
 // * Cards
 // *******************************************************************************
 
+$card-title-color: $headings-color !default;
 $card-spacer-y: $spacer * 1.5 !default;
 $card-spacer-x: $spacer * 1.5 !default;
-$card-title-spacer-y: $spacer * 0.875 !default;
+$card-title-spacer-y: $spacer * 0.5 !default;
+$card-subtitle-color: rgba-to-hex(rgba($black, 0.55), $rgba-to-hex-bg) !default;
 $card-spacer-x-sm: 1rem !default; // (C)
 $card-border-width: 0 !default;
 $card-border-color: $border-color !default;
-$card-inner-border-color: $border-inner-color !default; // (C)
-$card-cap-padding-y: $spacer * 1.5 !default;
-$card-cap-bg: transparent !default;
+$card-border-radius: 0.375rem !default;
+$card-inner-border-color: $border-color !default; // (C)
+$card-cap-padding-y: $card-spacer-y !default;
 $card-bg: $white !default;
+$card-cap-bg: transparent !default;
+$card-cap-color: $headings-color !default;
 $card-img-overlay-padding: 1.5rem !default;
-$card-box-shadow: 0 0.25rem 1.125rem rgba($black, 0.1) !default;
+$card-box-shadow: $box-shadow !default;
+$card-group-margin: $grid-gutter-width !default;
 $card-transition: all 0.2s ease-in-out !default; // (C)
-$card-border-color-scale: 60% !default; // (C)
+$card-border-color-scale: 61% !default; // (C)
 $card-hover-border-scale: 62% !default; // (C)
+$card-inner-border-radius: $border-radius !default;
 
 // * Accordion
 // *******************************************************************************
 
-$accordion-padding-y: 0.82rem !default;
-$accordion-padding-x: 1.125rem !default;
+$accordion-padding-y: 0.793rem !default;
+$accordion-padding-x: 1.25rem !default;
+$accordion-color: $body-color !default;
 $accordion-bg: $card-bg !default;
+$accordion-border-radius: $border-radius !default;
+$accordion-border-color: $border-color !default;
+$accordion-inner-border-radius: $accordion-border-radius !default;
 $accordion-button-color: $headings-color !default;
 
 $accordion-border-color: $card-bg !default;
 $accordion-button-active-bg: $accordion-bg !default;
 $accordion-button-active-color: $accordion-button-color !default;
 
-$accordion-icon-width: 1.125rem !default;
+$accordion-icon-width: 1.25rem !default;
 $accordion-icon-color: $accordion-button-color !default;
 $accordion-icon-active-color: $accordion-button-active-color !default;
 
-$accordion-icon-transform: rotate(90deg) !default;
+$accordion-icon-transform: rotate(0deg) !default;
 
-$accordion-button-icon: url("data:image/svg+xml,%3Csvg width='20' height='21' viewBox='0 0 20 21' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.5 5.5L12.5 10.5L7.5 15.5' stroke='#{$accordion-icon-color}' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7.5 5.5L12.5 10.5L7.5 15.5' stroke='white' stroke-opacity='0.1' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A") !default;
+$accordion-button-icon: url("data:image/svg+xml,%3csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5 7.5L10 12.5L15 7.5' stroke='#{$accordion-icon-active-color}' stroke-opacity='0.9' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e") !default;
+$accordion-button-active-icon: $accordion-button-icon !default;
 
-$accordion-button-active-icon: url("data:image/svg+xml,%3Csvg width='20' height='21' viewBox='0 0 20 21' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.5 5.5L12.5 10.5L7.5 15.5' stroke='#{$accordion-icon-color}' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7.5 5.5L12.5 10.5L7.5 15.5' stroke='white' stroke-opacity='0.1' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A") !default;
+$accordion-custom-button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$accordion-icon-active-color}' viewBox='0 0 24 24'%3E%3Cpath d='M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z'%3E%3C/path%3E%3C/svg%3E") !default;
+$accordion-custom-button-active-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$accordion-icon-active-color}' viewBox='0 0 24 24'%3E%3Cpath d='M5 11h14v2H5z'%3E%3C/path%3E%3C/svg%3E") !default;
 
 // * Tooltips
 // *******************************************************************************
-
-$tooltip-font-size: $font-size-base !default;
-$tooltip-bg: $dark !default;
+$tooltip-font-size: $font-size-sm !default;
+$tooltip-bg: #2f2b3d !default;
+$tooltip-color: $white !default;
+$tooltip-border-radius: $border-radius-sm !default;
 $tooltip-opacity: 1 !default;
-$tooltip-padding-y: $spacer * 0.3125 !default;
+$tooltip-padding-y: $spacer * 0.278 !default;
 $tooltip-padding-x: $spacer * 0.75 !default;
+
+$tooltip-arrow-height: 0.375rem !default;
+$tooltip-arrow-width: 0.75rem !default;
 
 $tooltip-box-shadow: none !default; // (C)
 
@@ -698,7 +867,8 @@ $tooltip-box-shadow: none !default; // (C)
 $popover-font-size: $font-size-base !default;
 $popover-bg: $card-bg !default;
 $popover-border-width: 0px !default;
-$popover-box-shadow: $box-shadow !default;
+$popover-border-radius: $border-radius !default;
+$popover-box-shadow: $box-shadow-lg !default;
 
 $popover-header-bg: $card-bg !default;
 $popover-header-color: $headings-color !default;
@@ -711,11 +881,13 @@ $popover-body-padding-x: 1.125rem !default;
 
 // * Toasts
 // *******************************************************************************
+$toast-background-color: rgba($white, 0.85) !default;
 $toast-padding-y: 0.406rem !default;
 $toast-font-size: $font-size-base !default;
 $toast-color: $body-color !default;
 $toast-background-color: rgba($card-bg, 0.85);
 $toast-border-width: 0px !default;
+$toast-box-shadow: $box-shadow-lg !default;
 $toast-header-border-color: rgba($border-color, 0.3) !default;
 $toast-spacing: 1rem !default;
 
@@ -725,10 +897,10 @@ $toast-header-background-color: $card-bg !default;
 // * Badges
 // *******************************************************************************
 
-$badge-font-size: 0.81em !default;
+$badge-font-size: 0.8667em !default;
 $badge-font-weight: $font-weight-medium !default;
-$badge-padding-y: 0.49em !default;
-$badge-padding-x: 1em !default;
+$badge-padding-y: 0.4235em !default;
+$badge-padding-x: 0.77em !default;
 $badge-border-radius: 0.25rem !default;
 
 $badge-pill-padding-x: 0.583em !default;
@@ -746,15 +918,18 @@ $modal-inner-padding: 1.5rem !default;
 $modal-footer-margin-between: 1rem !default;
 
 $modal-dialog-margin: $modal-inner-padding !default;
-
+$modal-content-color: null !default;
+$modal-content-bg: $white !default;
+$modal-content-border-color: $border-color;
 $modal-content-border-width: 0px !default;
-$modal-content-border-radius: $border-radius !default;
-$modal-content-box-shadow-xs: $floating-component-shadow !default;
-$modal-content-box-shadow-sm-up: $floating-component-shadow !default;
+$modal-content-border-radius: $border-radius-lg !default;
+$modal-content-box-shadow-xs: $box-shadow-lg !default;
+$modal-content-box-shadow-sm-up: $box-shadow-lg !default;
+$modal-backdrop-bg: #97959e !default;
 $modal-backdrop-opacity: 0.5 !default;
 $modal-header-border-width: 0px !default;
-$modal-header-padding-y: 1.25rem !default;
-$modal-header-padding-x: 0.25rem !default;
+$modal-header-padding-y: 1.5rem !default;
+$modal-header-padding-x: 0rem !default;
 $modal-header-padding: $modal-header-padding-y $modal-inner-padding $modal-header-padding-x !default;
 $modal-footer-padding: $modal-header-padding-x $modal-inner-padding $modal-header-padding-y !default; // (C)
 
@@ -774,20 +949,20 @@ $modal-simple-close-position: 1rem !default; // (C)
 // * Alerts
 // *******************************************************************************
 
-$alert-padding-y: $spacer * 0.687 !default;
-$alert-padding-x: $spacer * 0.875 !default;
-$alert-border-radius: $border-radius !default;
-$alert-bg-scale: -84% !default;
+$alert-padding-y: 0.6875rem !default;
+$alert-padding-x: 0.9375rem !default;
+$alert-bg-scale: 84% !default;
+$alert-bg-tint-scale: 84% !default; // (c)
 $alert-border-scale: -84% !default;
-$alert-color-scale: 0% !default;
-$alert-icon-bg: $white !default; // (C)
+$alert-color-scale: 40% !default;
+$alert-icon-size: 1.875rem !default; // (c)
 
 // * Progress bars
 // *******************************************************************************
 
-$progress-height: 0.75rem !default;
-$progress-font-size: 0.75rem !default;
-$progress-bg: rgba-to-hex(rgba($gray-500, 0.08), $rgba-to-hex-bg) !default;
+$progress-height: 0.375rem !default;
+$progress-font-size: $font-size-sm !default;
+$progress-bg: $gray-75 !default;
 $progress-border-radius: 3.125rem !default;
 $progress-bar-color: $white !default;
 
@@ -795,24 +970,31 @@ $progress-bar-color: $white !default;
 // *******************************************************************************
 
 // scss-docs-start list-group-variables
-$list-group-color: $body-color !default;
+$list-group-color: $headings-color !default;
 $list-group-bg: transparent !default;
 $list-group-border-color: $border-color !default;
-$list-group-item-padding-y: 0.57rem !default;
+$list-group-border-radius: $border-radius !default;
+
+$list-group-item-padding-y: 0.5rem !default;
 $list-group-item-padding-x: 1.25rem !default;
+
 $list-group-item-bg-scale: -84% !default;
 $list-group-item-border-scale: -84% !default; // (C)
 $list-group-item-color-scale: 0% !default;
-$list-group-item-bg-hover-scale: 0% !default; //  (c)
+$list-group-item-bg-hover-scale: 6% !default; //  (c)
 
-$list-group-hover-bg: rgba-to-hex($component-hover-bg, $rgba-to-hex-bg) !default;
+$list-group-hover-bg: rgba-to-hex($gray-50, $rgba-to-hex-bg) !default;
+$list-group-active-color: $headings-color !default;
+$list-group-active-bg: rgba-to-hex(rgba($primary, 0.16), $rgba-to-hex-bg) !default;
+$list-group-active-border-color: $list-group-border-color !default;
 
 $list-group-disabled-color: $text-muted !default;
 $list-group-disabled-bg: $list-group-bg !default;
 
-$list-group-action-hover-color: $component-hover-color !default;
+$list-group-action-color: $list-group-active-color !default;
+$list-group-action-hover-color: $list-group-action-color !default;
 
-$list-group-action-active-color: $component-active-bg !default;
+$list-group-action-active-color: $list-group-active-color !default;
 $list-group-action-active-bg: $list-group-hover-bg !default;
 // scss-docs-end list-group-variables
 
@@ -834,11 +1016,11 @@ $figure-caption-color: $text-muted !default;
 
 $breadcrumb-padding-y: 0 !default;
 $breadcrumb-padding-x: 0 !default;
-$breadcrumb-item-padding-x: 0.875rem !default;
+$breadcrumb-item-padding-x: 0.5rem !default;
 $breadcrumb-margin-bottom: 1rem !default;
 $breadcrumb-bg: transparent !default;
-$breadcrumb-divider-color: $black !default;
-$breadcrumb-active-color: $breadcrumb-divider-color !default;
+$breadcrumb-divider-color: $body-color !default;
+$breadcrumb-active-color: $headings-color !default;
 $breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-chevron-right' width='16' height='24' viewBox='0 0 24 24' stroke-width='1.75' stroke='#{$breadcrumb-divider-color}' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpolyline points='9 6 15 12 9 18'%3E%3C/polyline%3E%3C/svg%3E") !default;
 $breadcrumb-divider-flipped: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-chevron-left' width='16' height='24' viewBox='0 0 24 24' stroke-width='1.75' stroke='#{$breadcrumb-divider-color}' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'%3E%3C/path%3E%3Cpolyline points='15 6 9 12 15 18'%3E%3C/polyline%3E%3C/svg%3E") !default;
 $breadcrumb-color: $component-active-bg !default; // (C)
@@ -892,6 +1074,9 @@ $close-font-weight: 300 !default; // (C)
 
 // scss-docs-start offcanvas-variables
 $offcanvas-transition-duration: 0.25s !default;
+$offcanvas-bg-color: $modal-content-bg !default;
+$offcanvas-color: $modal-content-color !default;
+$offcanvas-btn-close-color: $body-color !default; // (C)
 // scss-docs-end offcanvas-variables
 
 // Utilities
@@ -902,4 +1087,4 @@ $rtl-support: false !default;
 $dark-style: false !default;
 
 // Useful Icons
-$upload-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-upload' width='24' height='24' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2' /%3E%3Cpolyline points='7 9 12 4 17 9' /%3E%3Cline x1='12' y1='4' x2='12' y2='16' /%3E%3C/svg%3E");
+$upload-icon: url("data:image/svg+xml,%3csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M4 17V19C4 20.1046 4.89543 21 6 21H18C19.1046 21 20 20.1046 20 19V17' stroke='%23808390' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M7 9L12 4L17 9' stroke='%23808390' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M12 4V16' stroke='%23808390' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");

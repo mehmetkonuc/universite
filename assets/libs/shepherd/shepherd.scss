@@ -2,7 +2,7 @@
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @charset "UTF-8";
 @import '../../scss/_custom-variables/libs';
-@import '../../node_modules/shepherd.js/dist/css/shepherd';
+@import 'shepherd.js/dist/css/shepherd';
 @import './mixins';
 
 $shepherd-header-content-padding-x: 1.25rem !default;
@@ -51,20 +51,28 @@ $shepherd-container-width: 15rem !default;
     margin-top: 0.8rem !important;
   }
   &[data-popper-placement='top'] {
-    margin-bottom: 0.8rem !important;
+    margin-top: -0.8rem !important;
   }
   &[data-popper-placement='left'] {
-    margin-right: 0.8rem !important;
+    margin-left: -0.8rem !important;
+    .shepherd-arrow:before {
+      border-bottom: 0;
+      border-top: 1px solid;
+    }
   }
   &[data-popper-placement='right'] {
     margin-left: 0.8rem !important;
+    .shepherd-arrow:before {
+      border-right: 0;
+      border-left: 1px solid;
+    }
   }
 }
 
 // Light style
 @if $enable-light-style {
   .shepherd-element {
-    box-shadow: light.$box-shadow !important;
+    box-shadow: light.$box-shadow;
     background-color: light.$card-bg !important;
     .shepherd-content {
       .shepherd-header {
@@ -91,7 +99,7 @@ $shepherd-container-width: 15rem !default;
 @if $enable-dark-style {
   .dark-style {
     .shepherd-element {
-      box-shadow: dark.$box-shadow !important;
+      box-shadow: dark.$box-shadow;
       background: dark.$card-bg !important;
       .shepherd-content {
         .shepherd-header {
@@ -121,6 +129,9 @@ $shepherd-container-width: 15rem !default;
     .shepherd-element {
       .btn-next {
         margin-right: 0.75rem;
+      }
+      &[data-popper-placement='left'] {
+        margin-left: -0.8rem !important;
       }
     }
   }

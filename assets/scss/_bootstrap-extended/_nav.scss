@@ -9,51 +9,32 @@
 
 // To fix height issue of nav pills
 .nav {
-  &.nav-pills {
-    .nav-link {
-      padding-top: $nav-link-padding-y - 0.043rem;
-      padding-bottom: $nav-link-padding-y - 0.043rem;
-    }
+  flex-wrap: inherit;
+  &.nav-pills:not(.nav-align-right):not(.nav-align-left) {
+    flex-wrap: wrap;
+  }
+  .nav-item {
+    white-space: nowrap;
+  }
+  .nav-tabs {
+    background-color: $card-bg;
   }
 }
 
-//default styles for tabs and pills
-.nav-tabs {
-  border-bottom: $nav-tabs-border-width solid $border-color;
-  @include border-top-radius($border-radius);
-  background-color: $card-bg;
-}
-.nav ~ .tab-content {
-  background: $nav-tabs-link-active-bg;
-}
 //nav tabs shadow
 .nav-tabs-shadow {
   box-shadow: $card-box-shadow;
 }
-
 // Tab and pills style
-.nav-tabs .nav-link {
-  line-height: $nav-link-line-height;
-  &,
-  &.active {
-    border-width: 0;
-  }
-}
-.nav-pills .nav-link.active {
-  box-shadow: $box-shadow-sm;
-}
-
 .nav-tabs,
 .nav-pills {
   .nav-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    &:not(.active) {
-      &:hover,
-      &:focus {
-        color: $nav-tabs-link-active-color;
-      }
+    text-transform: capitalize;
+    &.active {
+      background-color: transparent;
     }
   }
 
@@ -68,9 +49,23 @@
   }
 }
 
-.tab-content {
+.tab-content:not(.doc-example-content) {
   padding: $card-spacer-y;
-  border-radius: $border-radius;
+  .tab-pane {
+    opacity: 0;
+    transition: all linear 0.1s;
+    @include ltr-style {
+      transform: translateX(-30px);
+    }
+    @include rtl-style {
+      transform: translateX(30px);
+    }
+    &.show {
+      opacity: 1;
+      transform: unset !important;
+      transition: all ease-out 0.2s 0.1s;
+    }
+  }
 }
 
 // For scrollable navs/tabs/pills
@@ -86,13 +81,22 @@
 // --------------------------------------------------
 
 .nav-tabs {
+  div:not(.nav-align-left):not(.nav-align-right) > & {
+    display: inline-flex;
+    width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+  }
   &.widget-nav-tabs {
     border: 0 !important;
     overflow-x: auto;
     .nav-link {
       border: $border-width dashed $border-color;
+      &.active {
+        border: $border-width solid $border-color;
+      }
       @include media-breakpoint-up(md) {
-        height: 94px !important;
+        height: 100px !important;
         width: 110px !important;
         @include border-radius($border-radius);
       }
@@ -134,6 +138,36 @@
 //   flex-wrap: nowrap;
 // }
 
+// Tab link
+.nav-tabs {
+  position: relative;
+  .tab-slider {
+    height: 2px;
+    position: absolute;
+    .nav-align-left &,
+    .nav-align-right & {
+      width: 2px !important;
+    }
+  }
+  .nav-link {
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+}
+.nav-pills {
+  .nav-link {
+    padding: $nav-pills-padding-y $nav-pills-padding-x;
+  }
+  & .nav-item .nav-link:not(.active):hover {
+    border-bottom: none;
+    padding-bottom: $nav-link-padding-y;
+    background-color: $nav-pills-link-hover-bg;
+  }
+  ~ .tab-content {
+    box-shadow: $box-shadow;
+  }
+}
+
 // Sizing
 // *******************************************************************************
 
@@ -150,12 +184,18 @@
 .nav-align-right,
 .nav-align-bottom,
 .nav-align-left {
+  .nav-tabs {
+    background: $nav-tabs-link-active-bg;
+  }
   display: flex;
 
   > .nav,
   > div > .nav {
     z-index: 1;
     position: relative;
+  }
+  &:has(.nav-tabs) {
+    border-radius: $border-radius !important;
   }
 
   .row-bordered > [class^='col-'],
@@ -179,132 +219,224 @@
   > div > .nav {
     flex-grow: 0;
     flex-direction: column;
+    border-bottom-width: 0;
   }
 
-  > .nav .nav-link,
-  > div > .nav .nav-link {
+  > .nav.nav-pills .nav-item:not(:last-child),
+  > div > .nav.nav-pills .nav-item:not(:last-child) {
     margin: 0 0 $nav-spacer 0 !important;
   }
 
   > .tab-content {
     flex-grow: 1;
+    .tab-pane {
+      transform: translateY(-30px);
+      &.show {
+        transform: translateY(0px);
+      }
+    }
   }
 }
 
 // Top tabs
 .nav-align-top {
+  .tab-content {
+    @include border-bottom-radius($border-radius);
+  }
   flex-direction: column;
+  .nav-tabs {
+    border-bottom: $border-width solid $border-color;
+    @include border-top-radius($border-radius);
+    & .nav-link:not(.active):hover {
+      color: $primary !important;
+      border-bottom: 2px solid $nav-pills-link-hover-bg !important;
+      padding-bottom: calc($nav-link-padding-y - 0.125rem);
+    }
+    &.nav-lg .nav-link:not(.active):hover {
+      padding-bottom: calc($nav-link-padding-y-lg - 0.125rem);
+    }
+    &.nav-sm .nav-link:not(.active):hover {
+      padding-bottom: calc($nav-link-padding-y-sm - 0.125rem);
+    }
+  }
+  .nav-pills ~ .tab-content {
+    @include border-top-radius($border-radius);
+  }
 }
+.nav-align-top,
+.nav-align-bottom {
+  > .tab-content {
+    .tab-pane {
+      @include ltr-style {
+        transform: translateX(-30px);
+      }
+      @include rtl-style {
+        transform: translateX(30px);
+      }
+      &.show {
+        transform: translateX(0px) !important;
+      }
+    }
+  }
+  @include ltr-style {
+    > .nav.nav-pills .nav-item:not(:last-child) {
+      margin-right: $nav-spacer;
+    }
+  }
 
-// Right tabs
-@include ltr-only {
-  .nav-align-right {
-    .nav-tabs {
-      border: 0;
-      border-left: $nav-tabs-border-width solid $border-color;
-      @include border-bottom-end-radius($border-radius);
+  @include rtl-style {
+    > .nav.nav-pills .nav-item:not(:last-child) {
+      margin-left: $nav-spacer;
     }
   }
 }
 .nav-align-right {
+  .tab-content {
+    @include border-start-radius($border-radius);
+  }
   flex-direction: row-reverse;
+  .nav-tabs {
+    border-left: $border-width solid $border-color;
+    @include border-end-radius($border-radius);
+    position: relative;
+    .tab-slider {
+      @include ltr-style {
+        left: 0;
+      }
+      @include rtl-style {
+        right: 0;
+      }
+    }
+    ~ .tab-content {
+      .card & {
+        @include ltr-style {
+          border-right: $nav-tabs-border-width solid $nav-tabs-border-color;
+        }
+        @include rtl-style {
+          border-left: $nav-tabs-border-width solid $nav-tabs-border-color;
+        }
+      }
+    }
+    @include ltr-style {
+      & .nav-link:not(.active):hover {
+        color: $primary !important;
+        border-left: 2px solid $nav-pills-link-hover-bg !important;
+        padding-left: calc($nav-link-padding-x - 0.125rem);
+      }
+    }
+
+    @include rtl-style {
+      & .nav-link:not(.active):hover {
+        color: $primary !important;
+        border-right: 2px solid $nav-pills-link-hover-bg !important;
+        padding-right: calc($nav-link-padding-x - 0.125rem);
+      }
+    }
+  }
 
   > .nav .nav-item,
   > div > .nav .nav-item {
-    margin-left: -1px;
-    margin-bottom: 0;
+    margin-left: 0;
 
     @include rtl-style {
       margin-left: 0;
-      margin-right: -1px;
+      margin-right: 0;
     }
   }
-  .nav-pills {
-    margin-left: $spacer;
-  }
-
   .nav-link {
     text-align: right;
     justify-content: end;
   }
-  > .nav:not(.nav-pills) .nav-link,
-  > div > .nav:not(.nav-pills) .nav-link {
-    @include border-radius(0 $border-radius $border-radius 0);
-
-    @include rtl-style {
-      @include border-radius($border-radius 0 0 $border-radius);
-    }
+  .nav-pills ~ .tab-content {
+    @include border-end-radius($border-radius);
   }
 }
 
 // Bottom tabs
 .nav-align-bottom {
+  .tab-content {
+    @include border-top-radius($border-radius);
+  }
   flex-direction: column-reverse;
-  .nav-tabs {
-    border: 0;
-    border-top: $nav-tabs-border-width solid $border-color;
-    @include border-top-radius(0);
-    @include border-bottom-radius($border-radius);
-  }
-  .nav-pills {
-    margin-top: $spacer;
-  }
 
-  > .nav:not(.nav-pills) .nav-item,
-  > div > .nav:not(.nav-pills) .nav-item {
+  > .nav .nav-item,
+  > div > .nav .nav-item {
     margin-bottom: 0;
-    margin-top: -1px;
+    margin-top: 0;
   }
 
-  > .nav:not(.nav-pills) .nav-link,
-  > div > .nav:not(.nav-pills) .nav-link {
-    @include border-radius(0 0 $border-radius $border-radius);
+  > .nav,
+  > div > .nav {
+    border-bottom-width: 0;
+    border-top: $nav-tabs-border-width solid $nav-tabs-border-color;
+  }
+  .nav-tabs {
+    border-top: $border-width solid $border-color;
+    @include border-bottom-radius($border-radius);
+    .tab-slider {
+      bottom: inherit !important;
+    }
+    & .nav-link:not(.active):hover {
+      color: $primary !important;
+      border-top: 2px solid $nav-pills-link-hover-bg !important;
+      padding-top: calc($nav-link-padding-y - 0.125rem);
+    }
+  }
+  .nav-pills ~ .tab-content {
+    @include border-bottom-radius($border-radius);
   }
 }
 
 // Left tabs
-@include ltr-only {
-  .nav-align-left {
-    .nav-tabs {
-      border: 0;
-      border-right: $nav-tabs-border-width solid $border-color;
-      @include border-bottom-start-radius($border-radius);
-    }
-  }
-}
 .nav-align-left {
-  &.card {
-    flex-direction: row !important;
+  .tab-content {
+    @include border-end-radius($border-radius);
+  }
+  .nav-tabs {
+    border-right: $border-width solid $border-color;
+    @include border-start-radius($border-radius);
+    position: relative;
+    ~ .tab-content {
+      .card & {
+        @include ltr-style {
+          border-left: $nav-tabs-border-width solid $nav-tabs-border-color;
+        }
+        @include rtl-style {
+          border-right: $nav-tabs-border-width solid $nav-tabs-border-color;
+        }
+      }
+    }
+    @include ltr-style {
+      & .nav-link:not(.active):hover {
+        color: $primary !important;
+        border-right: 2px solid $nav-pills-link-hover-bg !important;
+        padding-right: calc($nav-link-padding-x - 0.125rem);
+      }
+    }
+
+    @include rtl-style {
+      & .nav-link:not(.active):hover {
+        color: $primary !important;
+        border-left: 2px solid $nav-pills-link-hover-bg !important;
+        padding-left: calc($nav-link-padding-x - 0.125rem);
+      }
+    }
   }
   > .nav .nav-item,
   > div > .nav .nav-item {
-    margin-right: -1px;
-    margin-bottom: 0;
+    margin-right: 0;
     @include rtl-style {
       margin-right: 0;
-      margin-left: -1px;
+      margin-left: 0;
     }
   }
   .nav-link {
     text-align: left;
     justify-content: start;
   }
-  > .nav:not(.nav-pills) .nav-link,
-  > div > .nav:not(.nav-pills) .nav-link {
-    @include rtl-style {
-      @include border-radius(0 $border-radius $border-radius 0);
-    }
-    @include border-radius($border-radius 0 0 $border-radius);
+  .nav-pills ~ .tab-content {
+    @include border-start-radius($border-radius);
   }
-}
-
-// With card card-header-tabs/pills override
-.card .nav.nav-tabs {
-  margin-right: -$nav-link-padding-x-lg;
-  margin-left: -$nav-link-padding-x-lg;
-}
-.card .nav.nav-pills {
-  margin-left: 0rem;
 }
 
 // Tab content
@@ -315,34 +447,48 @@
   flex-shrink: 1;
   background-clip: padding-box;
   background: $nav-tabs-link-active-bg;
-}
-
-.nav-align-top > .nav-pills ~ .tab-content,
-.nav-align-right > .nav-pills ~ .tab-content,
-.nav-align-bottom > .nav-pills ~ .tab-content,
-.nav-align-left > .nav-pills ~ .tab-content {
-  box-shadow: $card-box-shadow;
-}
-
-.nav-align-top :not(.nav-pills) ~ .tab-content {
-  @include border-radius(0 0 $border-radius $border-radius);
-}
-
-.nav-align-right :not(.nav-pills) ~ .tab-content {
-  @include border-radius($border-radius 0 0 $border-radius);
-  @include rtl-style {
-    @include border-radius(0 $border-radius $border-radius 0);
+  .card & {
+    background: transparent;
   }
 }
-
-.nav-align-bottom :not(.nav-pills) ~ .tab-content {
-  @include border-radius($border-radius $border-radius 0 0);
+.card .tab-content {
+  box-shadow: none !important;
 }
 
-.nav-align-left :not(.nav-pills) ~ .tab-content {
-  @include border-radius(0 $border-radius $border-radius 0);
-  @include rtl-style {
-    @include border-radius($border-radius 0 0 $border-radius);
+// Dark
+@if $dark-style {
+  .nav-tabs {
+    .nav-link.active {
+      border-color: $border-color;
+      border-bottom-color: $nav-tabs-link-active-bg;
+    }
+  }
+  .nav-align-top,
+  .nav-align-bottom,
+  .nav-align-left,
+  .nav-align-right {
+    .nav-tabs {
+      .nav-link.active {
+        border-color: $gray-200;
+        @include rtl-style {
+          border-right-color: $gray-200 !important;
+        }
+      }
+    }
+  }
+  .nav-align-top {
+    .nav-tabs {
+      .nav-link.active {
+        border-bottom-color: $nav-tabs-link-active-bg !important;
+      }
+    }
+  }
+  .nav-align-bottom {
+    .nav-tabs {
+      .nav-link.active {
+        border-top-color: $nav-tabs-link-active-bg !important;
+      }
+    }
   }
 }
 
@@ -352,29 +498,13 @@
     padding-right: 0;
   }
   .nav-align-left {
-    .nav-tabs {
-      border: 0;
-      border-left: $nav-tabs-border-width solid $border-color;
-      @include border-bottom-end-radius($border-radius);
-    }
     .nav-link {
       text-align: right;
     }
   }
   .nav-align-right {
-    .nav-tabs {
-      border: 0;
-      border-right: $nav-tabs-border-width solid $border-color;
-      @include border-bottom-start-radius($border-radius);
-    }
     .nav-link {
       text-align: left;
     }
-    .nav-pills {
-      margin-right: $spacer;
-    }
-  }
-  .card .nav.nav-pills {
-    margin-right: 0rem;
   }
 }

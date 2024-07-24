@@ -82,15 +82,15 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center text-nowrap">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
+              '<div class="avatar avatar-sm me-3">' +
               $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<h6 class="text-body mb-0">' +
+              '<h6 class="text-heading mb-0">' +
               $name +
               '</h6>' +
-              '<small class="text-muted">' +
+              '<small>' +
               $product_brand +
               '</small>' +
               '</div>' +
@@ -127,7 +127,7 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             var $total = full['qty'] * full['price'];
-            var $output = '<h6 class="mb-0">$' + $total + '</h6>';
+            var $output = '<span class="text-body">' + $total + '</span>';
             return $output;
           }
         }
@@ -190,8 +190,8 @@ $(function () {
         showCancelButton: true,
         confirmButtonText: 'Yes, Delete order!',
         customClass: {
-          confirmButton: 'btn btn-primary me-2',
-          cancelButton: 'btn btn-label-secondary'
+          confirmButton: 'btn btn-primary me-2 waves-effect waves-light',
+          cancelButton: 'btn btn-label-secondary waves-effect waves-light'
         },
         buttonsStyling: false
       }).then(function (result) {
@@ -201,7 +201,7 @@ $(function () {
             title: 'Deleted!',
             text: 'Order has been removed.',
             customClass: {
-              confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-success waves-effect waves-light'
             }
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -210,7 +210,7 @@ $(function () {
             text: 'Cancelled Delete :)',
             icon: 'error',
             customClass: {
-              confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-success waves-effect waves-light'
             }
           });
         }

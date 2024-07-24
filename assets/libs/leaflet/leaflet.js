@@ -1,3 +1,7 @@
-import * as leaFlet from 'leaflet';
+import leaFlet from 'leaflet';
+
+try {
+  window.leaFlet = leaFlet;
+} catch (e) {}
 
 export { leaFlet };

@@ -15,8 +15,14 @@ $dz-box-padding: 0rem !default;
   .comment-editor {
     .ql-editor {
       min-height: 7rem;
+      border-top-left-radius: light.$border-radius;
+      border-top-right-radius: light.$border-radius;
     }
   }
+}
+
+.gray-shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem 0 rgba(165, 163, 174, 0.3);
 }
 
 @include light.media-breakpoint-down(sm) {

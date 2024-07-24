@@ -7,18 +7,13 @@
   }
 }
 
-// Style for table inside card
+// Firefox fix for table head border bottom
 .table {
-  &:not(.table-borderless) {
-    margin-bottom: 0;
+  > :not(caption) > * > * {
+    background-clip: padding-box;
   }
-  > :not(:first-child) {
-    border-top: 0;
-  }
-  .table-light {
-    th {
-      border-bottom: 0;
-    }
+  &:not(.table-borderless):not(.table-dark) > :not(caption) > *:not(.table-dark) > * {
+    border-top-width: 1px;
   }
   .dropdown-item {
     display: flex;
@@ -31,8 +26,25 @@
       }
     }
   }
+  caption {
+    padding: $table-cell-padding-y $table-cell-padding-x;
+  }
+  &.table-sm {
+    thead tr th {
+      padding-block: $table-head-padding-y-sm;
+    }
+  }
+  thead tr th {
+    padding-block: $table-head-padding-y;
+  }
 }
 
+// Style for table inside card
+.card {
+  .table {
+    margin-bottom: 0;
+  }
+}
 @supports (-moz-appearance: none) {
   .table {
     .dropdown-menu.show {
@@ -43,17 +55,23 @@
 // Table heading style
 .table th {
   text-transform: uppercase;
-  font-size: $small-font-size;
-  letter-spacing: 1px;
-  padding-top: 0.88rem;
-  padding-bottom: 0.88rem;
+  font-size: $font-size-sm;
+  letter-spacing: 0.2px;
+  color: $table-th-color;
 }
-.table:not(.table-dark) {
-  thead:not(.table-dark) {
-    th {
-      color: $headings-color;
-    }
+.table-dark th {
+  color: var(--#{$prefix}table-color);
+  border-top: 1px solid $table-border-color;
+}
+@if $dark-style {
+  .table-light th {
+    color: var(--#{$prefix}table-color);
   }
+}
+
+// Dark Table icon button
+.table.table-dark .btn.btn-icon {
+  color: $table-border-color;
 }
 
 // class for to remove table border bottom
@@ -100,7 +118,7 @@
   .table:not(.table-dark) thead:not(.table-dark) th,
   .table:not(.table-dark) tfoot:not(.table-dark) th,
   .table:not(.table-dark) td {
-    border-color: $border-inner-color;
+    border-color: $border-color;
   }
 }
 
@@ -111,7 +129,7 @@
   .table.table-dark {
     .btn {
       i {
-        color: rgba-to-hex($gray-700, $rgba-to-hex-bg);
+        color: $card-bg;
       }
     }
   }

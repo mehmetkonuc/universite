@@ -15,18 +15,18 @@
 		var a = factory();
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(self, () => {
-return /******/ (() => { // webpackBootstrap
+})(self, function() {
+return /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./libs/bs-stepper/bs-stepper.js":
 /*!***************************************!*\
   !*** ./libs/bs-stepper/bs-stepper.js ***!
   \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   Stepper: () => (/* reexport default from dynamic */ bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0___default.a)\n/* harmony export */ });\n/* harmony import */ var bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bs-stepper/dist/js/bs-stepper */ \"./node_modules/bs-stepper/dist/js/bs-stepper.js\");\n/* harmony import */ var bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0__);\n\nvar bsStepper = document.querySelectorAll('.bs-stepper');\n\n// Adds crossed class\nbsStepper.forEach(function (el) {\n  el.addEventListener('show.bs-stepper', function (event) {\n    var index = event.detail.indexStep;\n    var numberOfSteps = el.querySelectorAll('.line').length;\n    var line = el.querySelectorAll('.step');\n\n    // The first for loop is for increasing the steps,\n    // the second is for turning them off when going back\n    // and the third with the if statement because the last line\n    // can't seem to turn off when I press the first item. ¯\\_(ツ)_/¯\n\n    for (var i = 0; i < index; i++) {\n      line[i].classList.add('crossed');\n      for (var j = index; j < numberOfSteps; j++) {\n        line[j].classList.remove('crossed');\n      }\n    }\n    if (event.detail.to == 0) {\n      for (var k = index; k < numberOfSteps; k++) {\n        line[k].classList.remove('crossed');\n      }\n      line[0].classList.remove('crossed');\n    }\n  });\n});\n\n\n//# sourceURL=webpack://Vuexy/./libs/bs-stepper/bs-stepper.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   Stepper: function() { return /* reexport default from dynamic */ bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0___default.a; }\n/* harmony export */ });\n/* harmony import */ var bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bs-stepper/dist/js/bs-stepper */ \"./node_modules/bs-stepper/dist/js/bs-stepper.js\");\n/* harmony import */ var bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0__);\n\nvar bsStepper = document.querySelectorAll('.bs-stepper');\n\n// Adds crossed class\nbsStepper.forEach(function (el) {\n  el.addEventListener('show.bs-stepper', function (event) {\n    var index = event.detail.indexStep;\n    var numberOfSteps = el.querySelectorAll('.line').length;\n    var line = el.querySelectorAll('.step');\n\n    // The first for loop is for increasing the steps,\n    // the second is for turning them off when going back\n    // and the third with the if statement because the last line\n    // can't seem to turn off when I press the first item. ¯\\_(ツ)_/¯\n\n    for (var i = 0; i < index; i++) {\n      line[i].classList.add('crossed');\n      for (var j = index; j < numberOfSteps; j++) {\n        line[j].classList.remove('crossed');\n      }\n    }\n    if (event.detail.to == 0) {\n      for (var k = index; k < numberOfSteps; k++) {\n        line[k].classList.remove('crossed');\n      }\n      line[0].classList.remove('crossed');\n    }\n  });\n});\ntry {\n  window.Stepper = (bs_stepper_dist_js_bs_stepper__WEBPACK_IMPORTED_MODULE_0___default());\n} catch (e) {}\n\n\n//# sourceURL=webpack://Vuexy/./libs/bs-stepper/bs-stepper.js?");
 
 /***/ }),
 
@@ -68,44 +68,44 @@ eval("/*!\n * bsStepper v1.7.0 (https://github.com/Johann-S/bs-stepper)\n * Copy
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
+/******/ 		__webpack_require__.n = function(module) {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
+/******/ 				function() { return module['default']; } :
+/******/ 				function() { return module; };
 /******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 		__webpack_require__.d = function(exports, definition) {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
+/******/ 		__webpack_require__.r = function(exports) {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 /******/ 	

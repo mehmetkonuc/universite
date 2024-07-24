@@ -1,0 +1,121 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/fontawesome.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/tabler-icons.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/flag-icons.css' %}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/rtl/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/rtl/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/node-waves/node-waves.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/libs/typeahead-js/typeahead.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+    {% with current_page=request.resolver_match.url_name %}
+    <div class="card mb-3">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <!-- Burada, dar ekranda görünecek olan metni ekliyoruz -->
+            <span class="nav-link d-lg-none">
+                {% if current_page == 'profile_settings' %}
+                    Hesap Ayarı
+                {% elif current_page == 'education_settings' %}
+                    Eğitim Ayarı
+                {% elif current_page == 'additional_settings' %}
+                    Ek Bilgiler
+                {% elif current_page == 'profile_delete' %}
+                    Hesabı Sil
+                {% endif %}
+            </span>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar-ex-6">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-ex-6">
+                <div class="navbar-nav me-auto">
+                    <ul class="nav nav-pills flex-column flex-md-row">
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_page == 'profile_settings' %}active{% endif %}" href="{% url 'profile_settings' %}">
+                                <i class="ti-xs ti ti-users me-1"></i> Hesap Ayarı
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_page == 'education_settings' %}active{% endif %}" href="{% url 'education_settings' %}">
+                                <i class="fa fa-solid fa-graduation-cap me-1"></i> Eğitim Ayarı
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_page == 'additional_settings' %}active{% endif %}" href="{% url 'additional_settings' %}">
+                                <i class="fa fa-solid fa-graduation-cap me-1"></i> Ek Bilgiler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_page == 'profile_delete' %}active{% endif %}" href="{% url 'profile_delete' %}">
+                                <i class="ti ti-trash-x"></i> Hesabı Sil
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    </div>
+    {% endwith %}
+
+    {% block profileSettings %}
+    {% endblock %}
+
+{% endblock %}
+{% block extra_javascript %}
+
+
+<script src="{% static 'assets/vendor/js/dropdown-hover.js' %}"></script>
+<script src="{% static 'assets/vendor/js/mega-dropdown.js' %}"></script>
+<script src="{% static 'assets/js/ui-navbar.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    updateNavbarText(); // Sayfa yüklendiğinde çağrılır
+});
+
+// Sayfa değiştikçe çağrılacak fonksiyon
+window.addEventListener("hashchange", function() {
+    updateNavbarText();
+});
+
+// Navbar'daki metni güncelleyen fonksiyon
+function updateNavbarText() {
+    var currentPage = window.location.hash.substr(1); // Şu anki sayfa adı
+    var navbarText = document.querySelector(".navbar-text");
+    if (navbarText) {
+        switch (currentPage) {
+            case 'profile_settings':
+                navbarText.textContent = "Hesap Ayarı";
+                break;
+            case 'education_settings':
+                navbarText.textContent = "Eğitim Ayarı";
+                break;
+            case 'additional_settings':
+                navbarText.textContent = "Ek Bilgiler";
+                break;
+            case 'profile_delete':
+                navbarText.textContent = "Hesabı Sil";
+                break;
+
+        }
+    }
+}
+
+</script>
+
+{% endblock %}

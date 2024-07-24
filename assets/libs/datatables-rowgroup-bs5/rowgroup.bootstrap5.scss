@@ -2,7 +2,7 @@
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
 
-@import '../../node_modules/datatables.net-rowgroup-bs5/css/rowGroup.bootstrap5';
+@import 'datatables.net-rowgroup-bs5/css/rowGroup.bootstrap5';
 
 // Light style
 @if $enable-light-style {

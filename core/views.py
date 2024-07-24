@@ -44,7 +44,7 @@ def register_two_step_view(request):
             FormSave = form.save(commit=False)
             FormSave.User = request.user
             FormSave.save()
-            return redirect('profileSettings')
+            return redirect('profile_settings')
     else:
         form = forms.EducationalInformationForm()
 

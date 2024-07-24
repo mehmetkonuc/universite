@@ -1,7 +1,7 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
-@import '../../node_modules/sweetalert2/src/sweetalert2';
+@import 'sweetalert2/src/sweetalert2';
 
 // Sweet Alert2 Modal
 .swal2-modal.swal2-popup {

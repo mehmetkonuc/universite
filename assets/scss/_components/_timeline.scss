@@ -34,42 +34,19 @@
   // Timeline Item
   .timeline-item {
     position: relative;
-    padding-left: 3rem;
+    padding-left: 1.4rem;
 
     .timeline-event {
       position: relative;
-      top: -1rem;
       width: 100%;
-      top: -1rem;
       min-height: $timeline-item-min-height;
       background-color: $timeline-item-bg-color;
       border-radius: $timeline-item-border-radius;
-      padding: $timeline-item-padding-y $timeline-item-padding-x $timeline-item-padding-y - 0.5;
-
-      &:before {
-        position: absolute;
-        top: 0.75rem;
-        left: 32px;
-        right: 100%;
-        width: 0;
-        height: 0;
-        border-top: 1rem solid transparent;
-        border-right: 1rem solid;
-        border-left: 0 solid;
-        border-bottom: 1rem solid transparent;
-        border-left-color: $timeline-item-bg-color;
-        border-right-color: $timeline-item-bg-color;
-        margin-left: -3rem;
-        content: '';
-      }
-
-      &.timeline-event-shadow {
-        box-shadow: $timeline-event-shadow !important;
-      }
+      padding: $timeline-item-padding-y $timeline-item-padding-x $timeline-item-padding-y - 0.1625;
 
       .timeline-event-time {
         position: absolute;
-        top: 1.1rem;
+        top: 1.2rem;
         font-size: $timeline-event-time-size;
         color: $timeline-event-time-color;
       }
@@ -78,15 +55,9 @@
 
     .timeline-indicator,
     .timeline-indicator-advanced {
-      i {
-        background-color: $body-bg;
-        .card & {
-          background-color: $card-bg;
-        }
-      }
       position: absolute;
-      left: -0.75rem;
-      top: -0.2rem;
+      left: -1rem;
+      top: 0.64rem;
       z-index: 2;
       height: $timeline-indicator-size;
       width: $timeline-indicator-size;
@@ -95,35 +66,35 @@
       justify-content: center;
       text-align: center;
       border-radius: 50%;
+    }
 
-      // Icons
-      i {
-        color: $timeline-point-indicator-color;
-      }
+    .timeline-indicator {
+      box-shadow: 0 0 0 10px $body-bg;
     }
 
     //For advanced Timeline Indicator Background
     .timeline-indicator-advanced {
       background-color: $card-bg;
-      top: -0.1rem;
+      top: 0;
     }
 
     .timeline-point {
       position: absolute;
-      left: -0.43rem;
+      left: -0.38rem;
       top: 0;
       z-index: 2;
       display: block;
       height: $timeline-point-size;
       width: $timeline-point-size;
       border-radius: 50%;
-      background-color: $timeline-point-indicator-color;
+      background-color: $timeline-point-color;
+      box-shadow: 0 0 0 10px $card-bg;
     }
 
     // Transparent Timeline Item
     &.timeline-item-transparent {
       .timeline-event {
-        top: -1.4rem;
+        top: -0.9rem;
         background-color: transparent;
 
         @include ltr-style {
@@ -133,26 +104,22 @@
         &.timeline-event-shadow {
           padding-left: 2rem;
         }
-
-        &:before {
-          display: none;
-        }
       }
     }
   }
 
+  // Timeline outline
+  &.timeline-outline {
+    .timeline-item {
+      .timeline-point {
+        outline: unset;
+        background-color: $card-bg !important;
+        border: 2px solid $primary;
+      }
+    }
+  }
   // Timeline Center
   &.timeline-center {
-    &:before {
-      left: 50%;
-      height: 97%;
-    }
-
-    &:after {
-      left: 50%;
-      margin-left: -0.55rem;
-    }
-
     .timeline-end-indicator {
       bottom: -1.4rem;
       left: 50%;
@@ -166,20 +133,13 @@
       &:nth-of-type(odd):not(.timeline-item-left):not(.timeline-item-right) {
         float: left;
         padding-left: 0;
-        padding-right: 3rem;
-        left: 0px;
-        padding-bottom: 3rem;
+        padding-right: 2.25rem;
+        padding-bottom: 2.5rem;
         border-left: 0;
         border-right: 1px solid $timeline-border-color;
         .timeline-event {
           .timeline-event-time {
             right: -10.2rem;
-          }
-          &:before {
-            right: -15px;
-            left: auto;
-            border-left-width: 16px;
-            border-right-width: 0;
           }
         }
 
@@ -192,15 +152,14 @@
       &:nth-of-type(even):not(.timeline-item-left):not(.timeline-item-right) {
         float: right;
         right: 1px;
-        padding-left: 3rem;
-        padding-bottom: 3rem;
+        padding-left: 2.25rem;
+        padding-bottom: 2.5rem;
         border-left: 1px solid $timeline-border-color;
 
         .timeline-event {
           .timeline-event-time {
             left: -10.2rem;
           }
-
           .timeline-point {
             left: 0;
           }
@@ -231,26 +190,22 @@
   }
 }
 
-//LTR only
+// LTR only
 @include ltr-only {
+  .timeline:not(.timeline-center) {
+    padding-left: 0.5rem;
+  }
   .timeline-item {
     border-left: 1px solid $timeline-border-color;
   }
 }
+
 // RTL
 @include rtl-only {
   .timeline:not(.timeline-center) {
+    padding-right: 0.5rem;
     .timeline-item {
       border-right: 1px solid $timeline-border-color;
-    }
-    &:before {
-      right: -1px;
-      left: auto;
-    }
-
-    &:after {
-      left: auto;
-      margin-right: -0.65rem;
     }
 
     .timeline-end-indicator {
@@ -260,17 +215,8 @@
 
     .timeline-item {
       padding-left: 0;
-      padding-right: 3rem;
+      padding-right: 2rem;
       border-right: 1px solid $timeline-border-color;
-
-      .timeline-event {
-        &:before {
-          right: -1rem;
-          left: auto;
-          border-left-width: 1rem;
-          border-right-width: 0;
-        }
-      }
 
       &.timeline-item-transparent {
         .timeline-event {
@@ -279,15 +225,15 @@
       }
 
       .timeline-point {
-        right: -0.4rem;
+        right: -0.38rem;
         left: auto;
       }
       .timeline-indicator {
-        right: -0.78rem;
+        right: -0.75rem;
         left: auto;
       }
       .timeline-indicator-advanced {
-        right: -0.78rem;
+        right: -1rem;
         left: auto;
       }
     }
@@ -301,13 +247,6 @@
       .timeline-indicator {
         left: calc(100% - calc(#{$timeline-indicator-size}/ 2));
       }
-      .timeline-event {
-        &:after {
-          transform: rotate(180deg);
-          right: -16px;
-          left: auto;
-        }
-      }
     }
   }
 }
@@ -316,41 +255,24 @@
 @include media-breakpoint-down(md) {
   .timeline {
     &.timeline-center {
-      &:before {
-        left: 1rem;
-      }
-      &:after {
-        left: 0;
-      }
-
       .timeline-end-indicator {
         left: -2px;
       }
 
       .timeline-item {
         border-right: 0 !important;
-        left: 0rem;
+        left: 1rem;
         &:not(:last-child) {
           border-left: 1px solid $timeline-border-color !important;
         }
         float: left !important;
         width: 100%;
         padding-left: 3rem !important;
-        padding-right: 0 !important;
-        border-right: 0 !important;
-        &:not(:last-child) {
-          border-left: 1px solid $timeline-border-color !important;
-        }
+        padding-right: 1.5rem !important;
 
         .timeline-event {
-          &:before {
-            right: 100% !important;
-            border-right-width: 1rem !important;
-            border-left-width: 0 !important;
-          }
-
           .timeline-event-time {
-            top: -1.4rem;
+            top: -1.7rem;
             left: 0 !important;
             right: auto !important;
           }
@@ -370,21 +292,12 @@
   @include rtl-only {
     .timeline {
       &.timeline-center {
-        &:before {
-          left: auto;
-          right: 1rem;
-        }
         .timeline-item {
           border-left: 0 !important;
-          right: 1px !important;
+          right: 1rem !important;
           &:not(:last-child) {
             border-right: 1px solid $timeline-border-color !important;
           }
-        }
-
-        &:after {
-          right: -0.55rem;
-          left: auto;
         }
 
         .timeline-item {
@@ -393,17 +306,6 @@
           padding-right: 3.5rem !important;
           padding-left: 1.5rem !important;
           .timeline-event {
-            &:before {
-              left: 100% !important;
-              right: -1rem !important;
-              border-left-width: 1rem !important;
-              border-right-width: 0 !important;
-            }
-            &:after {
-              transform: rotate(0deg);
-              right: -16.5px;
-              left: auto;
-            }
             .timeline-event-time {
               top: -1.2rem;
               right: 0 !important;
@@ -434,17 +336,6 @@
       .timeline-item {
         padding-left: 0;
         padding-right: 3rem;
-
-        .timeline-event {
-          &:after {
-            right: -16.5px;
-            left: auto;
-            border-left-width: 1rem;
-            border-right-width: 0;
-            border-left-color: $card-border-color;
-            border-right-color: $gray-300;
-          }
-        }
       }
     }
   }
@@ -460,7 +351,6 @@
 // For Contextual Colors
 @each $color, $value in $theme-colors {
   @if $color !=primary and $color !=light {
-    @include template-timeline-variant('.timeline-item-#{$color}', if($color== 'dark' and $dark-style, $light, $value));
     @include template-timeline-point-variant(
       '.timeline-point-#{$color}',
       if($color== 'dark' and $dark-style, $light, $value)

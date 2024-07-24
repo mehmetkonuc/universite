@@ -1,15 +1,16 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
-@import '../../node_modules/nouislider/dist/nouislider';
+@import 'nouislider/dist/nouislider';
 @import '../../scss/_custom-variables/libs';
 @import 'mixins';
 
-$noUiSlider-handle-width: 0.875rem !default;
-$noUiSlider-handle-height: 0.875rem !default;
+$noUiSlider-handle-color: #fff !default;
+$noUiSlider-handle-width: 1.375rem !default;
+$noUiSlider-handle-height: 1.375rem !default;
 $noUiSlider-bar-height: 0.375rem !default;
 $noUiSlider-vertical-height: 13.125rem !default;
 $noUiSlider-tick-size: 0.5rem !default;
-$noUiSlider-tick-label-font-size: 0.6875rem !default;
+$noUiSlider-tick-label-font-size: light.$font-size-sm !default;
 
 .noUi-target {
   direction: ltr !important;
@@ -27,6 +28,7 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 
 .noUi-connects {
   height: $noUiSlider-bar-height;
+  border-radius: light.$border-radius-pill;
 }
 
 .noUi-base,
@@ -54,25 +56,15 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
   backface-visibility: hidden;
   outline: none !important;
   position: absolute;
-  transform-origin: center;
-  transition: transform 0.2s;
-
+  box-shadow: none;
+  border: none;
+  transition: all 0.2s;
+  border: 4px solid;
+  background: #fff;
   &:before,
   &:after {
     display: none;
   }
-
-  &.noUi-active {
-    transform: scale(1.4, 1.4);
-  }
-}
-
-.noUi-horizontal .noUi-handle.noUi-active .noUi-tooltip {
-  transform: translate(-50%, 10%) scale(0.8, 0.8);
-}
-
-.noUi-vertical .noUi-handle.noUi-active .noUi-tooltip {
-  transform: translate(10%, -50%) scale(0.8, 0.8);
 }
 
 .noUi-touch-area {
@@ -82,7 +74,11 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 
 .noUi-state-tap .noUi-connect,
 .noUi-state-tap .noUi-origin {
-  transition: top 0.3s, right 0.3s, bottom 0.3s, left 0.3s;
+  transition:
+    top 0.3s,
+    right 0.3s,
+    bottom 0.3s,
+    left 0.3s;
 }
 
 .noUi-state-drag * {
@@ -93,13 +89,15 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 
 .noUi-horizontal {
   height: $noUiSlider-bar-height;
+  margin-bottom: 3rem;
+  margin-top: 1.5rem;
 }
 
 .noUi-horizontal .noUi-handle {
   left: -($noUiSlider-handle-width * 0.5);
   width: $noUiSlider-handle-width;
   height: $noUiSlider-handle-height;
-  top: -5px !important;
+  top: ($noUiSlider-bar-height - $noUiSlider-handle-height) * 0.5;
 
   @include app-ltr {
     right: -($noUiSlider-handle-width * 0.5);
@@ -112,10 +110,10 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 }
 
 .noUi-vertical .noUi-handle {
-  left: -(($noUiSlider-handle-height * 0.5) + 0.161);
   bottom: -($noUiSlider-handle-height);
   width: $noUiSlider-handle-height;
   height: $noUiSlider-handle-width;
+  right: ($noUiSlider-bar-height - $noUiSlider-handle-height) * 0.5;
 }
 
 // Styling
@@ -134,12 +132,13 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 
 .noUi-handle {
   border-radius: 10rem;
-  cursor: default;
+  background: $noUiSlider-handle-color;
+  cursor: pointer;
 }
 
 // Disabled state
-[disabled] .noUi-connect {
-  opacity: 0.3;
+.noUi-target[disabled] {
+  opacity: 0.45;
 }
 
 [disabled] .noUi-handle {
@@ -246,84 +245,104 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 .noUi-tooltip {
   position: absolute;
   display: block;
-  padding: 0.282rem 0.25rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   text-align: center;
   line-height: 1;
   transition: transform 0.2s;
-  font-size: 0.8125rem;
-  border: 0;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    clear: both;
+  }
 }
 
 .noUi-horizontal .noUi-tooltip {
-  bottom: 157%;
+  bottom: 125%;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -45%);
+  &::after {
+    content: '';
+    left: 50%;
+    transform: translateX(-50%);
+    top: 1.25rem;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
 }
 
 .noUi-vertical .noUi-tooltip {
   top: 50%;
-  right: 200%;
-  transform: translate(0, -50%);
+  right: 125%;
+  transform: translate(-15%, -52%);
+
+  &::after {
+    content: '';
+    top: 14%;
+    right: -5px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    @include app-rtl {
+      left: -14px;
+      right: auto;
+    }
+  }
 
   @include app-rtl {
     right: auto;
     left: 125%;
-  }
-}
-
-@include app-rtl(false) {
-  .noUi-vertical .noUi-handle.noUi-active .noUi-tooltip {
-    transform: translate(-10%, -50%) scale(0.8, 0.8);
+    transform: translate(15%, -52%);
   }
 }
 
 // Light style
 @if $enable-light-style {
   .light-style {
-    $noUiSlider-handle-color: light.$body-color !default;
-    $noUiSlider-default-bg: light.rgba-to-hex(light.$gray-600, light.$rgba-to-hex-bg);
-    $noUiSlider-line-color: rgba(light.$black, 0.08);
-    $noUiSlider-disabled-line-color: rgba(light.$black, 0.24);
-    $noUiSlider-tick-label-color: light.$text-muted;
-
+    $noUiSlider-default-bg: light.$gray-400;
+    $noUiSlider-tick-label-color: light.$text-light;
     .noUi-target {
-      background: $noUiSlider-line-color;
-    }
-
-    .noUi-connect {
-      background: $noUiSlider-default-bg !important;
-    }
-
-    .noUi-handle {
-      border: 2px solid light.$card-bg;
-      box-shadow: light.$box-shadow-sm;
-      background: $noUiSlider-handle-color !important;
-    }
-
-    .noUi-target[disabled] {
-      background: $noUiSlider-disabled-line-color;
+      .noUi-handle {
+        box-shadow: light.$form-range-thumb-box-shadow;
+      }
     }
 
     .noUi-value {
       color: $noUiSlider-tick-label-color;
     }
-
     .noUi-marker {
-      background: light.$border-color;
+      background: $noUiSlider-tick-label-color;
     }
 
     .noUi-tooltip {
-      color: light.$headings-color;
-      background: light.rgba-to-hex(rgba(light.$black, 0.16), light.$rgba-to-hex-bg);
-      font-weight: light.$font-weight-medium;
+      font-size: light.$small-font-size;
+      color: light.$tooltip-color;
+      border: none;
+      background: light.$tooltip-bg;
+    }
+    .noUi-horizontal .noUi-tooltip {
+      &::after {
+        border-top: 8px solid light.$tooltip-bg;
+      }
+    }
+    .noUi-vertical .noUi-tooltip {
+      &::after {
+        border-left: 8px solid light.$tooltip-bg;
+      }
+    }
+    @include app-rtl-style {
+      .noUi-vertical .noUi-tooltip {
+        &::after {
+          border-right: 8px solid light.$tooltip-bg;
+          border-left: 8px solid transparent;
+        }
+      }
     }
 
     @each $color, $value in light.$theme-colors {
       @if $color !=primary {
-        .noUi-#{$color} {
-          @include nouislider-variant($value);
-        }
+        @include nouislider-variant('.noUi-#{$color}', $value);
       }
     }
   }
@@ -331,49 +350,48 @@ $noUiSlider-tick-label-font-size: 0.6875rem !default;
 
 @if $enable-dark-style {
   .dark-style {
-    $noUiSlider-handle-color: dark.rgba-to-hex(dark.$gray-800, dark.$rgba-to-hex-bg);
-    $noUiSlider-default-bg: dark.rgba-to-hex(rgb(dark.$black, 0.1), dark.$rgba-to-hex-bg);
-    $noUiSlider-line-color: rgba(dark.$base, 0.08);
-    $noUiSlider-disabled-line-color: rgba(dark.$base, 0.24);
-    $noUiSlider-tick-label-color: dark.$text-muted;
-
+    $noUiSlider-default-bg: dark.$gray-400;
+    $noUiSlider-tick-label-color: dark.$text-light;
     .noUi-target {
-      background: $noUiSlider-line-color;
-    }
-
-    .noUi-connect {
-      background: $noUiSlider-default-bg;
-    }
-
-    .noUi-handle {
-      border: 2px solid dark.$card-bg;
-      box-shadow: dark.$box-shadow-sm;
-      background: $noUiSlider-handle-color !important;
-    }
-
-    .noUi-target[disabled] {
-      background: $noUiSlider-disabled-line-color;
+      .noUi-handle {
+        box-shadow: dark.$form-range-thumb-box-shadow;
+      }
     }
 
     .noUi-value {
       color: $noUiSlider-tick-label-color;
     }
-
     .noUi-marker {
-      background: dark.$border-color;
+      background: $noUiSlider-tick-label-color;
     }
 
     .noUi-tooltip {
-      color: dark.$headings-color;
-      background: rgba(dark.$base, 0.16);
-      font-weight: dark.$font-weight-medium;
+      font-size: dark.$small-font-size;
+      color: dark.$tooltip-color;
+      border: none;
+      background: dark.$tooltip-bg;
     }
-
+    .noUi-horizontal .noUi-tooltip {
+      &::after {
+        border-top: 8px solid dark.$tooltip-bg;
+      }
+    }
+    .noUi-vertical .noUi-tooltip {
+      &::after {
+        border-left: 8px solid dark.$tooltip-bg;
+      }
+    }
+    @include app-rtl-style {
+      .noUi-vertical .noUi-tooltip {
+        &::after {
+          border-right: 8px solid dark.$tooltip-bg;
+          border-left: 8px solid transparent;
+        }
+      }
+    }
     @each $color, $value in dark.$theme-colors {
       @if $color !=primary {
-        .noUi-#{$color} {
-          @include nouislider-variant($value);
-        }
+        @include nouislider-variant('.noUi-#{$color}', $value);
       }
     }
   }

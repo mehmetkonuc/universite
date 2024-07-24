@@ -23,21 +23,29 @@ nav.layout-navbar {
     box-shadow: none;
     transition: light.$btn-transition;
     transform: unset !important;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
     margin-top: 1rem;
     border-width: 2px;
     border-style: solid;
-    border-radius: light.$border-radius-lg;
+    border-radius: light.$border-radius;
     .navbar-nav {
       .nav-link {
-        padding: 0.5rem 0.9375rem;
+        padding: 0.5rem 0.625rem;
+        margin-inline-end: 0.625rem;
         @include light.media-breakpoint-down(xl) {
           padding-left: 0.5rem;
           padding-right: 0.5rem;
+          margin-inline-end: 0;
         }
       }
+
       .nav-item {
+        &:last-child {
+          .nav-link {
+            margin-inline-end: 0;
+          }
+        }
         &.mega-dropdown {
           > .dropdown-menu {
             @include light.media-breakpoint-up(lg) {
@@ -54,8 +62,11 @@ nav.layout-navbar {
             .mega-dropdown-link {
               padding-left: 0;
               padding-right: 0;
+              margin: 0;
+              font-weight: light.$font-weight-normal;
               i {
-                font-size: 0.625rem;
+                font-size: 0.75rem;
+                font-weight: light.$font-weight-bold;
               }
             }
           }
@@ -121,6 +132,17 @@ nav.layout-navbar {
             .nav-link.active {
               color: light.$primary !important;
             }
+            .nav-item {
+              &.mega-dropdown {
+                > .dropdown-menu {
+                  .mega-dropdown-link {
+                    i {
+                      color: light.$body-color;
+                    }
+                  }
+                }
+              }
+            }
           }
           @include light.media-breakpoint-down(lg) {
             .landing-nav-menu {
@@ -150,8 +172,8 @@ nav.layout-navbar {
     .layout-navbar {
       .navbar {
         &.landing-navbar {
-          border-color: rgba(dark.$white, 0.08);
-          background-color: rgba(dark.$white, 0.04);
+          border-color: rgba(dark.$card-bg, 0.68);
+          background-color: rgba(dark.$card-bg, 0.38);
           .navbar-nav {
             .nav-link {
               color: dark.$headings-color;
@@ -161,6 +183,17 @@ nav.layout-navbar {
             .nav-link.show,
             .nav-link.active {
               color: dark.$primary !important;
+            }
+            .nav-item {
+              &.mega-dropdown {
+                > .dropdown-menu {
+                  .mega-dropdown-link {
+                    i {
+                      color: dark.$body-color;
+                    }
+                  }
+                }
+              }
             }
           }
           @include light.media-breakpoint-down(lg) {

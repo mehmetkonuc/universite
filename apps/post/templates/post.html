@@ -1,0 +1,540 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/app-academy-details.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
+<style>
+   .gallery-container {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px; /* Resimler arasındaki boşluk */
+   }
+   .gallery-item {
+   flex: 1 1 calc(33.333% - 10px); /* Üç sütun düzeni */
+   box-sizing: border-box;
+   position: relative;
+   height: 200px; /* Sabit yükseklik */
+   overflow: hidden; /* Taşan kısımları gizle */
+   }
+   .gallery-item img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover; /* Resmi kapsayıcıya göre uygun şekilde kapla */
+   border-radius: 5px;
+   }
+   /* Özel durumlar için */
+   @media (max-width: 768px) {
+   .gallery-item {
+   flex: 1 1 calc(50% - 10px); /* Mobil cihazlar için iki sütun */
+   }
+   }
+   @media (max-width: 480px) {
+   .gallery-item {
+   flex: 1 1 100%; /* Tek sütun düzeni */
+   }
+   }
+   .thumbnail-container {
+   position: relative;
+   width: 100px; /* Kare boyutu */
+   height: 100px; /* Kare boyutu */
+   overflow: hidden; /* Taşan kısmı gizle */
+   margin: 5px;
+   }
+   .thumbnail-container img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover; /* Resmi kapsayıcıya göre kırp */
+   }
+   .remove-button {
+   position: absolute;
+   top: 5px;
+   right: 5px;
+   background: rgba(255, 255, 255, 0.7);
+   border: none;
+   border-radius: 25%;
+   cursor: pointer;
+   }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-3">
+      <div class="accordion stick-top accordion-custom-button" id="courseContent">
+         <div class="accordion-item active mb-0">
+            <div class="accordion-header" id="headingOne">
+               <button
+                  type="button"
+                  class="accordion-button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterOne"
+                  aria-expanded="true"
+                  aria-controls="chapterOne">
+               <span class="d-flex flex-column">
+               <span class="h5 mb-0">Course Content</span>
+               <span class="text-body fw-normal">2 / 5 | 4.4 min</span>
+               </span>
+               </button>
+            </div>
+            <div id="chapterOne" class="accordion-collapse collapse show" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck1" checked="" />
+                     <label for="defaultCheck1" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. Welcome to this course</span>
+                     <small class="text-body d-block">2.4 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck2" checked="" />
+                     <label for="defaultCheck2" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. Watch before you start</span>
+                     <small class="text-body d-block">4.8 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck3" />
+                     <label for="defaultCheck3" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. Basic design theory</span>
+                     <small class="text-body d-block">5.9 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck4" />
+                     <label for="defaultCheck4" class="form-check-label ms-4">
+                     <span class="mb-0 h6">4. Basic fundamentals</span>
+                     <small class="text-body d-block">3.6 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defaultCheck5" />
+                     <label for="defaultCheck5" class="form-check-label ms-4">
+                     <span class="mb-0 h6">5. What is ui/ux</span>
+                     <small class="text-body d-block">10.6 min</small>
+                     </label>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="accordion-item">
+            <div class="accordion-header" id="headingTwo">
+               <button
+                  type="button"
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterTwo"
+                  aria-expanded="false"
+                  aria-controls="chapterTwo">
+               <span class="d-flex flex-column">
+               <span class="h5 mb-0">Web Design for Web Developers</span>
+               <span class="text-body fw-normal">1 / 4 | 4.4 min</span>
+               </span>
+               </button>
+            </div>
+            <div id="chapterTwo" class="accordion-collapse collapse" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck1" checked="" />
+                     <label for="defCheck1" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. How to use Pages in Figma</span>
+                     <small class="text-body d-block">8:31 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck2" />
+                     <label for="defCheck2" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. What is Lo Fi Wireframe</span>
+                     <small class="text-body d-block">2 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck3" />
+                     <label for="defCheck3" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. How to use color in Figma</span>
+                     <small class="text-body d-block">5.9 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defCheck4" />
+                     <label for="defCheck4" class="form-check-label ms-4">
+                     <span class="mb-0 h6">4. Frames vs Groups in Figma</span>
+                     <small class="text-body d-block">3.6 min</small>
+                     </label>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="accordion-item">
+            <div class="accordion-header" id="headingThree">
+               <button
+                  type="button"
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterThree"
+                  aria-expanded="false"
+                  aria-controls="chapterThree">
+               <span class="d-flex flex-column">
+               <span class="h5 mb-0">Build Beautiful Websites!</span>
+               <span class="text-body fw-normal">0 / 6 | 4.4 min</span>
+               </span>
+               </button>
+            </div>
+            <div id="chapterThree" class="accordion-collapse collapse" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-01" />
+                     <label for="defCheck-01" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. Section & Div Block</span>
+                     <small class="text-body d-block">8:31 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-02" />
+                     <label for="defCheck-02" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. Read-Only Version of Chat App</span>
+                     <small class="text-body d-block">8 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-03" />
+                     <label for="defCheck-03" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. Webflow Autosave</span>
+                     <small class="text-body d-block">2.9 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-04" />
+                     <label for="defCheck-04" class="form-check-label ms-4">
+                     <span class="mb-0 h6">4. Canvas Settings</span>
+                     <small class="text-body d-block">7.6 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-05" />
+                     <label for="defCheck-05" class="form-check-label ms-4">
+                     <span class="mb-0 h6">5. HTML Tags</span>
+                     <small class="text-body d-block">10 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defCheck-06" />
+                     <label for="defCheck-06" class="form-check-label ms-4">
+                     <span class="mb-0 h6">6. Footer (Chat App)</span>
+                     <small class="text-body d-block">9.10 min</small>
+                     </label>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="accordion-item">
+            <div class="accordion-header" id="headingFour">
+               <button
+                  type="button"
+                  class="accordion-button collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#chapterFour"
+                  aria-expanded="false"
+                  aria-controls="chapterFour">
+               <span class="d-flex flex-column">
+               <span class="h5 mb-0">Final Project</span>
+               <span class="text-body fw-normal">2 / 3 | 4.4 min</span>
+               </span>
+               </button>
+            </div>
+            <div id="chapterFour" class="accordion-collapse collapse" data-bs-parent="#courseContent">
+               <div class="accordion-body py-4">
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-101" checked="" />
+                     <label for="defCheck-101" class="form-check-label ms-4">
+                     <span class="mb-0 h6">1. Responsive Blog Site</span>
+                     <small class="text-body d-block">10:0 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-4">
+                     <input class="form-check-input" type="checkbox" id="defCheck-102" checked="" />
+                     <label for="defCheck-102" class="form-check-label ms-4">
+                     <span class="mb-0 h6">2. Responsive Portfolio</span>
+                     <small class="text-body d-block">13:00 min</small>
+                     </label>
+                  </div>
+                  <div class="form-check d-flex align-items-center gap-1 mb-0">
+                     <input class="form-check-input" type="checkbox" id="defCheck-103" />
+                     <label for="defCheck-103" class="form-check-label ms-4">
+                     <span class="mb-0 h6">3. Responsive eCommerce Website</span>
+                     <small class="text-body d-block">15 min</small>
+                     </label>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-6">
+      <div class="col-12">
+         <div class="card mb-4">
+            <div class="card-body">
+               <form id="post-form" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <textarea name="Content" id="autosize-demo" rows="3" class="form-control" placeholder="Hadi aklındakini Fakula!!!"></textarea>
+                  <div id="preview-container" class="d-flex flex-wrap"></div>
+                  <div class="d-flex justify-content-end align-items-center mt-1">
+                     <div class="me-3">
+                        <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+                        <label for="id_images">
+                        <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i><span class="align-middle"></span>
+                        </label>
+                     </div>
+                     <button type="submit" class="btn btn-primary">
+                     <i class="ti ti-send ti-xs me-1"></i>
+                     </button>
+                  </div>
+               </form>
+            </div>
+         </div>
+         {% for item in post_images %}
+         <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between mb-0">
+               <div class="card-title mb-0">
+                  <div class="d-flex">
+                     <div class="d-flex">
+                        <a href="{% url 'profile' item.post.User.username %}">
+                           <div class="avatar avatar-md me-2">
+                              {% if item.post.User.profilepicturemodel.profile_photo %}
+                              {% with profile_photo_url=item.post.User.profilepicturemodel.profile_photo.url %}
+                              <img
+                                 src="{{ profile_photo_url }}"
+                                 alt="Avatar"
+                                 class="rounded-circle" />
+                              {% endwith %}
+                              {% else %}
+                              <img
+                                 src="{% static 'assets/img/avatars/14.png' %}"
+                                 alt="Avatar"
+                                 class="rounded-circle" />
+                              {% endif %}
+                           </div>
+                     </div>
+                     <div class="flex-grow-1 ms-1">
+                     <div class="me-2 h5 mb-0">{{ item.post.User.first_name }} {{ item.post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                     <small class="text-muted">{{ item.post.PublishDate }}</small>
+                     </div>
+                  </div>
+               </div>
+               <div class="dropdown">
+                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                     {% if item.post.User.username == user.username or user.is_superuser %}
+                     <a class="dropdown-item text-danger" href="#"
+                        data-bs-toggle="modal" data-bs-target="#modalCenter_{{item.post.id}}">Sil</a>
+                     {%endif%}
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               {{ item.post.Content }}
+               <div class="gallery-container mt-4">
+                  {% for image in item.images %}
+                  <div class="gallery-item">
+                     <a href="{{ image.Image.url }}" data-fancybox="gallery-{{ item.post.id }}">
+                     <img src="{{ image.Image.url }}" alt="Post Image">
+                     </a>
+                  </div>
+                  {% endfor %}
+               </div>
+               <hr />
+               <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center">
+                    <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.post.id }}">
+                      <i class="ti ti-heart{% if item.post.id in user_liked_posts %}-filled{% endif %}"></i>
+                      <span class="like-count text-body">{{ item.post.postlike_set.count }}</span>
+                  </a>
+                     <a href="{% url 'post_detail' item.post.id %}" class="text-body me-3"
+                        ><i class="ti ti-message-plus"></i> 15</a
+                        >
+                     <div class="dropdown">
+                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-share"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                           <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="ms-auto">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal fade" id="modalCenter_{{item.post.id}}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <p>
+                        Paylaşımı Silmek İstediğinizden emin misiniz?
+                     </p>
+                  </div>
+                  <div class="modal-footer">
+                     <a class="btn btn-primary" href="{% url 'delete_post' item.post.id %}">Sil</a>
+                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+</div>
+{%endblock%}
+{% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
+<script src="{% static 'assets/js/ui-modals.js' %}"></script>
+<script src="{% static 'assets/js/app-academy-course-details.js' %}"></script>
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
+<script>
+   $(document).ready(function() {
+       $('[data-fancybox]').fancybox({
+           // Fancybox options
+           loop: true,
+           buttons: [
+               'zoom',
+               'slideShow',
+               'thumbs',
+               'close'
+           ],
+           transitionEffect: "fade",
+           transitionDuration: 300
+       });
+   });
+</script>
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+       const previewContainer = document.getElementById('preview-container');
+       const fileInput = document.getElementById('id_images');
+       const maxImages = 4;
+       let existingFiles = [];  // Saklamak için bir dizi
+   
+       fileInput.addEventListener('change', function(event) {
+           const files = Array.from(event.target.files);
+   
+           // Yeni dosyalar mevcut dosyalarla birleştirilir
+           const newFiles = files.filter(file => !existingFiles.some(existingFile => existingFile.name === file.name));
+           if (newFiles.length + existingFiles.length > maxImages) {
+               alert(`Maksimum ${maxImages} resim yükleyebilirsiniz.`);
+               return;
+           }
+   
+           existingFiles = existingFiles.concat(newFiles);
+   
+           // Mevcut thumbnail'ları temizle
+           previewContainer.innerHTML = '';
+   
+           existingFiles.forEach(file => {
+               if (file && file.type.startsWith('image/')) {
+                   const reader = new FileReader();
+   
+                   reader.onload = function(e) {
+                       // Thumbnail container
+                       const div = document.createElement('div');
+                       div.classList.add('thumbnail-container');
+                       
+                       // Thumbnail image
+                       const img = document.createElement('img');
+                       img.src = e.target.result;
+                       div.appendChild(img);
+   
+                       // Remove button
+                       const removeButton = document.createElement('button');
+                       removeButton.textContent = 'x';
+                       removeButton.classList.add('remove-button');
+                       removeButton.onclick = function() {
+                           // Silme işlemi
+                           previewContainer.removeChild(div);
+                           existingFiles = existingFiles.filter(existingFile => existingFile.name !== file.name);
+   
+                           // File input'ı güncelle
+                           updateFileInput();
+                       };
+                       div.appendChild(removeButton);
+   
+                       previewContainer.appendChild(div);
+                   };
+   
+                   reader.readAsDataURL(file);
+               }
+           });
+       });
+   
+       // File input'ı güncelleme işlevi
+       function updateFileInput() {
+           const dataTransfer = new DataTransfer();
+           existingFiles.forEach(file => dataTransfer.items.add(file));
+           fileInput.files = dataTransfer.files;
+       }
+   
+       // Form gönderiminde dosyaları güncelleme
+       const form = document.getElementById('post-form');
+       form.addEventListener('submit', function() {
+           updateFileInput();
+       });
+   });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const likeButtons = document.querySelectorAll('.like-btn');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const postId = button.getAttribute('data-post-id');
+            const icon = button.querySelector('i');
+            const likeCountSpan = button.querySelector('.like-count');
+
+            fetch(`post/like/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ post_id: postId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    icon.classList.add('ti-heart-filled');
+                    icon.classList.remove('ti-heart');
+                } else {
+                    icon.classList.add('ti-heart');
+                    icon.classList.remove('ti-heart-filled');
+                }
+                likeCountSpan.textContent = data.like_count;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+
+</script>
+
+{% endblock %}

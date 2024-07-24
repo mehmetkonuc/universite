@@ -8,6 +8,7 @@
         .bs-stepper-circle {
           background-color: $background;
           color: $color;
+          box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
         }
         .bs-stepper-icon svg {
           fill: $background !important;
@@ -20,8 +21,8 @@
       &.crossed {
         .step-trigger {
           .bs-stepper-circle {
-            background-color: rgba-to-hex(rgba($background, 0.08), $card-bg) !important;
-            color: rgba-to-hex(rgba($background, 0.6), $card-bg) !important;
+            background-color: rgba-to-hex(rgba($background, 0.16), $card-bg) !important;
+            color: $background !important;
           }
           .bs-stepper-icon svg {
             fill: $background !important;

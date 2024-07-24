@@ -30,14 +30,17 @@
     },
     donut: {
       series1: '#fee802',
-      series2: '#3fd0bd',
+      series2: '#F1F0F2',
       series3: '#826bf8',
-      series4: '#2b9bf4'
+      series4: '#3fd0bd'
     },
     area: {
       series1: '#29dac7',
       series2: '#60f2ca',
       series3: '#a5f8cd'
+    },
+    bar: {
+      bg: '#1D9FF2'
     }
   };
 
@@ -502,7 +505,7 @@
           bottom: -12
         }
       },
-      colors: config.colors.info,
+      colors: chartColors.bar.bg,
       dataLabels: {
         enabled: false
       },

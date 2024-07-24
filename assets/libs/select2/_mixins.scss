@@ -11,6 +11,7 @@
 @mixin select2-validation-state($state, $border) {
   .is-#{$state} .select2-container--default .select2-selection,
   .is-#{$state}.select2-container--default .select2-selection {
+    border-width: $input-focus-border-width;
     border-color: $border !important;
   }
 }
@@ -19,8 +20,14 @@
   $color: if($color, $color, color-contrast($background));
 
   .select2-container--default {
+    .select2-results__option--highlighted[aria-selected] {
+      background-color: $background !important;
+      color: $color !important;
+    }
+
     &.select2-container--focus .select2-selection,
     &.select2-container--open .select2-selection {
+      border-width: $input-focus-border-width;
       border-color: $background !important;
     }
   }

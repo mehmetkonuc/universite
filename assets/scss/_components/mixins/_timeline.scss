@@ -6,32 +6,27 @@
   .timeline {
     #{$point-color} {
       background-color: $background !important;
-      box-shadow: 0 0 0 0.1875rem rgba($background, 0.16);
+      outline: 3px solid rgba($background, 0.12);
     }
-  }
-}
 
-// Timeline Theme
-@mixin template-timeline-variant($item-color, $background) {
-  .timeline {
-    #{$item-color} {
-      .timeline-event {
-        background-color: rgba($background, 0.1);
-
-        &:before {
-          border-left-color: rgba($background, 0.1) !important;
-          border-right-color: rgba($background, 0.1) !important;
-        }
+    // Timeline-outline styles
+    &.timeline-outline {
+      #{$point-color} {
+        border: 2px solid $background !important;
       }
     }
   }
 }
 
 @mixin template-timeline-indicator-variant($indicator-color, $background) {
+  $color: $background;
+  $background: rgba-to-hex(rgba($background, 0.16), $rgba-to-hex-bg);
+
   .timeline {
     #{$indicator-color} {
+      background-color: $background;
       i {
-        color: $background !important;
+        color: $color !important;
       }
     }
   }

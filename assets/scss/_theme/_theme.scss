@@ -18,14 +18,14 @@
     content: '\ea6b';
     font-family: 'tabler-icons';
     position: absolute;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: bold;
   }
   &.menu-vertical {
     .menu-sub > .menu-item > .menu-link:before {
-      left: 1.35rem;
+      left: 1.1rem;
       @include rtl-style {
-        right: 1.35rem;
+        right: 1.1rem;
         left: inherit;
       }
     }
@@ -76,10 +76,10 @@
         .layout-horizontal & {
           margin: $menu-vertical-header-margin-y 0;
           &:not(:first-child) {
-            margin-left: $menu-item-spacer;
+            margin-inline-start: calc($menu-item-spacer / 2);
           }
           &:not(:last-child) {
-            margin-right: $menu-item-spacer;
+            margin-inline-end: calc($menu-item-spacer / 2);
           }
         }
       }

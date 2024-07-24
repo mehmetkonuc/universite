@@ -17,11 +17,10 @@ $kanban-drag-min-width: 16.25rem;
 $kanban-drag-padding: 0;
 
 $kanban-item-width: 16.25rem;
-$kanban-item-padding-y: 1rem;
+$kanban-item-padding-y: 1.5rem;
 $kanban-item-padding-x: $kanban-item-padding-y;
-$kanban-item-border-radius: light.$border-radius;
 
-$kanban-add-new-board-padding: 0.9375rem;
+$kanban-add-new-board-padding: 1rem;
 
 // Kanban styles
 .app-kanban {
@@ -53,11 +52,11 @@ $kanban-add-new-board-padding: 0.9375rem;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          padding: 0 0 $kanban-add-new-board-padding 0;
           .kanban-title-board {
             font-size: $kanban-title-font-size;
             font-weight: $kanban-title-font-weight;
             max-width: $kanban-title-max-width;
-            font-weight: $kanban-title-font-weight;
             white-space: nowrap;
             overflow: hidden;
             &:focus {
@@ -82,10 +81,10 @@ $kanban-add-new-board-padding: 0.9375rem;
         }
         .kanban-title-button {
           position: absolute;
-          left: -8px;
+          left: -4px;
           bottom: 0;
           margin: -1.5rem 0;
-          font-size: light.$small-font-size;
+          font-weight: light.$font-weight-normal;
           &:focus {
             box-shadow: none;
           }
@@ -96,8 +95,8 @@ $kanban-add-new-board-padding: 0.9375rem;
           flex-direction: column;
           width: $kanban-item-width;
           padding: $kanban-item-padding-y $kanban-item-padding-x;
-          margin-bottom: $kanban-item-padding-x;
-          border-radius: $kanban-item-border-radius;
+          margin-bottom: 1rem;
+          border-radius: light.$border-radius;
           .kanban-tasks-item-dropdown {
             display: none;
             position: absolute;
@@ -108,6 +107,7 @@ $kanban-add-new-board-padding: 0.9375rem;
             }
           }
           &:hover {
+            box-shadow: rgba(0, 0, 0, 0.1) 0 4px 20px 0;
             .kanban-tasks-item-dropdown {
               display: block;
             }
@@ -122,9 +122,8 @@ $kanban-add-new-board-padding: 0.9375rem;
     .kanban-add-board-btn {
       padding-bottom: $kanban-add-new-board-padding;
     }
-    margin-top: $kanban-add-new-board-padding;
     float: left;
-    padding: 0 $kanban-add-new-board-padding;
+    padding: 0 $kanban-add-new-board-padding - 0.25rem;
     label {
       font-size: $kanban-title-font-size;
       font-weight: $kanban-title-font-weight;
@@ -150,6 +149,7 @@ $kanban-add-new-board-padding: 0.9375rem;
       text-align: right;
       border-top: 0;
       @include light.border-bottom-radius(light.$border-radius);
+      @include light.border-top-radius(0);
     }
   }
 }
@@ -188,10 +188,16 @@ $kanban-add-new-board-padding: 0.9375rem;
       .kanban-board {
         .kanban-board-header {
           color: light.$headings-color;
+          .kanban-title-button {
+            color: light.$headings-color;
+          }
         }
         .kanban-item {
           background-color: light.$card-bg;
-          box-shadow: light.$card-box-shadow;
+          box-shadow: light.$box-shadow-sm;
+          .kanban-text {
+            color: light.$headings-color;
+          }
         }
       }
       .kanban-add-new-board {
@@ -210,10 +216,16 @@ $kanban-add-new-board-padding: 0.9375rem;
       .kanban-board {
         .kanban-board-header {
           color: dark.$headings-color;
+          .kanban-title-button {
+            color: dark.$headings-color;
+          }
         }
         .kanban-item {
           background-color: dark.$card-bg;
-          box-shadow: dark.$card-box-shadow;
+          box-shadow: dark.$box-shadow-sm;
+          .kanban-text {
+            color: dark.$headings-color;
+          }
         }
       }
 

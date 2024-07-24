@@ -1,7 +1,7 @@
 @use '../../scss/_bootstrap-extended/include' as light;
 @use '../../scss/_bootstrap-extended/include-dark' as dark;
 @import '../../scss/_custom-variables/libs';
-@import '../../node_modules/datatables.net-fixedheader-bs5/css/fixedHeader.bootstrap5';
+@import 'datatables.net-fixedheader-bs5/css/fixedHeader.bootstrap5';
 
 // Fixed header Style
 .dt-fixedheader.fixedHeader-floating.table.dataTable {
@@ -15,13 +15,12 @@
 @if $enable-light-style {
   .light-style {
     .dtfh-floatingparenthead {
-      border-bottom: 2px solid light.$body-bg;
+      border-bottom: 1px solid light.$table-border-color;
     }
-    .dt-fixedheader.fixedHeader-floating.table.dataTable thead > tr > th,
-    .dt-fixedheader.fixedHeader-locked.table.dataTable thead > tr > th {
-      background-color: light.$card-bg;
+    .table-bordered.dt-fixedheader.fixedHeader-floating.table.dataTable thead > tr > th,
+    .table-bordered.dt-fixedheader.fixedHeader-locked.table.dataTable thead > tr > th {
       border-bottom-width: 1px;
-      border-color: light.$body-bg;
+      border-color: light.$table-border-color;
     }
   }
 }
@@ -30,13 +29,12 @@
 @if $enable-dark-style {
   .dark-style {
     .dtfh-floatingparenthead {
-      border-bottom: 2px solid dark.$body-bg;
+      border-bottom: 1px solid dark.$table-border-color;
     }
-    .dt-fixedheader.fixedHeader-floating.table.dataTable thead > tr > th,
-    .dt-fixedheader.fixedHeader-locked.table.dataTable thead > tr > th {
-      background-color: dark.$card-bg;
+    .table-bordered.dt-fixedheader.fixedHeader-floating.table.dataTable thead > tr > th,
+    .table-bordered.dt-fixedheader.fixedHeader-locked.table.dataTable thead > tr > th {
       border-bottom-width: 1px;
-      border-color: dark.$body-bg;
+      border-color: dark.$table-border-color;
     }
   }
 }

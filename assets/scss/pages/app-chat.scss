@@ -7,36 +7,37 @@
 @import '../_custom-variables/pages';
 
 // Variables
-$chat-app-height: calc(100vh - 11.5rem);
-$chat-app-height-with-no-navbar: calc(100vh - 7.5rem);
-$chat-app-horizontal-height-diff: 2.2rem;
+$chat-app-height: calc(100vh - 10.9rem);
+$chat-app-height-with-no-navbar: calc(100vh - 6.5rem);
+$chat-app-horizontal-height-diff: 3rem;
 
 $chat-contact-width: 21rem;
 
 $chat-contact-list-padding-x: 0.75rem;
-$chat-contact-list-padding-y: 0.5rem;
+$chat-contact-list-padding-y: 0.528rem;
 
-$chat-contact-list-margin-x: 0.75rem;
+$chat-contact-list-margin-x: $chat-contact-list-padding-x;
 $chat-contact-list-margin-y: 0.25rem;
 
 $chat-history-padding-x: 1.5rem;
-$chat-history-padding-y: 2rem;
-$chat-history-height: calc(100vh - 20.5rem);
-$chat-history-height-with-no-nabvar: calc(100vh - 16.5rem);
-
-$chat-sidebar-header-padding-x: 1.25rem;
-$chat-sidebar-header-padding-y: 0.73rem;
-
-$chat-history-header-padding-x: 1.25rem;
-$chat-history-header-padding-y: 0.575rem;
-
-$chat-history-footer-padding-x: 0.5rem;
-$chat-history-footer-margin-x: 1.5rem;
+$chat-history-padding-y: 1.5rem;
+$chat-history-height: calc(100vh - 22rem);
+$chat-history-height-with-no-nabvar: calc(100vh - 17.6rem);
+$chat-history-header-padding-x: $chat-history-padding-x;
+$chat-history-header-padding-y: 1.015rem;
+$chat-history-footer-padding: 0.5rem;
+$chat-history-footer-margin: $chat-history-padding-x;
 
 $chat-message-text-padding-x: 1rem;
-$chat-message-text-padding-y: 0.75rem;
+$chat-message-text-padding-y: 0.543rem;
 $chat-message-text-border-radius: light.$border-radius;
-$chat-list-margin: 1rem;
+$chat-list-margin: 3rem;
+
+$app-chat-shadow-light: light.$box-shadow-xs !default;
+$app-chat-shadow-dark: dark.$box-shadow-xs !default;
+
+$chat-bg-light: #f3f2f5;
+$chat-bg-dark: #202534;
 
 // App Chat Global
 .app-chat {
@@ -47,7 +48,7 @@ $chat-list-margin: 1rem;
   }
   @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
     .layout-horizontal & {
-      height: calc($chat-app-height - $chat-app-horizontal-height-diff) !important;
+      height: calc($chat-app-height - $chat-app-horizontal-height-diff);
     }
   }
   // Common Styles Of two sidebars
@@ -58,13 +59,20 @@ $chat-list-margin: 1rem;
 
     .sidebar-header {
       position: relative;
-      padding: $chat-sidebar-header-padding-y $chat-sidebar-header-padding-x;
 
       .close-sidebar {
         position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        margin: 0.15rem 0.15rem 0 0;
+        top: 1.25rem;
+        right: 1.25rem;
+      }
+      .chat-sidebar-avatar {
+        width: 84px;
+        height: 84px;
+        &::after {
+          bottom: 6px;
+          width: 16.8px;
+          height: 16.8px;
+        }
       }
     }
   }
@@ -94,22 +102,13 @@ $chat-list-margin: 1rem;
     }
 
     .sidebar-body {
-      height: calc(#{$chat-app-height} - 3.9rem);
+      height: calc(#{$chat-app-height} - 4.7rem);
       .layout-navbar-hidden & {
-        height: calc(#{$chat-app-height-with-no-navbar} - 3.9rem);
-        @include light.media-breakpoint-down(xs) {
-          height: calc(#{$chat-app-height} - 3.5rem);
-        }
+        height: calc(#{$chat-app-height-with-no-navbar} - 4.7rem);
       }
-      @include light.media-breakpoint-down(xs) {
-        height: calc(#{$chat-app-height} - 3.5rem);
-      }
-      .layout-horizontal & {
-        @include light.media-breakpoint-up(lg) {
-          height: calc(#{$chat-app-height} - 5rem + calc(#{$chat-app-horizontal-height-diff} / 2));
-        }
-        @include light.media-breakpoint-up(xl) {
-          height: calc(#{$chat-app-height} - 5rem - #{$chat-app-horizontal-height-diff});
+      @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
+        .layout-horizontal & {
+          height: calc(#{$chat-app-height} - 4.7rem - #{$chat-app-horizontal-height-diff});
         }
       }
 
@@ -117,16 +116,12 @@ $chat-list-margin: 1rem;
         li.chat-contact-list-item {
           display: flex;
           justify-content: space-between;
+          border-radius: $chat-message-text-border-radius;
           padding: $chat-contact-list-padding-y $chat-contact-list-padding-x;
           margin: $chat-contact-list-margin-y $chat-contact-list-margin-x;
-          border-radius: light.$border-radius;
           cursor: pointer;
           a {
             width: 100%;
-          }
-          .avatar {
-            border: 2px solid transparent;
-            border-radius: 50%;
           }
           .chat-contact-info {
             min-width: 0;
@@ -137,6 +132,9 @@ $chat-list-margin: 1rem;
           small {
             white-space: nowrap;
           }
+        }
+        li.chat-contact-list-item-title {
+          padding: $chat-contact-list-padding-y $chat-contact-list-padding-y * 2 $chat-contact-list-padding-y * 0.5;
         }
       }
     }
@@ -166,13 +164,13 @@ $chat-list-margin: 1rem;
     }
 
     .sidebar-body {
-      height: calc(#{$chat-app-height} - 11.5rem);
+      height: calc(#{$chat-app-height} - 12.5rem);
       .layout-navbar-hidden & {
-        height: calc(#{$chat-app-height-with-no-navbar} - 11.5rem);
+        height: calc(#{$chat-app-height-with-no-navbar} - 12.5rem);
       }
       @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
         .layout-horizontal & {
-          height: calc(#{$chat-app-height} - 10.9rem - #{$chat-app-horizontal-height-diff});
+          height: calc(#{$chat-app-height} - 12.3rem - #{$chat-app-horizontal-height-diff});
         }
       }
     }
@@ -193,10 +191,7 @@ $chat-list-margin: 1rem;
 
     .chat-history-header {
       padding: $chat-history-header-padding-y $chat-history-header-padding-x;
-
-      .user-status {
-        margin-bottom: 0.1rem;
-      }
+      margin-top: -1px;
     }
 
     .chat-history-body {
@@ -221,11 +216,6 @@ $chat-list-margin: 1rem;
             border-radius: $chat-message-text-border-radius;
             padding: $chat-message-text-padding-y $chat-message-text-padding-x;
           }
-          &:not(.chat-message-right) {
-            .chat-message-text {
-              border-top-left-radius: 0;
-            }
-          }
 
           &.chat-message-right {
             justify-content: flex-end;
@@ -238,6 +228,9 @@ $chat-list-margin: 1rem;
               margin-right: 0rem;
               margin-left: 1rem;
             }
+          }
+          &:not(.chat-message-right) .chat-message-text {
+            border-top-left-radius: 0;
           }
 
           .thumbnail {
@@ -252,9 +245,14 @@ $chat-list-margin: 1rem;
     }
 
     .chat-history-footer {
-      padding: $chat-history-header-padding-y $chat-history-footer-padding-x;
-      margin: 0 $chat-history-footer-margin-x;
+      padding: $chat-history-footer-padding;
+      padding-inline-start: 2px;
+      margin: $chat-history-footer-margin;
       border-radius: $chat-message-text-border-radius;
+      .form-control.message-input {
+        padding: calc(light.$input-padding-y - light.$input-border-width)
+          calc(light.$input-padding-x - light.$input-border-width);
+      }
     }
   }
 
@@ -282,9 +280,9 @@ $chat-list-margin: 1rem;
     }
 
     .sidebar-body {
-      height: calc(#{$chat-app-height} - 11.75rem);
+      height: calc(#{$chat-app-height} - 12.3rem);
       .layout-navbar-hidden & {
-        height: calc(#{$chat-app-height-with-no-navbar} - 11.75rem);
+        height: calc(#{$chat-app-height-with-no-navbar} - 12.3rem);
       }
       @include light.media-breakpoint-up($menu-collapsed-layout-breakpoint) {
         .layout-horizontal & {
@@ -312,10 +310,12 @@ $chat-list-margin: 1rem;
 @if $enable-light-style {
   .light-style {
     .app-chat {
+      .app-sidebar .sidebar-header .chat-sidebar-avatar::after {
+        box-shadow: 0 0 0 4px light.$card-bg;
+      }
       .app-chat-contacts,
       .app-chat-sidebar-left {
         background-color: light.$white;
-        box-shadow: 0 0 0 1px rgba(light.$black, 0.075);
 
         .chat-actions {
           .chat-search-input {
@@ -328,12 +328,10 @@ $chat-list-margin: 1rem;
             li {
               &.active {
                 color: light.$white;
+                box-shadow: 0px 2px 6px 0px rgba(light.$primary, 0.3);
                 h6,
                 .text-muted {
                   color: light.$white !important;
-                }
-                .avatar {
-                  border-color: light.$card-bg;
                 }
               }
             }
@@ -342,6 +340,10 @@ $chat-list-margin: 1rem;
       }
 
       .app-chat-history {
+        background-color: $chat-bg-light;
+        .chat-history-wrapper {
+          background-color: $chat-bg-light;
+        }
         .chat-history-header,
         .chat-history-footer {
           background-color: light.$card-bg;
@@ -352,7 +354,7 @@ $chat-list-margin: 1rem;
             .chat-message {
               .chat-message-text {
                 background-color: light.$card-bg;
-                box-shadow: light.$box-shadow-sm;
+                box-shadow: $app-chat-shadow-light;
               }
 
               &.chat-message-right {
@@ -389,6 +391,9 @@ $chat-list-margin: 1rem;
 @if $enable-dark-style {
   .dark-style {
     .app-chat {
+      .app-sidebar .sidebar-header .chat-sidebar-avatar::after {
+        box-shadow: 0 0 0 4px dark.$card-bg;
+      }
       .app-chat-contacts,
       .app-chat-sidebar-left {
         background-color: dark.$card-bg;
@@ -404,12 +409,10 @@ $chat-list-margin: 1rem;
             li {
               &.active {
                 color: dark.$white;
+                box-shadow: 0px 2px 6px 0px rgba(dark.$primary, 0.3);
                 h6,
                 .text-muted {
                   color: dark.$white !important;
-                }
-                .avatar {
-                  border-color: dark.$card-bg;
                 }
               }
             }
@@ -418,6 +421,11 @@ $chat-list-margin: 1rem;
       }
 
       .app-chat-history {
+        background-color: $chat-bg-dark;
+        .chat-history-wrapper {
+          background-color: $chat-bg-dark;
+        }
+
         .chat-history-header,
         .chat-history-footer {
           background-color: dark.$card-bg;
@@ -428,7 +436,7 @@ $chat-list-margin: 1rem;
             .chat-message {
               .chat-message-text {
                 background-color: dark.$card-bg;
-                box-shadow: dark.$box-shadow-sm;
+                box-shadow: $app-chat-shadow-dark;
               }
 
               &.chat-message-right {
@@ -482,13 +490,13 @@ $chat-list-margin: 1rem;
       .chat-message {
         &:not(.chat-message-right) {
           .chat-message-text {
-            border-top-right-radius: 0;
+            border-top-right-radius: 0 !important;
             border-top-left-radius: $chat-message-text-border-radius !important;
           }
         }
         &.chat-message-right {
           .chat-message-text {
-            border-top-left-radius: 0;
+            border-top-left-radius: 0 !important;
             border-top-right-radius: $chat-message-text-border-radius !important;
           }
         }

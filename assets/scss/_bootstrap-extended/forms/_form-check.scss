@@ -1,21 +1,32 @@
 // Checkboxes and Radios
 // *******************************************************************************
-// styles form check svg size, disabled color and shadow
+.form-check-input {
+  cursor: $form-check-label-cursor;
+  &:disabled {
+    background-color: $form-check-input-disabled-bg;
+    border-color: $form-check-input-disabled-bg;
+  }
+  &:checked {
+    box-shadow: $box-shadow-xs;
+  }
+}
+
 .form-check {
-  .form-check-input {
-    &:disabled:not(:checked) {
-      background-color: $form-check-input-disabled-bg;
-    }
-    &:checked,
-    &[type='checkbox']:indeterminate {
-      box-shadow: $form-check-input-focus-box-shadow;
+  position: relative;
+}
+
+// Only for checkbox and radio (not for bs default switch)
+//? .dt-checkboxes-cell class is used for DataTables checkboxes
+.form-check:not(.form-switch),
+.dt-checkboxes-cell {
+  .form-check-input[type='radio'] {
+    background-size: 1.3125rem;
+    &:not(:checked) {
+      background-size: 0.75rem;
     }
   }
 }
 
-.form-check-input {
-  cursor: $form-check-label-cursor;
-}
 // RTL Style
 @include rtl-only {
   .form-check {
@@ -32,6 +43,14 @@
 // Switches
 // *******************************************************************************
 
+.form-switch .form-check-input {
+  background-color: $form-switch-bg;
+  border: none;
+  box-shadow: $form-switch-box-shadow;
+  &:focus {
+    box-shadow: $form-switch-box-shadow;
+  }
+}
 // RTL Style
 @include rtl-only {
   .form-switch {

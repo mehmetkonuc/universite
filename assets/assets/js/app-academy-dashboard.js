@@ -22,7 +22,7 @@
   // Donut Chart Colors
   const chartColors = {
     donut: {
-      series1: '#22A95E',
+      series1: '#209F59',
       series2: '#24B364',
       series3: config.colors.success,
       series4: '#53D28C',
@@ -34,8 +34,8 @@
   const leadsReportChartEl = document.querySelector('#leadsReportChart'),
     leadsReportChartConfig = {
       chart: {
-        height: 157,
-        width: 130,
+        height: 170,
+        width: 150,
         parentHeightOffset: 0,
         type: 'donut'
       },
@@ -72,15 +72,15 @@
       plotOptions: {
         pie: {
           donut: {
-            size: '75%',
+            size: '70%',
             labels: {
               show: true,
               value: {
-                fontSize: '1.5rem',
+                fontSize: '1.125rem',
                 fontFamily: 'Public Sans',
                 color: headingColor,
                 fontWeight: 500,
-                offsetY: -15,
+                offsetY: -20,
                 formatter: function (val) {
                   return parseInt(val) + '%';
                 }
@@ -91,7 +91,7 @@
               },
               total: {
                 show: true,
-                fontSize: '.7rem',
+                fontSize: '.9375rem',
                 label: 'Total',
                 color: labelColor,
                 formatter: function (w) {
@@ -113,7 +113,7 @@
   const horizontalBarChartEl = document.querySelector('#horizontalBarChart'),
     horizontalBarChartConfig = {
       chart: {
-        height: 270,
+        height: 320,
         type: 'bar',
         toolbar: {
           show: false
@@ -155,11 +155,14 @@
         config.colors.danger,
         config.colors.warning
       ],
+      fill: {
+        opacity: [1, 1, 1, 1, 1, 1]
+      },
       dataLabels: {
         enabled: true,
         style: {
           colors: ['#fff'],
-          fontWeight: 200,
+          fontWeight: 400,
           fontSize: '13px',
           fontFamily: 'Public Sans'
         },
@@ -189,7 +192,8 @@
         labels: {
           style: {
             colors: labelColor,
-            fontSize: '13px'
+            fontSize: '13px',
+            fontFamily: 'Public Sans'
           },
           formatter: function (val) {
             return `${val}%`;
@@ -229,17 +233,18 @@
 
   //radial Barchart
 
+  // Radial bar chart functions
   function radialBarChart(color, value, show) {
     const radialBarChartOpt = {
       chart: {
-        height: show == 'true' ? 58 : 53,
-        width: show == 'true' ? 58 : 43,
+        height: show == 'true' ? 58 : 48,
+        width: show == 'true' ? 58 : 38,
         type: 'radialBar'
       },
       plotOptions: {
         radialBar: {
           hollow: {
-            size: show == 'true' ? '45%' : '33%'
+            size: show == 'true' ? '50%' : '25%'
           },
           dataLabels: {
             show: show == 'true' ? true : false,
@@ -291,11 +296,11 @@
   // Variable declaration for table
   var dt_academy_course = $('.datatables-academy-course'),
     logoObj = {
-      angular: '<span class="badge bg-label-danger p-2"><i class="ti ti-brand-angular ti-md"></i></span>',
-      figma: '<span class="badge bg-label-warning p-2"><i class="ti ti-brand-figma ti-md"></i></span>',
-      react: '<span class="badge bg-label-info p-2"><i class="ti ti-brand-react-native ti-md"></i></span>',
-      art: '<span class="badge bg-label-success p-2"><i class="ti ti-color-swatch ti-md"></i></span>',
-      fundamentals: '<span class="badge bg-label-primary p-2"><i class="ti ti-diamond ti-md"></i></span>'
+      angular: '<span class="badge bg-label-danger rounded p-1_5"><i class="ti ti-brand-angular ti-28px"></i></span>',
+      figma: '<span class="badge bg-label-warning rounded p-1_5"><i class="ti ti-brand-figma ti-28px"></i></span>',
+      react: '<span class="badge bg-label-info rounded p-1_5"><i class="ti ti-brand-react-native ti-28px"></i></span>',
+      art: '<span class="badge bg-label-success rounded p-1_5"><i class="ti ti-color-swatch ti-28px"></i></span>',
+      fundamentals: '<span class="badge bg-label-primary rounded p-1_5"><i class="ti ti-diamond ti-28px"></i></span>'
     };
 
   // orders datatable
@@ -362,11 +367,11 @@
             // Creates full output for row
             var $row_output =
               '<div class="d-flex align-items-center">' +
-              '<span class="me-3">' +
+              '<span class="me-4">' +
               logoObj[$logo] +
               '</span>' +
               '<div>' +
-              '<a class="text-body text-truncate fw-medium mb-2 text-wrap" href="/app/academy/course_details/">' +
+              '<a class="text-heading text-truncate fw-medium mb-2 text-wrap" href="app-academy-course-details.html">' +
               $course +
               '</a>' +
               '<div class="d-flex align-items-center mt-1">' +
@@ -375,9 +380,9 @@
               $output +
               '</div>' +
               '</div>' +
-              '<span class="text-nowrap">' +
+              '<small class="text-nowrap text-heading">' +
               $user +
-              '</span>' +
+              '</small>' +
               '</div>' +
               '</div>' +
               '</div>';
@@ -392,7 +397,7 @@
             var Hs = Math.floor(duration.asHours());
             var minutes = Math.floor(duration.asMinutes()) - Hs * 60;
             var formattedTime = Hs + 'h ' + minutes + 'm';
-            return '<span class="h6 mb-0 text-nowrap">' + formattedTime + '</span>';
+            return '<span class="fw-medium text-nowrap text-heading">' + formattedTime + '</span>';
           }
         },
         {
@@ -404,7 +409,7 @@
 
             return (
               '<div class="d-flex align-items-center gap-3">' +
-              '<p class="h6 mb-0">' +
+              '<p class="fw-medium mb-0 text-heading">' +
               $status_number +
               '</p>' +
               '<div class="progress w-100" style="height: 8px;">' +
@@ -414,7 +419,7 @@
               $status_number +
               '" aria-valuemin="0" aria-valuemax="100"></div>' +
               '</div>' +
-              '<small class="text-muted">' +
+              '<small>' +
               $average_number +
               '</small></div>'
             );
@@ -431,17 +436,17 @@
             return (
               '<div class="d-flex align-items-center justify-content-between">' +
               '<div class="w-px-50 d-flex align-items-center">' +
-              '<i class="ti ti-users ti-sm me-2 text-primary"></i>' +
+              '<i class="ti ti-users ti-lg me-2 text-primary"></i><span>' +
               $user_number +
-              '</div>' +
+              '</span></div>' +
               '<div class="w-px-50 d-flex align-items-center">' +
-              '<i class="ti ti-book ti-sm me-2 text-info"></i>' +
+              '<i class="ti ti-book ti-lg me-2 text-info"></i><span>' +
               $note +
-              '</div>' +
+              '</span></div>' +
               '<div class="w-px-50 d-flex align-items-center">' +
-              '<i class="ti ti-video ti-sm me-2 text-danger" ></i>' +
+              '<i class="ti ti-video ti-lg me-2 text-danger"></i><span>' +
               $view +
-              '</div>' +
+              '</span></div>' +
               '</div>'
             );
           }
@@ -451,15 +456,19 @@
       dom:
         '<"card-header py-sm-0"<"head-label text-center">f' +
         '>t' +
-        '<"row mx-4"' +
-        '<"col-sm-6 col-12 text-center text-xl-start pb-2 pb-xl-0 px-0"i>' +
-        '<"col-sm-6 col-12 d-flex justify-content-center justify-content-xl-end px-0"p>' +
+        '<"row mx-md-4 flex-column flex-md-row align-items-center"' +
+        '<"col-sm-6 col-12 text-center text-md-start pb-2 pb-xl-0 px-0"i>' +
+        '<"col-sm-6 col-12 d-flex justify-content-center justify-content-md-end px-0"p>' +
         '>',
       lengthMenu: [5],
       language: {
         sLengthMenu: '_MENU_',
         search: '',
-        searchPlaceholder: 'Course Name'
+        searchPlaceholder: 'Search Course',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
       },
       // Buttons with Dropdown
 

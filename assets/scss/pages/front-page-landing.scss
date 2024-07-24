@@ -48,9 +48,6 @@
     -webkit-text-fill-color: transparent;
     animation: shine 2s ease-in-out infinite alternate;
   }
-  .hero-sub-title {
-    line-height: 28px;
-  }
   .landing-hero-btn {
     .hero-btn-item {
       inset-inline-start: -86%;
@@ -125,6 +122,7 @@
     }
     .swiper-slide {
       height: auto;
+      padding: 0.8125rem;
     }
     .client-logo {
       height: 1.375rem;
@@ -165,6 +163,8 @@
     .card-img-position {
       height: 15rem;
       transform: translateX(-50%);
+      max-width: 100%;
+      object-fit: cover;
       @include light.media-breakpoint-down(lg) {
         height: 13rem;
       }
@@ -186,11 +186,22 @@
 .landing-pricing {
   border-radius: $section-radius;
   .pricing-plans-item {
-    inset-inline-end: -60%;
-    bottom: 0;
+    inset-inline-end: -56%;
+    bottom: -0.5rem;
     @include light.media-breakpoint-down(md) {
       inset-inline-end: 0;
       bottom: 1rem;
+    }
+  }
+  .pricing-list {
+    .badge {
+      &.badge-center {
+        width: 1rem;
+        height: 1rem;
+        i {
+          margin-top: -3px;
+        }
+      }
     }
   }
   .price-yearly-toggle {
@@ -203,6 +214,7 @@
     .card-header,
     .card-body {
       padding: 2rem;
+      padding-top: 3rem;
     }
   }
 }
@@ -216,10 +228,13 @@
   }
 }
 
-// CTA
 .landing-cta {
-  background-repeat: no-repeat;
-  background-size: cover;
+  .cta-title {
+    font-size: 2.125rem;
+    @include light.media-breakpoint-down(md) {
+      font-size: 1.8rem;
+    }
+  }
 }
 
 // Contact US
@@ -232,14 +247,9 @@
     .contact-img {
       border-radius: 3.75rem light.$border-radius light.$border-radius light.$border-radius;
     }
-    &::before {
-      content: url('../../../img/front-pages/icons/contact-border.png');
-      position: absolute;
+    .contact-border-img {
       inset-block-start: -2.5rem;
       inset-inline-start: -2.8125rem;
-      @include light.media-breakpoint-down(md) {
-        display: none;
-      }
     }
   }
 }
@@ -254,10 +264,6 @@
         background-color: light.$card-bg;
       }
     }
-    //CTA
-    .landing-cta {
-      background-image: url('../../../img/front-pages/backgrounds/cta-bg.png');
-    }
   }
 }
 
@@ -270,21 +276,6 @@
       &::after {
         background-color: dark.$card-bg;
       }
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        height: 100%;
-        background: url('../../../img/front-pages/backgrounds/hero-bg-dark.png') center no-repeat;
-        background-size: contain;
-      }
-    }
-    //CTA
-    .landing-cta {
-      background-image: url('../../../img/front-pages/backgrounds/cta-bg-dark.png');
     }
   }
 }

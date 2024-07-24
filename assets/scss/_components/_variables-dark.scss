@@ -4,19 +4,20 @@
 
 // Avatar
 // *******************************************************************************
-$avatar-initial-bg: $secondary !default;
-$avatar-initial-counter-bg: rgba-to-hex($gray-800, $rgba-to-hex-bg) !default;
+$avatar-bg: #373b50 !default; // (C)
+
+// Menu
+// *******************************************************************************
+$menu-horizontal-box-shadow: 0px 1px 4px 0px rgba($shadow-bg, 0.1) !default;
 
 // switch
 // *******************************************************************************
-$switch-off-color: rgba-to-hex($gray-400, $rgba-to-hex-bg) !default;
-$switch-off-bg: $base !default;
-$switch-off-border: $switch-off-bg !default;
-$switch-off-disabled-bg: rgba-to-hex($gray-800, $rgba-to-hex-bg) !default;
+$switch-off-color: rgba-to-hex($gray-600, $rgba-to-hex-bg) !default;
+$switch-off-bg: rgba-to-hex(rgba($base, 0.1), $rgba-to-hex-bg) !default;
+$switch-off-border: rgba-to-hex(rgba($base, 0.1), $rgba-to-hex-bg) !default;
 // Timeline
 // *******************************************************************************
-$timeline-item-bg-color: $card-bg !default;
-$timeline-point-indicator-color: $primary !default;
+$timeline-border-color: rgba-to-hex(rgba($base, 0.12), $rgba-to-hex-bg) !default;
 $timeline-event-time-color: $body-color !default;
 
 // Text Divider

@@ -1,13 +1,16 @@
 @import '../../scss/_bootstrap-extended/functions';
 
 @mixin flatpickr-theme($background, $color: null) {
-  $in-range-bg: rgba-to-hex(rgba($background, 0.16), #fff);
+  $in-range-bg: rgba-to-hex(rgba($background, 0.16), $card-bg);
   $color: if($color, $color, color-contrast($background));
   $in-range-color: $background;
 
   .flatpickr-day {
-    &.today {
-      border-color: $background;
+    &.today,
+    &.today:hover {
+      color: $background !important;
+      border-color: rgba-to-hex(rgba($background, 0.16), $card-bg);
+      background-color: rgba-to-hex(rgba($background, 0.16), $card-bg) !important;
     }
 
     &.inRange,
@@ -16,7 +19,7 @@
     &.today.inRange,
     &.prevMonthDay.today.inRange,
     &.nextMonthDay.today.inRange {
-      color: $in-range-color !important;
+      color: $background !important;
       background: $in-range-bg !important;
       border-color: $in-range-bg !important;
     }
@@ -43,13 +46,14 @@
       color: $color !important;
       background: $background !important;
       border-color: $background !important;
+      box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
     }
   }
 }
 
 @mixin flatpickr-dark-theme($background, $color: null) {
   $color: if($color, $color, color-contrast($background));
-  $in-range-bg: rgba-to-hex(rgba($background, 0.16), #2f3349);
+  $in-range-bg: rgba-to-hex(rgba($background, 0.16), $card-bg);
   $in-range-color: $background;
 
   .flatpickr-calendar .numInputWrapper span {
@@ -63,8 +67,12 @@
   }
 
   .flatpickr-day {
-    &.today {
-      border-color: $background;
+    &.today,
+    &.today:hover,
+    &.inRange {
+      color: $background !important;
+      border-color: rgba-to-hex(rgba($background, 0.16), $card-bg) !important;
+      background-color: rgba-to-hex(rgba($background, 0.16), $card-bg) !important;
     }
 
     &.inRange,
@@ -75,7 +83,7 @@
     &.prevMonthDay.today.inRange {
       border-color: $in-range-bg !important;
       background: $in-range-bg !important;
-      color: $in-range-color !important;
+      color: $background !important;
     }
 
     &.selected,
@@ -100,6 +108,7 @@
       background: $background !important;
       border-color: $background !important;
       color: $color !important;
+      box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
     }
   }
 }

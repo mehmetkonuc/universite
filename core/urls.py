@@ -20,7 +20,7 @@ from django.conf import settings
 from django.views.static import serve
 from . import views
 from django.contrib.auth import views as auth_views
-from post.views import PostView
+from apps.post.views import PostView
 urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root' : settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root' : settings.STATIC_ROOT}),
@@ -40,6 +40,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='guest/password_reset_complete.html'), name='password_reset_complete'),
     #UYGULAMALARIM
-    path('profile/', include('profiles.urls')),
-    path('post/', include('post.urls')),
+    path('profile/', include('apps.profiles.urls')),
+    path('post/', include('apps.post.urls')),
 ]

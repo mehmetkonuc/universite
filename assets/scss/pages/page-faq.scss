@@ -5,14 +5,7 @@
 @use '../_bootstrap-extended/include-dark' as dark;
 @import '../_custom-variables/pages';
 
-$faq-header-min-height: 300px !default;
-
 .faq-header {
-  background: url('../../../img/pages/header.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  min-height: $faq-header-min-height !important;
-
   .input-wrapper {
     position: relative;
     width: 100%;
@@ -25,10 +18,29 @@ $faq-header-min-height: 300px !default;
     }
   }
 }
+
+.faq-banner-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: left;
+}
+
 @if $enable-light-style {
   .light-style {
     .bg-faq-section {
-      background-color: rgba(light.$dark, 0.04);
+      background-color: light.$gray-50;
+    }
+    .faq-header {
+      .input-wrapper {
+        .input-group-text,
+        .form-control {
+          background-color: light.$card-bg;
+        }
+      }
     }
   }
 }
@@ -36,7 +48,15 @@ $faq-header-min-height: 300px !default;
 @if $enable-dark-style {
   .dark-style {
     .bg-faq-section {
-      background-color: rgba(dark.$base, 0.04);
+      background-color: dark.$gray-50;
+    }
+    .faq-header {
+      .input-wrapper {
+        .input-group-text,
+        .form-control {
+          background-color: dark.$card-bg;
+        }
+      }
     }
   }
 }

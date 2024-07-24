@@ -256,7 +256,7 @@ class TemplateCustomizer {
     if (updateStorage) this.settings.onSettingsChange.call(this, this.settings)
   }
 
-  setLang(lang, force = false) {
+  setLang(lang, updateStorage = true, force = false) {
     if (lang === this.settings.lang && !force) return
     if (!TemplateCustomizer.LANGUAGES[lang]) throw new Error(`Language "${lang}" not found!`)
 
@@ -299,6 +299,10 @@ class TemplateCustomizer {
     }
 
     this.settings.lang = lang
+
+    if (updateStorage) this._setSetting('Lang', lang)
+
+    if (updateStorage) this.settings.onSettingsChange.call(this, this.settings)
   }
 
   // Update theme settings control
@@ -381,7 +385,8 @@ class TemplateCustomizer {
       'FixedNavbarOption',
       'LayoutType',
       'contentLayout',
-      'Rtl'
+      'Rtl',
+      'Lang'
     ]
 
     keysToRemove.forEach(key => {
@@ -442,21 +447,15 @@ class TemplateCustomizer {
     // ! Set settings by following priority: Local Storage, Theme Config, HTML Classes
     this.settings.rtl = rtl !== '' ? rtl === 'true' : this.settings.defaultTextDir
     this.settings.stylesOpt = this.settings.styles.indexOf(style) !== -1 ? style : this.settings.defaultStyle
+    document.documentElement.setAttribute('data-style', this.settings.stylesOpt)
     if (this.settings.stylesOpt === 'system') {
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         this.settings.style = 'dark'
-        document.cookie = `style=dark` // to fix laravel system mode issue
       } else {
         this.settings.style = 'light'
-        document.cookie = `style=light` // to fix laravel system mode issue
       }
     } else {
-      document.cookie = `style=; expires=Thu, 01 Jan 2000 00:00:00 UTC; path=/;` // to fix laravel system mode issue
       this.settings.style = this.settings.styles.indexOf(style) !== -1 ? style : this.settings.defaultStyle
-    }
-    if (this.settings.styles.indexOf(this.settings.style) === -1) {
-      // eslint-disable-next-line prefer-destructuring
-      this.settings.style = this.settings.styles[0]
     }
     this.settings.contentLayout = contentLayout !== '' ? contentLayout : this.settings.defaultContentLayout
     this.settings.layoutCollapsed = collapsedMenu !== '' ? collapsedMenu === 'true' : this.settings.defaultMenuCollapsed
@@ -491,12 +490,12 @@ class TemplateCustomizer {
       image = image || nameVal
 
       return this._getElementFromString(`<div class="col-4 px-2">
-      <div class="form-check custom-option custom-option-icon mb-0">
+      <div class="form-check custom-option custom-option-icon">
         <label class="form-check-label custom-option-content p-0" for="${inputName}${nameVal}">
           <span class="custom-option-body mb-0">
             <img src="${assetsPath}img/customizer/${image}${
-        isDarkStyle ? '-dark' : ''
-      }.svg" alt="${title}" class="img-fluid scaleX-n1-rtl" />
+              isDarkStyle ? '-dark' : ''
+            }.svg" alt="${title}" class="img-fluid scaleX-n1-rtl" />
           </span>
           <input
             name="${inputName}"
@@ -506,7 +505,7 @@ class TemplateCustomizer {
             id="${inputName}${nameVal}" />
         </label>
       </div>
-      <label class="form-check-label small" for="${inputName}${nameVal}">${title}</label>
+      <label class="form-check-label small text-nowrap text-body mt-1" for="${inputName}${nameVal}">${title}</label>
     </div>`)
     }
 
@@ -651,6 +650,9 @@ class TemplateCustomizer {
 
         const rtlCb = e => {
           this._loadingState(true)
+          this._setSetting('Lang', this.settings.lang)
+          // For demo purpose, we will use EN as LTR and AR as RTL Language
+          this._getSetting('Lang') === 'ar' ? this._setSetting('Lang', 'en') : this._setSetting('Lang', 'ar')
           this.setRtl(e.target.value === 'rtl', true, () => {
             this._loadingState(false)
           })
@@ -817,7 +819,7 @@ class TemplateCustomizer {
     }, 100)
 
     // Set language
-    this.setLang(this.settings.lang, true)
+    this.setLang(this.settings.lang, false, true)
 
     // Append container
     if (_container === document) {
@@ -913,7 +915,9 @@ class TemplateCustomizer {
           this.settings.themesPath +
             this.settings.cssFilenamePattern.replace(
               '%name%',
-              theme ? theme : 'theme-default' + (this.settings.style !== 'light' ? `-${this.settings.style}` : '')
+              theme
+                ? theme
+                : this.settings.defaultTheme.name + (this.settings.style !== 'light' ? `-${this.settings.style}` : '')
             )
         )
       )
@@ -939,7 +943,9 @@ class TemplateCustomizer {
       document.write(`<link rel="stylesheet" type="text/css" href="${href}" class="${className}">`)
     }
 
-    curLink.parentNode.removeChild(curLink)
+    if (curLink) {
+      curLink.parentNode.removeChild(curLink)
+    }
   }
 
   _loadStylesheets(stylesheets, cb) {
@@ -1189,11 +1195,11 @@ TemplateCustomizer.CONTENT = [
 TemplateCustomizer.DIRECTIONS = [
   {
     name: 'ltr',
-    title: 'Left to Right'
+    title: 'Left to Right (En)'
   },
   {
     name: 'rtl',
-    title: 'Right to Left'
+    title: 'Right to Left (Ar)'
   }
 ]
 
@@ -1250,20 +1256,8 @@ TemplateCustomizer.LANGUAGES = {
     content_label: 'Inhalt',
     layout_navbar_label: 'Art der Navigationsleiste',
     direction_label: 'Richtung'
-  },
-  pt: {
-    panel_header: 'Personalizador De Modelo',
-    panel_sub_header: 'Personalize e visualize em tempo real',
-    theming_header: 'Temas',
-    style_label: 'Estilo (Modo)',
-    theme_label: 'Temas',
-    layout_header: 'Esquema',
-    layout_label: 'Menu (Navegação)',
-    layout_header_label: 'Tipos de cabeçalho',
-    content_label: 'Contente',
-    layout_navbar_label: 'Tipo de barra de navegação',
-    direction_label: 'Direção'
   }
 }
 
+window.TemplateCustomizer = TemplateCustomizer
 export { TemplateCustomizer }

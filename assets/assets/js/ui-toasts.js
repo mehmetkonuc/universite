@@ -69,7 +69,7 @@ $(function () {
   var getMessage = function () {
     var msgs = [
       "Don't be pushed around by the fears in your mind. Be led by the dreams in your heart.",
-      '<div class="mb-3"><input class="input-small form-control" value="Textbox"/>&nbsp;<a href="http://johnpapa.net" target="_blank">This is a hyperlink</a></div><div class="d-flex"><button type="button" id="okBtn" class="btn btn-primary btn-sm me-2">Close me</button><button type="button" id="surpriseBtn" class="btn btn-sm btn-secondary">Surprise me</button></div>',
+      '<div class="mb-3"><input class="input-small form-control" value="Textbox"/>&nbsp;<a href="http://johnpapa.net" target="_blank">This is a hyperlink</a></div><div class="d-flex"><button type="button" id="okBtn" class="btn btn-primary btn-sm me-2 waves-effect waves-light">Close me</button><button type="button" id="surpriseBtn" class="btn btn-sm btn-secondary waves-effect waves-light">Surprise me</button></div>',
       'Live the Life of Your Dreams',
       'Believe in Your Self!',
       'Be mindful. Be grateful. Be positive.',
@@ -83,7 +83,7 @@ $(function () {
   };
   var getMessageWithClearButton = function (msg) {
     msg = msg ? msg : 'Clear itself?';
-    msg += '<br /><br /><button type="button" class="btn btn-secondary clear">Yes</button>';
+    msg += '<br /><br /><button type="button" class="btn btn-secondary clear waves-effect waves-light">Yes</button>';
     return msg;
   };
   $('#closeButton').on('click', function () {

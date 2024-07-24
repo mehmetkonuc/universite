@@ -44,21 +44,20 @@
 @if $enable-light-style {
   .light-style {
     .ui-timepicker-wrapper {
-      padding: light.$dropdown-padding-y 0;
+      padding: light.$dropdown-padding-y;
       z-index: light.$zindex-popover;
       background: light.$dropdown-bg;
-      box-shadow: light.$dropdown-box-shadow;
+      box-shadow: light.$card-box-shadow;
       border: light.$dropdown-border-width solid light.$dropdown-border-color;
 
       @include light.border-radius(light.$border-radius);
     }
 
     .ui-timepicker-list li {
-      color: light.$body-color;
+      color: light.$dropdown-link-color;
 
       &:hover {
         background: light.$dropdown-link-hover-bg;
-        color: light.$dropdown-link-hover-color;
       }
       &:not(.ui-timepicker-selected) {
         .ui-timepicker-duration {
@@ -74,7 +73,7 @@
     .ui-timepicker-list li.ui-timepicker-disabled,
     .ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {
       background: light.$dropdown-bg !important;
-      color: light.$text-muted !important;
+      color: light.$dropdown-link-disabled-color !important;
     }
   }
 }
@@ -86,17 +85,16 @@
       padding: dark.$dropdown-padding-y 0;
       z-index: dark.$zindex-popover;
       background: dark.$dropdown-bg;
-      box-shadow: dark.$dropdown-box-shadow;
+      box-shadow: dark.$card-box-shadow;
 
       @include dark.border-radius(dark.$border-radius);
     }
 
     .ui-timepicker-list li {
-      color: dark.$body-color;
+      color: dark.$dropdown-link-color;
 
       &:hover {
         background: dark.$dropdown-link-hover-bg;
-        color: dark.$dropdown-link-hover-color;
       }
       &:not(.ui-timepicker-selected) {
         .ui-timepicker-duration {
@@ -111,7 +109,7 @@
 
     .ui-timepicker-list li.ui-timepicker-disabled,
     .ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {
-      color: dark.$text-muted !important;
+      color: dark.$dropdown-link-disabled-color !important;
       background: dark.$dropdown-bg !important;
     }
   }

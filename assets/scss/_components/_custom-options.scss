@@ -6,21 +6,27 @@
   padding-left: 0;
   border: $custom-option-border-width solid $custom-option-border-color;
   border-radius: $border-radius;
+  margin: subtract($input-focus-border-width, $custom-option-border-width);
   &:hover {
-    border: $custom-option-border-width solid $custom-option-border-hover-color;
+    border-width: $custom-option-border-width;
+    border-color: $custom-option-border-hover-color;
   }
-
   &.custom-option-image {
     border-width: $custom-option-image-border-width !important;
-    .custom-option-body {
-      img {
-        border-radius: $border-radius;
-      }
+    overflow: hidden;
+    margin: 0;
+    &:hover {
+      border-width: $custom-option-image-border-width !important;
+      border-color: $custom-option-border-hover-color;
     }
   }
   .custom-option-content {
     cursor: $custom-option-cursor;
     width: 100%;
+  }
+  .form-check-input {
+    background-color: transparent;
+    margin-inline-start: $form-check-padding-start * -1.12;
   }
 }
 
@@ -28,23 +34,31 @@
 .custom-option-basic {
   .custom-option-content {
     padding: $custom-option-padding;
-    padding-left: $custom-option-padding + $form-check-padding-start;
+    padding-left: $custom-option-padding + $form-check-padding-start + 0.65em;
   }
   .custom-option-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 0.25rem;
+    padding-bottom: 0.4375rem;
   }
+}
+
+.custom-option-body {
+  color: $body-color;
 }
 
 // Custom option with icon
 .custom-option-icon {
+  overflow: hidden;
   &.checked {
     i,
     svg {
       color: $component-active-bg;
     }
+  }
+  &:not(.checked) svg {
+    color: $headings-color;
   }
   .custom-option-content {
     text-align: center;
@@ -54,20 +68,24 @@
     display: block;
     margin-bottom: 0.5rem;
     i {
-      font-size: 1.75rem;
+      color: $headings-color;
+      &::before {
+        font-size: 1.75rem;
+      }
       margin-bottom: 0.5rem;
       display: block;
     }
     svg {
-      height: 38px;
-      width: 38px;
-      margin-bottom: 0.25rem;
+      height: 28px;
+      width: 28px;
+      margin-bottom: 0.5rem;
     }
     .custom-option-title {
       display: block;
       font-size: $font-size-base;
       font-weight: $font-weight-medium;
       color: $headings-color;
+      margin-bottom: 0.5rem;
     }
   }
   .form-check-input {
@@ -104,23 +122,18 @@
       margin: 0;
       border: 0;
       opacity: 0;
+      border: 1px solid transparent;
       &:checked {
         opacity: 1;
       }
     }
     &:hover {
       .form-check-input {
-        border: inherit;
-        border-width: 2px;
+        border-color: $form-check-input-focus-border;
+        border-width: 1px;
         opacity: 1;
-      }
-    }
-
-    // To make form check bg transparent on hover on custom option image
-    &:not(.checked) {
-      &:hover {
-        .form-check-input {
-          background-color: transparent;
+        &:checked {
+          border-color: $primary;
         }
       }
     }
@@ -142,7 +155,7 @@
   .custom-option-image.custom-option-image-check {
     .form-check-input {
       right: auto;
-      left: 10px;
+      left: 16px;
     }
   }
 }

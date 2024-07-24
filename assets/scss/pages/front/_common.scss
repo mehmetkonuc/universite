@@ -1,6 +1,6 @@
 // scss
 .section-py {
-  padding: 5rem 0;
+  padding: 6.25rem 0;
   @include light.media-breakpoint-down(xl) {
     padding: 4rem 0;
   }
@@ -10,7 +10,7 @@
 }
 
 .first-section-pt {
-  padding-top: 8.84rem;
+  padding-top: 11.28rem;
   @include light.media-breakpoint-down(xl) {
     padding-top: 7.5rem;
   }
@@ -23,21 +23,21 @@
   }
 }
 
-.section-title {
-  position: relative;
-  font-weight: 700;
-  z-index: 1;
-  &::after {
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 120%;
-    inset-inline-start: -12%;
-    bottom: 0;
-    background: url('../../../img/front-pages/icons/section-title-icon.png') no-repeat left bottom;
-    background-size: contain;
-    z-index: -1;
-  }
+.banner-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: left;
+}
+
+.section-title-img {
+  height: 100%;
+  width: 120%;
+  inset-inline-start: -12%;
+  top: 10px;
 }
 
 // Light style

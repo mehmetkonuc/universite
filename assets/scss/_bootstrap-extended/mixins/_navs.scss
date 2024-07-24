@@ -14,11 +14,28 @@
   $pills-selector: if($parent== '', '.nav-pills', '#{$parent}.nav-pills, #{$parent} > .nav-pills');
 
   #{$pills-selector} .nav-link.active {
+    box-shadow: 0 0.125rem 0.375rem 0 rgba($background, 0.3);
     &,
     &:hover,
     &:focus {
       background-color: $background;
       color: if($color, $color, color-contrast($background));
+    }
+  }
+
+  #{$parent}.nav-tabs {
+    .nav-link {
+      &.waves-effect {
+        .waves-ripple {
+          background: radial-gradient(
+            rgba($background, 0.2) 0,
+            rgba($background, 0.3) 40%,
+            rgba($background, 0.4) 50%,
+            rgba($background, 0.5) 60%,
+            rgba($white, 0) 70%
+          );
+        }
+      }
     }
   }
 

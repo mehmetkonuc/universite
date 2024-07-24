@@ -1,31 +1,42 @@
 // * Carets
 // *******************************************************************************
 
-@mixin caret-up {
-  margin-top: -0;
+@mixin caret-up($caret-width) {
+  margin-top: 0.97 * divide($caret-width, 2);
+  margin-left: 0.8em;
   width: $caret-width;
   height: $caret-width;
-  border: 1px solid;
+  border: 2px solid;
   border-bottom: 0;
   border-left: 0;
   transform: rotate(-45deg);
+  @include rtl-style {
+    margin-right: 0.8em !important;
+    margin-left: 0 !important;
+  }
 }
 
-@mixin caret-down {
-  margin-top: -1 * divide($caret-width, 1.5);
+@mixin caret-down($caret-width) {
+  margin-top: -1.08 * divide($caret-width, 2);
+  margin-left: 0.8em;
   width: $caret-width;
   height: $caret-width;
-  border: 1px solid;
+  border: 2px solid;
   border-top: 0;
   border-left: 0;
   transform: rotate(45deg);
+  @include rtl-style {
+    margin-right: 0.8em !important;
+    margin-left: 0 !important;
+  }
 }
 
-@mixin caret-left {
-  margin-top: -1 * divide($caret-width, 2.5);
+@mixin caret-left($caret-width) {
+  margin-top: 0;
+  margin-right: 0.5em;
   width: $caret-width;
   height: $caret-width;
-  border: 1px solid;
+  border: 2px solid;
   border-top: 0;
   border-right: 0;
   transform: rotate(45deg);
@@ -36,11 +47,12 @@
   }
 }
 
-@mixin caret-right {
-  margin-top: -1 * divide($caret-width, 2.5);
+@mixin caret-right($caret-width) {
+  margin-top: 0;
+  margin-right: 0.5em;
   width: $caret-width;
   height: $caret-width;
-  border: 1px solid;
+  border: 2px solid;
   border-top: 0;
   border-left: 0;
   transform: rotate(-45deg);

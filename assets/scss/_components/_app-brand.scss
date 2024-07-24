@@ -12,7 +12,13 @@
   min-height: 1px;
   align-items: center;
 }
-
+// For cover auth pages
+.auth-cover-brand {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 2.5rem;
+  inset-inline-start: $spacer * 1.5;
+}
 .app-brand-link {
   display: flex;
   align-items: center;
@@ -34,12 +40,7 @@
   flex-shrink: 0;
   opacity: 1;
   transition: opacity $menu-animation-duration ease-in-out;
-  @include ltr-style() {
-    margin-left: 0.625rem !important;
-  }
-  @include rtl-style() {
-    margin-right: 0.625rem !important;
-  }
+  margin-inline-start: 0.75rem !important;
 }
 
 .app-brand-img-collapsed {
@@ -52,9 +53,8 @@
 
 // App brand with vertical menu
 .menu-vertical .app-brand {
-  margin: 0 $menu-vertical-link-margin-x 0 calc($menu-vertical-link-margin-x + 0.125rem);
-  padding-right: $menu-vertical-link-padding-x - 0.5rem;
-  padding-left: $menu-vertical-link-padding-x - 0.5rem;
+  padding-right: $menu-vertical-link-padding-x + 0.25rem;
+  padding-left: $menu-vertical-link-padding-x + 0.625rem;
 }
 
 // App brand with vertical menu

@@ -29,7 +29,7 @@
     // Account details
     const FormValidation1 = FormValidation.formValidation(wizardValidationFormStep1, {
       fields: {
-        id_username: {
+        formValidationUsername: {
           validators: {
             notEmpty: {
               message: 'The name is required'
@@ -168,7 +168,7 @@
             placeholder: 'Select an country',
             dropdownParent: $this.parent()
           })
-          .on('change.select2', function () {
+          .on('change', function () {
             // Revalidate the color field when an option is chosen
             FormValidation2.revalidateField('formValidationCountry');
           });

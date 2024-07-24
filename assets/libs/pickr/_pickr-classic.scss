@@ -1,4 +1,4 @@
-@import '../../node_modules/@simonwep/pickr/src/scss/themes/classic.scss';
+@import '@simonwep/pickr/dist/themes/classic.min';
 @import '../../scss/_custom-variables/libs';
 
 @include app-rtl(false) {

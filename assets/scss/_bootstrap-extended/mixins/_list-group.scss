@@ -16,11 +16,20 @@
     shift-color($background, -$list-group-item-bg-scale, $card-bg),
     shift-color($background, $list-group-item-bg-scale, $card-bg)
   );
+  $border-color: if(
+    $dark-style,
+    if(
+      $parent == '.list-group-item-dark',
+      color-contrast($background),
+      shift-color($background, -$list-group-item-color-scale, $card-bg)
+    ),
+    shift-color($background, $list-group-item-color-scale, $card-bg)
+  );
   $color: shift-color($background, $list-group-item-color-scale);
   $hover-background: shade-color($background-color, $list-group-item-bg-hover-scale);
   #{$parent} {
-    background-color: $background-color;
     border-color: $border-color;
+    background-color: $background-color;
     color: $color !important;
   }
 
@@ -29,14 +38,16 @@
     color: $color;
     &:hover,
     &:focus {
+      border-color: $border-color;
       background-color: $hover-background;
       color: $color;
     }
 
     &.active {
-      border-color: $background;
-      background-color: $background;
-      color: if($color, $color, color-contrast($background));
+      border-color: $border-color !important;
+      background-color: $background !important;
+      // color: if($color, $color, color-contrast($background));
+      color: color-contrast($background) !important;
     }
   }
 }
@@ -44,12 +55,19 @@
 @mixin template-list-group-theme($background, $color: null) {
   @include template-list-group-item-variant('.list-group-item-primary', $background);
 
-  .list-group-item-action.active {
-    &,
-    &:hover,
-    &:focus {
-      border-color: $background;
-      background-color: $background;
+  .list-group-item.active {
+    background-color: rgba-to-hex(rgba($background, 0.16), $card-bg);
+    color: $background;
+    &.waves-effect {
+      .waves-ripple {
+        background: radial-gradient(
+          rgba($background, 0.2) 0,
+          rgba($background, 0.3) 40%,
+          rgba($background, 0.4) 50%,
+          rgba($background, 0.5) 60%,
+          rgba($black, 0) 70%
+        );
+      }
     }
   }
 }
@@ -59,6 +77,7 @@
     &.list-group-timeline {
       #{$parent} {
         &:before {
+          border-color: $background;
           background-color: $background;
         }
       }
