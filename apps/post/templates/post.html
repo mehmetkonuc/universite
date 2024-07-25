@@ -1,148 +1,211 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/libs/dropzone/dropzone.css' %}" />
-
+<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/pages/post.css' %}" />
 {% endblock extra_css%}
-
-
 {% block content %}
-
 <div class="row">
-  <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
-    <div class="d-flex gap-4">
-      <button class="btn btn-label-primary" data-bs-toggle="modal" data-bs-target="#add-post"><i class="ti ti-plus me-1"></i>Oluştur</button>
-      <button class="btn btn-label-danger" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
-    </div>
+   <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
+      <div class="d-flex gap-4">
+         <button class="btn btn-label-primary" data-bs-toggle="modal" data-bs-target="#add-post"><i class="ti ti-plus me-1"></i>Oluştur</button>
+         <button class="btn btn-label-danger" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+      </div>
+   </div>
+</div>
+{% for item in post_images %}
+<div class="row justify-content-center">
+   <div class="col-md-6 col-xxl-6 mb-4">
+      <div class="card">
+         <div class="card-header d-flex justify-content-between mb-0">
+            <div class="card-title mb-0">
+               <div class="d-flex">
+                  <div class="d-flex">
+                     <a href="{% url 'profile' item.post.User.username %}">
+                        <div class="avatar avatar-md me-2">
+                           {% if item.post.User.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=item.post.User.profilepicturemodel.profile_photo.url %}
+                           <img
+                              src="{{ profile_photo_url }}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endwith %}
+                           {% else %}
+                           <img
+                              src="{% static 'assets/img/avatars/14.png' %}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endif %}
+                        </div>
+                  </div>
+                  <div class="flex-grow-1 ms-1">
+                  <div class="me-2 h5 mb-0">{{ item.post.User.first_name }} {{ item.post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                  <small class="text-muted">{{ item.post.PublishDate }}</small>
+                  </div>
+               </div>
+            </div>
+            <div class="dropdown">
+               <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+               </button>
+               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                  <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                  {% if item.post.User.username == user.username or user.is_superuser %}
+                  <a class="dropdown-item text-danger" href="#"
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{item.post.id}}">Sil</a>
+                  {%endif%}
+               </div>
+            </div>
+         </div>
+         <div class="card-body">
+          {{ item.post.Content }}
+          <div class="gallery-container mt-4">
+            {% for image in item.images %}
+            <div class="gallery-item">
+               <a href="{{ image.Image.url }}" data-fancybox="gallery-{{ item.post.id }}">
+               <img src="{{ image.Image.url }}" alt="Post Image">
+               </a>
+            </div>
+            {% endfor %}
+         </div>
+
+         <hr />
+         <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center">
+              <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.post.id }}">
+                <i class="ti ti-heart{% if item.post.id in user_liked_posts %}-filled{% endif %}"></i>
+                <span class="like-count text-body">{{ item.post.likes.count }}</span>
+            </a>
+               <a href="{% url 'post_detail' item.post.id %}" class="text-body me-3"
+                  ><i class="ti ti-message-plus"></i> {{ item.post.comments.count }}</a
+                  >
+               <div class="dropdown">
+                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="ti ti-share"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                     <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                  </div>
+               </div>
+            </div>
+            <div class="ms-auto">
+            </div>
+         </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modalCenter_{{item.post.id}}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <p>
+              Paylaşımı Silmek İstediğinizden emin misiniz?
+           </p>
+        </div>
+        <div class="modal-footer">
+           <a class="btn btn-primary" href="{% url 'delete_post' item.post.id %}">Sil</a>
+           <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        </div>
+     </div>
   </div>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-md-6 col-xxl-6 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <div class="card-title mb-0">
-                    <h5 class="mb-1">Örnek Başlık</h5>
-                    <p class="card-subtitle">Alt Başlık</p>
-                  </div>
-                  <div class="dropdown">
-                    <button
-                      class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
-                      type="button"
-                      id="MonthlyCampaign"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false">
-                      <i class="ti ti-dots-vertical ti-md text-muted"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                      <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                      <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                      <a class="dropdown-item" href="javascript:void(0);">View All</a>
-                    </div>
-                  </div>
-            </div>
-            <div class="card-body">
+{% endfor %}
 
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Modals -->
 <div class="modal fade" id="add-post" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header justify-content-center">
-        <h5 class="modal-title" id="modalCenterTitle">Gönderi Oluştur</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <hr />
-      <div class="modal-body">
-          <div class="d-flex justify-content-between align-items-center mb-6">
-            <div class="d-flex align-items-center">
-                <div class="avatar avatar-md me-2">
-                  {% if user.profilepicturemodel.profile_photo %}
-                  {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
-                  <img
-                      src="{{ profile_photo_url }}"
-                      alt="Avatar"
-                      class="rounded-circle" />
-                  {% endwith %}
-                  {% else %}
-                  <img
-                      src="{% static 'assets/img/avatars/14.png' %}"
-                      alt="Avatar"
-                      class="rounded-circle" />
-                  {% endif %}
-                </div>
-                <div>
-            <h6 class="mb-0 text-truncate">{{ user.first_name }} {{ user.last_name }}</h6>
-            <small class="text-truncate text-body">@{{ user.username }}</small>
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header justify-content-center">
+            <h5 class="modal-title" id="modalCenterTitle">Gönderi Oluştur</h5>
+            <button
+               type="button"
+               class="btn-close"
+               data-bs-dismiss="modal"
+               aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <div class="d-flex justify-content-between align-items-center mb-6">
+               <div class="d-flex align-items-center">
+                  <div class="avatar avatar-md me-2">
+                     {% if user.profilepicturemodel.profile_photo %}
+                     {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+                     <img
+                        src="{{ profile_photo_url }}"
+                        alt="Avatar"
+                        class="rounded-circle" />
+                     {% endwith %}
+                     {% else %}
+                     <img
+                        src="{% static 'assets/img/avatars/14.png' %}"
+                        alt="Avatar"
+                        class="rounded-circle" />
+                     {% endif %}
+                  </div>
+                  <div>
+                     <div class="me-2 h5 mb-0">{{ user.first_name }} {{ user.last_name }}</div>
+                     <small class="text-muted">@{{ user.username }}</small>
+                  </div>
+               </div>
             </div>
-        </div>
-      </div>
-        <textarea id="autosize-demo border-0 shadow-none" placeholder="Yorumunu Fakula!!!" rows="3" class="form-control"></textarea>
-        <div class="collapse" id="collapseExample">
-          <form action="/upload" class="dropzone needsclick mt-2" id="dropzone-multi">
-            <div class="dz-message needsclick">
-              Dosyaları buraya bırakın veya yüklemek için tıklayın
+            <textarea id="autosize-demo border-0 shadow-none" placeholder="Yorumunu Fakula!!!" rows="3" class="form-control"></textarea>
+            <div class="collapse" id="collapseExample">
+               <form action="/upload" class="dropzone needsclick mt-2" id="dropzone-multi">
+                  <div class="dz-message needsclick">
+                     Dosyaları buraya bırakın veya yüklemek için tıklayın
+                  </div>
+                  <div class="fallback">
+                     <input name="file" type="file" />
+                  </div>
+               </form>
             </div>
-            <div class="fallback">
-              <input name="file" type="file" />
-            </div>
-          </form>
-        </div>
+         </div>
+         <div class="modal-footer">
+            <a class="btn btn-label-secondary" data-bs-toggle="collapse" href="#collapseExample">
+            <i class="ti ti-photo"></i>
+            </a>
+            <button type="button" class="btn btn-primary"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
+         </div>
       </div>
-      <div class="modal-footer">
-        <a class="btn btn-label-secondary" data-bs-toggle="collapse" href="#collapseExample">
-          <i class="ti ti-photo"></i>
-        </a>
-        <button type="button" class="btn btn-primary"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
-      </div>
-    </div>
-  </div>
+   </div>
 </div>
 <!-- End Modals -->
-
 <!-- Canvas -->
 <div
-class="offcanvas offcanvas-end"
-tabindex="-1"
-id="filter-canvas"
-aria-labelledby="offcanvasEndLabel">
-<div class="offcanvas-header">
-  <h5 id="offcanvasEndLabel" class="offcanvas-title">Filtrele</h5>
-  <button
-    type="button"
-    class="btn-close text-reset"
-    data-bs-dismiss="offcanvas"
-    aria-label="Close"></button>
-</div>
-<div class="offcanvas-body my-auto mx-0 flex-grow-0">
-
-  <button type="button" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
-  <button
-    type="button"
-    class="btn btn-label-secondary d-grid w-100"
-    data-bs-dismiss="offcanvas">
-    Vazgeç
-  </button>
-</div>
+   class="offcanvas offcanvas-end"
+   tabindex="-1"
+   id="filter-canvas"
+   aria-labelledby="offcanvasEndLabel">
+   <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title">Filtrele</h5>
+      <button
+         type="button"
+         class="btn-close text-reset"
+         data-bs-dismiss="offcanvas"
+         aria-label="Close"></button>
+   </div>
+   <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+      <button type="button" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
+      <button
+         type="button"
+         class="btn btn-label-secondary d-grid w-100"
+         data-bs-dismiss="offcanvas">
+      Vazgeç
+      </button>
+   </div>
 </div>
 <!-- End Canvas -->
-
-
-
 {% endblock content %}
-
 {% block extra_javascript %}
 <script src="{% static 'assets/vendor/libs/dropzone/dropzone.js' %}"></script>
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/post.js' %}"></script>
-
 {% endblock extra_javascript %}
-

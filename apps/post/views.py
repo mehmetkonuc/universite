@@ -8,8 +8,11 @@ from django.http import JsonResponse
 from apps.comments.models import Comment
 from apps.comments.forms import CommentForm
 from django.contrib.contenttypes.models import ContentType
+from apps.likes.models import Like
+
 
 # Create your views here.
+
 class PostView(View):
     form_class = forms.PostsForm
     model_post = models.PostsModel
@@ -23,8 +26,10 @@ class PostView(View):
         if 'AnonymousUser' not in str(request.user):
             form = self.form_class()
             posts = self.model_post.objects.all().order_by('-PublishDate')
-            user_liked_posts = self.model_like.objects.filter(user=request.user).values_list('post_id', flat=True)
-
+            # user_liked_posts = self.model_like.objects.filter(user=request.user).values_list('post_id', flat=True)
+            content_type = ContentType.objects.get_for_model(self.model_post)
+            user_liked_posts = Like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+            
             post_images = []
             for post in posts:
                 images = models.ImageModel.objects.filter(Post=post)
@@ -57,7 +62,8 @@ class PostView(View):
                 
 
             posts = self.model_post.objects.all().order_by('-PublishDate')
-            user_liked_posts = self.model_like.objects.filter(user=request.user).values_list('post_id', flat=True)
+            content_type = ContentType.objects.get_for_model(self.model_post)
+            user_liked_posts = Like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
 
             post_images = []
             for post in posts:
@@ -84,13 +90,18 @@ def delete_post(request, PostID):
         
     return redirect('post')
 
+
 @login_required
 def like_post(request, post_id):
     post = get_object_or_404(models.PostsModel, id=post_id)
-    user = request.user
+    content_type = ContentType.objects.get_for_model(post)
 
     # Kullanıcının bu postu daha önce beğenip beğenmediğini kontrol et
-    like, created = models.PostLike.objects.get_or_create(user=user, post=post)
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=post.id
+    )
 
     if not created:
         # Eğer beğeni zaten varsa, beğeniyi kaldır
@@ -100,9 +111,33 @@ def like_post(request, post_id):
         liked = True
 
     # Beğeni sayısını güncelle
-    like_count = post.postlike_set.count()
+    like_count = Like.objects.filter(content_type=content_type, object_id=post.id, user=request.user).count()
 
     return JsonResponse({'liked': liked, 'like_count': like_count})
+
+
+
+
+# @login_required
+# def likes_post(request, post_id):
+#     post = get_object_or_404(models.PostsModel, id=post_id)
+#     user = request.user
+
+#     # Kullanıcının bu postu daha önce beğenip beğenmediğini kontrol et
+#     like, created = models.PostLike.objects.get_or_create(user=user, post=post)
+
+#     if not created:
+#         # Eğer beğeni zaten varsa, beğeniyi kaldır
+#         like.delete()
+#         liked = False
+#     else:
+#         liked = True
+
+#     # Beğeni sayısını güncelle
+#     like_count = post.postlike_set.count()
+
+#     return JsonResponse({'liked': liked, 'like_count': like_count})
+
 
 class PostDetails(View):
     context = {

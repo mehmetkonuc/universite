@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.comments',
     'apps.post',
     'apps.inputs',
+    'apps.likes',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
