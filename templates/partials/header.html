@@ -340,7 +340,7 @@ id="layout-navbar">
         {% if user.is_authenticated and user.is_superuser %}
         <div class="dropdown-divider my-1 mx-n2"></div>
         <li>
-          <a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fa-solid fa-screwdriver-wrench me-2 "></i></i> <span class="align-middle">Admin Paneli</span></a>
+          <a class="dropdown-item" href="{% url 'admin:index' %}"><i class="ti ti-crown me-2"></i> <span class="align-middle">Admin Paneli</span></a>
         </li>
         {% endif %}
         <div class="dropdown-divider my-1 mx-n2"></div>
@@ -352,13 +352,13 @@ id="layout-navbar">
 
             {% endif %}
 
-            <i class="ti ti-user-check me-2 ti-sm"></i>
+            <i class="ti ti-user-check me-2"></i>
             <span class="align-middle">Profil</span>
           </a>
         </li>
         <li>
           <a class="dropdown-item" href="{% url 'profile_settings' %}">
-            <i class="ti ti-settings me-2 ti-sm"></i>
+            <i class="ti ti-settings me-2"></i>
             <span class="align-middle">Settings</span>
           </a>
         </li>
