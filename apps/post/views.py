@@ -9,14 +9,15 @@ from apps.comments.models import Comment
 from apps.comments.forms import CommentForm
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
+from apps.photos.models import PhotosModel
 
 
 # Create your views here.
-
 class PostView(View):
     form_class = forms.PostsForm
     model_post = models.PostsModel
-    model_like = models.PostLike
+    model_like = Like
+    model_photos = PhotosModel
     template_name = 'home.html'
     context = {
         'siteTitle': 'Paylaşımlar',
@@ -26,24 +27,13 @@ class PostView(View):
         if 'AnonymousUser' not in str(request.user):
             form = self.form_class()
             posts = self.model_post.objects.all().order_by('-PublishDate')
-            # user_liked_posts = self.model_like.objects.filter(user=request.user).values_list('post_id', flat=True)
             content_type = ContentType.objects.get_for_model(self.model_post)
-            user_liked_posts = Like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-            
-            post_images = []
-            for post in posts:
-                images = models.ImageModel.objects.filter(Post=post)
-                post_images.append({
-                    'post': post,
-                    'images': images,
-                })
-            
+            user_liked_posts = self.model_like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+                    
             self.context.update({
                 'form': form,
                 'posts': posts,
-                'post_images': post_images,
                 'user_liked_posts':user_liked_posts
-
             })
         
         return render(request, self.template_name, self.context)
@@ -58,24 +48,20 @@ class PostView(View):
                 form_save.save()
                 images = request.FILES.getlist('images')
                 for image in images:
-                    models.ImageModel.objects.create(Post=form_save, Image=image)
-                
-
+                    self.model_photos.objects.create(
+                        user=request.user,
+                        content_type=ContentType.objects.get_for_model(form_save),
+                        object_id=form_save.pk,
+                        photo=image
+                    )
+          
             posts = self.model_post.objects.all().order_by('-PublishDate')
             content_type = ContentType.objects.get_for_model(self.model_post)
-            user_liked_posts = Like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+            user_liked_posts = self.model_like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
 
-            post_images = []
-            for post in posts:
-                images = models.ImageModel.objects.filter(Post=post)
-                post_images.append({
-                    'post': post,
-                    'images': images
-                })
             self.context.update({
                 'form': form,
                 'posts': posts,
-                'post_images': post_images,
                 'user_liked_posts':user_liked_posts
 
             })
@@ -89,7 +75,6 @@ def delete_post(request, PostID):
         delete_post.delete()
         
     return redirect('post')
-
 
 @login_required
 def like_post(request, post_id):
@@ -114,29 +99,6 @@ def like_post(request, post_id):
     like_count = Like.objects.filter(content_type=content_type, object_id=post.id, user=request.user).count()
 
     return JsonResponse({'liked': liked, 'like_count': like_count})
-
-
-
-
-# @login_required
-# def likes_post(request, post_id):
-#     post = get_object_or_404(models.PostsModel, id=post_id)
-#     user = request.user
-
-#     # Kullanıcının bu postu daha önce beğenip beğenmediğini kontrol et
-#     like, created = models.PostLike.objects.get_or_create(user=user, post=post)
-
-#     if not created:
-#         # Eğer beğeni zaten varsa, beğeniyi kaldır
-#         like.delete()
-#         liked = False
-#     else:
-#         liked = True
-
-#     # Beğeni sayısını güncelle
-#     like_count = post.postlike_set.count()
-
-#     return JsonResponse({'liked': liked, 'like_count': like_count})
 
 
 class PostDetails(View):

@@ -1,7 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'assets/vendor/libs/dropzone/dropzone.css' %}" />
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/pages/post.css' %}" />
 {% endblock extra_css%}
@@ -14,7 +13,7 @@
       </div>
    </div>
 </div>
-{% for item in post_images %}
+{% for item in posts %}
 <div class="row justify-content-center">
    <div class="col-md-6 col-xxl-6 mb-4">
       <div class="card">
@@ -22,10 +21,10 @@
             <div class="card-title mb-0">
                <div class="d-flex">
                   <div class="d-flex">
-                     <a href="{% url 'profile' item.post.User.username %}">
+                     <a href="{% url 'profile' item.User.username %}">
                         <div class="avatar avatar-md me-2">
-                           {% if item.post.User.profilepicturemodel.profile_photo %}
-                           {% with profile_photo_url=item.post.User.profilepicturemodel.profile_photo.url %}
+                           {% if item.User.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=item.User.profilepicturemodel.profile_photo.url %}
                            <img
                               src="{{ profile_photo_url }}"
                               alt="Avatar"
@@ -40,8 +39,8 @@
                         </div>
                   </div>
                   <div class="flex-grow-1 ms-1">
-                  <div class="me-2 h5 mb-0">{{ item.post.User.first_name }} {{ item.post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-                  <small class="text-muted">{{ item.post.PublishDate }}</small>
+                  <div class="me-2 h5 mb-0">{{ item.User.first_name }} {{ item.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                  <small class="text-muted">{{ item.PublishDate }}</small>
                   </div>
                </div>
             </div>
@@ -51,20 +50,20 @@
                </button>
                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                  {% if item.post.User.username == user.username or user.is_superuser %}
+                  {% if item.User.username == user.username or user.is_superuser %}
                   <a class="dropdown-item text-danger" href="#"
-                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{item.post.id}}">Sil</a>
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{item.id}}">Sil</a>
                   {%endif%}
                </div>
             </div>
          </div>
          <div class="card-body">
-          {{ item.post.Content }}
+          {{ item.Content }}
           <div class="gallery-container mt-4">
-            {% for image in item.images %}
+            {% for image in item.photos.all %}
             <div class="gallery-item">
-               <a href="{{ image.Image.url }}" data-fancybox="gallery-{{ item.post.id }}">
-               <img src="{{ image.Image.url }}" alt="Post Image">
+               <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ item.post.id }}">
+               <img src="{{ image.photo.url }}" alt="Post Image">
                </a>
             </div>
             {% endfor %}
@@ -73,12 +72,12 @@
          <hr />
          <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
-              <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.post.id }}">
-                <i class="ti ti-heart{% if item.post.id in user_liked_posts %}-filled{% endif %}"></i>
-                <span class="like-count text-body">{{ item.post.likes.count }}</span>
+              <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.id }}">
+                <i class="ti ti-heart{% if item.id in user_liked_posts %}-filled{% endif %}"></i>
+                <span class="like-count text-body">{{ item.likes.count }}</span>
             </a>
-               <a href="{% url 'post_detail' item.post.id %}" class="text-body me-3"
-                  ><i class="ti ti-message-plus"></i> {{ item.post.comments.count }}</a
+               <a href="{% url 'post_detail' item.id %}" class="text-body me-3"
+                  ><i class="ti ti-message-plus"></i> {{ item.comments.count }}</a
                   >
                <div class="dropdown">
                   <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -98,7 +97,7 @@
    </div>
 </div>
 
-<div class="modal fade" id="modalCenter_{{item.post.id}}" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalCenter_{{item.id}}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
      <div class="modal-content">
         <div class="modal-header">
@@ -111,7 +110,7 @@
            </p>
         </div>
         <div class="modal-footer">
-           <a class="btn btn-primary" href="{% url 'delete_post' item.post.id %}">Sil</a>
+           <a class="btn btn-primary" href="{% url 'delete_post' item.id %}">Sil</a>
            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
         </div>
      </div>
@@ -132,48 +131,44 @@
                data-bs-dismiss="modal"
                aria-label="Close"></button>
          </div>
+         <form id="post-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
          <div class="modal-body">
-            <div class="d-flex justify-content-between align-items-center mb-6">
-               <div class="d-flex align-items-center">
-                  <div class="avatar avatar-md me-2">
-                     {% if user.profilepicturemodel.profile_photo %}
-                     {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
-                     <img
-                        src="{{ profile_photo_url }}"
-                        alt="Avatar"
-                        class="rounded-circle" />
-                     {% endwith %}
-                     {% else %}
-                     <img
-                        src="{% static 'assets/img/avatars/14.png' %}"
-                        alt="Avatar"
-                        class="rounded-circle" />
-                     {% endif %}
-                  </div>
-                  <div>
-                     <div class="me-2 h5 mb-0">{{ user.first_name }} {{ user.last_name }}</div>
-                     <small class="text-muted">@{{ user.username }}</small>
+               <div class="d-flex justify-content-between align-items-center mb-6">
+                  <div class="d-flex align-items-center">
+                     <div class="avatar avatar-md me-2">
+                        {% if user.profilepicturemodel.profile_photo %}
+                        {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+                        <img
+                           src="{{ profile_photo_url }}"
+                           alt="Avatar"
+                           class="rounded-circle" />
+                        {% endwith %}
+                        {% else %}
+                        <img
+                           src="{% static 'assets/img/avatars/14.png' %}"
+                           alt="Avatar"
+                           class="rounded-circle" />
+                        {% endif %}
+                     </div>
+                     <div>
+                        <div class="me-2 h5 mb-0">{{ user.first_name }} {{ user.last_name }}</div>
+                        <small class="text-muted">@{{ user.username }}</small>
+                     </div>
                   </div>
                </div>
-            </div>
-            <textarea id="autosize-demo border-0 shadow-none" placeholder="Yorumunu Fakula!!!" rows="3" class="form-control"></textarea>
-            <div class="collapse" id="collapseExample">
-               <form action="/upload" class="dropzone needsclick mt-2" id="dropzone-multi">
-                  <div class="dz-message needsclick">
-                     Dosyaları buraya bırakın veya yüklemek için tıklayın
-                  </div>
-                  <div class="fallback">
-                     <input name="file" type="file" />
-                  </div>
-               </form>
-            </div>
+               <textarea name="Content" id="autosize-demo border-0 shadow-none" placeholder="Yorumunu Fakula!!!" rows="3" class="form-control"></textarea>
+               <div id="preview-container" class="d-flex flex-wrap"></div>
          </div>
          <div class="modal-footer">
-            <a class="btn btn-label-secondary" data-bs-toggle="collapse" href="#collapseExample">
-            <i class="ti ti-photo"></i>
-            </a>
-            <button type="button" class="btn btn-primary"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
+            <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+            <label for="id_images">
+            <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i><span class="align-middle"></span>
+            </label>
+            <button type="submit" class="btn btn-primary"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
          </div>
+      </form>
+
       </div>
    </div>
 </div>
@@ -205,7 +200,6 @@
 <!-- End Canvas -->
 {% endblock content %}
 {% block extra_javascript %}
-<script src="{% static 'assets/vendor/libs/dropzone/dropzone.js' %}"></script>
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/post.js' %}"></script>
 {% endblock extra_javascript %}
