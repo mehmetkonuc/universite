@@ -13,7 +13,7 @@
       </div>
    </div>
 </div>
-{% for item in posts %}
+{% for post in posts %}
 <div class="row justify-content-center">
    <div class="col-md-6 col-xxl-6 mb-4">
       <div class="card">
@@ -21,10 +21,10 @@
             <div class="card-title mb-0">
                <div class="d-flex">
                   <div class="d-flex">
-                     <a href="{% url 'profile' item.User.username %}">
+                     <a href="{% url 'profile' post.User.username %}">
                         <div class="avatar avatar-md me-2">
-                           {% if item.User.profilepicturemodel.profile_photo %}
-                           {% with profile_photo_url=item.User.profilepicturemodel.profile_photo.url %}
+                           {% if post.User.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=post.User.profilepicturemodel.profile_photo.url %}
                            <img
                               src="{{ profile_photo_url }}"
                               alt="Avatar"
@@ -39,8 +39,8 @@
                         </div>
                   </div>
                   <div class="flex-grow-1 ms-1">
-                  <div class="me-2 h5 mb-0">{{ item.User.first_name }} {{ item.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-                  <small class="text-muted">{{ item.PublishDate }}</small>
+                  <div class="me-2 h5 mb-0">{{ post.User.first_name }} {{ post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                  <small class="text-muted">{{ post.PublishDate }}</small>
                   </div>
                </div>
             </div>
@@ -50,19 +50,19 @@
                </button>
                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                  {% if item.User.username == user.username or user.is_superuser %}
+                  {% if post.User.username == user.username or user.is_superuser %}
                   <a class="dropdown-item text-danger" href="#"
-                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{item.id}}">Sil</a>
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
                   {%endif%}
                </div>
             </div>
          </div>
          <div class="card-body">
-          {{ item.Content }}
+          {{ post.Content }}
           <div class="gallery-container mt-4">
-            {% for image in item.photos.all %}
+            {% for image in post.photos.all %}
             <div class="gallery-item">
-               <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ item.post.id }}">
+               <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
                <img src="{{ image.photo.url }}" alt="Post Image">
                </a>
             </div>
@@ -72,12 +72,12 @@
          <hr />
          <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
-              <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ item.id }}">
-                <i class="ti ti-heart{% if item.id in user_liked_posts %}-filled{% endif %}"></i>
-                <span class="like-count text-body">{{ item.likes.count }}</span>
+              <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ post.id }}">
+                <i class="ti ti-heart{% if post.id in user_liked_posts %}-filled{% endif %}"></i>
+                <span class="like-count text-body">{{ post.likes.count }}</span>
             </a>
-               <a href="{% url 'post_detail' item.id %}" class="text-body me-3"
-                  ><i class="ti ti-message-plus"></i> {{ item.comments.count }}</a
+               <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
+                  ><i class="ti ti-message-plus"></i> {{ post.comments.count }}</a
                   >
                <div class="dropdown">
                   <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -97,7 +97,7 @@
    </div>
 </div>
 
-<div class="modal fade" id="modalCenter_{{item.id}}" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
      <div class="modal-content">
         <div class="modal-header">
@@ -110,7 +110,7 @@
            </p>
         </div>
         <div class="modal-footer">
-           <a class="btn btn-primary" href="{% url 'delete_post' item.id %}">Sil</a>
+           <a class="btn btn-primary" href="{% url 'delete_post' post.id %}">Sil</a>
            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
         </div>
      </div>

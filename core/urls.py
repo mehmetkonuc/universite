@@ -42,4 +42,5 @@ urlpatterns = [
     #UYGULAMALARIM
     path('profile/', include('apps.profiles.urls')),
     path('post/', include('apps.post.urls')),
+    path('members/', include('apps.members.urls')),
 ]

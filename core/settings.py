@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.inputs',
     'apps.likes',
     'apps.photos',
+    'apps.members',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 

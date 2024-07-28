@@ -7,10 +7,11 @@ import apps.profiles.models as models
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from apps.post.models import PostsModel
 
 class ProfileView(LoginRequiredMixin, View):
     model = models.EducationalInformationModel
+    model_posts = PostsModel
     template = 'profile.html'
     context = {
         'siteTitle' : 'Profil',
@@ -20,9 +21,11 @@ class ProfileView(LoginRequiredMixin, View):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
         user = get_object_or_404(users, username=username)
         model = self.model.objects.filter(User=user).first()
+        posts = self.model_posts.objects.filter(User=user).order_by('-PublishDate')
         self.context.update(
             {'model': model,
-             'profileUser' : user}
+             'profileUser' : user,
+             'posts':posts}
         )
         return render(request, self.template, self.context)
     

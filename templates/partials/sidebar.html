@@ -47,10 +47,10 @@
           <div>Ana Sayfa</div>
         </a>
       </li>
-      <li class="menu-item">
-        <a href="#" class="menu-link">
+      <li class="menu-item {% if current_page == 'members' %} active{% endif %}">
+        <a href="{% url 'members' %}" class="menu-link">
           <i class="menu-icon tf-icons ti ti-user-search"></i>
-          <div><del>Üyeler</del></div>
+          <div>Üyeler</div>
         </a>
       </li>
       <li class="menu-item">

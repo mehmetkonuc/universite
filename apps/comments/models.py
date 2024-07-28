@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
+from apps.likes.models import Like
+from apps.photos.models import PhotosModel
 
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -9,6 +12,8 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     text = models.TextField()
+    likes = GenericRelation(Like)
+    photos = GenericRelation(PhotosModel)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

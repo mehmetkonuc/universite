@@ -10,6 +10,7 @@ from apps.comments.forms import CommentForm
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.photos.models import PhotosModel
+from django.urls import reverse
 
 
 # Create your views here.
@@ -96,55 +97,101 @@ def like_post(request, post_id):
         liked = True
 
     # Beğeni sayısını güncelle
-    like_count = Like.objects.filter(content_type=content_type, object_id=post.id, user=request.user).count()
+    like_count = Like.objects.filter(content_type=content_type, object_id=post.id).count()
 
     return JsonResponse({'liked': liked, 'like_count': like_count})
 
 
 class PostDetails(View):
+    form_class = CommentForm
+    model_posts = models.PostsModel
+    model_comments = Comment
+    model_likes = Like
+    model_photos = PhotosModel
+    template = 'post-detail.html'
     context = {
-        'siteTitle': 'Paylaşımlar',
+        'siteTitle': 'Yorumlar',
     }
     def get(self, request, post_id):
         post = models.PostsModel.objects.filter(id=post_id).first()
-        comments = Comment.objects.filter(content_type=ContentType.objects.get_for_model(models.PostsModel), object_id=post.id).order_by('-created_at')
-        post_images = models.ImageModel.objects.filter(Post=post)
-        user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
-        
-        form = CommentForm()
+        content_type = ContentType.objects.get_for_model(self.model_posts)
+        comments = Comment.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
+        user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(self.model_comments), user=request.user).values_list('object_id', flat=True)
+        form = self.form_class()
 
         self.context.update({
             'form': form,
             'comments' : comments,
             'post' : post,
-            'post_images' :post_images,
-            'user_liked_posts':user_liked_posts
+            'user_liked_posts':user_liked_posts,
+            'user_liked_comments': user_liked_comments,
         })
-        return render(request, "post-detail.html", self.context)
+        return render(request, self.template, self.context)
     
     def post(self, request, post_id):
-        post = models.PostsModel.objects.filter(id=post_id).first()
-        form = CommentForm(request.POST)
+        post = self.model_posts.objects.filter(id=post_id).first()
+        content_type = ContentType.objects.get_for_model(self.model_posts)
+        form = self.form_class(request.POST)
         
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user = request.user
-            comment.content_type = ContentType.objects.get_for_model(models.PostsModel)
+            comment.content_type = content_type
             comment.object_id = post.id
             comment.save()
+            
+            images = request.FILES.getlist('images')
+            for image in images:
+                self.model_photos.objects.create(
+                    user=request.user,
+                    content_type=ContentType.objects.get_for_model(comment),
+                    object_id=comment.pk,
+                    photo=image
+                )
             return redirect('post_detail', post_id=post.id)
-        else:
-            print('girmedi')
         
-        comments = Comment.objects.filter(content_type=ContentType.objects.get_for_model(models.PostsModel), object_id=post.id).order_by('-created_at')
-        post_images = models.ImageModel.objects.filter(Post=post)
-        user_liked_posts = models.PostLike.objects.filter(user=request.user).values_list('post_id', flat=True)
-
+        comments = self.model_comments.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
+        user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        
         self.context.update({
             'form': form,
             'comments' : comments,
             'post' : post,
-            'post_images' :post_images,
             'user_liked_posts':user_liked_posts
         })
         return render(request, "post/post-detail.html", self.context)
+
+
+@login_required
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    content_type = ContentType.objects.get_for_model(comment)
+
+    # Kullanıcının bu postu daha önce beğenip beğenmediğini kontrol et
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=comment.id
+    )
+
+    if not created:
+        # Eğer beğeni zaten varsa, beğeniyi kaldır
+        like.delete()
+        liked = False
+    else:
+        liked = True
+
+    # Beğeni sayısını güncelle
+    like_count = Like.objects.filter(content_type=content_type, object_id=comment.id).count()
+
+    return JsonResponse({'liked': liked, 'like_count': like_count})
+
+
+def delete_comment(request, comment_id):
+    delete_comment = Comment.objects.get(id=comment_id)
+    
+    if delete_comment.user == request.user or request.user.is_superuser:
+        delete_comment.delete()
+    
+    return redirect(reverse('post_detail', kwargs={'post_id': delete_comment.object_id}))

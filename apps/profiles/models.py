@@ -11,7 +11,7 @@ class ProfilePictureModel(models.Model):
 
 
 class EducationalInformationModel(models.Model):
-    User = models.ForeignKey(settings.AUTH_USER_MODEL,
+    User = models.OneToOneField(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     Country = models.ForeignKey(inputs.CountriesModel,
                              on_delete=models.CASCADE)

@@ -2,6 +2,7 @@
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/post.css' %}" />
 
 {% endblock %}
 {% block content %}
@@ -73,7 +74,7 @@
                   <ul class="nav nav-pills flex-column flex-sm-row mb-4">
                     <li class="nav-item">
                       <a class="nav-link active" href="javascript:void(0);"
-                        ><i class="ti-xs ti ti-user-check me-1"></i> Profile</a
+                        ><i class="ti-xs ti ti-user-check me-1"></i> Gönderi</a
                       >
                     </li>
                     <li class="nav-item">
@@ -181,7 +182,107 @@
                 </div>
                 <div class="col-xl-8 col-lg-7 col-md-7">
 
-
+                  {% for post in posts %}
+                        <div class="card">
+                           <div class="card-header d-flex justify-content-between mb-0">
+                              <div class="card-title mb-0">
+                                 <div class="d-flex">
+                                    <div class="d-flex">
+                                       <a href="{% url 'profile' post.User.username %}">
+                                          <div class="avatar avatar-md me-2">
+                                             {% if post.User.profilepicturemodel.profile_photo %}
+                                             {% with profile_photo_url=post.User.profilepicturemodel.profile_photo.url %}
+                                             <img
+                                                src="{{ profile_photo_url }}"
+                                                alt="Avatar"
+                                                class="rounded-circle" />
+                                             {% endwith %}
+                                             {% else %}
+                                             <img
+                                                src="{% static 'assets/img/avatars/14.png' %}"
+                                                alt="Avatar"
+                                                class="rounded-circle" />
+                                             {% endif %}
+                                          </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-1">
+                                    <div class="me-2 h5 mb-0">{{ post.User.first_name }} {{ post.User.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                                    <small class="text-muted">{{ post.PublishDate }}</small>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="dropdown">
+                                 <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                                 </button>
+                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                                    <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                                    {% if post.User.username == user.username or user.is_superuser %}
+                                    <a class="dropdown-item text-danger" href="#"
+                                       data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
+                                    {%endif%}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="card-body">
+                            {{ post.Content }}
+                            <div class="gallery-container mt-4">
+                              {% for image in post.photos.all %}
+                              <div class="gallery-item">
+                                 <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                                 <img src="{{ image.photo.url }}" alt="Post Image">
+                                 </a>
+                              </div>
+                              {% endfor %}
+                           </div>
+                  
+                           <hr />
+                           <div class="d-flex align-items-center">
+                              <div class="d-flex align-items-center">
+                                <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ post.id }}">
+                                  <i class="ti ti-heart{% if post.id in user_liked_posts %}-filled{% endif %}"></i>
+                                  <span class="like-count text-body">{{ post.likes.count }}</span>
+                              </a>
+                                 <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
+                                    ><i class="ti ti-message-plus"></i> {{ post.comments.count }}</a
+                                    >
+                                 <div class="dropdown">
+                                    <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="ti ti-share"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                                       <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                                       <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="ms-auto">
+                              </div>
+                           </div>
+                           </div>
+                        </div>
+                  
+                  <div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                       <div class="modal-content">
+                          <div class="modal-header">
+                             <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                             <p>
+                                Paylaşımı Silmek İstediğinizden emin misiniz?
+                             </p>
+                          </div>
+                          <div class="modal-footer">
+                             <a class="btn btn-primary" href="{% url 'delete_post' post.id %}">Sil</a>
+                             <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                          </div>
+                       </div>
+                    </div>
+                  </div>
+                  
+                  {% endfor %}
                   
                 </div>
               </div>
