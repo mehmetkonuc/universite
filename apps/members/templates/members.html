@@ -8,7 +8,7 @@
 <div class="row">
   <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
      <div class="d-flex gap-4">
-        <button class="btn btn-label-danger" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+        <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
      </div>
   </div>
 </div>
@@ -53,18 +53,18 @@
             <span class="text-body">@{{member.username}}</span>
           </a>
           <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
-            <span class="badge bg-label-primary d-flex align-items-center"><i class="ti ti-building-bank"></i>{{member.educationalinformationmodel.University}}</span>
-            <span class="badge bg-label-warning d-flex align-items-center"><i class="ti ti-address-book"></i>{{member.educationalinformationmodel.Department}}</span>
+            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-building-bank"></i>{{member.educationalinformationmodel.University}}</span>
+            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-address-book"></i>{{member.educationalinformationmodel.Department}}</span>
           </div>
           <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
-            <span class="badge bg-label-danger d-flex align-items-center mb-3"><i class="ti ti-school me-1"></i>{{member.educationalinformationmodel.Status}}</span>
+            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill mb-3"><i class="ti ti-school me-1"></i>{{member.educationalinformationmodel.Status}}</span>
           </div>
 
           <div class="d-flex align-items-center justify-content-center">
-            <a href="javascript:;" class="btn btn-primary d-flex align-items-center me-4"
+            <a href="javascript:;" class="btn btn-label-primary rounded-pill d-flex align-items-center me-4"
               ><i class="ti ti-user-plus me-1"></i>Arkadaş Ekle</a
             >
-            <a href="javascript:;" class="btn btn-label-secondary btn-icon"
+            <a href="javascript:;" class="btn btn-label-success btn-icon rounded-pill"
               ><i class="ti ti-mail ti-md"></i
             ></a>
           </div>
