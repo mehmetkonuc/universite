@@ -39,8 +39,10 @@ urlpatterns = [
         template_name='guest/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='guest/password_reset_complete.html'), name='password_reset_complete'),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     #UYGULAMALARIM
     path('profile/', include('apps.profiles.urls')),
     path('post/', include('apps.post.urls')),
     path('members/', include('apps.members.urls')),
+    path('blogs/', include('apps.blogs.urls')),
 ]

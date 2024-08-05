@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "crispy_forms",
     "crispy_bootstrap5",
+    'ckeditor',
+    'ckeditor_uploader',
     'apps.settings',
     'apps.profiles',
     'apps.comments',
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'apps.likes',
     'apps.photos',
     'apps.members',
+    'apps.blogs',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -142,3 +145,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = ['core.backends.EmailOrUsernameModelBackend']
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "uploads/"

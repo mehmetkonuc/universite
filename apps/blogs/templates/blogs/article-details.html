@@ -1,0 +1,120 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<style>
+.gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Resimler arasındaki boşluk */
+    }
+    .gallery-item {
+    flex: 1 1 calc(33.333% - 10px); /* Üç sütun düzeni */
+    box-sizing: border-box;
+    position: relative;
+    height: auto; /* Sabit yükseklik */
+    overflow: hidden; /* Taşan kısımları gizle */
+    object-fit: cover; /* Resimlerin oranını korur */
+
+    }
+    .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Resmi kapsayıcıya göre uygun şekilde kapla */
+    border-radius: 5px;
+
+    }
+    /* Özel durumlar için */
+    @media (max-width: 768px) {
+    .gallery-item {
+    flex: 1 1 calc(50% - 10px); /* Mobil cihazlar için iki sütun */
+    }
+    }
+    @media (max-width: 480px) {
+    .gallery-item {
+    flex: 1 1 100%; /* Tek sütun düzeni */
+    }
+    }
+</style>
+{% endblock extra_css%}
+
+{% block content %}
+<div class="row">
+    <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
+       <div class="d-flex gap-4">
+          <a href="{% url 'article_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
+          <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+       </div>
+    </div>
+ </div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-xxl-6 mb-4">
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                    <h5 class="mb-1">{{article.title}}</h5>
+                  </div>
+            </div>
+            <div class="card-body">
+               <div class="gallery-container mt-4">
+                  <div class="gallery-item">
+                {{article.content|safe}}
+               </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Canvas -->
+<div
+   class="offcanvas offcanvas-end"
+   tabindex="-1"
+   id="filter-canvas"
+   aria-labelledby="offcanvasEndLabel">
+   <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title">Filtrele</h5>
+      <button
+         type="button"
+         class="btn-close text-reset"
+         data-bs-dismiss="offcanvas"
+         aria-label="Close"></button>
+   </div>
+   <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+      <button type="button" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
+      <button
+         type="button"
+         class="btn btn-label-secondary d-grid w-100"
+         data-bs-dismiss="offcanvas">
+      Vazgeç
+      </button>
+   </div>
+</div>
+<!-- End Canvas -->
+{% endblock content %}
+
+{% block extra_javascript %}
+<script>
+CKEDITOR.replace('editor', {
+    extraAllowedContent: 'img[class]',
+    filebrowserImageUploadUrl: '/upload/',
+    on: {
+        instanceReady: function(evt) {
+            evt.editor.dataProcessor.htmlFilter.addRules({
+                elements: {
+                    img: function(el) {
+                        // Yüklenen tüm resimlere 'ckeditor-img' sınıfı ekle
+                        el.addClass('ckeditor-img');
+                    }
+                }
+            });
+        }
+    }
+});
+</script>
+
+{% endblock extra_javascript %}
+
