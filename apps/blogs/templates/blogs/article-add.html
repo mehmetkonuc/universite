@@ -3,6 +3,8 @@
 {% load crispy_forms_tags %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+
 {{form.media}}
 <style>
     .django-ckeditor-widget {
@@ -24,9 +26,22 @@
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{form.title|as_crispy_field}}
-                    <input name="futured_image" class="filepond mb-2" type="file" />
+                    <input name="futured_image" id="futured_image" class="filepond mb-2" type="file" />
                     {{form.content|as_crispy_field}}
-
+                    <label for="category" class="form-label">Category</label>
+                    <select
+                        id="category"
+                        name="category"
+                        class="selectpicker w-100 mb-4"
+                        data-style="btn-default"
+                        data-live-search="true">
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" data-tokens="{{ category.name }}">{{ category.name }}</option>
+                            {% for child in category.get_children %}
+                                <option value="{{ child.id }}" data-tokens="{{ child.name }}">--- {{ child.name }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
                     <button type="submit" class="btn btn-label-primary">Gönder</button>
                 </form>
             </div>
@@ -36,6 +51,7 @@
 {% endblock content %}
 
 {% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
 
 {% endblock extra_javascript %}
 

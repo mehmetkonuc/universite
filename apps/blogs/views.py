@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from apps.blogs.forms import ArticleAddForm
-from apps.blogs.models import ArticlesModel
+from apps.blogs.models import ArticlesModel, Category
 from apps.photos.models import PhotosModel
 from django.contrib.contenttypes.models import ContentType
 from apps.comments.forms import CommentForm
@@ -11,8 +11,11 @@ from apps.comments.models import Comment
 class ArticleAddView(View):
     def get(self, request):
         form = ArticleAddForm()
+        categories = Category.objects.filter(parent__isnull=True)
+
         context = {
             'form': form,
+            'categories' : categories
         }
         return render(request, 'blogs/article-add.html', context)
 
@@ -29,8 +32,12 @@ class ArticleAddView(View):
                 object_id=form_data.pk,
                 photo=futured_image
             )
+        
+        categories = Category.objects.filter(parent__isnull=True)
+
         context = {
             'form': form,
+            'categories' : categories
         }
         
         return render(request, 'blogs/article-add.html', context)
