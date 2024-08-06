@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from apps.blogs.forms import ArticleAddForm
 from apps.blogs.models import ArticlesModel, Category
@@ -55,14 +55,14 @@ class ArticlesDetailsView(View):
     form_class = CommentForm
     model_comments = Comment
 
-    def get(self, request, article_id):
-        article = ArticlesModel.objects.filter(pk=article_id).first()
+    def get(self, request, slug):
+        article = get_object_or_404(ArticlesModel, slug=slug)
         content_type = ContentType.objects.get_for_model(article)
         comments = self.model_comments.objects.filter(content_type=content_type, object_id=article.id).order_by('-created_at')
 
         context = {
-            'article':article,
-            'comments' :comments
+            'article': article,
+            'comments': comments
         }
         return render(request, 'blogs/article-details.html', context)
 

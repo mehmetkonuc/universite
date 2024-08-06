@@ -20,7 +20,7 @@
    <div class="card p-2 h-100 shadow-none border">
      <div class="rounded-2 text-center mb-4">
 
-       <a href="{% url 'article_details' article.id %}"
+       <a href="{% url 'article_details' article.slug %}"
          >
          {% for image in article.futured_image.all %}
 
@@ -41,7 +41,7 @@
           <small class="fw-normal">{{article.create_at}}</small>
          </p>
        </div>
-       <a href="{% url 'article_details' article.id %}" class="h5">{{article.title}}</a>
+       <a href="{% url 'article_details' article.slug %}" class="h5">{{article.title}}</a>
        <div align="justify">
        <p class="mt-1">{{article.content|safe|truncatechars:255}}</p>
        </div>
@@ -50,7 +50,7 @@
 
          <a
            class="w-100 btn btn-label-primary d-flex align-items-center"
-           href="{% url 'article_details' article.id %}">
+           href="{% url 'article_details' article.slug %}">
            <span class="me-2">Okumaya Devam Et</span
            ><i class="ti ti-chevron-right ti-xs scaleX-n1-rtl"></i>
          </a>

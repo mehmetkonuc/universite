@@ -4,6 +4,9 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.photos.models import PhotosModel
 from mptt.models import MPTTModel, TreeForeignKey
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from apps.blogs.utils import slugify_tr
 
 # Create your models here.
 class Category(MPTTModel):
@@ -24,6 +27,12 @@ class ArticlesModel(models.Model):
     futured_image = GenericRelation(PhotosModel)
     create_at = models.DateTimeField(auto_now_add=True)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
+    slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
     def __str__(self):
         return self.title
+
+@receiver(pre_save, sender=ArticlesModel)
+def pre_save_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify_tr(instance.title)
