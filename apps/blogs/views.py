@@ -8,67 +8,89 @@ from apps.comments.forms import CommentForm
 from apps.comments.models import Comment
 
 # Create your views here.
-class ArticleAddView(View):
-    def get(self, request):
-        form = ArticleAddForm()
-        categories = Category.objects.filter(parent__isnull=True)
+class ArticlesView(View):
+    model_article = ArticlesModel
+    template = 'blogs/index.html'
+    context = {
+        'siteTitle': 'Makaleler',
+    }
 
-        context = {
+    def get(self, request):
+        articles = self.model_article.objects.all()
+
+        self.context.update({
+            'articles':articles
+        })
+        return render(request, self.template, self.context)
+
+
+class ArticleAddView(View):
+    model_categories = Category
+    model_photos = PhotosModel
+    form_article = ArticleAddForm
+    template = 'blogs/article-add.html'
+    context = {
+        'siteTitle': 'Makale Ekle',
+    }
+
+    def get(self, request):
+        form = self.form_article()
+        categories = self.model_categories.objects.filter(parent__isnull=True)
+
+        self.context.update({
             'form': form,
             'categories' : categories
-        }
-        return render(request, 'blogs/article-add.html', context)
+        })
+        return render(request, self.template, self.context)
 
     def post(self, request):
-        form = ArticleAddForm(request.POST)
+        form = self.form_article(request.POST)
         if form.is_valid():
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
             futured_image = request.FILES.get('futured_image')
-            PhotosModel.objects.create(
+            self.model_photos.objects.create(
                 user=request.user,
                 content_type=ContentType.objects.get_for_model(form_data),
                 object_id=form_data.pk,
                 photo=futured_image
             )
+            return redirect('article_details', slug=form_data.slug)
         
-        categories = Category.objects.filter(parent__isnull=True)
+        categories = self.model_categories.objects.filter(parent__isnull=True)
 
-        context = {
+        self.context.update({
             'form': form,
             'categories' : categories
-        }
+        })
         
-        return render(request, 'blogs/article-add.html', context)
+        return render(request, self.template, self.context)
 
-class ArticlesView(View):
-    def get(self, request):
-        articles = ArticlesModel.objects.all()
-
-        context = {
-            'articles':articles
-        }
-        return render(request, 'blogs/index.html', context)
 
 class ArticlesDetailsView(View):
-    form_class = CommentForm
+    model_article = ArticlesModel
     model_comments = Comment
+    model_photos = PhotosModel
+    form_class = CommentForm
+    template = 'blogs/article-details.html'
+    context = {
+        }
 
     def get(self, request, slug):
-        article = get_object_or_404(ArticlesModel, slug=slug)
+        article = get_object_or_404(self.model_article, slug=slug)
         content_type = ContentType.objects.get_for_model(article)
         comments = self.model_comments.objects.filter(content_type=content_type, object_id=article.id).order_by('-created_at')
-
-        context = {
+        self.context.update({
+            'siteTitle':article.title,
             'article': article,
             'comments': comments
-        }
-        return render(request, 'blogs/article-details.html', context)
+        })
 
-    def post(self, request, article_id):
-        article = ArticlesModel.objects.filter(pk=article_id).first()
+        return render(request, self.template, self.context)
 
+    def post(self, request, slug):
+        article = get_object_or_404(self.model_article, slug=slug)
         content_type = ContentType.objects.get_for_model(article)
         form = self.form_class(request.POST)
         
@@ -87,15 +109,37 @@ class ArticlesDetailsView(View):
                     object_id=comment.pk,
                     photo=image
                 )
-            return redirect('article_details', article_id=article.id)
+            return redirect('article_details', slug=article.slug)
         
         comments = self.model_comments.objects.filter(content_type=content_type, object_id=article.id).order_by('-created_at')
         # user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
         
-        context = {
+        self.context.update({
             'form': form,
             'comments' : comments,
             'article' : article,
             # 'user_liked_posts':user_liked_posts
-        }
-        return render(request, "blogs/article-details.html", context)
+            })
+        return render(request, self.template, self.context)
+
+
+def delete_article(request, article_id):
+    delete_article = ArticlesModel.objects.get(id=article_id)
+    
+    if delete_article.user == request.user or request.user.is_superuser:
+        delete_article.delete()
+        
+    return redirect('articles')
+
+
+def delete_comment(request, comment_id):
+    delete_comment = Comment.objects.get(id=comment_id)
+    
+    if delete_comment.user == request.user or request.user.is_superuser:
+        delete_comment.delete()
+    
+    article = ArticlesModel.objects.get(id=delete_comment.object_id)
+
+    return redirect('article_details', slug=article.slug)
+
+

@@ -1,264 +1,247 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-
 {% block extra_css %}
 <style>
-.gallery-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px; /* Resimler arasındaki boşluk */
-    }
-    .gallery-item {
-    flex: 1 1 calc(33.333% - 10px); /* Üç sütun düzeni */
-    box-sizing: border-box;
-    position: relative;
-    height: auto; /* Sabit yükseklik */
-    overflow: hidden; /* Taşan kısımları gizle */
-    object-fit: cover; /* Resimlerin oranını korur */
-
-    }
-    .gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Resmi kapsayıcıya göre uygun şekilde kapla */
-    border-radius: 5px;
-
-    }
-    /* Özel durumlar için */
-    @media (max-width: 768px) {
-    .gallery-item {
-    flex: 1 1 calc(50% - 10px); /* Mobil cihazlar için iki sütun */
-    }
-    }
-    @media (max-width: 480px) {
-    .gallery-item {
-    flex: 1 1 100%; /* Tek sütun düzeni */
-    }
-    }
+   .card img {
+   height: 400px; /* İstediğiniz yükseklik */
+   object-fit: cover; /* Resmi alanın tamamına sığdır */
+   width: 100%; /* Resmi genişliğe yay */
+   }
 </style>
 {% endblock extra_css%}
-
 {% block content %}
-
 <div class="row justify-content-center g-6">
-    <div class="col-lg-8">
+   <div class="col-lg-8">
+      <!-- Article -->
       <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between mb-0">
+         <div class="card-header d-flex justify-content-between mb-0">
             <div class="card-title mb-0">
                <div class="d-flex">
-                <div class="me-1">
-                    <h4 class="mb-0">{{article.title}}</h4>
+                  <div class="me-1">
+                     <h4 class="mb-0">{{article.title}}</h4>
                   </div>
                </div>
             </div>
             <div class="d-flex align-items-beetwen">
-            <i class="ti ti-share ti-lg mx-4"></i>
-
+               <i class="ti ti-share ti-lg mx-4"></i>
+               <div class="dropdown">
+                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                     {% if article.user.username == user.username or user.is_superuser %}
+                     <a class="dropdown-item text-danger" href="#"
+                        data-bs-toggle="modal" data-bs-target="#modalCenter_{{article.id}}">Sil</a>
+                     {%endif%}
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card-body">
+            <div class="card academy-content shadow-none border">
+               <div class="bg-label-primary rounded-2 text-center">
+                  <div class="cursor-pointer">
+                     {% for image in article.futured_image.all %}
+                     <img
+                        class="card-img-top"
+                        src="{{ image.photo.url }}"
+                        alt="tutor image 1"
+                        />
+                     {%endfor%}
+                  </div>
+               </div>
+               <div class="card-body pt-4">
+                  <hr class="my-6" />
+                  <div class="d-flex justify-content-between mb-0">
+                     <div class="d-flex">
+                        <div class="avatar-wrapper">
+                           <div class="avatar me-4">
+                              <a href="{% url 'profile' article.user.username %}">
+                              {% if article.user.profilepicturemodel.profile_photo %}
+                              {% with profile_photo_url=article.user.profilepicturemodel.profile_photo.url %}
+                              <img src="{{ profile_photo_url }}" alt="Avatar" class="rounded-circle" />
+                              {% endwith %}
+                              {% else %}
+                              <img src="{static 'assets/img/avatars/11.png' %}" alt="Avatar" class="rounded-circle" />
+                              {% endif %}
+                              </a>
+                           </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                           <a href="{% url 'profile' article.user.username %}">
+                              <h6 class="mb-1">{{article.user.first_name}} {{article.user.last_name}}</h6>
+                           </a>
+                           <small>{{article.user.educationalinformationmodel.University}} - {{article.user.educationalinformationmodel.Department}}</small>
+                        </div>
+                     </div>
+                     <div class="d-flex align-items-beetwen">
+                        <small>{{article.create_at}}</small> 
+                     </div>
+                  </div>
+                  <hr class="mb-3" />
+                  <div align="justify">
+                     {{article.content | safe}}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- End Article -->
+      <!-- Article Delete Modals -->
+      <div class="modal fade" id="modalCenter_{{article.id}}" tabindex="-1" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     Paylaşımı Silmek İstediğinizden emin misiniz?
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <a class="btn btn-primary" href="{% url 'delete_article' article.id %}">Sil</a>
+                  <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- End Article Delete Modals -->
+      <!-- Comment Form -->
+      <div class="card mb-4">
+         <div class="card-body">
+            <form class="form-send-message" id="comment-form" method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="d-flex justify-content-between align-items-center">
+                  <textarea name="text" id="autosize-demo" rows="3" class="form-control border-0 shadow-xs" placeholder="Yorumunu Fakula!!!"></textarea>
+                  <div class="message-actions d-flex align-items-center">
+                     <label for="id_images" class="form-label mb-0">
+                     <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i>
+                     <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+                     </label>
+                     <button class="btn btn-primary d-flex send-msg-btn waves-effect waves-light me-1">
+                     <i class="ti ti-send ti-xs cursor-pointer rounded-pill mx-1 waves-effect waves-light"></i>
+                     </button>
+                  </div>
+               </div>
+               <div id="preview-container" class="d-flex flex-wrap"></div>
+            </form>
+         </div>
+      </div>
+      <!-- End Comment Form -->
+      {% for comment in comments %}
+      <!-- Comments -->
+      <div class="card mb-4">
+         <div class="card-header d-flex justify-content-between mb-0">
+            <div class="card-title mb-0">
+               <div class="d-flex">
+                  <div class="d-flex">
+                     <a href="{% url 'profile' comment.user.username %}">
+                        <div class="avatar avatar-md me-2">
+                           {% if comment.user.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=comment.user.profilepicturemodel.profile_photo.url %}
+                           <img
+                              src="{{ profile_photo_url }}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endwith %}
+                           {% else %}
+                           <img
+                              src="{% static 'assets/img/avatars/14.png' %}"
+                              alt="Avatar"
+                              class="rounded-circle" />
+                           {% endif %}
+                        </div>
+                  </div>
+                  <div class="flex-grow-1 ms-1">
+                  <div class="me-2 h5 mb-0">{{ comment.user.first_name }} {{ comment.user.last_name }} <small class="text-muted h6"> bir yorum gönderdi.</small></div></a>
+                  <small class="text-muted">{{ comment.created_at }}</small>
+                  </div>
+               </div>
+            </div>
             <div class="dropdown">
                <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <i class="ti ti-dots-vertical ti-sm text-muted"></i>
                </button>
                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                  {% if post.User.username == user.username or user.is_superuser %}
+                  {% if comment.user.username == user.username or user.is_superuser %}
                   <a class="dropdown-item text-danger" href="#"
-                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{comment.id}}">Sil</a>
                   {%endif%}
                </div>
             </div>
-        </div>
          </div>
-        <div class="card-body">
-          <div class="card academy-content shadow-none border">
-            <div class="p-2">
-              <div class="cursor-pointer">
-                {% for image in article.futured_image.all %}
-                <img
-                  class="img-fluid d-flex mx-auto my-6 rounded"
-                  src="{{ image.photo.url }}"
-                  alt="tutor image 1"
-              />
-             {%endfor%}
-              </div>
+         <div class="card-body">
+            {{ comment.text }}
+            <div class="gallery-container mt-4">
+               {% for image in comment.photos.all %}
+               <div class="gallery-item">
+                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ comment.id }}">
+                  <img src="{{ image.photo.url }}" alt="Comment Image">
+                  </a>
+               </div>
+               {% endfor %}
             </div>
-            <div class="card-body pt-4">
-                <hr class="mb-3" />
-                <div align="justify">
-                {{article.content | safe}}</div>
-              <hr class="my-6" />
-              <h5>Yazar</h5>
-              <div class="d-flex justify-content-start align-items-center user-name">
-                <div class="avatar-wrapper">
-                  <div class="avatar me-4">
-                    <a href="{% url 'profile' article.user.username %}">
-
-                    {% if article.user.profilepicturemodel.profile_photo %}
-                    {% with profile_photo_url=article.user.profilepicturemodel.profile_photo.url %}
-                    <img src="{{ profile_photo_url }}" alt="Avatar" class="rounded-circle" />
-                    {% endwith %}
-                    {% else %}
-                    <img src="{static 'assets/img/avatars/11.png' %}" alt="Avatar" class="rounded-circle" />
-                    {% endif %}
-                    </a>
-                  </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <a href="{% url 'profile' article.user.username %}">
-
-                  <h6 class="mb-1">{{article.user.first_name}} {{article.user.last_name}}</h6>
-                </a>
-
-                  <small>{{article.user.educationalinformationmodel.University}} - {{article.user.educationalinformationmodel.Department}}</small>
-                </div>
-              </div>
+            <hr />
+            <div class="d-flex align-items-center">
+               <div class="d-flex align-items-center">
+                  <a href="javascript:void(0);" class="text-body me-3 like-comment-btn" data-comment-id="{{ comment.id }}">
+                  <i class="ti ti-heart{% if comment.id in user_liked_comments %}-filled{% endif %}"></i>
+                  <span class="like-comment-count text-body">{{ comment.likes.count }}</span>
+                  </a>
+               </div>
+               <div class="ms-auto">
+               </div>
             </div>
-          </div>
-        </div>
+         </div>
       </div>
-
-
-      <div class="card mb-4">
-        <div class="card-body">
-           <form class="form-send-message" id="comment-form" method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="d-flex justify-content-between align-items-center">
-              <textarea name="text" id="autosize-demo" rows="3" class="form-control border-0 shadow-xs" placeholder="Yorumunu Fakula!!!"></textarea>
-              <div class="message-actions d-flex align-items-center">
-              <label for="id_images" class="form-label mb-0">
-                 <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i>
-                 <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
-              </label>
-              <button class="btn btn-primary d-flex send-msg-btn waves-effect waves-light me-1">
-                 <i class="ti ti-send ti-xs cursor-pointer rounded-pill mx-1 waves-effect waves-light"></i>
-              </button>
-              </div>
-           </div>
-              <div id="preview-container" class="d-flex flex-wrap"></div>
-           </form>
-        </div>
-     </div>
-
-
-     {% for comment in comments %}
-     <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between mb-0">
-           <div class="card-title mb-0">
-              <div class="d-flex">
-                 <div class="d-flex">
-                    <a href="{% url 'profile' comment.user.username %}">
-                       <div class="avatar avatar-md me-2">
-                          {% if comment.user.profilepicturemodel.profile_photo %}
-                          {% with profile_photo_url=comment.user.profilepicturemodel.profile_photo.url %}
-                          <img
-                             src="{{ profile_photo_url }}"
-                             alt="Avatar"
-                             class="rounded-circle" />
-                          {% endwith %}
-                          {% else %}
-                          <img
-                             src="{% static 'assets/img/avatars/14.png' %}"
-                             alt="Avatar"
-                             class="rounded-circle" />
-                          {% endif %}
-                       </div>
-                 </div>
-                 <div class="flex-grow-1 ms-1">
-                 <div class="me-2 h5 mb-0">{{ comment.user.first_name }} {{ comment.user.last_name }} <small class="text-muted h6"> bir yorum gönderdi.</small></div></a>
-                 <small class="text-muted">{{ comment.created_at }}</small>
-                 </div>
-              </div>
-           </div>
-           <div class="dropdown">
-              <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="ti ti-dots-vertical ti-sm text-muted"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                 <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                 {% if comment.user.username == user.username or user.is_superuser %}
-                 <a class="dropdown-item text-danger" href="#"
-                    data-bs-toggle="modal" data-bs-target="#modalCenter_{{comment.id}}">Sil</a>
-                 {%endif%}
-              </div>
-           </div>
-        </div>
-        <div class="card-body">
-         {{ comment.text }}
-         <div class="gallery-container mt-4">
-           {% for image in comment.photos.all %}
-           <div class="gallery-item">
-              <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ comment.id }}">
-              <img src="{{ image.photo.url }}" alt="Comment Image">
-              </a>
-           </div>
-           {% endfor %}
-        </div>
-
-        <hr />
-        <div class="d-flex align-items-center">
-           <div class="d-flex align-items-center">
-             <a href="javascript:void(0);" class="text-body me-3 like-comment-btn" data-comment-id="{{ comment.id }}">
-               <i class="ti ti-heart{% if comment.id in user_liked_comments %}-filled{% endif %}"></i>
-               <span class="like-comment-count text-body">{{ comment.likes.count }}</span>
-           </a>
-           </div>
-           <div class="ms-auto">
-           </div>
-        </div>
-        </div>
-     </div>
-
-     <div class="modal fade" id="modalCenter_{{comment.id}}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                 <p>
-                    Yorumu Silmek İstediğinizden emin misiniz?
-                 </p>
-              </div>
-              <div class="modal-footer">
-                 <a class="btn btn-primary" href="{% url 'delete_comment' comment.id %}">Sil</a>
-                 <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
-              </div>
-           </div>
-        </div>
+      <!-- End Comments -->
+      <!-- Comment Delete Modals -->
+      <div class="modal fade" id="modalCenter_{{comment.id}}" tabindex="-1" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     Yorumu Silmek İstediğinizden emin misiniz?
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <a class="btn btn-primary" href="{% url 'delete_article_comment' comment.id %}">Sil</a>
+                  <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+               </div>
+            </div>
+         </div>
       </div>
-     {% endfor %}
-
-
-
-
-
-
-    </div>
-  </div>
-
-
+      <!-- End Comment Delete Modals -->
+      {% endfor %}
+   </div>
+</div>
 {% endblock content %}
-
 {% block extra_javascript %}
 <script>
-CKEDITOR.replace('editor', {
-    extraAllowedContent: 'img[class]',
-    filebrowserImageUploadUrl: '/upload/',
-    on: {
-        instanceReady: function(evt) {
-            evt.editor.dataProcessor.htmlFilter.addRules({
-                elements: {
-                    img: function(el) {
-                        // Yüklenen tüm resimlere 'ckeditor-img' sınıfı ekle
-                        el.addClass('ckeditor-img');
-                    }
-                }
-            });
-        }
-    }
-});
+   CKEDITOR.replace('editor', {
+       extraAllowedContent: 'img[class]',
+       filebrowserImageUploadUrl: '/upload/',
+       on: {
+           instanceReady: function(evt) {
+               evt.editor.dataProcessor.htmlFilter.addRules({
+                   elements: {
+                       img: function(el) {
+                           // Yüklenen tüm resimlere 'ckeditor-img' sınıfı ekle
+                           el.addClass('ckeditor-img');
+                       }
+                   }
+               });
+           }
+       }
+   });
 </script>
-
 {% endblock extra_javascript %}
-

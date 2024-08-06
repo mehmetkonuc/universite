@@ -113,9 +113,9 @@ class PostDetails(View):
         'siteTitle': 'Yorumlar',
     }
     def get(self, request, post_id):
-        post = models.PostsModel.objects.filter(id=post_id).first()
+        post = self.model_posts.objects.filter(id=post_id).first()
         content_type = ContentType.objects.get_for_model(self.model_posts)
-        comments = Comment.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
+        comments = self.model_comments.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
         user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
         user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(self.model_comments), user=request.user).values_list('object_id', flat=True)
         form = self.form_class()
