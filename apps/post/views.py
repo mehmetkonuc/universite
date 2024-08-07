@@ -6,12 +6,11 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from apps.comments.models import Comment
-from apps.comments.forms import CommentForm
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.photos.models import PhotosModel
 from django.urls import reverse
-
+from apps.comments.views import CommentView
 
 # Create your views here.
 class PostView(View):
@@ -103,11 +102,8 @@ def like_post(request, post_id):
 
 
 class PostDetails(View):
-    form_class = CommentForm
     model_posts = models.PostsModel
-    model_comments = Comment
     model_likes = Like
-    model_photos = PhotosModel
     template = 'post-detail.html'
     context = {
         'siteTitle': 'Yorumlar',
@@ -115,14 +111,12 @@ class PostDetails(View):
     def get(self, request, post_id):
         post = self.model_posts.objects.filter(id=post_id).first()
         content_type = ContentType.objects.get_for_model(self.model_posts)
-        comments = self.model_comments.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
         user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(self.model_comments), user=request.user).values_list('object_id', flat=True)
-        form = self.form_class()
+        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        form = CommentView.form_class()
 
         self.context.update({
             'form': form,
-            'comments' : comments,
             'post' : post,
             'user_liked_posts':user_liked_posts,
             'user_liked_comments': user_liked_comments,
@@ -131,33 +125,13 @@ class PostDetails(View):
     
     def post(self, request, post_id):
         post = self.model_posts.objects.filter(id=post_id).first()
-        content_type = ContentType.objects.get_for_model(self.model_posts)
-        form = self.form_class(request.POST)
-        
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.user = request.user
-            comment.content_type = content_type
-            comment.object_id = post.id
-            comment.save()
-            
-            images = request.FILES.getlist('images')
-            for image in images:
-                self.model_photos.objects.create(
-                    user=request.user,
-                    content_type=ContentType.objects.get_for_model(comment),
-                    object_id=comment.pk,
-                    photo=image
-                )
-            return redirect('post_detail', post_id=post.id)
-        
-        comments = self.model_comments.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
+        content_type = ContentType.objects.get_for_model(post)
+        form = CommentView.comment_post(request=request, content_type=content_type, object_id=post_id)
         user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(self.model_comments), user=request.user).values_list('object_id', flat=True)
+        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
         
         self.context.update({
             'form': form,
-            'comments' : comments,
             'post' : post,
             'user_liked_posts':user_liked_posts,
             'user_liked_comments': user_liked_comments,
@@ -188,12 +162,3 @@ def like_comment(request, comment_id):
     like_count = Like.objects.filter(content_type=content_type, object_id=comment.id).count()
 
     return JsonResponse({'liked': liked, 'like_count': like_count})
-
-
-def delete_comment(request, comment_id):
-    delete_comment = Comment.objects.get(id=comment_id)
-    
-    if delete_comment.user == request.user or request.user.is_superuser:
-        delete_comment.delete()
-    
-    return redirect(reverse('post_detail', kwargs={'post_id': delete_comment.object_id}))

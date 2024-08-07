@@ -8,6 +8,4 @@ urlpatterns = [
     path('like/<int:post_id>/', views.like_post, name='like_post'),
     path('details/<int:post_id>/', views.PostDetails.as_view(), name='post_detail'),
     path('like-comment/<int:comment_id>/', views.like_comment, name='like_comment'),
-    path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
-
 ]

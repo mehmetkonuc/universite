@@ -72,6 +72,13 @@
          <hr />
          <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
+
+               {% block like-button %}
+                  {% with content_type_id=16 object_id=post.id liked=liked like_count=post.likes.count %}
+                     {% include 'likes/like_button.html' %}
+                  {% endwith %}
+               {% endblock like-button %}
+
               <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ post.id }}">
                 <i class="ti ti-heart{% if post.id in user_liked_posts %}-filled{% endif %}"></i>
                 <span class="like-count text-body">{{ post.likes.count }}</span>
