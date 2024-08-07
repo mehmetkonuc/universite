@@ -3,6 +3,8 @@ from django.conf import settings
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.photos.models import PhotosModel
+from apps.comments.models import Comment
+from apps.likes.models import Like
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -25,8 +27,11 @@ class ArticlesModel(models.Model):
     title = models.CharField(max_length=155)
     content = RichTextUploadingField()
     futured_image = GenericRelation(PhotosModel)
+    comments = GenericRelation(Comment)
+    likes = GenericRelation(Like)
     create_at = models.DateTimeField(auto_now_add=True)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
+
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
     def __str__(self):

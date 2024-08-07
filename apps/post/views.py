@@ -153,14 +153,16 @@ class PostDetails(View):
         
         comments = self.model_comments.objects.filter(content_type=content_type, object_id=post.id).order_by('-created_at')
         user_liked_posts = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(self.model_comments), user=request.user).values_list('object_id', flat=True)
         
         self.context.update({
             'form': form,
             'comments' : comments,
             'post' : post,
-            'user_liked_posts':user_liked_posts
-        })
-        return render(request, "post/post-detail.html", self.context)
+            'user_liked_posts':user_liked_posts,
+            'user_liked_comments': user_liked_comments,
+            })
+        return render(request, self.template, self.context)
 
 
 @login_required
