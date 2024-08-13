@@ -81,14 +81,14 @@ class ArticlesDetailsView(View):
     def get(self, request, slug):
         article = get_object_or_404(self.model_article, slug=slug)
         content_type = ContentType.objects.get_for_model(article)
-        user_liked_article = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         self.context.update({
             'siteTitle':article.title,
             'article': article,
-            'user_liked_article' : user_liked_article,
-            'user_liked_comments' : user_liked_comments,
+            'liked' : liked,
+            'liked_comment' : liked_comment,
         })
 
         return render(request, self.template, self.context)
@@ -97,14 +97,14 @@ class ArticlesDetailsView(View):
         article = get_object_or_404(self.model_article, slug=slug)
         content_type = ContentType.objects.get_for_model(article)
         form = CommentView.comment_post(request=request, content_type=content_type, object_id=article.id)
-        user_liked_article = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        user_liked_comments = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         self.context.update({
             'form': form,
             'article' : article,
-            'user_liked_article' : user_liked_article,
-            'user_liked_comments' : user_liked_comments,
+            'liked' : liked,
+            'liked_comment' : liked_comment,
             })
         return render(request, self.template, self.context)
 
@@ -116,53 +116,3 @@ def delete_article(request, article_id):
         delete_article.delete()
 
     return redirect('articles')
-
-
-@login_required
-def like_article(request, article_id):
-    article = get_object_or_404(ArticlesModel, id=article_id)
-    content_type = ContentType.objects.get_for_model(article)
-
-    # Kullanıcının bu postu daha önce beğenip beğenmediğini kontrol et
-    like, created = Like.objects.get_or_create(
-        user=request.user,
-        content_type=content_type,
-        object_id=article.id
-    )
-
-    if not created:
-        # Eğer beğeni zaten varsa, beğeniyi kaldır
-        like.delete()
-        liked = False
-    else:
-        liked = True
-
-    # Beğeni sayısını güncelle
-    like_count = Like.objects.filter(content_type=content_type, object_id=article.id).count()
-
-    return JsonResponse({'liked': liked, 'like_count': like_count})
-
-
-@login_required
-def like_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    content_type = ContentType.objects.get_for_model(comment)
-
-    # Kullanıcının bu postu daha önce beğenip beğenmediğini kontrol et
-    like, created = Like.objects.get_or_create(
-        user=request.user,
-        content_type=content_type,
-        object_id=comment.id
-    )
-
-    if not created:
-        # Eğer beğeni zaten varsa, beğeniyi kaldır
-        like.delete()
-        liked = False
-    else:
-        liked = True
-
-    # Beğeni sayısını güncelle
-    like_count = Like.objects.filter(content_type=content_type, object_id=comment.id).count()
-
-    return JsonResponse({'liked': liked, 'like_count': like_count})

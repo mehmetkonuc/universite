@@ -65,10 +65,10 @@
          <hr />
          <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
-              <a href="javascript:void(0);" class="text-body me-3 like-btn" data-post-id="{{ post.id }}">
-                <i class="ti ti-heart{% if post.id in user_liked_posts %}-filled{% endif %}"></i>
-                <span class="like-count text-body">{{ post.likes.count }}</span>
-            </a>
+               <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
+                  <i class="ti ti-heart{% if post.id in liked %}-filled{% endif %}"></i>
+                  <span class="like-count text-body">{{ post.likes.count }}</span>
+              </a>
                <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
                   ><i class="ti ti-message-plus"></i> {{ post.comments.count }}</a
                   >
@@ -124,4 +124,5 @@
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/post-details.js' %}"></script>
+<script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 {%endblock%}

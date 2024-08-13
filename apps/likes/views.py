@@ -3,12 +3,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from apps.likes.models import Like
+import json
 
 # Create your views here.
-@require_POST
+
 def like_object(request):
-    content_type_id = request.POST.get('content_type_id')
-    object_id = request.POST.get('object_id')
+    data = json.loads(request.body)
+    content_type_id = data.get('content_type_id')
+    object_id = data.get('object_id')
     content_type = get_object_or_404(ContentType, id=content_type_id)
     model_class = content_type.model_class()
     obj = get_object_or_404(model_class, id=object_id)

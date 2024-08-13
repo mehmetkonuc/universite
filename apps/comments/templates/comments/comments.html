@@ -57,10 +57,11 @@
    <hr />
    <div class="d-flex align-items-center">
       <div class="d-flex align-items-center">
-        <a href="javascript:void(0);" class="text-body me-3 like-comment-btn" data-comment-id="{{ comment.id }}">
-          <i class="ti ti-heart{% if comment.id in user_liked_comments %}-filled{% endif %}"></i>
-          <span class="like-comment-count text-body">{{ comment.likes.count }}</span>
-      </a>
+
+         <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comment.likes.content_type.id}}" data-object-id="{{comment.id}}">
+            <i class="ti ti-heart{% if comment.id in liked_comment %}-filled{% endif %}"></i>
+            <span class="like-count text-body">{{ comment.likes.count }}</span>
+        </a>
       </div>
       <div class="ms-auto">
       </div>

@@ -88,10 +88,11 @@
             </div>
             <div class="d-flex align-items-center mt-4">
                <div class="d-flex align-items-center">
-                 <a href="javascript:void(0);" class="text-body me-3 like-btn" data-article-id="{{ article.id }}">
-                   <i class="ti ti-heart{% if article.id in user_liked_article %}-filled{% endif %}"></i>
-                   <span class="like-count text-body">{{ article.likes.count }}</span>
-               </a>
+                  <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{article.likes.content_type.id}}" data-object-id="{{article.id}}">
+                     <i class="ti ti-heart{% if article.id in liked %}-filled{% endif %}"></i>
+                     <span class="like-count text-body">{{ article.likes.count }}</span>
+                 </a>
+
                   <a href="{% url 'article_details' article.id %}" class="text-body me-3"
                      ><i class="ti ti-message-plus"></i> {{ article.comments.count }}</a
                      >
@@ -151,110 +152,7 @@
 </div>
 {% endblock content %}
 {% block extra_javascript %}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const likeButtons = document.querySelectorAll('.like-btn');
-
-    likeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const articleId = button.getAttribute('data-article-id');
-            const icon = button.querySelector('i');
-            const likeCountSpan = button.querySelector('.like-count');
-
-            fetch(`/blogs/like/${articleId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ article_id: articleId }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.liked) {
-                    icon.classList.add('ti-heart-filled');
-                    icon.classList.remove('ti-heart');
-                } else {
-                    icon.classList.add('ti-heart');
-                    icon.classList.remove('ti-heart-filled');
-                }
-                likeCountSpan.textContent = data.like_count;
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    });
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-});
-
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const likeButtons = document.querySelectorAll('.like-comment-btn');
-
-    likeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const commentId = button.getAttribute('data-comment-id');
-            const icon = button.querySelector('i');
-            const likeCountSpan = button.querySelector('.like-comment-count');
-
-            fetch(`/blogs/like-comment/${commentId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ comment_id: commentId }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.liked) {
-                    icon.classList.add('ti-heart-filled');
-                    icon.classList.remove('ti-heart');
-                } else {
-                    icon.classList.add('ti-heart');
-                    icon.classList.remove('ti-heart-filled');
-                }
-                likeCountSpan.textContent = data.like_count;
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    });
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-});
-
-</script>
-
-
-
+<script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 <script>
    CKEDITOR.replace('editor', {
        extraAllowedContent: 'img[class]',
