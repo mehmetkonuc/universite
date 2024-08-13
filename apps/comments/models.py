@@ -16,5 +16,13 @@ class Comment(models.Model):
     photos = GenericRelation(PhotosModel)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+
     def __str__(self):
         return f'Comment by {self.user} on {self.content_object}'
+    
+    def is_parent(self):
+        return self.parent is None
+
+    def get_replies(self):
+        return self.replies.all()

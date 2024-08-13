@@ -2,14 +2,9 @@ from django.shortcuts import render, redirect
 from django.views import View
 from . import forms
 from . import models
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from apps.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.photos.models import PhotosModel
-from django.urls import reverse
 from apps.comments.views import CommentView
 
 # Create your views here.
@@ -87,12 +82,14 @@ class PostDetails(View):
         post = self.model_posts.objects.filter(id=post_id).first()
         content_type = ContentType.objects.get_for_model(self.model_posts)
         liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        comments =CommentView.comment_get(content_type=content_type, object_id=post.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
         form = CommentView.form_class()
 
         self.context.update({
             'form': form,
             'post' : post,
+            'comments' : comments,
             'liked':liked,
             'liked_comment': liked_comment,
         })
@@ -103,11 +100,13 @@ class PostDetails(View):
         content_type = ContentType.objects.get_for_model(post)
         form = CommentView.comment_post(request=request, content_type=content_type, object_id=post_id)
         liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        comments =CommentView.comment_get(content_type=content_type, object_id=post.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
         
         self.context.update({
             'form': form,
             'post' : post,
+            'comments' : comments,
             'liked':liked,
             'liked_comment': liked_comment,
             })

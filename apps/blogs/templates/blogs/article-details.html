@@ -141,7 +141,7 @@
       <!-- End Comment Form -->
 
       <!-- Comments -->
-      {% for comment in article.comments.all %}
+      {% for comment in comments %}
          {% block comment %}
             {% include 'comments/comments.html' %}
          {% endblock comment %}

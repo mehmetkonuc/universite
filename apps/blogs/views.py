@@ -82,11 +82,13 @@ class ArticlesDetailsView(View):
         article = get_object_or_404(self.model_article, slug=slug)
         content_type = ContentType.objects.get_for_model(article)
         liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        comments =CommentView.comment_get(content_type=content_type, object_id=article.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         self.context.update({
             'siteTitle':article.title,
             'article': article,
+            'comments': comments,
             'liked' : liked,
             'liked_comment' : liked_comment,
         })
@@ -98,11 +100,13 @@ class ArticlesDetailsView(View):
         content_type = ContentType.objects.get_for_model(article)
         form = CommentView.comment_post(request=request, content_type=content_type, object_id=article.id)
         liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        comments =CommentView.comment_get(content_type=content_type, object_id=article.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         self.context.update({
             'form': form,
             'article' : article,
+            'comments': comments,
             'liked' : liked,
             'liked_comment' : liked_comment,
             })
