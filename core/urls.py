@@ -47,4 +47,5 @@ urlpatterns = [
     path('members/', include('apps.members.urls')),
     path('blogs/', include('apps.blogs.urls')),
     path('likes/', include('apps.likes.urls')),
+    path('marketplace/', include('apps.marketplace.urls')),
 ]

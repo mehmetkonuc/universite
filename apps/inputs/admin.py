@@ -6,5 +6,7 @@ admin.site.register(models.CountriesModel)
 admin.site.register(models.UniversitiesModel)
 admin.site.register(models.DepartmentsModel)
 admin.site.register(models.StatusModel)
+admin.site.register(models.City)
+admin.site.register(models.Currency)
 # admin.site.register(models.GrandeModel)
 

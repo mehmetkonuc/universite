@@ -1,0 +1,85 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<style>
+   .card img {
+   height: 200px; /* İstediğiniz yükseklik */
+   object-fit: cover; /* Resmi alanın tamamına sığdır */
+   width: 100%; /* Resmi genişliğe yay */
+   }
+</style>
+{% endblock extra_css%}
+{% block content %}
+<div class="row">
+   <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
+      <div class="d-flex gap-4">
+         <a href="{% url 'marketplace_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
+         <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+      </div>
+   </div>
+</div>
+<div class="row gy-6 mb-6">
+   {% for article in marketplaces %}
+   <div class="col-sm-6 col-lg-4">
+      <div class="card p-2 h-100 shadow-none border">
+         <div class="bg-label-primary rounded text-center">
+            <a href="{% url 'article_details' article.slug %}">
+            {% for image in article.futured_image.all %}
+            <img class="img-fluid rounded" src="{{ image.photo.url }}" alt="tutor image 1" />
+            {% endfor %}
+            </a>
+         </div>
+         <div class="card-body p-4 pt-2 d-flex flex-column justify-content-between">
+            <div>
+               <div class="d-flex justify-content-between align-items-center mb-4">
+                  <span class="badge bg-label-primary">{{ article.category }}</span>
+                  <p class="d-flex align-items-center justify-content-center fw-medium gap-1 mb-0">
+                     <small class="fw-normal">{{ article.create_at }}</small>
+                  </p>
+               </div>
+               <a href="{% url 'article_details' article.slug %}" class="h5">{{ article.title }}</a>
+               <p class="mt-1" align="justify">{{ article.content|safe|truncatechars:255 }}</p>
+               <span class="badge bg-label-success">{{ article.price }}</span>
+               <span class="badge bg-label-secondary">{{ article.city }}</span>
+
+            </div>
+            <div class="mt-4">
+               <a class="w-100 btn btn-label-primary d-flex align-items-center" href="{% url 'article_details' article.slug %}">
+               <span class="me-2">İlanı İncele</span>
+               <i class="ti ti-chevron-right ti-xs scaleX-n1-rtl"></i>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
+   {% endfor %}
+</div>
+<!-- Canvas -->
+<div
+   class="offcanvas offcanvas-end"
+   tabindex="-1"
+   id="filter-canvas"
+   aria-labelledby="offcanvasEndLabel">
+   <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title">Filtrele</h5>
+      <button
+         type="button"
+         class="btn-close text-reset"
+         data-bs-dismiss="offcanvas"
+         aria-label="Close"></button>
+   </div>
+   <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+      <button type="button" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
+      <button
+         type="button"
+         class="btn btn-label-secondary d-grid w-100"
+         data-bs-dismiss="offcanvas">
+      Vazgeç
+      </button>
+   </div>
+</div>
+<!-- End Canvas -->
+{% endblock content %}
+{% block extra_javascript %}
+{% endblock extra_javascript %}

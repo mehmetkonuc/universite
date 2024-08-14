@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.photos',
     'apps.members',
     'apps.blogs',
+    'apps.marketplace',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
