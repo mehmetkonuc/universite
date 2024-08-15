@@ -48,4 +48,5 @@ urlpatterns = [
     path('blogs/', include('apps.blogs.urls')),
     path('likes/', include('apps.likes.urls')),
     path('marketplace/', include('apps.marketplace.urls')),
+    path('confessions/', include('apps.confessions.urls')),
 ]
