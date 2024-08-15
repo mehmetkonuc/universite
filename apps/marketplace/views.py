@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from apps.marketplace.models import MarketPlaceModel, Category
 from apps.marketplace.forms import MarketPlaceForm
@@ -59,6 +59,23 @@ class MarketPlaceAddView(View):
         self.context.update({
             'form': form,
             'categories' : categories
+        })
+
+        return render(request, self.template, self.context)
+
+
+class MarketPlaceDetailView(View):
+    model_marketplace = MarketPlaceModel
+    template = 'marketplace/detail.html'
+    context = {
+        }
+
+    def get(self, request, slug):
+        data = get_object_or_404(self.model_marketplace, slug=slug)
+
+        self.context.update({
+            'siteTitle':data.title,
+            'data': data,
         })
 
         return render(request, self.template, self.context)

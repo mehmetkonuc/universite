@@ -24,7 +24,7 @@
    <div class="col-sm-6 col-lg-4">
       <div class="card p-2 h-100 shadow-none border">
          <div class="bg-label-primary rounded text-center">
-            <a href="{% url 'article_details' article.slug %}">
+            <a href="{% url 'marketplace_detail' article.slug %}">
             {% for image in article.futured_image.all %}
             <img class="img-fluid rounded" src="{{ image.photo.url }}" alt="tutor image 1" />
             {% endfor %}
@@ -38,17 +38,35 @@
                      <small class="fw-normal">{{ article.create_at }}</small>
                   </p>
                </div>
-               <a href="{% url 'article_details' article.slug %}" class="h5">{{ article.title }}</a>
+               <a href="{% url 'marketplace_detail' article.slug %}" class="h5">{{ article.title }}</a>
                <p class="mt-1" align="justify">{{ article.content|safe|truncatechars:255 }}</p>
                <span class="badge bg-label-success">{{ article.price }}</span>
                <span class="badge bg-label-secondary">{{ article.city }}</span>
 
             </div>
-            <div class="mt-4">
-               <a class="w-100 btn btn-label-primary d-flex align-items-center" href="{% url 'article_details' article.slug %}">
-               <span class="me-2">İlanı İncele</span>
-               <i class="ti ti-chevron-right ti-xs scaleX-n1-rtl"></i>
-               </a>
+            <div>
+               <hr  />
+               <div class="d-flex">
+                  <div class="avatar-wrapper">
+                     <div class="avatar me-4">
+                        <a href="{% url 'profile' article.user.username %}">
+                        {% if article.user.profilepicturemodel.profile_photo %}
+                        {% with profile_photo_url=article.user.profilepicturemodel.profile_photo.url %}
+                        <img src="{{ profile_photo_url }}" alt="Avatar" class="rounded-circle" />
+                        {% endwith %}
+                        {% else %}
+                        <img src="{static 'assets/img/avatars/11.png' %}" alt="Avatar" class="rounded-circle" />
+                        {% endif %}
+                        </a>
+                     </div>
+                  </div>
+                  <div class="d-flex flex-column">
+                     <a href="{% url 'profile' article.user.username %}">
+                     <span class="text-body">{{article.user.first_name}} {{article.user.last_name}}</span>
+                     </a>
+                     <small>{{article.user.educationalinformationmodel.University}}</small>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
