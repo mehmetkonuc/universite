@@ -71,16 +71,16 @@
           <div><del>Ders Notları</del></div>
         </a>
       </li>
-      <li class="menu-item">
-        <a href="#" class="menu-link">
-          <i class="menu-icon tf-icons ti ti-eye-x"></i>
-          <div><del>İtiraflar</del></div>
+      <li class="menu-item {% if current_page == 'confessions' %} active{% endif %}">
+        <a href="{% url 'confessions' %}" class="menu-link">
+          <i class="menu-icon ti-icons ti ti-spy"></i>
+          <div>İtiraflar</div>
         </a>
       </li>
       <li class="menu-item">
         <a href="#" class="menu-link">
-          <i class="menu-icon tf-icons ti ti-message-question"></i>
-          <div><del>Forum</del></div>
+          <i class="menu-icon ti-icons ti ti-speakerphone"></i>
+          <div><del>Tartışmalar</del></div>
         </a>
       </li>
       <li class="menu-item">

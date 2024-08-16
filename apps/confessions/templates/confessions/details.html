@@ -1,0 +1,133 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css%}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 mb-4">
+        <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+          <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+        </button>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-xxl-8 mb-4">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between">
+                <div class="card-title mb-0">
+                  <div class="badge bg-label-success"><i class="ti ti-building-bank ti-sm me-1"></i> {{ confession.university }}</div>
+                  </div>
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
+                      type="button"
+                      id="MonthlyCampaign"
+                      data-bs-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false">
+                      <i class="ti ti-dots-vertical ti-md text-muted"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                      <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                      <a class="dropdown-item" href="javascript:void(0);">Download</a>
+                      <a class="dropdown-item" href="javascript:void(0);">View All</a>
+                    </div>
+                  </div>
+            </div>
+            <div class="card-body border border-start-0">
+              <div class="card-title mb-4">
+                <h4 class="my-0 mt-4" style="text-transform: capitalize;"> {{ confession.title }}</h4>
+                <small>{{ confession.create_at }}</small>
+                </div>
+                {{confession.description|safe}}
+                <hr  />
+                <div class="d-flex">
+                   <div class="avatar-wrapper">
+                      <div class="avatar me-4">
+                        {% if not confession.is_privacy %}
+                         <a href="{% url 'profile' confession.user.username %}">
+                         {% if confession.user.profilepicturemodel.profile_photo %}
+                         {% with profile_photo_url=confession.user.profilepicturemodel.profile_photo.url %}
+                         <img src="{{ profile_photo_url }}" alt="Avatar" class="rounded-circle" />
+                         {% endwith %}
+                         {% else %}
+                         <img src="{%static 'assets/img/avatars/11.png' %}" alt="Avatar" class="rounded-circle" />
+                         {% endif %}
+                         </a>
+                         {% elif confession.is_privacy %}
+                         <img src="{%static 'assets/img/avatars/privacy.jpg' %}" alt="Avatar" class="rounded-circle" />
+
+                         {% endif %}
+
+                      </div>
+                   </div>
+                   <div class="d-flex flex-column">
+                    {% if not confession.is_privacy %}
+                      <a href="{% url 'profile' confession.user.username %}">
+                      <span class="text-body">{{confession.user.first_name}} {{confession.user.last_name}}</span>
+                      </a>
+                      <small>{{confession.user.educationalinformationmodel.University}}</small>
+                      {% else %}
+                        <span class="text-body">Gizli Kullanıcı</span>
+                        </a>
+                        <small>{{confession.user.educationalinformationmodel.University}}</small>
+                      {% endif %}
+                   </div>
+                   <div class="ms-auto">
+                   </div>
+                </div>
+                <hr  />
+
+                <div class="d-flex align-items-center mt-4">
+                  <div class="d-flex align-items-center">
+                     <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{confession.likes.content_type.id}}" data-object-id="{{confession.id}}">
+                        <i class="ti ti-heart{% if confession.id in liked %}-filled{% endif %}"></i>
+                        <span class="like-count text-body">{{ confession.likes.count }}</span>
+                    </a>
+   
+                     <a href="{% url 'confession_details' confession.slug %}" class="text-body me-3"
+                        ><i class="ti ti-message-plus"></i> {{ confession.comments.count }}</a
+                        >
+                     <div class="dropdown">
+                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-share"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                           <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="ms-auto">
+                  </div>
+               </div>
+            </div>
+        </div>
+
+              <!-- Comment Form -->
+      {% block comment-form %}
+      {% include 'comments/form-comment.html' %}
+   {% endblock comment-form %}
+   <!-- End Comment Form -->
+
+   <!-- Comments -->
+   {% for comment in comments %}
+      {% block comment %}
+         {% include 'comments/comments.html' %}
+      {% endblock comment %}
+   {% endfor %}
+   <!-- End Comments -->
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+{% block extra_javascript %}
+<script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
+
+{% endblock extra_javascript %}
+

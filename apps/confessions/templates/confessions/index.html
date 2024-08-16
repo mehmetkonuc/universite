@@ -1,0 +1,65 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css%}
+
+{% block content %}
+<div class="row">
+    <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
+       <div class="d-flex gap-4">
+          <a href="{% url 'confessions_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
+          <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+       </div>
+    </div>
+ </div>
+ <div class="row">
+   <div class="col-lg-12">
+    <div class="card">
+       <div class="card-body">
+          <h5 class="card-title">İtiraflar</h5>
+          <hr />
+          {% for confession in confessions %}
+          <div class="card-body list-group list-group-flush">
+
+            <div class="d-flex">
+                    <div class="avatar-wrapper">
+                        <div class="avatar me-4">
+                           {% if not confession.is_privacy %}
+                           <a href="{% url 'profile' confession.user.username %}">
+                           {% if confession.user.profilepicturemodel.profile_photo %}
+                           {% with profile_photo_url=confession.user.profilepicturemodel.profile_photo.url %}
+                           <img src="{{ profile_photo_url }}" alt="Avatar" class="rounded-circle" />
+                           {% endwith %}
+                           {% else %}
+                           <img src="{%static 'assets/img/avatars/11.png' %}" alt="Avatar" class="rounded-circle" />
+                           {% endif %}
+                           </a>
+                           {% elif confession.is_privacy %}
+                           <img src="{%static 'assets/img/avatars/privacy.jpg' %}" alt="Avatar" class="rounded-circle" />
+                           {% endif %}
+                        </div>
+                     </div>
+                <div class="d-flex justify-content-between w-100 flex-wrap gap-2">
+                  <div class="me-2">
+                    <a href="{% url 'confession_details' confession.slug %}">
+                        <h5 class="my-0" style="text-transform: capitalize;">{{confession.title}}</h5>
+                    </a>
+                    <small class="text-body">{{confession.create_at}} - <i class="ti ti-heart ti-sm me-1"></i>{{confession.likes.count}} - <i class="ti ti-message-plus ti-sm me-1"></i>{{confession.comments.count}}</small>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="badge bg-label-success"><i class="ti ti-building-bank ti-sm me-1"></i> {{ confession.university }}</div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          {% endfor %}
+       </div>
+    </div>
+   </div>
+ </div>
+{% endblock content %}
+
+{% block extra_javascript %}
+
+{% endblock extra_javascript %}

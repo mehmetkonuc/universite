@@ -17,7 +17,7 @@
            <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
          </button>
      </div>
-   </div>
+</div>
 
 <div class="row justify-content-center g-6">
    <div class="col-lg-8">
@@ -40,6 +40,7 @@
                   <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                      <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
                      {% if article.user.username == user.username or user.is_superuser %}
+                     <a class="dropdown-item" href="{% url 'article_edit' article.slug %}">Düzenle</a>
                      <a class="dropdown-item text-danger" href="#"
                         data-bs-toggle="modal" data-bs-target="#modalCenter_{{article.id}}">Sil</a>
                      {%endif%}

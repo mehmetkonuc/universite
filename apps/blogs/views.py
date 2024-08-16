@@ -113,6 +113,55 @@ class ArticlesDetailsView(View):
         return render(request, self.template, self.context)
 
 
+class ArticleEditView(View):
+    model_categories = Category
+    model_article = ArticlesModel
+    model_photos = PhotosModel
+    form_article = ArticleAddForm
+    template = 'blogs/article-add.html'
+    context = {
+        'siteTitle': 'Makale Ekle',
+    }
+
+    def get(self, request, slug):
+        instance = self.model_article.objects.filter(slug=slug).first()
+        form = self.form_article(instance = instance)
+        categories = self.model_categories.objects.filter(parent__isnull=True)
+
+        self.context.update({
+            'form': form,
+            'categories' : categories
+        })
+        return render(request, self.template, self.context)
+
+    def post(self, request):
+        form = self.form_article(request.POST)
+        if form.is_valid():
+            form_data = form.save(commit=False)
+            form_data.user = request.user
+            form_data.save()
+            futured_image = request.FILES.get('futured_image')
+            self.model_photos.objects.create(
+                user=request.user,
+                content_type=ContentType.objects.get_for_model(form_data),
+                object_id=form_data.pk,
+                photo=futured_image
+            )
+            return redirect('article_details', slug=form_data.slug)
+
+        categories = self.model_categories.objects.filter(parent__isnull=True)
+
+        self.context.update({
+            'form': form,
+            'categories' : categories
+        })
+
+        return render(request, self.template, self.context)
+
+
+
+
+
 def delete_article(request, article_id):
     delete_article = ArticlesModel.objects.get(id=article_id)
 

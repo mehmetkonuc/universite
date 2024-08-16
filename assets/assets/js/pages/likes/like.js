@@ -1,3 +1,9 @@
+/**
+ * File Upload
+ */
+
+'use strict';
+
 document.addEventListener('DOMContentLoaded', () => {
     const likeButtons = document.querySelectorAll('.like-btn');
 
@@ -7,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const objectId = button.getAttribute('data-object-id');
             const icon = button.querySelector('i');
             const likeCountSpan = button.querySelector('.like-count');
-
-            fetch('{% url "like_object" %}', {
+            console.log(contentTypeId)
+            fetch('/likes/like/', {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'),

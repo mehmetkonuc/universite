@@ -38,7 +38,7 @@
                      <small class="fw-normal">{{ article.create_at }}</small>
                   </p>
                </div>
-               <a href="{% url 'marketplace_detail' article.slug %}" class="h5">{{ article.title }}</a>
+               <a href="{% url 'marketplace_detail' article.slug %}"> <h3 class="mb-0">{{ article.title }}</h3></a>
                <p class="mt-1" align="justify">{{ article.content|safe|truncatechars:255 }}</p>
                <span class="badge bg-label-success">{{ article.price }}</span>
                <span class="badge bg-label-secondary">{{ article.city }}</span>

@@ -39,7 +39,7 @@
                      <small class="fw-normal">{{ article.create_at }}</small>
                   </p>
                </div>
-               <a href="{% url 'article_details' article.slug %}" class="h5">{{ article.title }}</a>
+               <a href="{% url 'article_details' article.slug %}"><h4 class="mb-0">{{ article.title }}</h4></a>
                <p class="mt-1" align="justify">{{ article.content|safe|truncatechars:255 }}</p>
             </div>
             <div>

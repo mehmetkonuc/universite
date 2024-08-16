@@ -1,4 +1,4 @@
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     const previewContainer = document.getElementById('preview-container');
     const fileInput = document.getElementById('id_images');
     const maxImages = 4;
@@ -63,7 +63,7 @@
     }
 
     // Form gönderiminde dosyaları güncelleme
-    const form = document.getElementById('post-form');
+    const form = document.getElementById('comment-form');
     form.addEventListener('submit', function() {
         updateFileInput();
     });
