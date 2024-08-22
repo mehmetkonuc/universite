@@ -1,4 +1,4 @@
-<div class="card mb-4">
+<!-- <div class="card mb-4">
     <div class="card-body">
        <form class="form-send-message" id="comment-form" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
@@ -17,4 +17,24 @@
           <div id="preview-container" class="d-flex flex-wrap"></div>
        </form>
     </div>
- </div>
+ </div> -->
+
+
+ <div class="card mb-4">
+   <div class="card-body">
+       <h4 class="card-title">Yorum Yapın</h4>
+       <form class="form-send-message" id="comment-form" method="POST" enctype="multipart/form-data">
+           {% csrf_token %}
+           <div class="mb-3">
+               <textarea class="form-control" name="text" rows="4" placeholder="Yorumunuzu buraya yazın..."></textarea>
+           </div>
+          <div id="preview-container" class="d-flex flex-wrap"></div>
+
+           <button type="submit" class="btn btn-label-primary">Yorumu Gönder</button>
+           <label for="id_images" class="form-label mb-0">
+             <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i>
+             <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+          </label>
+       </form>
+   </div>
+</div>

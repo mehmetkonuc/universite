@@ -66,7 +66,7 @@ class MarketPlaceAddView(View):
 
 class MarketPlaceDetailView(View):
     model_marketplace = MarketPlaceModel
-    template = 'marketplace/detail.html'
+    template = 'marketplace/details.html'
     context = {
         }
 

@@ -1,0 +1,130 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/swiper/swiper.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/ui-carousel.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
+
+{% endblock extra_css%}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 mb-4">
+        <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+          <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+        </button>
+    </div>
+  </div>
+
+
+  <div class="container mt-5">
+    <!-- İlan Başlığı -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="fw-bold">{{ data.title }}</h1>
+        </div>
+    </div>
+
+    <!-- İlan Fotoğrafları -->
+    <div class="row justify-content-center mt-3">
+        <div class="col-lg-4">
+          {% for image in data.futured_image.all %}
+
+          <div id="swiper-gallery">
+            <div class="swiper gallery-top">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background-image: url( {{image.photo.url}} )">
+                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ data.id }}" style="display: block; width: 100%; height: 100%;"></a>
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ data.id }}" style="display: block; width: 100%; height: 100%;"></a>
+
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                  Slide 3
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                  Slide 4
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                  Slide 5
+                </div>
+              </div>
+              <!-- Add Arrows -->
+              <div class="swiper-button-next swiper-button-white"></div>
+              <div class="swiper-button-prev swiper-button-white"></div>
+            </div>
+            <div class="swiper gallery-thumbs">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                </div>
+                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- İlan Bilgileri -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">{{ data.price }} {{ data.currency.symbol }}</h4>
+                    <p class="card-text"><strong>İlan Tarihi:</strong> {{ data.create_at }}</p>
+                    <p class="card-text"><strong>Kategori:</strong> {{ data.category.name }}</p>
+                    <p class="card-text"><strong>Konum:</strong> {{ data.country }}, {{ data.city.name }}</p>
+                    <p class="card-text"><strong>Telefon:</strong> {{ data.phone_number }}</p>
+                    <p class="card-text"><strong>Adres:</strong> {{ data.address }}</p>
+                </div>
+            </div>
+              <div class="card">
+                <div class="card-body d-flex align-items-center">
+                  {% if data.user.profilepicturemodel.profile_photo %}
+                  {% with profile_photo_url=data.user.profilepicturemodel.profile_photo.url %}
+                  <img src="{{ profile_photo_url }}" class="avatar avatar-md rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
+                     >
+                  {% endwith %}
+                  {% else %}
+                  <img src="{% static 'assets/img/avatars/11.png' %}" class="rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
+                     style="width: 80px; height: 80px;">
+                  {% endif %}
+                  <div>
+                     <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
+                     <small>{{data.user.educationalinformationmodel.University}}</small>
+                  </div>
+               </div>
+              </div>
+        </div>
+
+
+    </div>
+
+    <!-- İlan Açıklaması -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Açıklama</h4>
+                    <p class="card-text">{{ data.description | safe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock content %}
+{% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/swiper/swiper.js' %}"></script>
+<script src="{% static 'assets/js/ui-carousel.js' %}"></script>
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
+
+{% endblock extra_javascript %}

@@ -74,20 +74,20 @@ class ArticleAddView(View):
 class ArticlesDetailsView(View):
     model_article = ArticlesModel
     model_likes = Like
-    template = 'blogs/article-details.html'
+    template = 'blogs/details.html'
     context = {
         }
 
     def get(self, request, slug):
-        article = get_object_or_404(self.model_article, slug=slug)
-        content_type = ContentType.objects.get_for_model(article)
+        data = get_object_or_404(self.model_article, slug=slug)
+        content_type = ContentType.objects.get_for_model(data)
         liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=article.id)
+        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         self.context.update({
-            'siteTitle':article.title,
-            'article': article,
+            'siteTitle':data.title,
+            'data': data,
             'comments': comments,
             'liked' : liked,
             'liked_comment' : liked_comment,
@@ -96,16 +96,16 @@ class ArticlesDetailsView(View):
         return render(request, self.template, self.context)
 
     def post(self, request, slug):
-        article = get_object_or_404(self.model_article, slug=slug)
-        content_type = ContentType.objects.get_for_model(article)
-        form = CommentView.comment_post(request=request, content_type=content_type, object_id=article.id)
+        data = get_object_or_404(self.model_article, slug=slug)
+        content_type = ContentType.objects.get_for_model(data)
+        form = CommentView.comment_post(request=request, content_type=content_type, object_id=data.id)
         liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=article.id)
+        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         self.context.update({
             'form': form,
-            'article' : article,
+            'data' : data,
             'comments': comments,
             'liked' : liked,
             'liked_comment' : liked_comment,

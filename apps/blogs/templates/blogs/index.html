@@ -19,61 +19,60 @@
       </div>
    </div>
 </div>
-<div class="row gy-6 mb-6">
-   {% for article in articles %}
-   <div class="col-sm-6 col-lg-4">
-      <div class="card p-2 h-100 shadow-none border">
-         <div class="bg-label-primary rounded text-center">
-            <a href="{% url 'article_details' article.slug %}">
-            {% for image in article.futured_image.all %}
-            <img class="img-fluid rounded" src="{{ image.photo.url }}" alt="tutor image 1" />
-            {% endfor %}
+<div class="container mt-5">
+   <!-- Makaleler Grid Yapısı -->
+   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for makale in articles %}
+      <div class="col">
+         <div class="card h-100">
+            <!-- Makale Resmi -->
+            {% if makale.futured_image.exists %}
+            {% for image in makale.futured_image.all %}
+            <a href="{% url 'article_details' makale.slug %}">
+            <img src="{{ image.photo.url }}" class="card-img-top" alt="{{ makale.title }}">
             </a>
-         </div>
-         
-         <div class="card-body p-4 pt-2 d-flex flex-column justify-content-between">
-            <div>
-               <div class="d-flex justify-content-between align-items-center mb-4">
-                  <span class="badge bg-label-primary">{{ article.category }}</span>
-                  <p class="d-flex align-items-center justify-content-center fw-medium gap-1 mb-0">
-                     <small class="fw-normal">{{ article.create_at }}</small>
-                  </p>
-               </div>
-               <a href="{% url 'article_details' article.slug %}"><h4 class="mb-0">{{ article.title }}</h4></a>
-               <p class="mt-1" align="justify">{{ article.content|safe|truncatechars:255 }}</p>
+            {% endfor %}
+            {% endif %}
+            <div class="card-body">
+               <!-- Makale Başlığı -->
+               <a href="{% url 'article_details' makale.slug %}">
+                  <h5 class="card-title fw-bold">{{ makale.title|truncatewords:6 }}</h5>
+               </a>
+               <!-- Makale Tarihi ve Kategorisi -->
+               <p class="text-muted mb-2">{{ makale.create_at }} | {{ makale.category.name }}</p>
+               <!-- Makale Özeti -->
+               <p class="card-text">{{ makale.content|safe|truncatewords:30 }}</p>
             </div>
-            <div>
-               <hr  />
-               <div class="d-flex">
-                  <div class="avatar-wrapper">
-                     <div class="avatar me-4">
-                        <a href="{% url 'profile' article.user.username %}">
-                        {% if article.user.profilepicturemodel.profile_photo %}
-                        {% with profile_photo_url=article.user.profilepicturemodel.profile_photo.url %}
-                        <img src="{{ profile_photo_url }}" alt="Avatar" class="rounded-circle" />
-                        {% endwith %}
-                        {% else %}
-                        <img src="{static 'assets/img/avatars/11.png' %}" alt="Avatar" class="rounded-circle" />
-                        {% endif %}
-                        </a>
+            <div class="card-footer bg-white border-top-0">
+               <div class="d-flex justify-content-between align-items-center">
+                  <!-- Yazar Bilgisi -->
+                  <div class="d-flex align-items-center">
+                     {% if makale.user.profilepicturemodel.profile_photo %}
+                     {% with profile_photo_url=makale.user.profilepicturemodel.profile_photo.url %}
+                     <img src="{{ profile_photo_url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                     {% endwith %}
+                     {% else %}
+                     <img src="{% static 'assets/img/avatars/11.png' %}" class="rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
+                        style="width: 80px; height: 80px;">
+                     {% endif %}
+                     <div>
+                        <span>{{ makale.user.first_name }} {{ makale.user.last_name }}</span>
+                        <div>
+                           <small>{{makale.user.educationalinformationmodel.University}}</small>
+                        </div>
                      </div>
                   </div>
-                  <div class="d-flex flex-column">
-                     <a href="{% url 'profile' article.user.username %}">
-                     <span class="text-body">{{article.user.first_name}} {{article.user.last_name}}</span>
-                     </a>
-                     <small>{{article.user.educationalinformationmodel.University}}</small>
-                  </div>
-                  <div class="ms-auto">
-                     <span class="text-muted d-flex align-items-center"><i class="ti ti-message-dots ti-sm me-1"></i> {{ article.comments.count }}</span>
-                     <span class="text-muted d-flex align-items-center"><i class="ti ti-heart ti-sm me-1"></i> {{ article.likes.count }}</span>
+                  <!-- Beğeni ve Yorum Sayısı -->
+                  <div>
+                     <span class="me-3"><i class="ti ti-heart-filled text-danger"></i> {{ makale.likes.count }}</span>
+                     <span><i class="ti ti-message-dots text-primary"></i> {{ makale.comments.count }}</span>
                   </div>
                </div>
             </div>
          </div>
       </div>
+      {% endfor %}
    </div>
-   {% endfor %}
 </div>
 <!-- Canvas -->
 <div
