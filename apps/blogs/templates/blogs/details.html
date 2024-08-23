@@ -25,7 +25,7 @@
    <div class="row justify-content-center">
       <div class="col-lg-8">
          <h1 class="fw-bold mb-0">{{ data.title }}</h1>
-         <p class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</p>
+         <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
       </div>
    </div>
    <!-- Makale Ana Görseli -->
@@ -34,7 +34,7 @@
          <div class="article-image">
             {% if data.futured_image.exists %}
             {% for image in data.futured_image.all %}
-            <img src="{{ image.photo.url }}" class="img-fluid rounded w-100" alt="{{ data.title }}">
+            <img src="{{ image.photo.url }}" class="img-fluid rounded w-100 border" alt="{{ data.title }}">
             {% endfor %}
             {% endif %}
          </div>

@@ -77,10 +77,10 @@
           <div>İtiraflar</div>
         </a>
       </li>
-      <li class="menu-item">
-        <a href="#" class="menu-link">
-          <i class="menu-icon ti-icons ti ti-speakerphone"></i>
-          <div><del>Tartışmalar</del></div>
+      <li class="menu-item {% if current_page == 'questions' %} active{% endif %}">
+        <a href="{% url 'questions' %}" class="menu-link">
+          <i class="menu-icon ti-icons ti ti-message-2-question"></i>
+          <div>Sorular</div>
         </a>
       </li>
       <li class="menu-item">

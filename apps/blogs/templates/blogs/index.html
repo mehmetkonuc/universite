@@ -26,37 +26,36 @@
       <div class="col">
          <div class="card h-100">
             <!-- Makale Resmi -->
-            {% if makale.futured_image.exists %}
             {% for image in makale.futured_image.all %}
             <a href="{% url 'article_details' makale.slug %}">
             <img src="{{ image.photo.url }}" class="card-img-top" alt="{{ makale.title }}">
             </a>
             {% endfor %}
-            {% endif %}
             <div class="card-body">
                <!-- Makale Başlığı -->
                <a href="{% url 'article_details' makale.slug %}">
-                  <h5 class="card-title fw-bold">{{ makale.title|truncatewords:6 }}</h5>
+                  <h4 class="card-title fw-bold">{{ makale.title|truncatewords:6 }}</h4>
                </a>
                <!-- Makale Tarihi ve Kategorisi -->
-               <p class="text-muted mb-2">{{ makale.create_at }} | {{ makale.category.name }}</p>
+               <small class="text-muted mb-2">{{ makale.create_at }} | {{ makale.category.name }}</small>
                <!-- Makale Özeti -->
                <p class="card-text">{{ makale.content|safe|truncatewords:30 }}</p>
             </div>
             <div class="card-footer bg-white border-top-0">
                <div class="d-flex justify-content-between align-items-center">
                   <!-- Yazar Bilgisi -->
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center text-muted">
                      {% if makale.user.profilepicturemodel.profile_photo %}
                      {% with profile_photo_url=makale.user.profilepicturemodel.profile_photo.url %}
                      <img src="{{ profile_photo_url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
                      {% endwith %}
                      {% else %}
-                     <img src="{% static 'assets/img/avatars/11.png' %}" class="rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
-                        style="width: 80px; height: 80px;">
+                     <img src="{% static 'assets/img/avatars/11.png' %}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
                      {% endif %}
                      <div>
-                        <span>{{ makale.user.first_name }} {{ makale.user.last_name }}</span>
+                        <a href="{% url 'profile' makale.user.username %}">
+                        <small class="text-body">{{ makale.user.first_name }} {{ makale.user.last_name }}</small>
+                        </a>
                         <div>
                            <small>{{makale.user.educationalinformationmodel.University}}</small>
                         </div>

@@ -63,7 +63,7 @@
             {% for image in post.photos.all %}
             <div class="gallery-item">
                <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
-               <img src="{{ image.photo.url }}" alt="Post Image">
+               <img src="{{ image.photo.url }}" class="border" alt="Post Image">
                </a>
             </div>
             {% endfor %}

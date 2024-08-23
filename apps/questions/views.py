@@ -1,43 +1,81 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views import View
-from apps.blogs.forms import ArticleAddForm
-from apps.blogs.models import ArticlesModel, Category
+from apps.questions.models import QuestionsModel, Category
 from apps.photos.models import PhotosModel
+from apps.questions.forms import QuestionsAddForm
+from django.views import View
 from django.contrib.contenttypes.models import ContentType
-from apps.comments.models import Comment
 from apps.likes.models import Like
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from apps.comments.views import CommentView
 
 # Create your views here.
-class ArticlesView(View):
-    model_article = ArticlesModel
-    template = 'blogs/index.html'
+class QuestionsView(View):
+    model_questions = QuestionsModel
+    template = 'questions/index.html'
     context = {
-        'siteTitle': 'Makaleler',
+        'siteTitle': 'Sorular',
     }
 
     def get(self, request):
-        articles = self.model_article.objects.all()
+        data = self.model_questions.objects.all()
 
         self.context.update({
-            'articles':articles
+            'data':data
         })
         return render(request, self.template, self.context)
 
 
-class ArticleAddView(View):
+class QuestionsDetailsView(View):
+    model_questions = QuestionsModel
+    model_likes = Like
+    template = 'questions/details.html'
+    context = {
+        }
+
+    def get(self, request, slug):
+        data = get_object_or_404(self.model_questions, slug=slug)
+        content_type = ContentType.objects.get_for_model(data)
+        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        self.context.update({
+            'siteTitle':data.title,
+            'data': data,
+            'comments': comments,
+            'liked' : liked,
+            'liked_comment' : liked_comment,
+        })
+
+        return render(request, self.template, self.context)
+
+    def post(self, request, slug):
+        data = get_object_or_404(self.model_questions, slug=slug)
+        content_type = ContentType.objects.get_for_model(data)
+        form = CommentView.comment_post(request=request, content_type=content_type, object_id=data.id)
+        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        self.context.update({
+            'form': form,
+            'data' : data,
+            'comments': comments,
+            'liked' : liked,
+            'liked_comment' : liked_comment,
+            })
+        return render(request, self.template, self.context)
+
+class QuestionsAddView(View):
     model_categories = Category
     model_photos = PhotosModel
-    form_article = ArticleAddForm
-    template = 'blogs/article-add.html'
+    form_questions = QuestionsAddForm
+    template = 'questions/add.html'
     context = {
-        'siteTitle': 'Makale Ekle',
+        'siteTitle': 'Soru Ekle',
     }
 
     def get(self, request):
-        form = self.form_article()
+        form = self.form_questions()
         categories = self.model_categories.objects.filter(parent__isnull=True)
 
         self.context.update({
@@ -47,7 +85,7 @@ class ArticleAddView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
-        form = self.form_article(request.POST)
+        form = self.form_questions(request.POST)
         if form.is_valid():
             form_data = form.save(commit=False)
             form_data.user = request.user
@@ -69,103 +107,3 @@ class ArticleAddView(View):
         })
 
         return render(request, self.template, self.context)
-
-
-class ArticlesDetailsView(View):
-    model_article = ArticlesModel
-    model_likes = Like
-    template = 'blogs/details.html'
-    context = {
-        }
-
-    def get(self, request, slug):
-        data = get_object_or_404(self.model_article, slug=slug)
-        content_type = ContentType.objects.get_for_model(data)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-
-        self.context.update({
-            'siteTitle':data.title,
-            'data': data,
-            'comments': comments,
-            'liked' : liked,
-            'liked_comment' : liked_comment,
-        })
-
-        return render(request, self.template, self.context)
-
-    def post(self, request, slug):
-        data = get_object_or_404(self.model_article, slug=slug)
-        content_type = ContentType.objects.get_for_model(data)
-        form = CommentView.comment_post(request=request, content_type=content_type, object_id=data.id)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-
-        self.context.update({
-            'form': form,
-            'data' : data,
-            'comments': comments,
-            'liked' : liked,
-            'liked_comment' : liked_comment,
-            })
-        return render(request, self.template, self.context)
-
-
-class ArticleEditView(View):
-    model_categories = Category
-    model_article = ArticlesModel
-    model_photos = PhotosModel
-    form_article = ArticleAddForm
-    template = 'blogs/article-add.html'
-    context = {
-        'siteTitle': 'Makale Ekle',
-    }
-
-    def get(self, request, slug):
-        instance = self.model_article.objects.filter(slug=slug).first()
-        form = self.form_article(instance = instance)
-        categories = self.model_categories.objects.filter(parent__isnull=True)
-
-        self.context.update({
-            'form': form,
-            'categories' : categories
-        })
-        return render(request, self.template, self.context)
-
-    def post(self, request):
-        form = self.form_article(request.POST)
-        if form.is_valid():
-            form_data = form.save(commit=False)
-            form_data.user = request.user
-            form_data.save()
-            futured_image = request.FILES.get('futured_image')
-            self.model_photos.objects.create(
-                user=request.user,
-                content_type=ContentType.objects.get_for_model(form_data),
-                object_id=form_data.pk,
-                photo=futured_image
-            )
-            return redirect('article_details', slug=form_data.slug)
-
-        categories = self.model_categories.objects.filter(parent__isnull=True)
-
-        self.context.update({
-            'form': form,
-            'categories' : categories
-        })
-
-        return render(request, self.template, self.context)
-
-
-
-
-
-def delete_article(request, article_id):
-    delete_article = ArticlesModel.objects.get(id=article_id)
-
-    if delete_article.user == request.user or request.user.is_superuser:
-        delete_article.delete()
-
-    return redirect('articles')
