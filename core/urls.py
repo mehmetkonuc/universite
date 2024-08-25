@@ -50,4 +50,5 @@ urlpatterns = [
     path('marketplace/', include('apps.marketplace.urls')),
     path('confessions/', include('apps.confessions.urls')),
     path('questions/', include('apps.questions.urls')),
+    path('documents/', include('apps.documents.urls')),
 ]

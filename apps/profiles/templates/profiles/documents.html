@@ -1,0 +1,60 @@
+{% extends 'profiles/partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
+<style>
+   .card img {
+   height: 200px; /* İstediğiniz yükseklik */
+   object-fit: cover; /* Resmi alanın tamamına sığdır */
+   width: 100%; /* Resmi genişliğe yay */
+   }
+</style>
+{% endblock extra_css%}
+
+{% block profile_content %}
+
+{% for document in documents %}
+<div class="card card-border-shadow-primary mb-4">
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{% url 'document_details' slug=document.slug %}">
+                <h4 class="card-title fw-bold">{{document.title}}</h4>
+            </a>
+        </h5>
+        <p class="card-text">
+            <strong>Folder:</strong> 
+            <a href="">
+                {{ document.folder.name }}
+            </a>
+            <br>
+            <strong>Uploaded by:</strong> {{ document.user.username }}
+            <br>
+            <strong>Uploaded on:</strong> {{ document.uploaded_at|date:"F d, Y" }}
+            <br>
+            <strong>Documents in Folder:</strong> {{ document.folder.documents.count }}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <span class="badge bg-primary me-2">
+                    <i class="bi bi-hand-thumbs-up"></i> {{ document.likes_count }} Likes
+                </span>
+                <span class="badge bg-secondary">
+                    <i class="bi bi-chat-left-text"></i> {{ document.comments_count }} Comments
+                </span>
+            </div>
+            <a href="" class="btn btn-outline-primary">
+                View Details
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+{% endblock %}
+{% block extra_javascript %}
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
+
+{% endblock extra_javascript %}

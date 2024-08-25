@@ -22,7 +22,7 @@
         <div class="col-md-8">
             {% for item in data %}
             <!-- Single Question Card -->
-            <div class="card mb-4">
+            <div class="card card-border-shadow-primary mb-4">
                 <div class="card-body">
                     <a href="{% url 'question_details' item.slug %}">
                         <h4 class="card-title fw-bold">{{item.title}}</h4>

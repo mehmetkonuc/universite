@@ -24,7 +24,7 @@
    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       {% for makale in articles %}
       <div class="col">
-         <div class="card h-100">
+         <div class="card card-border-shadow-primary h-100">
             <!-- Makale Resmi -->
             {% for image in makale.futured_image.all %}
             <a href="{% url 'article_details' makale.slug %}">

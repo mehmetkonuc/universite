@@ -65,10 +65,10 @@
           <div>İlanlar</div>
         </a>
       </li>
-      <li class="menu-item">
-        <a href="#" class="menu-link">
+      <li class="menu-item {% if current_page == 'documents' %} active{% endif %}">
+        <a href="{% url 'documents' %}" class="menu-link">
           <i class="menu-icon tf-icons ti ti-notebook"></i>
-          <div><del>Ders Notları</del></div>
+          <div>Ders Notları</div>
         </a>
       </li>
       <li class="menu-item {% if current_page == 'confessions' %} active{% endif %}">

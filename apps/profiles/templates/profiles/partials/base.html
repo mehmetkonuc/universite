@@ -1,0 +1,76 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
+{% endblock %}
+{% block content %}
+<!-- Header -->
+<div class="row mt-8">
+   <div class="col-12">
+      <div class="card mb-6">
+         <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
+            <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+               {% if profile.profilepicturemodel.profile_photo %}
+               {% with profile_photo_url=profile.profilepicturemodel.profile_photo.url %}
+               <img
+                  src="{{ profile_photo_url }}"
+                  alt="user image"
+                  class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+               {% endwith %}
+               {% else %}
+               <img
+                  src="{% static 'assets/img/avatars/14.png' %}"
+                  alt="user image"
+                  class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+               {% endif %}
+
+            </div>
+            <div class="flex-grow-1 mt-3 mt-lg-5">
+               <div
+                  class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
+                  <div class="user-profile-info">
+                     <h4 class="mb-0 mt-lg-6">{{profile.first_name}} {{profile.last_name}} <span class="badge badge-center bg-success bg-glow">8.2</span></h4>
+                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kullanıcı Adı">@{{profile.username}}</span>
+                     
+                     <ul
+                        class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                           <i class="ti ti-building-bank ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.University}}</span>
+                        </li>
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                           <i class="ti ti-address-book ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.Department}}</span>
+                        </li>
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                           <i class="ti ti-school ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.Status}}</span>
+                        </li>
+                     </ul>
+                  </div>
+                  {%if user.username == profile.username %}
+
+                  <a href="{% url 'profile_settings' %}" class="btn btn-primary mb-1">
+                  <i class="ti ti-settings ti-xs me-2"></i>Hesap Ayarları
+                  </a>
+                  {%else%}
+                  <a href="javascript:void(0)" class="btn btn-primary mb-1">
+                     <i class="ti ti-user-check ti-xs me-2"></i>Arkadaş Ekle
+                     </a>
+                     {% endif %}
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!--/ Header -->
+{% block profile-nav %}
+{% include 'profiles/partials/profile-nav.html' %}            
+{% endblock %}
+
+{% block profile_content %}
+{% endblock %}
+
+
+{% endblock %}
+{% block extra_javascript %}
+{% endblock %}

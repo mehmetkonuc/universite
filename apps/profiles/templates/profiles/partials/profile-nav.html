@@ -1,0 +1,104 @@
+<!-- Primary navbar -->
+{% with current_page=request.resolver_match.url_name %}
+<nav class="navbar navbar-expand-xl navbar-detached bg-navbar-theme mb-4">
+   <div class="container-fluid">
+      <span class="navbar-brand d-lg-none">
+      {% if current_page == 'profile' %}
+      Bilgi
+      {% elif current_page == 'education_settings' %}
+      Eğitim Ayarı
+      {% elif current_page == 'additional_settings' %}
+      Ek Bilgiler
+      {% elif current_page == 'profile_delete' %}
+      Hesabı Sil
+      {% endif %}
+      </span>
+      <button
+         class="navbar-toggler"
+         type="button"
+         data-bs-toggle="collapse"
+         data-bs-target="#navbar-ex-7">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar-ex-7">
+         <ul class="nav nav-pills flex-column flex-sm-row gap-2 gap-lg-0">
+            <li class="nav-item">
+               <a class="nav-link {% if current_page == 'profile' %}active{% endif %}" href="{% url 'profile' username=profile.username %}"
+                  ><i class="tf-icons navbar-icon ti ti-info-circle me-1"></i> Bilgi</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link {% if current_page == 'posts_profile' %}active{% endif %}" href="{% url 'posts_profile' username=profile.username %}"
+                  ><i class="tf-icons navbar-icon ti ti-ballpen me-1"></i> Gönderiler</a
+                  >
+            </li>
+            <li class="nav-item">
+               <a class="nav-link {% if current_page == 'articles_profile' %}active{% endif %}" href="{% url 'articles_profile' username=profile.username %}"
+                  ><i class="tf-icons navbar-icon ti ti-blockquote me-1"></i> Makaleler</a
+                  >
+            </li>
+            <li class="nav-item">
+               <a class="nav-link {% if current_page == 'marketplace_profile' %}active{% endif %}" href="{% url 'marketplace_profile' username=profile.username %}"
+                  ><i class="tf-icons navbar-icon ti ti-building-store me-1"></i> İlanlar</a
+                  >
+            </li>
+            <li class="nav-item">
+               <a class="nav-link {% if current_page == 'documents_profile' %}active{% endif %}" href="{% url 'documents_profile' username=profile.username %}"
+                  ><i class="tf-icons navbar-icon ti ti-notebook me-1"></i> Ders Notları</a
+                  >
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="javascript:void(0);"
+                  ><i class="tf-icons navbar-icon ti ti-spy me-1"></i> İtiraflar</a
+                  >
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="javascript:void(0);"
+                  ><i class="tf-icons navbar-icon ti ti-message-2-question me-1"></i> Sorular</a
+                  >
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="javascript:void(0);"
+                  ><i class="tf-icons navbar-icon ti ti-calendar-stats me-1"></i> Etkinlikler</a
+                  >
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>
+{% endwith %}
+{% block extra_javascript %}
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+       updateNavbarText(); // Sayfa yüklendiğinde çağrılır
+   });
+   
+   // Sayfa değiştikçe çağrılacak fonksiyon
+   window.addEventListener("hashchange", function() {
+       updateNavbarText();
+   });
+   
+   // Navbar'daki metni güncelleyen fonksiyon
+   function updateNavbarText() {
+       var currentPage = window.location.hash.substr(1); // Şu anki sayfa adı
+       var navbarText = document.querySelector(".navbar-text");
+       if (navbarText) {
+           switch (currentPage) {
+               case 'profile':
+                   navbarText.textContent = "Bilgi";
+                   break;
+               case 'education_settings':
+                   navbarText.textContent = "Eğitim Ayarı";
+                   break;
+               case 'additional_settings':
+                   navbarText.textContent = "Ek Bilgiler";
+                   break;
+               case 'profile_delete':
+                   navbarText.textContent = "Hesabı Sil";
+                   break;
+   
+           }
+       }
+   }
+   
+</script>
+{% endblock %}

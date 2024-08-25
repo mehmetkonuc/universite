@@ -1,0 +1,75 @@
+{% extends 'profiles/partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
+<style>
+   .card img {
+   height: 200px; /* İstediğiniz yükseklik */
+   object-fit: cover; /* Resmi alanın tamamına sığdır */
+   width: 100%; /* Resmi genişliğe yay */
+   }
+</style>
+{% endblock extra_css%}
+
+{% block profile_content %}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+   {% for makale in articles %}
+   <div class="col">
+      <div class="card card-border-shadow-primary h-100">
+         <!-- Makale Resmi -->
+         {% for image in makale.futured_image.all %}
+         <a href="{% url 'article_details' makale.slug %}">
+         <img src="{{ image.photo.url }}" class="card-img-top" alt="{{ makale.title }}">
+         </a>
+         {% endfor %}
+         <div class="card-body">
+            <!-- Makale Başlığı -->
+            <a href="{% url 'article_details' makale.slug %}">
+               <h4 class="card-title fw-bold">{{ makale.title|truncatewords:6 }}</h4>
+            </a>
+            <!-- Makale Tarihi ve Kategorisi -->
+            <small class="text-muted mb-2">{{ makale.create_at }} | {{ makale.category.name }}</small>
+            <!-- Makale Özeti -->
+            <p class="card-text">{{ makale.content|safe|truncatewords:30 }}</p>
+         </div>
+         <div class="card-footer bg-white border-top-0">
+            <div class="d-flex justify-content-between align-items-center">
+               <!-- Yazar Bilgisi -->
+               <div class="d-flex align-items-center text-muted">
+                  {% if makale.user.profilepicturemodel.profile_photo %}
+                  {% with profile_photo_url=makale.user.profilepicturemodel.profile_photo.url %}
+                  <img src="{{ profile_photo_url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                  {% endwith %}
+                  {% else %}
+                  <img src="{% static 'assets/img/avatars/11.png' %}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                  {% endif %}
+                  <div>
+                     <a href="{% url 'profile' makale.user.username %}">
+                     <small class="text-body">{{ makale.user.first_name }} {{ makale.user.last_name }}</small>
+                     </a>
+                     <div>
+                        <small>{{makale.user.educationalinformationmodel.University}}</small>
+                     </div>
+                  </div>
+               </div>
+               <!-- Beğeni ve Yorum Sayısı -->
+               <div>
+                  <span class="me-3"><i class="ti ti-heart-filled text-danger"></i> {{ makale.likes.count }}</span>
+                  <span><i class="ti ti-message-dots text-primary"></i> {{ makale.comments.count }}</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   {% endfor %}
+</div>
+
+
+{% endblock %}
+{% block extra_javascript %}
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
+
+{% endblock extra_javascript %}

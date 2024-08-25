@@ -1,0 +1,84 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+
+{% endblock extra_css%}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4">Documents</h1>
+
+  {% for document in data %}
+  <div class="card mb-4 card-border-shadow-primary">
+      <div class="card-body">
+          <h5 class="card-title">
+              <a href="{% url 'document_details' slug=document.slug %}">
+                  <h4 class="card-title fw-bold">{{document.title}}</h4>
+              </a>
+          </h5>
+          <p class="card-text">
+              <strong>Folder:</strong> 
+              <a href="">
+                  {{ document.folder.name }}
+              </a>
+              <br>
+              <strong>Uploaded by:</strong> {{ document.user.username }}
+              <br>
+              <strong>Uploaded on:</strong> {{ document.uploaded_at|date:"F d, Y" }}
+              <br>
+              <strong>Documents in Folder:</strong> {{ document.folder.documents.count }}
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+              <div>
+                  <span class="badge bg-primary me-2">
+                      <i class="bi bi-hand-thumbs-up"></i> {{ document.likes_count }} Likes
+                  </span>
+                  <span class="badge bg-secondary">
+                      <i class="bi bi-chat-left-text"></i> {{ document.comments_count }} Comments
+                  </span>
+              </div>
+              <a href="" class="btn btn-outline-primary">
+                  View Details
+              </a>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+  
+  <!-- Pagination -->
+  <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+          {% if documents.has_previous %}
+          <li class="page-item">
+              <a class="page-link" href="?page={{ documents.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+              </a>
+          </li>
+          {% endif %}
+          {% for num in documents.paginator.page_range %}
+          <li class="page-item {% if documents.number == num %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+          </li>
+          {% endfor %}
+          {% if documents.has_next %}
+          <li class="page-item">
+              <a class="page-link" href="?page={{ documents.next_page_number }}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+              </a>
+          </li>
+          {% endif %}
+      </ul>
+  </nav>
+
+</div>
+
+
+
+
+{% endblock content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+

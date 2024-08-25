@@ -1,39 +1,140 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from . import forms
+from apps.profiles import forms
 from django.contrib.auth import logout
 import apps.profiles.models as models
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from apps.post.models import PostsModel
+from apps.blogs.models import ArticlesModel
+from apps.comments.models import Comment
+from apps.likes.models import Like
+from apps.marketplace.models import MarketPlaceModel
+from apps.documents.models import DocumentsModel
+from apps.confessions.models import ConfessionsModel
+from apps.questions.models import QuestionsModel
+from django.contrib.contenttypes.models import ContentType
 
 class ProfileView(LoginRequiredMixin, View):
     model = models.EducationalInformationModel
     model_posts = PostsModel
-    template = 'profile.html'
+    template = 'profiles/index.html'
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        user = get_object_or_404(users, username=username)
-        model = self.model.objects.filter(User=user).first()
-        posts = self.model_posts.objects.filter(User=user).order_by('-PublishDate')
+        profile = get_object_or_404(users, username=username)
+        article = ArticlesModel.objects.filter(user=profile).count()
+        comment = Comment.objects.filter(user=profile).count()
+        like = Like.objects.filter(user=profile).count()
+        posts = self.model_posts.objects.filter(User=profile).count()
+        marketplace = MarketPlaceModel.objects.filter(user=profile).count()
+        documents = DocumentsModel.objects.filter(user=profile).count()
+        confessions = ConfessionsModel.objects.filter(user=profile, is_privacy=False).count()
+        questions = QuestionsModel.objects.filter(user=profile).count()
+        
         self.context.update(
-            {'model': model,
-             'profileUser' : user,
-             'posts':posts}
+            {'profile': profile,
+            'article': article,
+            'comment': comment,
+            'marketplace': marketplace,
+            'documents': documents,
+            'confessions': confessions,
+            'questions': questions,
+            'like': like,
+            'posts':posts}
         )
         return render(request, self.template, self.context)
-    
+
+
+class PostsProfileView(LoginRequiredMixin, View):
+    model_posts = PostsModel
+    model_like = Like
+    template = 'profiles/posts.html'
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        users = get_user_model()  # Varsayılan kullanıcı modelini al
+        profile = get_object_or_404(users, username=username)
+        posts = self.model_posts.objects.filter(User=profile)
+        content_type = ContentType.objects.get_for_model(self.model_posts)
+        liked = self.model_like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+
+        self.context.update(
+            {'profile': profile,
+             'posts':posts,
+            'liked':liked
+             }
+        )
+        return render(request, self.template, self.context)
+
+
+class ArticlesProfileView(LoginRequiredMixin, View):
+    model_articles = ArticlesModel
+    template = 'profiles/articles.html'
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        users = get_user_model()  # Varsayılan kullanıcı modelini al
+        profile = get_object_or_404(users, username=username)
+        articles = self.model_articles.objects.filter(user=profile)
+
+        self.context.update(
+            {'profile': profile,
+             'articles':articles,
+             }
+        )
+        return render(request, self.template, self.context)
+
+
+class MarketplaceProfileView(LoginRequiredMixin, View):
+    model_marketplace = MarketPlaceModel
+    template = 'profiles/marketplace.html'
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        users = get_user_model()  # Varsayılan kullanıcı modelini al
+        profile = get_object_or_404(users, username=username)
+        marketplace = self.model_marketplace.objects.filter(user=profile)
+
+        self.context.update(
+            {'profile': profile,
+             'marketplace':marketplace,
+             }
+        )
+        return render(request, self.template, self.context)
+
+class DocumentsProfileView(LoginRequiredMixin, View):
+    model_documents = DocumentsModel
+    template = 'profiles/documents.html'
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        users = get_user_model()  # Varsayılan kullanıcı modelini al
+        profile = get_object_or_404(users, username=username)
+        documents = self.model_documents.objects.filter(user=profile)
+
+        self.context.update(
+            {'profile': profile,
+             'documents':documents,
+             }
+        )
+        return render(request, self.template, self.context)
 
 class ProfileSettingsView(LoginRequiredMixin, View):
     form_class = forms.ProfilePictureForm
     profile_form = forms.ProfileEditForm
-    template_name = 'settings/profile-settings.html'
+    template_name = 'profiles/settings/profile-settings.html'
     context = {
         'siteTitle': 'Hesap Ayarları',
     }
@@ -64,7 +165,7 @@ class ProfileSettingsView(LoginRequiredMixin, View):
 class PictureSettingsView(LoginRequiredMixin, View):
     form_class = forms.ProfilePictureForm
     profile_form = forms.ProfileEditForm
-    template_name = 'settings/profile-settings.html'
+    template_name = 'profiles/settings/profile-settings.html'
     context = {
         'siteTitle': 'Hesap Ayarları',
     }
@@ -88,7 +189,7 @@ class PictureSettingsView(LoginRequiredMixin, View):
 
 
 class EducationSettingsView(LoginRequiredMixin, View):
-    template_name = 'settings/education-settings.html'
+    template_name = 'profiles/settings/education-settings.html'
     model = models.EducationalInformationModel
     form = forms.EducationalInformationForm
     context = {
@@ -115,7 +216,7 @@ class EducationSettingsView(LoginRequiredMixin, View):
 
 
 class AdditionalInformationView(LoginRequiredMixin, View):
-    template_name = 'settings/additional-information.html'
+    template_name = 'profiles/settings/additional-information.html'
     model = models.AdditionalInformationModel
     form = forms.AdditionalInformationForm
     context = {
@@ -142,7 +243,7 @@ class AdditionalInformationView(LoginRequiredMixin, View):
 
 
 class ProfileDeleteView(LoginRequiredMixin, View):
-    template_name = 'settings/profile-delete.html'
+    template_name = 'profiles/settings/profile-delete.html'
     context = { 
             'siteTitle' : 'Hesabı Sil'           
         }
