@@ -1,11 +1,12 @@
 from django import forms
-from . import models
+from apps.blogs.models import ArticlesModel
+from django.core.exceptions import ValidationError
 
 class ArticleAddForm(forms.ModelForm):
 
     class Meta:
-        model = models.ArticlesModel
-        fields = ['title', 'content', 'category']
+        model = ArticlesModel
+        fields = ['title', 'content', 'category', 'futured_image']
         widgets = {
             'category': forms.Select(attrs={
                 'class': 'selectpicker w-100',
@@ -13,3 +14,4 @@ class ArticleAddForm(forms.ModelForm):
                 'data-live-search': 'true'
             }),
         }
+

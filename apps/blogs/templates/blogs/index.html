@@ -26,11 +26,9 @@
       <div class="col">
          <div class="card card-border-shadow-primary h-100">
             <!-- Makale Resmi -->
-            {% for image in makale.futured_image.all %}
             <a href="{% url 'article_details' makale.slug %}">
-            <img src="{{ image.photo.url }}" class="card-img-top" alt="{{ makale.title }}">
+            <img src="{{makale.futured_image.url}}" class="card-img-top" alt="{{ makale.title }}">
             </a>
-            {% endfor %}
             <div class="card-body">
                <!-- Makale Başlığı -->
                <a href="{% url 'article_details' makale.slug %}">

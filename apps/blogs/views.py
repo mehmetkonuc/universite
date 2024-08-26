@@ -4,10 +4,7 @@ from apps.blogs.forms import ArticleAddForm
 from apps.blogs.models import ArticlesModel, Category
 from apps.photos.models import PhotosModel
 from django.contrib.contenttypes.models import ContentType
-from apps.comments.models import Comment
 from apps.likes.models import Like
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from apps.comments.views import CommentView
 
 # Create your views here.
@@ -31,7 +28,7 @@ class ArticleAddView(View):
     model_categories = Category
     model_photos = PhotosModel
     form_article = ArticleAddForm
-    template = 'blogs/article-add.html'
+    template = 'blogs/add.html'
     context = {
         'siteTitle': 'Makale Ekle',
     }
@@ -47,18 +44,13 @@ class ArticleAddView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
-        form = self.form_article(request.POST)
+        form = self.form_article(request.POST, request.FILES)
+        
         if form.is_valid():
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
-            futured_images = request.FILES.get('futured_image')
-            self.model_photos.objects.create(
-                user=request.user,
-                content_type=ContentType.objects.get_for_model(form_data),
-                object_id=form_data.pk,
-                photo=futured_images
-            )
+
             return redirect('article_details', slug=form_data.slug)
 
         categories = self.model_categories.objects.filter(parent__isnull=True)
@@ -118,7 +110,7 @@ class ArticleEditView(View):
     model_article = ArticlesModel
     model_photos = PhotosModel
     form_article = ArticleAddForm
-    template = 'blogs/article-add.html'
+    template = 'blogs/add.html'
     context = {
         'siteTitle': 'Makale Ekle',
     }
@@ -130,36 +122,32 @@ class ArticleEditView(View):
 
         self.context.update({
             'form': form,
-            'categories' : categories
+            'instance':instance,
+            'categories' : categories,
+            'futured_image_url': instance.futured_image.url if instance.futured_image else None,
         })
         return render(request, self.template, self.context)
 
-    def post(self, request):
-        form = self.form_article(request.POST)
+    def post(self, request, slug):
+        instance = self.model_article.objects.filter(slug=slug).first()
+        form = self.form_article(instance=instance, data=request.POST or None, files=request.FILES or None)
+        
         if form.is_valid():
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
-            futured_image = request.FILES.get('futured_image')
-            self.model_photos.objects.create(
-                user=request.user,
-                content_type=ContentType.objects.get_for_model(form_data),
-                object_id=form_data.pk,
-                photo=futured_image
-            )
+
             return redirect('article_details', slug=form_data.slug)
 
         categories = self.model_categories.objects.filter(parent__isnull=True)
 
         self.context.update({
             'form': form,
+            'instance':instance,
             'categories' : categories
         })
 
         return render(request, self.template, self.context)
-
-
-
 
 
 def delete_article(request, article_id):

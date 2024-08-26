@@ -20,25 +20,38 @@
       </button>
    </div>
 </div>
-<div class="container mt-5">
    <!-- Makale Başlığı -->
    <div class="row justify-content-center">
-      <div class="col-lg-8">
-         <h1 class="fw-bold mb-0">{{ data.title }}</h1>
+      <div class="col-lg-8 d-flex justify-content-between">
+         <div>
+
+         <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
          <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
+         </div>
+         <div class="dropdown">
+            <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="ti ti-dots-vertical ti-sm"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+               <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+               {% if data.user.username == user.username or user.is_superuser %}
+               <a class="dropdown-item" href="{% url 'article_edit' slug=data.slug %}">Düzenle</a>
+               <a class="dropdown-item text-danger" href="#"
+                  data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
+               {%endif%}
+
+            </div>
+         </div>
       </div>
    </div>
    <!-- Makale Ana Görseli -->
    <div class="row justify-content-center mt-3">
       <div class="col-lg-8">
-         <div class="article-image">
-            {% if data.futured_image.exists %}
-            {% for image in data.futured_image.all %}
-            <img src="{{ image.photo.url }}" class="img-fluid rounded w-100 border" alt="{{ data.title }}">
-            {% endfor %}
-            {% endif %}
+         <div class="article-image ">
+            <img src="{{data.futured_image.url}}" class="img-fluid rounded w-100 border" alt="{{ data.title }}">
          </div>
       </div>
+      
    </div>
    <!-- Yazar Bilgisi -->
    <div class="row justify-content-center mt-4">
@@ -104,11 +117,14 @@
          <!-- End Comment Form -->
       </div>
    </div>
+
+   {% if comments %}
    <div class="row justify-content-center">
       <div class="col-lg-8">
          <h4 class="fw-bold mb-0">Yorumlar</h4>
       </div>
    </div>
+   {%endif%}
    <div class="row justify-content-center mt-4">
       <div class="col-lg-8">
          <!-- Comments -->
@@ -120,7 +136,27 @@
          <!-- End Comments -->
       </div>
    </div>
-</div>
+
+<!-- Delete Article Modal -->
+<div class="modal fade" id="modalCenter_{{data.id}}" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <p>
+               Makaleyi Silmek İstediğinizden Emin Misiniz?
+            </p>
+         </div>
+         <div class="modal-footer">
+            <a class="btn btn-primary" href="{% url 'delete_article' data.id %}">Sil</a>
+            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+         </div>
+      </div>
+   </div>
+ </div>
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
