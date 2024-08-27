@@ -36,6 +36,8 @@ class ArticlesModel(models.Model):
     likes = GenericRelation(Like)
     create_at = models.DateTimeField(auto_now_add=True)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
+    is_published = models.BooleanField(default=False)
+
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
     def __str__(self):

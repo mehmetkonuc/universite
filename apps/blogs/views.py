@@ -16,13 +16,44 @@ class ArticlesView(View):
     }
 
     def get(self, request):
-        articles = self.model_article.objects.all()
+        articles = self.model_article.objects.filter(is_published=True)
 
         self.context.update({
             'articles':articles
         })
         return render(request, self.template, self.context)
 
+
+class MyArticlesView(View):
+    model_article = ArticlesModel
+    template = 'blogs/my_articles.html'
+    context = {
+        'siteTitle': 'Makaleler',
+    }
+
+    def get(self, request):
+        articles = self.model_article.objects.filter(is_published=True, user=request.user)
+
+        self.context.update({
+            'articles':articles
+        })
+        return render(request, self.template, self.context)
+
+
+class MyDraftArticlesView(View):
+    model_article = ArticlesModel
+    template = 'blogs/my_darft_articles.html'
+    context = {
+        'siteTitle': 'Makaleler',
+    }
+
+    def get(self, request):
+        articles = self.model_article.objects.filter(is_published=False, user=request.user)
+
+        self.context.update({
+            'articles':articles
+        })
+        return render(request, self.template, self.context)
 
 class ArticleAddView(View):
     model_categories = Category

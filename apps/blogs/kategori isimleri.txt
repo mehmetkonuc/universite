@@ -1,0 +1,88 @@
+1. Bilim ve Teknoloji
+    Fizik
+    Kimya
+    Biyoloji
+    Matematik
+    Bilgisayar Bilimleri
+    Yapay Zeka
+    Robotik
+    Veri Bilimi
+    Mühendislik
+        Elektrik ve Elektronik
+        Makine Mühendisliği
+        İnşaat Mühendisliği
+2. Sosyal Bilimler
+    Psikoloji
+    Sosyoloji
+    Antropoloji
+    Tarih
+    Siyaset Bilimi
+    Uluslararası İlişkiler
+    Ekonomi
+    Coğrafya
+    Eğitim Bilimleri
+3. Sanat ve Beşeri Bilimler
+    Edebiyat
+        Klasik Edebiyat
+        Modern Edebiyat
+    Felsefe
+    Tarih
+    Dilbilim
+    Görsel Sanatlar
+        Resim
+        Heykel
+    Müzik
+    Tiyatro ve Sinema
+    Medya ve İletişim
+4. Sağlık Bilimleri
+    Tıp
+    Hemşirelik
+    Eczacılık
+    Biyomedikal Bilimler
+    Beslenme ve Diyetetik
+    Fizyoterapi ve Rehabilitasyon
+    Veterinerlik
+    Halk Sağlığı
+5. İşletme ve Yönetim
+    Pazarlama
+    Finans
+    İşletme Yönetimi
+    İnsan Kaynakları
+    Girişimcilik
+    Uluslararası Ticaret
+    Lojistik ve Tedarik Zinciri Yönetimi
+6. Hukuk
+    Anayasa Hukuku
+    Medeni Hukuk
+    Ceza Hukuku
+    Ticaret Hukuku
+    İnsan Hakları Hukuku
+    Çevre Hukuku
+7. Çevre ve Doğa Bilimleri
+    Çevre Bilimi
+    Ekoloji
+    İklim Değişikliği
+    Doğal Kaynaklar
+    Çevre Yönetimi
+    Deniz Bilimleri
+8. Eğitim
+    Eğitim Teknolojileri
+    Pedagoji
+    Özel Eğitim
+    Eğitim Yönetimi
+    Dil Eğitimi
+    STEM Eğitimi
+9. Toplum ve Kültür
+    Kültürel Çalışmalar
+    Medya ve İletişim
+    Kültür ve Sanat
+    Spor ve Rekreasyon
+    Toplumsal Cinsiyet Çalışmaları
+    Etik
+10. Kariyer ve Kişisel Gelişim
+    Kariyer Planlama
+    Liderlik
+    İletişim Becerileri
+    Zaman Yönetimi
+    Motivasyon ve Kişisel Gelişim
+    Yabancı Dil Öğrenimi

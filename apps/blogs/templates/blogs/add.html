@@ -9,60 +9,84 @@
 {% block content %}
 <div class="row justify-content-center">
    <div class="col-md-8 col-xxl-8">
-    <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between">
+      <div class="card shadow-none bg-label-primary mb-4">
+         <div class="card-header d-flex justify-content-between">
             <div class="card-title mb-0">
-                <h5 class="mb-1">Makale Yaz</h5>
-             </div>
-        </div>
-    </div>
-      <div class="card">
-         <div class="card-body">
+               <h5 class="text-primary mb-0 fw-bold">Makale Yaz</h5>
+            </div>
+         </div>
+      </div>
+
             <form method="POST" enctype="multipart/form-data">
                {% csrf_token %}
+               <div class="card mb-4">
+                  <div class="card-body">
                {{form.title|as_crispy_field}}
+               </div>
+               </div>
+               <div class="card mb-4">
+                  <div class="card-body">
                <label for="id_futured_image" class="form-label requiredField">
                Öne Çıkan Görsel<span class="asteriskField">*</span>
                </label>
                {{ form.futured_image.errors }}
                <!-- Custom file upload area -->
-               <div id="upload-container" class="upload-container mb-4" onclick="triggerFileInput()">
+               <div id="upload-container" class="upload-container" onclick="triggerFileInput()">
                   <input type="file" id="futured_image" name="futured_image" accept="image/*" onchange="previewImage(event)" style="display:none;">
                   <input type="hidden" id="remove_image" name="remove_image" value="false">
-
                   <div id="upload-area" class="upload-area text-center">
                      <i class="ti ti-cloud-upload ti-32px mb-4"></i>
                      <p>Resim Yüklemek İçin Tıkla</p>
                   </div>
                </div>
                <!-- Image preview area -->
-               <div id="image-preview" class="image-preview mb-4" data-image-url="{{ futured_image_url }}">
+               <div id="image-preview" class="image-preview" data-image-url="{{ futured_image_url }}">
                   {% if futured_image_url %}
                   <img src="{{ futured_image_url }}" alt="Seçilen Resim">
                   <button type="button" class="delete-btn" onclick="removeImage()">X</button>
                   {% endif %}
-              </div>
-               {{form.content|as_crispy_field}}
-               <label for="category" class="form-label">Category</label>
+               </div>
+               <div id="id_futured_image_helptext" class="form-text mb-4">{{ form.futured_image.help_text }}</div>
+                  </div>
+               </div>
+
+               <div class="card mb-4">
+                  <div class="card-body">
+               <label for="category" class="form-label">{{ form.category.label }}<span class="asteriskField">*</span></label>
                {{ form.category.errors }}
-               <select id="category" name="category" class="selectpicker w-100 mb-4" data-style="btn-default" data-live-search="true">
-                <option value="" data-tokens="">Kategori Seçin</option>
+               <select id="category" name="category" class="selectpicker w-100" data-style="btn-default" data-live-search="true">
+                  <option value="" data-tokens="">Kategori Seçin</option>
                   {% for category in categories %}
                   <option value="{{ category.id }}" data-tokens="{{ category.name }}" {% if instance.category.id == category.id %} selected{%endif%}>{{ category.name }}</option>
                   {% for child in category.get_children %}
                   <option value="{{ child.id }}" data-tokens="{{ child.name }}" {% if instance.category == child %} selected{%endif%}>--- {{ child.name }}</option>
+                  {% for childs in child.get_children %}
+                  <option value="{{ childs.id }}" data-tokens="{{ childs.name }}" {% if instance.category == childs %} selected{%endif%}>------ {{ childs.name }}</option>
+                  {% endfor %}
                   {% endfor %}
                   {% endfor %}
                </select>
-               <button type="submit" class="btn btn-label-primary">Yayınla</button>
+               <div id="id_category_helptext" class="form-text mb-4">{{ form.category.help_text }}</div>
+                  </div>
+               </div>
+               <div class="card mb-4">
+                  <div class="card-body">
+               {{form.content|as_crispy_field}}
+                  </div>
+               </div>
+
+               <div class="card mb-4">
+                  <div class="card-body">
+               {{form.is_published|as_crispy_field}}
+                  </div>
+               </div>
+               <button type="submit" class="btn btn-label-primary">Gönder</button>
             </form>
-         </div>
-      </div>
+
    </div>
 </div>
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
 <script src="{% static 'assets/js/pages/blogs/add.js' %}"></script>
-
 {% endblock extra_javascript %}

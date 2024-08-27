@@ -53,11 +53,33 @@
           <div>Üyeler</div>
         </a>
       </li>
-      <li class="menu-item {% if current_page == 'articles' %} active{% endif %}">
-        <a href="{% url 'articles' %}" class="menu-link">
+      <li class="menu-item {% if '/blogs/' in request.path %} active open{% endif %}">
+        <a href="" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-blockquote"></i>
           <div>Blog</div>
         </a>
+        <ul class="menu-sub">
+          <li class="menu-item {% if current_page == 'articles' %} active{% endif %}">
+            <a href="{% url 'articles' %}" class="menu-link">
+              <div>Tüm Makaleler</div>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_articles' %} active{% endif %}">
+            <a href="{% url 'my_articles' %}" class="menu-link">
+              <div>Makalelerim</div>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_draft_articles' %} active{% endif %}">
+            <a href="{% url 'my_draft_articles' %}" class="menu-link">
+              <div>Taslaklarım</div>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'article_add' %} active{% endif %}">
+            <a href="{% url 'article_add' %}" class="menu-link">
+              <div>Makale Yaz</div>
+            </a>
+          </li>
+        </ul>
       </li>
       <li class="menu-item {% if current_page == 'marketplace' %} active{% endif %}">
         <a href="{% url 'marketplace' %}" class="menu-link">
