@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from apps.marketplace.models import MarketPlaceModel, Category
+from apps.marketplace.models import MarketPlaceModel, Category, MarketPlaceImagesModel
 from apps.marketplace.forms import MarketPlaceForm
 from django.contrib.contenttypes.models import ContentType
 from apps.photos.models import PhotosModel
@@ -17,16 +17,16 @@ class MarketPlaceView(View):
         marketplaces = self.model_marketplace.objects.all()
 
         self.context.update({
-            'marketplaces':marketplaces
+            'data':marketplaces
         })
         return render(request, self.template, self.context)
 
 
 class MarketPlaceAddView(View):
     model_marketplace = MarketPlaceModel
-    model_photos = PhotosModel
+    model_images = MarketPlaceImagesModel
     form_marketplace = MarketPlaceForm
-    template = 'marketplace/marketplace-add.html'
+    template = 'marketplace/add.html'
     context = {
         'siteTitle' : 'İlan Ekle'
     }
@@ -45,14 +45,15 @@ class MarketPlaceAddView(View):
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
-            futured_image = request.FILES.get('futured_image')
-            self.model_photos.objects.create(
-                user=request.user,
-                content_type=ContentType.objects.get_for_model(form_data),
-                object_id=form_data.pk,
-                photo=futured_image
-            )
-            # return redirect('article_details', slug=form_data.slug)
+            images = request.FILES.getlist('images')
+            for image in images:
+                self.model_images.objects.create(
+                    user=request.user,
+                    content_type=ContentType.objects.get_for_model(form_data),
+                    object_id=form_data.pk,
+                    image=image
+                )
+            return redirect('article_details', slug=form_data.slug)
 
         categories = Category.objects.filter(parent__isnull=True)
 
@@ -64,7 +65,7 @@ class MarketPlaceAddView(View):
         return render(request, self.template, self.context)
 
 
-class MarketPlaceDetailView(View):
+class MarketPlaceDetailsView(View):
     model_marketplace = MarketPlaceModel
     template = 'marketplace/details.html'
     context = {

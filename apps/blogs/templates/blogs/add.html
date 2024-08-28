@@ -16,16 +16,15 @@
             </div>
          </div>
       </div>
-
-            <form method="POST" enctype="multipart/form-data">
-               {% csrf_token %}
-               <div class="card mb-4">
-                  <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+         {% csrf_token %}
+         <div class="card mb-4">
+            <div class="card-body">
                {{form.title|as_crispy_field}}
-               </div>
-               </div>
-               <div class="card mb-4">
-                  <div class="card-body">
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
                <label for="id_futured_image" class="form-label requiredField">
                Öne Çıkan Görsel<span class="asteriskField">*</span>
                </label>
@@ -47,11 +46,10 @@
                   {% endif %}
                </div>
                <div id="id_futured_image_helptext" class="form-text mb-4">{{ form.futured_image.help_text }}</div>
-                  </div>
-               </div>
-
-               <div class="card mb-4">
-                  <div class="card-body">
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
                <label for="category" class="form-label">{{ form.category.label }}<span class="asteriskField">*</span></label>
                {{ form.category.errors }}
                <select id="category" name="category" class="selectpicker w-100" data-style="btn-default" data-live-search="true">
@@ -67,22 +65,20 @@
                   {% endfor %}
                </select>
                <div id="id_category_helptext" class="form-text mb-4">{{ form.category.help_text }}</div>
-                  </div>
-               </div>
-               <div class="card mb-4">
-                  <div class="card-body">
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
                {{form.content|as_crispy_field}}
-                  </div>
-               </div>
-
-               <div class="card mb-4">
-                  <div class="card-body">
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
                {{form.is_published|as_crispy_field}}
-                  </div>
-               </div>
-               <button type="submit" class="btn btn-label-primary">Gönder</button>
-            </form>
-
+            </div>
+         </div>
+         <button type="submit" class="btn btn-label-primary">Gönder</button>
+      </form>
    </div>
 </div>
 {% endblock content %}

@@ -16,38 +16,26 @@
   </div>
 
 
-  <div class="container mt-5">
     <!-- İlan Başlığı -->
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="fw-bold">{{ data.title }}</h1>
+            <h1 class="fw-bold mb-0">{{ data.title }}</h1>
         </div>
     </div>
 
     <!-- İlan Fotoğrafları -->
     <div class="row justify-content-center mt-3">
         <div class="col-lg-4">
-          {% for image in data.futured_image.all %}
-
+          <div class="card">
           <div id="swiper-gallery">
             <div class="swiper gallery-top">
               <div class="swiper-wrapper">
-                <div class="swiper-slide" style="background-image: url( {{image.photo.url}} )">
-                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ data.id }}" style="display: block; width: 100%; height: 100%;"></a>
+              {% for image in data.images.all %}
+                <div class="swiper-slide" style="background-image: url( {{image.image.url}} )">
+                  <a href="{{ image.image.url }}" data-fancybox="gallery-{{ data.id }}" style="display: block; width: 100%; height: 100%;"></a>
                 </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ data.id }}" style="display: block; width: 100%; height: 100%;"></a>
+              {% endfor %}
 
-                </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                  Slide 3
-                </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                  Slide 4
-                </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                  Slide 5
-                </div>
               </div>
               <!-- Add Arrows -->
               <div class="swiper-button-next swiper-button-white"></div>
@@ -55,20 +43,17 @@
             </div>
             <div class="swiper gallery-thumbs">
               <div class="swiper-wrapper">
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
+                {% for image in data.images.all %}
+
+                <div class="swiper-slide" style="background-image: url({{image.image.url}})">
                 </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                </div>
-                <div class="swiper-slide" style="background-image: url({{image.photo.url}})">
-                </div>
+                {% endfor %}
+
               </div>
             </div>
           </div>
-          {% endfor %}
+          </div>
+
         </div>
 
         <!-- İlan Bilgileri -->
@@ -116,7 +101,6 @@
             </div>
         </div>
     </div>
-</div>
 
 
 

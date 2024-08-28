@@ -19,7 +19,7 @@ class ArticlesView(View):
         articles = self.model_article.objects.filter(is_published=True)
 
         self.context.update({
-            'articles':articles
+            'data':articles
         })
         return render(request, self.template, self.context)
 
@@ -54,6 +54,7 @@ class MyDraftArticlesView(View):
             'articles':articles
         })
         return render(request, self.template, self.context)
+
 
 class ArticleAddView(View):
     model_categories = Category

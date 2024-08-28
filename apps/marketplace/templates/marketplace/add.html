@@ -1,0 +1,102 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/marketplace/add.css' %}" />
+{{form.media}}
+<style>
+   .django-ckeditor-widget {
+   display: block !important;
+   }
+</style>
+{% endblock extra_css%}
+{% block content %}
+<div class="row justify-content-center">
+   <div class="col-lg-8 col-md-8 col-xxl-8">
+      <div class="card shadow-none bg-label-primary mb-4">
+         <div class="card-header d-flex justify-content-between">
+            <div class="card-title mb-0">
+               <h5 class="text-primary mb-0 fw-bold">İlan Yayınla</h5>
+            </div>
+         </div>
+      </div>
+      <form method="POST" enctype="multipart/form-data">
+         {% csrf_token %}
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.title|as_crispy_field}}
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               <label for="id_images" class="form-label requiredField">
+               Öne Çıkan Görseller<span class="asteriskField">*</span>
+               </label>
+               {{ form.images.errors }}
+               <!-- Custom file upload area -->
+               <div id="upload-container" class="upload-container" onclick="triggerFileInput()">
+                <input type="file" id="images" name="images" accept="image/*" onchange="previewImages(event)" multiple style="display:none;">
+                <input type="hidden" id="remove_images" name="remove_images" value="">
+                <div id="upload-area" class="upload-area text-center">
+                    <i class="ti ti-cloud-upload ti-32px mb-4"></i>
+                    <p>Resim Yüklemek İçin Tıkla</p>
+                </div>
+            </div>
+            <!-- Image preview area -->
+            <div id="image-previews" class="image-previews"></div>
+            
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.description|as_crispy_field}}
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.price|as_crispy_field}}
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               <label for="category" class="form-label">Category</label>
+               <select
+                  id="category"
+                  name="category"
+                  class="selectpicker w-100 mb-4"
+                  data-style="btn-default"
+                  data-live-search="true">
+                  {% for category in categories %}
+                  <option value="{{ category.id }}" data-tokens="{{ category.name }}">{{ category.name }}</option>
+                  {% for child in category.get_children %}
+                  <option value="{{ child.id }}" data-tokens="{{ child.name }}">--- {{ child.name }}</option>
+                  {% endfor %}
+                  {% endfor %}
+               </select>
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.country|as_crispy_field}}
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.city|as_crispy_field}}
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.phone_number|as_crispy_field}}
+            </div>
+         </div>
+         <button type="submit" class="btn btn-label-primary">Gönder</button>
+      </form>
+   </div>
+</div>
+{% endblock content %}
+{% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
+<script src="{% static 'assets/js/pages/marketplace/add.js' %}"></script>
+{% endblock extra_javascript %}

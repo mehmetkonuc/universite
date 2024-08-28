@@ -3,13 +3,35 @@ from django.conf import settings
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
-from apps.photos.models import PhotosModel
 from apps.inputs.models import CountriesModel, City, Currency
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_delete
 from apps.blogs.utils import slugify_tr
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.core.files.storage import default_storage
+from django.utils.timezone import now
 
 # Create your models here.
+def upload_to(instance, filename):
+    return f'marketplace/{now().year}/{now().month}/{filename}'
+
+class MarketPlaceImagesModel(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    image = models.ImageField(upload_to=upload_to)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+@receiver(post_delete, sender=MarketPlaceImagesModel)
+def delete_photo_file(sender, instance, **kwargs):
+    if instance.image:
+        if default_storage.exists(instance.image.name):
+            default_storage.delete(instance.image.name)
+
+
 class Category(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
@@ -25,7 +47,7 @@ class MarketPlaceModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                         on_delete=models.CASCADE)
     title = models.CharField(max_length=155)
-    futured_image = GenericRelation(PhotosModel)
+    images = GenericRelation(MarketPlaceImagesModel)
     description = RichTextUploadingField()
     currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -40,4 +62,3 @@ class MarketPlaceModel(models.Model):
 def pre_save_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = slugify_tr(instance.title)
-
