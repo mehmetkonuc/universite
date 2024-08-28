@@ -16,6 +16,7 @@ from django.utils.timezone import now
 def upload_to(instance, filename):
     return f'marketplace/{now().year}/{now().month}/{filename}'
 
+
 class MarketPlaceImagesModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -56,6 +57,7 @@ class MarketPlaceModel(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add=True)
+    is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
 @receiver(pre_save, sender=MarketPlaceModel)

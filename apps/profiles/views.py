@@ -60,7 +60,7 @@ class PostsProfileView(LoginRequiredMixin, View):
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
         profile = get_object_or_404(users, username=username)
-        posts = self.model_posts.objects.filter(User=profile)
+        posts = self.model_posts.objects.filter(User=profile).order_by('-PublishDate')
         content_type = ContentType.objects.get_for_model(self.model_posts)
         liked = self.model_like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
 
@@ -103,11 +103,11 @@ class MarketplaceProfileView(LoginRequiredMixin, View):
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
         profile = get_object_or_404(users, username=username)
-        marketplace = self.model_marketplace.objects.filter(user=profile)
+        marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
 
         self.context.update(
             {'profile': profile,
-             'marketplace':marketplace,
+             'data':marketplace,
              }
         )
         return render(request, self.template, self.context)

@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from apps.blogs.forms import ArticleAddForm
 from apps.blogs.models import ArticlesModel, Category
-from apps.photos.models import PhotosModel
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.comments.views import CommentView
@@ -35,7 +34,7 @@ class MyArticlesView(View):
         articles = self.model_article.objects.filter(is_published=True, user=request.user)
 
         self.context.update({
-            'articles':articles
+            'data':articles
         })
         return render(request, self.template, self.context)
 
@@ -51,14 +50,13 @@ class MyDraftArticlesView(View):
         articles = self.model_article.objects.filter(is_published=False, user=request.user)
 
         self.context.update({
-            'articles':articles
+            'data':articles
         })
         return render(request, self.template, self.context)
 
 
 class ArticleAddView(View):
     model_categories = Category
-    model_photos = PhotosModel
     form_article = ArticleAddForm
     template = 'blogs/add.html'
     context = {
@@ -140,7 +138,6 @@ class ArticlesDetailsView(View):
 class ArticleEditView(View):
     model_categories = Category
     model_article = ArticlesModel
-    model_photos = PhotosModel
     form_article = ArticleAddForm
     template = 'blogs/add.html'
     context = {
