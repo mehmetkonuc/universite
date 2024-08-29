@@ -9,4 +9,4 @@ class FolderForm(forms.ModelForm):
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = DocumentsModel
-        fields = ['title', 'file', 'folder', 'content']
+        fields = ['title', 'folder', 'content']

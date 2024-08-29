@@ -42,7 +42,7 @@
                <!-- Makale Tarihi ve Kategorisi -->
                <small class="text-muted mb-2">{{ item.create_at }} | {{ item.category.name }}</small>
                <!-- Makale Özeti -->
-               <h4 class="card-title">{{ item.price }} {{ item.currency.symbol }}</h4>
+               <h4 class="card-title fw-bold text-primary">{{ item.currency }}{{ item.price }}</h4>
                <span class="card-text">{{ item.description|safe|truncatewords:30 }}</span>
             </div>
             <div class="card-footer">

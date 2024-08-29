@@ -40,5 +40,5 @@ class Currency(models.Model):
 # class GrandeModel(models.Model):
 #     Grande = models.CharField(max_length=55)
 
-#     def __str__(self):
-#         return self.Grande
+    def __str__(self):
+        return self.name

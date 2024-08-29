@@ -44,7 +44,11 @@ function previewImages(event) {
     previewsArea.style.display = 'flex';
     
     showAddIconDiv(previewsArea);
+
+    // Input'un değerini sıfırla, böylece aynı dosyayı tekrar seçebilirsin
+    event.target.value = '';
 }
+
 
 // addIconDiv'i gösteren fonksiyon
 function showAddIconDiv(previewsArea) {
