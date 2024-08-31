@@ -82,7 +82,7 @@
         </ul>
       </li>
       <li class="menu-item {% if '/marketplace/' in request.path %} active open{% endif %}">
-        <a href="{% url 'marketplace' %}" class="menu-link  menu-toggle">
+        <a href="{% url 'marketplace' %}" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-building-store"></i>
           <div>İlanlar</div>
         </a>
@@ -109,11 +109,28 @@
           </li>
         </ul>
       </li>
-      <li class="menu-item {% if current_page == 'documents' %} active{% endif %}">
-        <a href="{% url 'documents' %}" class="menu-link">
+      <li class="menu-item {% if '/documents/' in request.path %} active open{% endif %}">
+        <a href="" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-notebook"></i>
           <div>Ders Notları</div>
         </a>
+        <ul class="menu-sub">
+          <li class="menu-item {% if current_page == 'documents' %} active{% endif %}">
+            <a href="{% url 'documents' %}" class="menu-link">
+              <small>Tüm Ders Notları</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_documents' %} active{% endif %}">
+            <a href="{% url 'my_documents' %}" class="menu-link">
+              <small>Ders Notlarım</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'documents_add' %} active{% endif %}">
+            <a href="{% url 'documents_add' %}" class="menu-link">
+              <small>Ders Notu Yükle</small>
+            </a>
+          </li>
+          </ul>
       </li>
       <li class="menu-item {% if current_page == 'confessions' %} active{% endif %}">
         <a href="{% url 'confessions' %}" class="menu-link">

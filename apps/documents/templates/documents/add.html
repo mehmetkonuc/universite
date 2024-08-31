@@ -1,0 +1,287 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+
+{{form.media}}
+<style>
+.upload-container {
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+    border: 1px dashed #6c757d;
+    border-radius: 10px;
+    position: relative;
+    padding: 20px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+.upload-container:hover {
+    background-color: #e2e6ea;
+}
+
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    color: #6c757d;
+    font-size: 16px;
+}
+
+.document-previews {
+    display: none;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.document-preview {
+    position: relative;
+    width: 100%;
+    max-width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px;
+}
+
+.document-preview .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.document-preview .delete-btn:hover {
+    background-color: rgba(255, 0, 0, 0.9);
+}
+
+.upload-icon-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+
+   .django-ckeditor-widget {
+   display: block !important;
+   }
+</style>
+{% endblock extra_css%}
+{% block content %}
+<div class="row justify-content-center">
+   <div class="col-lg-8 col-md-8 col-xxl-8">
+      <div class="card shadow-none bg-label-primary mb-4">
+         <div class="card-header d-flex justify-content-between">
+            <div class="card-title mb-0">
+               <h5 class="text-primary mb-0 fw-bold">Ders Notları Yayınla</h5>
+            </div>
+         </div>
+      </div>
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+              {{ message }}
+          </div>
+      {% endfor %}
+  {% endif %}
+      <form method="POST" enctype="multipart/form-data">
+         {% csrf_token %}
+         <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex bd-highlight justify-content-between align-items-center">
+              <div class="flex-grow-1 bd-highlight">{{form.folder|as_crispy_field}}</div>
+              <div class="p-2 bd-highlight"><i class="btn btn-icon btn-label-primary ti ti-plus ti-md mt-2" data-bs-toggle="modal" data-bs-target="#create_folder"></i></div>
+            </div>
+          </div>
+       </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.title|as_crispy_field}}
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               <label for="id_images" class="form-label requiredField">
+               Öne Çıkan Görseller
+               </label>
+               {{ form.images.errors }}
+               <!-- Custom file upload area -->
+               <div id="upload-container" class="upload-container">
+                  <input type="file" id="documents" name="documents" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" onchange="previewDocuments(event)" multiple style="display:none;">
+                  <input type="hidden" id="deleted-documents" name="deleted_documents">
+              
+                  <div id="upload-area" class="upload-area text-center">
+                      <i class="ti ti-cloud-upload ti-32px mb-4"></i>
+                      <p>Doküman Yüklemek İçin Tıkla</p>
+                  </div>
+                </div>
+            
+                <!-- Doküman ön izleme alanı -->
+                <div id="document-previews" class="document-previews">
+                    {% for document in instance.documents.all %}
+                        <div class="document-preview" data-document-id="{{ document.id }}">
+                            <i class="ti ti-file ti-32px"></i>
+                            <p>{{ document.document_name|truncatewords:5 }}</p>
+                            <button type="button" class="delete-btn" onclick="removeDocument(this)">X</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+         </div>
+         <div class="card mb-4">
+            <div class="card-body">
+               {{form.content|as_crispy_field}}
+            </div>
+         </div>
+         <button type="submit" class="btn btn-label-primary">Gönder</button>
+      </form>
+   </div>
+</div>
+
+<!-- Create Folder Modal -->
+<div class="modal fade" id="create_folder" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+      <form method="POST" action="{% url 'create_folder' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+           <h5 class="modal-title" id="modalCenterTitle">Klasör Oluştur</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{form_folder|crispy}}
+        </div>
+        <div class="modal-footer">
+           <button type="submit" class="btn btn-label-primary" data-bs-dismiss="modal">Gönder</button>
+           <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        </div>
+      </form>
+
+     </div>
+  </div>
+</div>
+{% endblock content %}
+{% block extra_javascript %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var previewsArea = document.getElementById('document-previews');
+    var uploadContainer = document.getElementById('upload-container');
+
+    if (previewsArea.querySelectorAll('.document-preview').length > 0) {
+        previewsArea.style.display = 'flex';
+        uploadContainer.style.display = 'none';
+        showAddIconDiv(previewsArea);
+    }
+
+    uploadContainer.addEventListener('click', function() {
+        document.getElementById('documents').click();
+    });
+});
+
+var selectedFiles = [];
+
+function previewDocuments(event) {
+    var files = Array.from(event.target.files);
+    var previewsArea = document.getElementById('document-previews');
+    var uploadContainer = document.getElementById('upload-container');
+
+    files.forEach(function(file) {
+        selectedFiles.push(file);
+
+        var previewDiv = document.createElement('div');
+        previewDiv.className = 'document-preview';
+        previewDiv.innerHTML = `
+            <i class="ti ti-file ti-32px"></i>
+            <p>${file.name}</p>
+            <button type="button" class="delete-btn" onclick="removeDocument(this, '${file.name}')">X</button>
+        `;
+        previewsArea.appendChild(previewDiv);
+    });
+
+    uploadContainer.style.display = 'none';
+    previewsArea.style.display = 'flex';
+    
+    showAddIconDiv(previewsArea);
+
+    event.target.value = '';
+}
+
+function showAddIconDiv(previewsArea) {
+    if (!previewsArea.querySelector('.upload-icon-area')) {
+        var addIconDiv = document.createElement('div');
+        addIconDiv.className = 'document-preview';
+        addIconDiv.innerHTML = `
+            <div class="upload-icon-area">
+                <i class="ti ti-plus ti-32px mb-4"></i>
+            </div>
+        `;
+        previewsArea.insertBefore(addIconDiv, previewsArea.firstChild);
+
+        addIconDiv.addEventListener('click', function() {
+            document.getElementById('documents').click();
+        });
+    }
+}
+
+function removeDocument(button, fileName) {
+    var previewDiv = button.parentElement;
+    var previewsArea = document.getElementById('document-previews');
+    var uploadContainer = document.getElementById('upload-container');
+    var documentId = previewDiv.dataset.documentId;
+    var deletedDocumentsInput = document.getElementById('deleted-documents');
+
+    previewDiv.remove();
+
+    if (fileName) {
+        selectedFiles = selectedFiles.filter(function(file) {
+            return file.name !== fileName;
+        });
+    }
+
+    if (documentId) {
+        var currentValue = deletedDocumentsInput.value;
+        deletedDocumentsInput.value = currentValue ? currentValue + ',' + documentId : documentId;
+    }
+
+    if (previewsArea.querySelectorAll('.document-preview').length === 1) {
+        previewsArea.style.display = 'none';
+        uploadContainer.style.display = 'block';
+    }
+}
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    var inputElement = document.getElementById('documents');
+    var dataTransfer = new DataTransfer();
+
+    selectedFiles.forEach(function(file) {
+        dataTransfer.items.add(file);
+    });
+
+    inputElement.files = dataTransfer.files;
+
+    selectedFiles = [];
+});
+
+</script>
+
+{% endblock extra_javascript %}

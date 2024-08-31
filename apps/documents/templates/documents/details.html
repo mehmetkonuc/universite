@@ -1,124 +1,149 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-comments.css' %}" />
-
 {% endblock extra_css%}
-
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 mb-4">
+       <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+       <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+       </button>
+    </div>
+ </div>
 
+   <!-- Doküman Başlığı -->
+   <div class="row justify-content-center mb-4">
+    <div class="col-lg-8 d-flex justify-content-between">
+       <div>
 
-<div class="container my-5">
+       <h1 class="fw-bold mb-0 mt-0">{{ document.title }}</h1>
+       <small class="text-muted">Klasör: <a href="">{{ document.folder.name }}</a> | Yayınlanma Tarihi: {{ document.uploaded_at }}</small>
+       </div>
+       <div class="dropdown">
+          <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="ti ti-dots-vertical ti-sm"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+             <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+             {% if document.user.username == user.username or user.is_superuser %}
+             <a class="dropdown-item" href="{% url 'documents_edit' slug=document.slug %}">Düzenle</a>
+             <a class="dropdown-item text-danger" href="#"
+                data-bs-toggle="modal" data-bs-target="#modalCenter_{{document.id}}">Sil</a>
+             {%endif%}
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="mb-4">
-                <div class="card">
-                    <div class="card-body">
-                <h1 class="mb-0">{{ document.title }}</h1>
+          </div>
+       </div>
+    </div>
+ </div>
 
-                <p><strong>Folder:</strong> 
-                    <a href="">
-                        {{ document.folder.name }}
-                    </a>
-                </p>
-                <p>{{ document.content|safe }}</p>
-
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <div class="text-muted">
-                        <div class="d-flex align-items-center">
-                            {% if document.user.profilepicturemodel.profile_photo %}
-                            {% with profile_photo_url=document.user.profilepicturemodel.profile_photo.url %}
-                            <div class="avatar me-2">
-                                <img src="{{ profile_photo_url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2">
-                            </div>
-                            {% endwith %}
-                            {% else %}
-                            <div class="avatar avatar-xs me-2">
-                                <img src="{% static 'assets/img/avatars/11.png' %}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                            </div>
-                            {% endif %}
-                            <div>
-                               <small>{{ document.user.first_name }} {{ document.user.last_name }}</small>
-                               <div>
-                                <small>{{document.user.educationalinformationmodel.University}}</small>
-                             </div>
-                            </div>
-                         </div>
-
-                    </div>
-                    <div>
-                        <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{document.likes.content_type.id}}" data-object-id="{{document.id}}">
-                            <i class="ti ti-heart{% if document.id in liked %}-filled{% endif %}"></i>
-                            <span class="like-count text-body">{{ document.likes.count }}</span>
-                            </a>
-                            <i class="ti ti-message-plus me-1"></i> {{ document.comments.count }}
-                    </div>
-                </div>
-
-
-                </div>
+   <!-- Doküman İçeriği -->
+   <div class="row justify-content-center">
+      <div class="col-lg-8">
+         <!-- Yüklenen Dosyalar -->
+         <div class="card card-border-shadow-primary mb-4">
+            <div class="card-header bg-primary mb-4">
+               <h5 class="text-white mb-0 fw-bold">Dokümanlar({{ document.documents.count }})</h5>
             </div>
-            </div>
-
-            <!-- <div class="document-viewer mb-4">
-                <iframe src="{{ document.file.url }}#toolbar=0" allowfullscreen></iframe>
-            </div> -->
-        </div>
-        <div class="col-lg-4">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Document Details</h5>
-                    <p><strong>Folder:</strong> 
-                        <a href="">
-                            {{ document.folder.name }}
+            <div class="card-body">
+               {% if document.documents.exists %}
+               <ul class="list-unstyled">
+                  {% for file in document.documents.all %}
+                  <li class="mb-3">
+                     <div class="d-flex justify-content-between align-items-center">
+                        <span>{{ file.document_name }}</span>
+                        <a href="{{ file.document.url }}" class="btn btn-sm btn-outline-primary" download>
+                        <i class="ti ti-download"></i> İndir
                         </a>
-                    </p>
-                    <p><strong>Documents in Folder:</strong> {{ document.folder.documents.count }}</p>
-                    <a href="{{ document.file.url }}" class="btn btn-outline-primary" download>
-                        <i class="bi bi-download"></i> Download Document
-                    </a>
-                </div>
+                     </div>
+                  </li>
+                  {% endfor %}
+               </ul>
+               {% else %}
+               <p class="text-muted">Bu dokümana ait yüklenen dosya bulunmuyor.</p>
+               {% endif %}
             </div>
-        </div>
-    </div>
-       <!-- Yorum Formu -->
-   <div class="row">
-    <div class="col-lg-8">
-       <!-- Comment Form -->
-       {% block comment-form %}
-       {% include 'comments/form-comment.html' %}
-       {% endblock comment-form %}
-       <!-- End Comment Form -->
-    </div>
- </div>
- <div class="row">
-    <div class="col-lg-8">
-       <h4 class="fw-bold mb-0">Yorumlar ({{document.comments.count}})</h4>
-    </div>
- </div>
- <div class="row mt-4">
-    <div class="col-lg-8">
-       <!-- Comments -->
-       {% for comment in comments %}
-       {% block comment %}
-       {% include 'comments/comments.html' %}
-       {% endblock comment %}
-       {% endfor %}
-       <!-- End Comments -->
-    </div>
- </div>
-</div>
+         </div>
+
+         <div class="card mb-4 card-border-shadow-primary">
+            <div class="card-header bg-primary mb-4">
+               <h5 class="text-white mb-0 fw-bold">Açıklama</h5>
+            </div>
+            <div class="card-body">
+               {{ document.content|safe }}
+            </div>
+         </div>
+      </div>
+      <!-- Yazar Bilgisi ve İstatistikler -->
+      <div class="col-lg-8">
+         <div class="card mb-4 card-border-shadow-primary">
+            <div class="card-header bg-primary mb-4">
+                <h5 class="text-white mb-0 fw-bold">Yazar</h5>
+             </div>
+            <div class="card-body">
+               <div class="d-flex align-items-center">
+                  {% if document.user.profilepicturemodel.profile_photo %}
+                  <img src="{{ document.user.profilepicturemodel.profile_photo.url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-3" style="width: 60px; height: 60px;">
+                  {% else %}
+                  <img src="{% static 'assets/img/avatars/11.png' %}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-3" style="width: 60px; height: 60px;">
+                  {% endif %}
+                  <div>
+                     <h5 class="mb-0">{{ document.user.first_name }} {{ document.user.last_name }}</h5>
+                     <small>{{ document.user.educationalinformationmodel.University }}</small>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- Yorum Formu -->
+   <div class="row justify-content-center mt-4">
+      <div class="col-lg-8">
+         <!-- Comment Form -->
+         {% block comment-form %}
+         {% include 'comments/form-comment.html' %}
+         {% endblock comment-form %}
+         <!-- End Comment Form -->
+      </div>
+   </div>
+   <div class="row justify-content-center mt-4">
+      <div class="col-lg-8">
+         <!-- Comments -->
+         {% for comment in document.comments.all %}
+         {% block comment %}
+         {% include 'comments/comments.html' %}
+         {% endblock comment %}
+         {% endfor %}
+         <!-- End Comments -->
+      </div>
+   </div>
+
+   <!-- Delete Documents Modal -->
+<div class="modal fade" id="modalCenter_{{document.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+       <div class="modal-content">
+          <div class="modal-header bg-label-primary">
 
 
 
-
+             <h5 class="modal-title text-primary mb-4" id="modalCenterTitle">Silme Uyarısı</h5>
+             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+             <p>
+                Geri Getirilemeyecek Şekilde Silinecektir Emin Misiniz?
+             </p>
+          </div>
+          <div class="modal-footer">
+             <a class="btn btn-label-danger" href="{% url 'documents_delete' document.id %}">Sil</a>
+             <button type="button" class="btn btn-label-primary" data-bs-dismiss="modal">Vazgeç</button>
+          </div>
+       </div>
+    </div>
+  </div>
 {% endblock content %}
-
 {% block extra_javascript %}
 <script src="{% static 'assets/js/pages/comments/comment-comments.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 {% endblock extra_javascript %}
-

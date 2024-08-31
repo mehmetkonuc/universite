@@ -39,7 +39,7 @@
 <!-- İlan Fotoğrafları -->
 <div class="row justify-content-center mt-3">
    <div class="col-lg-4">
-      <div class="card">
+      <div class="card card-border-shadow-primary">
          <div id="swiper-gallery">
             <div class="swiper gallery-top">
                <div class="swiper-wrapper">
@@ -66,7 +66,10 @@
    </div>
    <!-- İlan Bilgileri -->
    <div class="col-lg-4">
-      <div class="card mb-4">
+      <div class="card card-border-shadow-primary mb-4">
+         <div class="card-header bg-primary mb-4">
+            <h5 class="text-white mb-0 fw-bold">İlan Detayları</h5>
+         </div>
          <div class="card-body">
             <h4 class="card-title fw-bold text-primary">{{ data.currency }}{{ data.price }}</h4>
             <p class="card-text"><strong>İlan Tarihi:</strong> {{ data.create_at }}</p>
@@ -76,7 +79,10 @@
             <p class="card-text"><strong>Adres:</strong> {{ data.address }}</p>
          </div>
       </div>
-      <div class="card">
+      <div class="card card-border-shadow-primary">
+         <div class="card-header bg-primary mb-4">
+            <h5 class="text-white mb-0 fw-bold">Yazar</h5>
+         </div>
          <div class="card-body d-flex align-items-center">
             {% if data.user.profilepicturemodel.profile_photo %}
             {% with profile_photo_url=data.user.profilepicturemodel.profile_photo.url %}
@@ -98,9 +104,11 @@
 <!-- İlan Açıklaması -->
 <div class="row justify-content-center mt-4">
    <div class="col-lg-8">
-      <div class="card">
+      <div class="card card-border-shadow-primary">
+         <div class="card-header bg-primary">
+            <h5 class="text-white mb-0 fw-bold">Açıklama</h5>
+         </div>
          <div class="card-body">
-            <h4 class="card-title">Açıklama</h4>
             <p class="card-text">{{ data.description | safe }}</p>
          </div>
       </div>
