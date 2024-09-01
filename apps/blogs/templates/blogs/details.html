@@ -20,130 +20,131 @@
       </button>
    </div>
 </div>
-   <!-- Makale Başlığı -->
-   <div class="row justify-content-center">
-      <div class="col-lg-8 d-flex justify-content-between">
-         <div>
-
-         <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
-         <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
-         </div>
-         <div class="dropdown">
-            <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ti ti-dots-vertical ti-sm"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-               <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-               {% if data.user.username == user.username or user.is_superuser %}
-               <a class="dropdown-item" href="{% url 'article_edit' slug=data.slug %}">Düzenle</a>
-               <a class="dropdown-item text-danger" href="#"
-                  data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
-               {%endif%}
-
-            </div>
+<!-- Makale Başlığı -->
+<div class="row justify-content-center">
+   <div class="col-lg-8 d-flex justify-content-between">
+      <div>
+      <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
+      <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
+      </div>
+      <div class="dropdown">
+         <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         <i class="ti ti-dots-vertical ti-sm"></i>
+         </button>
+         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+            <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+            {% if data.user.username == user.username or user.is_superuser %}
+            <a class="dropdown-item" href="{% url 'article_edit' slug=data.slug %}">Düzenle</a>
+            <a class="dropdown-item text-danger" href="#"
+               data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
+            {%endif%}
          </div>
       </div>
    </div>
-   <!-- Makale Ana Görseli -->
-   <div class="row justify-content-center mt-3">
-      <div class="col-lg-8">
-         <div class="article-image ">
-            <img src="{{data.futured_image.url}}" class="img-fluid rounded w-100 border" alt="{{ data.title }}">
-         </div>
+</div>
+<!-- Makale Ana Görseli -->
+<div class="row justify-content-center mt-3">
+   <div class="col-lg-8">
+      <div class="article-image ">
+         <img src="{{data.futured_image.url}}" class="img-fluid rounded w-100 border" alt="{{ data.title }}">
       </div>
-      
    </div>
-   <!-- Makale İçeriği -->
-   <div class="row justify-content-center mt-4">
-      <div class="col-lg-8">
-         <div class="card">
-            <div class="card-header bg-primary mb-4">
-               <h5 class="text-white mb-0 fw-bold">İçerik</h5>
-            </div>
-            <div class="card-body">
-               <div align="justify">
-                  <p class="card-text">{{ data.content | safe }}</p>
-               </div>
+</div>
+<!-- Makale İçeriği -->
+<div class="row justify-content-center mt-4">
+   <div class="col-lg-8">
+      <div class="card">
+         <div class="card-header bg-label-primary mb-4">
+            <h5 class="text-primary mb-0 fw-bold">İçerik</h5>
+         </div>
+         <div class="card-body">
+               {{ data.content | safe }}
+            <div class="d-flex align-items-center border-top">
                <div class="d-flex align-items-center mt-4">
-                  <div class="d-flex align-items-center">
-                     <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
-                     <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %}"></i>
-                     <span class="like-count text-body">{{ data.likes.count }}</span>
-                     </a>
-                     <i class="ti ti-message-plus me-1"></i> {{ data.comments.count }}
-                     <div class="dropdown ms-2">
-                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ti ti-share"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                           <a class="dropdown-item" href="javascript:void(0);">Sil</a>
-                        </div>
+                  <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
+                  <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %}"></i>
+                  <span class="like-count text-body">{{ data.likes.count }}</span>
+                  </a>
+                  <i class="ti ti-message-plus me-1"></i> {{ data.comments.count }}
+                  <div class="dropdown ms-2">
+                     <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <i class="ti ti-share"></i>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                        <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                        <a class="dropdown-item" href="javascript:void(0);">Sil</a>
                      </div>
                   </div>
-                  <div class="ms-auto">
-                  </div>
+               </div>
+               <div class="ms-auto">
                </div>
             </div>
          </div>
       </div>
    </div>
+</div>
 
-      <!-- Yazar Bilgisi -->
-      <div class="row justify-content-center mt-4">
-         <div class="col-lg-8">
-            <div class="card">
-               <div class="card-header bg-primary mb-4">
-                  <h5 class="text-white mb-0 fw-bold">Yazar</h5>
-               </div>
-               <div class="card-body d-flex align-items-center">
+<!-- Yazar Bilgisi -->
+<div class="row justify-content-center mt-4">
+   <div class="col-lg-8">
+      <div class="card card-border-shadow-primary">
+         <div class="card-header bg-label-primary mb-4">
+            <h5 class="text-primary mb-0 fw-bold">Yazar</h5>
+         </div>
+         <div class="card-body d-flex align-items-center">
+            <a href="{% url 'profile' data.user.username %}">
+               <div class="avatar avatar-xl me-3">
                   {% if data.user.profilepicturemodel.profile_photo %}
-                  {% with profile_photo_url=data.user.profilepicturemodel.profile_photo.url %}
-                  <img src="{{ profile_photo_url }}" class="avatar avatar-md rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
-                     >
-                  {% endwith %}
+                  <img src="{{ data.user.profilepicturemodel.profile_photo.url }}" 
+                     class="rounded-circle" 
+                     alt="Yazar Profil Fotoğrafı">
                   {% else %}
-                  <img src="{% static 'assets/img/avatars/11.png' %}" class="rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
-                     style="width: 80px; height: 80px;">
+                  <img src="{% static 'assets/img/avatars/11.png' %}" 
+                     class="rounded-circle" 
+                     alt="Yazar Profil Fotoğrafı">
                   {% endif %}
-                  <div>
-                     <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
-                     <small>{{data.user.educationalinformationmodel.University}} - {{data.user.educationalinformationmodel.Department}}</small>
-                  </div>
                </div>
-            </div>
+            </a>
+            <a href="{% url 'profile' data.user.username %}">
+               <div>
+                  <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
+                  <small class="text-body">{{ data.user.educationalinformationmodel.University }} > {{ data.user.educationalinformationmodel.Department }} > {{ data.user.educationalinformationmodel.Status }}</small>
+               </div>
+            </a>
          </div>
       </div>
+   </div>
+</div>
 
-   <!-- Yorum Formu -->
-   <div class="row justify-content-center mt-4">
-      <div class="col-lg-8">
-         <!-- Comment Form -->
-         {% block comment-form %}
-         {% include 'comments/form-comment.html' %}
-         {% endblock comment-form %}
-         <!-- End Comment Form -->
-      </div>
+<!-- Yorum Formu -->
+<div class="row justify-content-center mt-4">
+   <div class="col-lg-8">
+      <!-- Comment Form -->
+      {% block comment-form %}
+      {% include 'comments/form-comment.html' %}
+      {% endblock comment-form %}
+      <!-- End Comment Form -->
    </div>
+</div>
 
-   {% if comments %}
-   <div class="row justify-content-center">
-      <div class="col-lg-8">
-         <h4 class="fw-bold mb-0">Yorumlar</h4>
-      </div>
+{% if comments %}
+<div class="row justify-content-center">
+   <div class="col-lg-8">
+      <h4 class="fw-bold mb-0">Yorumlar</h4>
    </div>
-   {%endif%}
-   <div class="row justify-content-center mt-4">
-      <div class="col-lg-8">
-         <!-- Comments -->
-         {% for comment in comments %}
-         {% block comment %}
-         {% include 'comments/comments.html' %}
-         {% endblock comment %}
-         {% endfor %}
-         <!-- End Comments -->
-      </div>
+</div>
+{%endif%}
+<div class="row justify-content-center mt-4">
+   <div class="col-lg-8">
+      <!-- Comments -->
+      {% for comment in comments %}
+      {% block comment %}
+      {% include 'comments/comments.html' %}
+      {% endblock comment %}
+      {% endfor %}
+      <!-- End Comments -->
    </div>
+</div>
 
 <!-- Delete Article Modal -->
 <div class="modal fade" id="modalCenter_{{data.id}}" tabindex="-1" aria-hidden="true">

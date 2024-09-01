@@ -4,11 +4,6 @@
 {% block extra_css %}
 
 {{form.media}}
-<style>
-   .django-ckeditor-widget {
-   display: block !important;
-   }
-</style>
 {% endblock extra_css%}
 {% block content %}
 <div class="row justify-content-center">
@@ -16,35 +11,22 @@
       <div class="card shadow-none bg-label-primary mb-4">
          <div class="card-header d-flex justify-content-between">
             <div class="card-title mb-0">
-               <h5 class="text-primary mb-0 fw-bold">İtiraf Yayınla</h5>
+               <h5 class="text-primary mb-0 fw-bold">Klasör Oluştur</h5>
             </div>
          </div>
       </div>
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+              {{ message }}
+          </div>
+      {% endfor %}
+  {% endif %}
       <form method="POST" enctype="multipart/form-data">
          {% csrf_token %}
          <div class="card mb-4">
             <div class="card-body">
-               {{form.title|as_crispy_field}}
-            </div>
-         </div>
-         <div class="card mb-4">
-            <div class="card-body">
-               {{form.description|as_crispy_field}}
-            </div>
-         </div>
-         <div class="card mb-4">
-            <div class="card-body">
-               {{form.university|as_crispy_field}}
-            </div>
-         </div>
-         <div class="card mb-4">
-            <div class="card-body">
-               {{form.is_privacy|as_crispy_field}}
-            </div>
-         </div>
-         <div class="card mb-4">
-            <div class="card-body">
-               {{form.is_published|as_crispy_field}}
+               {{form|crispy}}
             </div>
          </div>
          <button type="submit" class="btn btn-label-primary">Gönder</button>

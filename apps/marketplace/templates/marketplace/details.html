@@ -67,8 +67,8 @@
    <!-- İlan Bilgileri -->
    <div class="col-lg-4">
       <div class="card card-border-shadow-primary mb-4">
-         <div class="card-header bg-primary mb-4">
-            <h5 class="text-white mb-0 fw-bold">İlan Detayları</h5>
+         <div class="card-header bg-label-primary mb-4">
+            <h5 class="text-primary mb-0 fw-bold">İlan Detayları</h5>
          </div>
          <div class="card-body">
             <h4 class="card-title fw-bold text-primary">{{ data.currency }}{{ data.price }}</h4>
@@ -80,23 +80,29 @@
          </div>
       </div>
       <div class="card card-border-shadow-primary">
-         <div class="card-header bg-primary mb-4">
-            <h5 class="text-white mb-0 fw-bold">Yazar</h5>
+         <div class="card-header bg-label-primary mb-4">
+            <h5 class="text-primary mb-0 fw-bold">Yazar</h5>
          </div>
          <div class="card-body d-flex align-items-center">
-            {% if data.user.profilepicturemodel.profile_photo %}
-            {% with profile_photo_url=data.user.profilepicturemodel.profile_photo.url %}
-            <img src="{{ profile_photo_url }}" class="avatar avatar-md rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
-               >
-            {% endwith %}
-            {% else %}
-            <img src="{% static 'assets/img/avatars/11.png' %}" class="rounded-circle me-3" alt="Yazar Profil Fotoğrafı"
-               style="width: 80px; height: 80px;">
-            {% endif %}
-            <div>
-               <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
-               <small>{{data.user.educationalinformationmodel.University}}</small>
-            </div>
+            <a href="{% url 'profile' data.user.username %}">
+               <div class="avatar avatar-xl me-3">
+                  {% if data.user.profilepicturemodel.profile_photo %}
+                  <img src="{{ data.user.profilepicturemodel.profile_photo.url }}" 
+                     class="rounded-circle" 
+                     alt="Yazar Profil Fotoğrafı">
+                  {% else %}
+                  <img src="{% static 'assets/img/avatars/11.png' %}" 
+                     class="rounded-circle" 
+                     alt="Yazar Profil Fotoğrafı">
+                  {% endif %}
+               </div>
+            </a>
+            <a href="{% url 'profile' data.user.username %}">
+               <div>
+                  <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
+                  <small class="text-body">{{ data.user.educationalinformationmodel.University }} > {{ data.user.educationalinformationmodel.Department }} > {{ data.user.educationalinformationmodel.Status }}</small>
+               </div>
+            </a>
          </div>
       </div>
    </div>
@@ -105,8 +111,8 @@
 <div class="row justify-content-center mt-4">
    <div class="col-lg-8">
       <div class="card card-border-shadow-primary">
-         <div class="card-header bg-primary">
-            <h5 class="text-white mb-0 fw-bold">Açıklama</h5>
+         <div class="card-header bg-label-primary">
+            <h5 class="text-primary mb-0 fw-bold">Açıklama</h5>
          </div>
          <div class="card-body">
             <p class="card-text">{{ data.description | safe }}</p>

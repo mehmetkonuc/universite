@@ -12,14 +12,25 @@
        </button>
     </div>
  </div>
+ {% if messages %}
+ {% for message in messages %}
+ <div class="row justify-content-center">
 
+ <div class="col-lg-8">
+     <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+         {{ message }}
+     </div>
+   </div>
+</div>
+ {% endfor %}
+{% endif %}
    <!-- Doküman Başlığı -->
    <div class="row justify-content-center mb-4">
     <div class="col-lg-8 d-flex justify-content-between">
        <div>
 
-       <h1 class="fw-bold mb-0 mt-0">{{ document.title }}</h1>
-       <small class="text-muted">Klasör: <a href="">{{ document.folder.name }}</a> | Yayınlanma Tarihi: {{ document.uploaded_at }}</small>
+       <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
+       <small class="text-muted">Klasör: <a href="">{{ data.folder.name }}</a> | Yayınlanma Tarihi: {{ data.uploaded_at }}</small>
        </div>
        <div class="dropdown">
           <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -28,9 +39,9 @@
           <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
              <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
              {% if document.user.username == user.username or user.is_superuser %}
-             <a class="dropdown-item" href="{% url 'documents_edit' slug=document.slug %}">Düzenle</a>
+             <a class="dropdown-item" href="{% url 'documents_edit' slug=data.slug %}">Düzenle</a>
              <a class="dropdown-item text-danger" href="#"
-                data-bs-toggle="modal" data-bs-target="#modalCenter_{{document.id}}">Sil</a>
+                data-bs-toggle="modal" data-bs-target="#modalCenter_{{ data.id }}">Sil</a>
              {%endif%}
 
           </div>
@@ -43,13 +54,13 @@
       <div class="col-lg-8">
          <!-- Yüklenen Dosyalar -->
          <div class="card card-border-shadow-primary mb-4">
-            <div class="card-header bg-primary mb-4">
-               <h5 class="text-white mb-0 fw-bold">Dokümanlar({{ document.documents.count }})</h5>
+            <div class="card-header bg-label-primary mb-4">
+               <h5 class="text-primary mb-0 fw-bold">Dokümanlar({{ data.documents.count }})</h5>
             </div>
             <div class="card-body">
-               {% if document.documents.exists %}
+               {% if data.documents.exists %}
                <ul class="list-unstyled">
-                  {% for file in document.documents.all %}
+                  {% for file in data.documents.all %}
                   <li class="mb-3">
                      <div class="d-flex justify-content-between align-items-center">
                         <span>{{ file.document_name }}</span>
@@ -67,38 +78,70 @@
          </div>
 
          <div class="card mb-4 card-border-shadow-primary">
-            <div class="card-header bg-primary mb-4">
-               <h5 class="text-white mb-0 fw-bold">Açıklama</h5>
+            <div class="card-header bg-label-primary mb-4">
+               <h5 class="text-primary mb-0 fw-bold">Açıklama</h5>
             </div>
             <div class="card-body">
-               {{ document.content|safe }}
-            </div>
-         </div>
-      </div>
-      <!-- Yazar Bilgisi ve İstatistikler -->
-      <div class="col-lg-8">
-         <div class="card mb-4 card-border-shadow-primary">
-            <div class="card-header bg-primary mb-4">
-                <h5 class="text-white mb-0 fw-bold">Yazar</h5>
-             </div>
-            <div class="card-body">
-               <div class="d-flex align-items-center">
-                  {% if document.user.profilepicturemodel.profile_photo %}
-                  <img src="{{ document.user.profilepicturemodel.profile_photo.url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-3" style="width: 60px; height: 60px;">
-                  {% else %}
-                  <img src="{% static 'assets/img/avatars/11.png' %}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-3" style="width: 60px; height: 60px;">
-                  {% endif %}
-                  <div>
-                     <h5 class="mb-0">{{ document.user.first_name }} {{ document.user.last_name }}</h5>
-                     <small>{{ document.user.educationalinformationmodel.University }}</small>
+               {{ data.content|safe }}
+               <div class="d-flex align-items-center border-top">
+                  <div class="d-flex align-items-center mt-4">
+                     <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
+                     <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %}"></i>
+                     <span class="like-count text-body">{{ data.likes.count }}</span>
+                     </a>
+                     <i class="ti ti-message-plus me-1"></i> {{ data.comments.count }}
+                     <div class="dropdown ms-2">
+                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-share"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                           <a class="dropdown-item" href="javascript:void(0);">Sil</a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="ms-auto">
                   </div>
                </div>
             </div>
          </div>
       </div>
    </div>
+   
+      <!-- Yazar Bilgisi ve İstatistikler -->
+<!-- Yazar Bilgisi -->
+<div class="row justify-content-center mb-4">
+   <div class="col-lg-8">
+      <div class="card card-border-shadow-primary">
+         <div class="card-header bg-label-primary mb-4">
+            <h5 class="text-primary mb-0 fw-bold">Yazar</h5>
+         </div>
+         <div class="card-body d-flex align-items-center">
+            <a href="{% url 'profile' data.user.username %}">
+               <div class="avatar avatar-xl me-3">
+                  {% if data.user.profilepicturemodel.profile_photo %}
+                  <img src="{{ data.user.profilepicturemodel.profile_photo.url }}" 
+                     class="rounded-circle" 
+                     alt="Yazar Profil Fotoğrafı">
+                  {% else %}
+                  <img src="{% static 'assets/img/avatars/11.png' %}" 
+                     class="rounded-circle" 
+                     alt="Yazar Profil Fotoğrafı">
+                  {% endif %}
+               </div>
+            </a>
+            <a href="{% url 'profile' data.user.username %}">
+               <div>
+                  <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
+                  <small class="text-body">{{ data.user.educationalinformationmodel.University }} > {{ data.user.educationalinformationmodel.Department }} > {{ data.user.educationalinformationmodel.Status }}</small>
+               </div>
+            </a>
+         </div>
+      </div>
+   </div>
+</div> 
    <!-- Yorum Formu -->
-   <div class="row justify-content-center mt-4">
+   <div class="row justify-content-center mb-4">
       <div class="col-lg-8">
          <!-- Comment Form -->
          {% block comment-form %}
@@ -107,10 +150,10 @@
          <!-- End Comment Form -->
       </div>
    </div>
-   <div class="row justify-content-center mt-4">
+   <div class="row justify-content-center">
       <div class="col-lg-8">
          <!-- Comments -->
-         {% for comment in document.comments.all %}
+         {% for comment in data.comments.all %}
          {% block comment %}
          {% include 'comments/comments.html' %}
          {% endblock comment %}
@@ -120,13 +163,10 @@
    </div>
 
    <!-- Delete Documents Modal -->
-<div class="modal fade" id="modalCenter_{{document.id}}" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalCenter_{{ data.id}}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
        <div class="modal-content">
           <div class="modal-header bg-label-primary">
-
-
-
              <h5 class="modal-title text-primary mb-4" id="modalCenterTitle">Silme Uyarısı</h5>
              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -136,7 +176,7 @@
              </p>
           </div>
           <div class="modal-footer">
-             <a class="btn btn-label-danger" href="{% url 'documents_delete' document.id %}">Sil</a>
+             <a class="btn btn-label-danger" href="{% url 'documents_delete' data.id %}">Sil</a>
              <button type="button" class="btn btn-label-primary" data-bs-dismiss="modal">Vazgeç</button>
           </div>
        </div>

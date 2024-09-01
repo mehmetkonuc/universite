@@ -1,0 +1,65 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<style>
+   .folder-icon {
+       font-size: 50px;
+       color: #ffc107;
+   }
+   .folder-name {
+       margin-top: 10px;
+       font-weight: bold;
+       text-align: center;
+       white-space: nowrap;
+       overflow: hidden;
+       text-overflow: ellipsis;
+   }
+</style>
+{% endblock extra_css%}
+
+{% block content %}
+<div class="row">
+    <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
+       <div class="d-flex gap-4">
+          <a href="{% url 'folder_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
+          <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+       </div>
+    </div>
+ </div>
+ {% if messages %}
+ {% for message in messages %}
+ <div class="row justify-content-center">
+
+ <div class="col">
+     <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+         {{ message }}
+     </div>
+   </div>
+</div>
+ {% endfor %}
+{% endif %}
+   <div class="row row-cols-2 row-cols-md-4 g-4">
+       {% for folder in data %}
+       <div class="col text-center">
+           <a href="{% url 'my_folder_details' folder=folder.id %}">
+               <i class="bi bi-folder-fill folder-icon"></i>
+               <div class="folder-name">{{ folder.name }}</div>
+           </a>
+       </div>
+       {% empty %}
+       <div class="col">
+           <p>Klasörünüz bulunmuyor.</p>
+       </div>
+       {% endfor %}
+   </div>
+
+
+{% endblock content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+

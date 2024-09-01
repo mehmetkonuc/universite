@@ -57,6 +57,7 @@ class DocumentsModel(models.Model):
     documents = GenericRelation(DocumentsUploadModel)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
+    is_published = models.BooleanField(default=False)
     comments = GenericRelation(Comment)
     likes = GenericRelation(Like)
     

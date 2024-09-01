@@ -22,6 +22,7 @@ class ConfessionsModel(models.Model):
     university = models.ForeignKey(UniversitiesModel,
                         on_delete=models.CASCADE)
     is_privacy = models.BooleanField(default=True)
+    is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
 @receiver(pre_save, sender=ConfessionsModel)

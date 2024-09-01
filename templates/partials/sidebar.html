@@ -74,7 +74,7 @@
               <small>Taslaklarım</small>
             </a>
           </li>
-          <li class="menu-item {% if current_page == 'article_add' %} active{% endif %}">
+          <li class="menu-item {% if current_page == 'article_add' or current_page == 'article_edit' %} active{% endif %}">
             <a href="{% url 'article_add' %}" class="menu-link">
               <small>Makale Yaz</small>
             </a>
@@ -102,7 +102,7 @@
               <small>Taslaklarım</small>
             </a>
           </li>
-          <li class="menu-item {% if current_page == 'marketplace_add' %} active{% endif %}">
+          <li class="menu-item {% if current_page == 'marketplace_add' or current_page == 'marketplace_edit' %} active{% endif %}">
             <a href="{% url 'marketplace_add' %}" class="menu-link">
               <small>İlan Oluştur</small>
             </a>
@@ -125,18 +125,63 @@
               <small>Ders Notlarım</small>
             </a>
           </li>
-          <li class="menu-item {% if current_page == 'documents_add' %} active{% endif %}">
+          <li class="menu-item {% if current_page == 'my_draft_documents' %} active{% endif %}">
+            <a href="{% url 'my_draft_documents' %}" class="menu-link">
+              <small>Taslaklarım</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_folders' or current_page == 'folder_add' %} active open{% endif %}">
+            <a href="" class="menu-link menu-toggle">
+              <small>Klasörlerim</small>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item {% if current_page == 'my_folders' %} active{% endif %}">
+                <a href="{% url 'my_folders' %}" class="menu-link">
+                  <small>Tüm Klasörlerim</small>
+                </a>
+              </li>
+              <li class="menu-item {% if current_page == 'folder_add' or '/my-folder-details/edit/' in request.path %} active{% endif %}">
+                <a href="{% url 'folder_add' %}" class="menu-link">
+                  <small>Klasör Oluştur</small>
+                </a>
+              </li>
+            </ul>
+
+          </li>
+          <li class="menu-item {% if current_page == 'documents_add' or current_page == 'documents_edit' %} active{% endif %}">
             <a href="{% url 'documents_add' %}" class="menu-link">
               <small>Ders Notu Yükle</small>
             </a>
           </li>
           </ul>
       </li>
-      <li class="menu-item {% if current_page == 'confessions' %} active{% endif %}">
-        <a href="{% url 'confessions' %}" class="menu-link">
+      <li class="menu-item {% if '/confessions/' in request.path %} active open{% endif %}">
+        <a href="{% url 'confessions' %}" class="menu-link menu-toggle">
           <i class="menu-icon ti-icons ti ti-spy"></i>
           <div>İtiraflar</div>
         </a>
+        <ul class="menu-sub">
+          <li class="menu-item {% if current_page == 'confessions' %} active{% endif %}">
+            <a href="{% url 'confessions' %}" class="menu-link">
+              <small>Tüm İtiraflar</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_confessions' %} active{% endif %}">
+            <a href="{% url 'my_confessions' %}" class="menu-link">
+              <small>İtiraflarım</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_draft_confessions' %} active{% endif %}">
+            <a href="{% url 'my_draft_confessions' %}" class="menu-link">
+              <small>Taslaklarım</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'confessions_add' or current_page == 'confessions_edit' %} active{% endif %}">
+            <a href="{% url 'confessions_add' %}" class="menu-link">
+              <small>İtiraf Yaz</small>
+            </a>
+          </li>
+        </ul>
       </li>
       <li class="menu-item {% if current_page == 'questions' %} active{% endif %}">
         <a href="{% url 'questions' %}" class="menu-link">
