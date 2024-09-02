@@ -23,6 +23,14 @@ class ArticleAddForm(forms.ModelForm):
     class Meta:
         model = ArticlesModel
         fields = ['title', 'content', 'category', 'futured_image', 'is_published']
+        widgets = {
+            'category': forms.Select(attrs={
+                'class': 'selectpicker w-100',
+                'data-style': 'btn-default',
+                'data-live-search': 'true'
+            }),
+        }
+        
         labels = {
             'title': 'Makale Başlığı',
             'content': 'Makale İçeriği',

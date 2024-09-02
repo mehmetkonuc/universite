@@ -53,7 +53,7 @@
                       </div>
                   {% endfor %}
               </div>
-              
+              <div id="id_images_helptext" class="form-text mb-4">İlanınızla alaklı görselleri yükleyiniz. Maksimum 20 fotoğraf yüklenebilir. Zorunlu değil.</div>
             </div>
          </div>
          <div class="card mb-4">
@@ -66,28 +66,18 @@
                <label for="id_images" class="form-label requiredField">
                   Para Birimi ve Fiyat
                   </label>
-               <div class="mb-3 input-group">
+               <div class="input-group">
                   {{ form.currency }}
                   {{ form.price }}
               </div>
+              <div id="id_price_helptext" class="form-text mb-4">Para birimini seçin ve fiyatı yazın.</div>
             </div>
          </div>
          <div class="card mb-4">
             <div class="card-body">
-               <label for="category" class="form-label">Category</label>
-               <select
-                  id="category"
-                  name="category"
-                  class="selectpicker w-100 mb-4"
-                  data-style="btn-default"
-                  data-live-search="true">
-                  {% for category in categories %}
-                  <option value="{{ category.id }}" data-tokens="{{ category.name }}" {% if instance.category.id == category.id %} selected{%endif%}>{{ category.name }}</option>
-                  {% for child in category.get_children %}
-                  <option value="{{ child.id }}" data-tokens="{{ child.name }}" {% if instance.category == child %} selected{%endif%}>--- {{ child.name }}</option>
-                  {% endfor %}
-                  {% endfor %}
-               </select>
+               {{form.category|as_crispy_field}}
+
+
             </div>
          </div>
          <div class="card mb-4">

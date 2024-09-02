@@ -58,11 +58,11 @@
    <div class="d-flex align-items-center">
       <div class="d-flex align-items-center">
          <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comment.likes.content_type.id}}" data-object-id="{{comment.id}}">
-            <i class="ti ti-heart{% if comment.id in liked_comment %}-filled{% endif %}"></i>
+            <i class="ti ti-heart{% if comment.id in liked_comment %}-filled{% endif %} text-primary"></i>
             <span class="like-count text-body">{{ comment.likes.count }}</span>
         </a>
         <a href="{% url 'comment_detail' comment.id %}" class="text-body me-3"
-        ><i class="ti ti-message-plus"></i> {{ comment.replies.count }}</a>
+        ><i class="ti ti-message-filled text-danger"></i> {{ comment.replies.count }}</a>
       </div>
       <div class="ms-auto">
       </div>

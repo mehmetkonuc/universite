@@ -72,21 +72,12 @@
          <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
                <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comments.likes.content_type.id}}" data-object-id="{{comments.id}}">
-                  <i class="ti ti-heart{% if comments.id in liked_comment %}-filled{% endif %}"></i>
+                  <i class="ti ti-heart{% if comments.id in liked_comment %}-filled{% endif %} text-primary"></i>
                   <span class="like-count text-body">{{ comments.likes.count }}</span>
               </a>
                <a href="{% url 'comment_detail' comments.id %}" class="text-body me-3"
-                  ><i class="ti ti-message-plus"></i> {{ comments.replies.count }}</a
+                  ><i class="ti ti-message-filled text-danger"></i> {{ comments.replies.count }}</a
                   >
-               <div class="dropdown">
-                  <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="ti ti-share"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                     <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                     <a class="dropdown-item" href="javascript:void(0);">Sil</a>
-                  </div>
-               </div>
             </div>
             <div class="ms-auto">
             </div>

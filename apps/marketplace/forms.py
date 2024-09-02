@@ -35,3 +35,40 @@ class MarketPlaceForm(forms.ModelForm):
     class Meta:
         model = MarketPlaceModel
         fields =['title', 'description', 'currency', 'price', 'category', 'country', 'city', 'phone_number', 'is_published']
+    
+        widgets = {
+            'category': forms.Select(attrs={
+                'class': 'selectpicker w-100',
+                'data-style': 'btn-default',
+                'data-live-search': 'true'
+            }),
+            'country': forms.Select(attrs={
+                'class': 'selectpicker w-100',
+                'data-style': 'btn-default',
+                'data-live-search': 'true'
+            }),
+            'city': forms.Select(attrs={
+                'class': 'selectpicker w-100',
+                'data-style': 'btn-default',
+                'data-live-search': 'true'
+            }),
+        }
+
+        labels = {
+        'title': 'İlan Başlığı',
+        'description': 'İlan Açıklaması',
+        'category': 'Kategori',
+        'country': 'Ülke',
+        'city': 'Şehir',
+        'phone_number': 'Telefon Numarası',
+
+    }
+        help_texts = {
+        'title': 'İlan başlığını yazınız. 150 harften fazla olamaz.',
+        'description': 'İlanızı açıklayanız.',
+        'category': 'Kategori seçin',
+        'country': 'Ülke seçin.',
+        'city': 'Şehir seçin.',
+        'phone_number': 'Telefon numarasınızı giriniz. Zorunlu değil.',
+
+    }

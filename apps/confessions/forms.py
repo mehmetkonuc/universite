@@ -28,3 +28,16 @@ class ConfessionsForm(forms.ModelForm):
                 'data-live-search': 'true'
             }),
         }
+
+        labels = {
+        'title': 'Başlık',
+        'description': 'Açıklama',
+        'university': 'Üniversite',
+        'is_privacy': 'Gizle',
+    }
+        help_texts = {
+        'title': 'İtirafınızı özetleyen başlık giriniz. 150 harften fazla olamaz.',
+        'description': 'İtirafınızı yazın.',
+        'university': 'Üniversite seçin.',
+        'is_privacy': 'Gizli yayınlamak istiyorsanız seçiniz.',
+    }

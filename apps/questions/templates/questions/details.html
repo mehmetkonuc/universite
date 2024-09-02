@@ -1,101 +1,143 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-comments.css' %}" />
 {% endblock extra_css%}
-
 {% block content %}
 <!-- Main Content -->
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 mb-4">
-           <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
-           <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
-           </button>
-        </div>
-     </div>
-
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Question Details -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h1 class="card-title mb-0">{{data.title}}</h1>
-                    <small class="card-text text-muted">Category: {{data.category}}  | {{data.create_at}}</small>
-                    
-                    <p>{{ data.content|safe }}</p>
-                    
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div class="text-muted">
-                            <div class="d-flex align-items-center">
-                                {% if data.user.profilepicturemodel.profile_photo %}
-                                {% with profile_photo_url=data.user.profilepicturemodel.profile_photo.url %}
-                                <div class="avatar me-2">
-                                    <img src="{{ profile_photo_url }}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2">
-                                </div>
-                                {% endwith %}
-                                {% else %}
-                                <div class="avatar avatar-xs me-2">
-                                    <img src="{% static 'assets/img/avatars/11.png' %}" alt="Yazar Profil Fotoğrafı" class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                                </div>
-                                {% endif %}
-                                <div>
-                                   <small>{{ data.user.first_name }} {{ data.user.last_name }}</small>
-                                   <div>
-                                    <small>{{data.user.educationalinformationmodel.University}}</small>
-                                 </div>
-                                </div>
-                             </div>
-
-                        </div>
-                        <div>
-                            <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
-                                <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %}"></i>
-                                <span class="like-count text-body">{{ data.likes.count }}</span>
-                                </a>
-                                <i class="ti ti-message-plus me-1"></i> {{ data.comments.count }}
-                        </div>
-                    </div>
-                </div>
+   <div class="row justify-content-center">
+      <div class="col-lg-8 mb-4">
+         <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+         <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+         </button>
+      </div>
+   </div>
+   <div class="row justify-content-center">
+      <div class="col-lg-8">
+         <!-- Question Details -->
+         <div class="card card-border-shadow-primary mb-4">
+            <div class="card-body">
+               <div class="mb-4 d-flex justify-content-between">
+                  <div>
+                     <h1 class="card-title mb-0">{{data.title}}</h1>
+                     <small class="card-text text-muted">Category: {{data.category}}  | {{data.create_at}}</small>
+                  </div>
+                  <div class="dropdown">
+                     <button class="btn rounded-pill border-1 p-2 me-n1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <i class="ti ti-dots-vertical ti-sm"></i>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                        <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                        {% if data.user.username == user.username or user.is_superuser %}
+                        <a class="dropdown-item" href="{% url 'questions_edit' slug=data.slug %}">Düzenle</a>
+                        <a class="dropdown-item text-danger" href="#"
+                           data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
+                        {%endif%}
+                     </div>
+                  </div>
+               </div>
+               <p>{{ data.content|safe }}</p>
+               <div class="d-flex align-items-center border-top">
+                  <div class="d-flex align-items-center mt-4">
+                     <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
+                     <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %}"></i>
+                     <span class="like-count text-body">{{ data.likes.count }}</span>
+                     </a>
+                     <a href="#comments" class="text-body me-3"
+                        ><i class="ti ti-message-plus"></i> {{ data.comments.count }}</a
+                        >
+                  </div>
+                  <div class="ms-auto">
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
+   <!-- Yazar Bilgisi -->
+   <div class="row justify-content-center">
+      <div class="col-lg-8">
+         <div class="card card-border-shadow-primary mb-4">
+            <div class="card-header bg-label-primary mb-4">
+               <h5 class="text-primary mb-0 fw-bold">Yazar</h5>
+            </div>
+            <div class="card-body d-flex align-items-center">
+               <a href="{% url 'profile' data.user.username %}">
+                  <div class="avatar avatar-xl me-3">
+                     {% if data.user.profilepicturemodel.profile_photo %}
+                     <img src="{{ data.user.profilepicturemodel.profile_photo.url }}" 
+                        class="rounded-circle" 
+                        alt="Yazar Profil Fotoğrafı">
+                     {% else %}
+                     <img src="{% static 'assets/img/avatars/11.png' %}" 
+                        class="rounded-circle" 
+                        alt="Yazar Profil Fotoğrafı">
+                     {% endif %}
+                  </div>
+               </a>
+               <a href="{% url 'profile' data.user.username %}">
+                  <div>
+                     <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
+                     <small class="text-body">{{ data.user.educationalinformationmodel.University }} > {{ data.user.educationalinformationmodel.Department }} > {{ data.user.educationalinformationmodel.Status }}</small>
+                  </div>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
    <!-- Yorum Formu -->
+   <div class="row justify-content-center">
+      <div class="col-lg-8">
+         <!-- Comment Form -->
+         {% block comment-form %}
+         {% include 'comments/form-comment.html' %}
+         {% endblock comment-form %}
+         <!-- End Comment Form -->
+      </div>
+   </div>
+   <div class="row justify-content-center">
+      <div class="col-lg-8">
+         <h4 class="fw-bold mb-0" id="comments">Cevaplar ({{data.comments.count}})</h4>
+      </div>
+   </div>
    <div class="row justify-content-center mt-4">
-    <div class="col-lg-8">
-       <!-- Comment Form -->
-       {% block comment-form %}
-       {% include 'comments/form-comment.html' %}
-       {% endblock comment-form %}
-       <!-- End Comment Form -->
-    </div>
- </div>
- <div class="row justify-content-center">
-    <div class="col-lg-8">
-       <h4 class="fw-bold mb-0">Cevaplar ({{data.comments.count}})</h4>
-    </div>
- </div>
- <div class="row justify-content-center mt-4">
-    <div class="col-lg-8">
-       <!-- Comments -->
-       {% for comment in comments %}
-       {% block comment %}
-       {% include 'comments/comments.html' %}
-       {% endblock comment %}
-       {% endfor %}
-       <!-- End Comments -->
-    </div>
- </div>
-
+      <div class="col-lg-8">
+         <!-- Comments -->
+         {% for comment in comments %}
+         {% block comment %}
+         {% include 'comments/comments.html' %}
+         {% endblock comment %}
+         {% endfor %}
+         <!-- End Comments -->
+      </div>
+   </div>
 </div>
 
+<!-- Delete Questions Modal -->
+<div class="modal fade" id="modalCenter_{{data.id}}" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header bg-label-primary">
+            <h5 class="modal-title text-primary mb-4" id="modalCenterTitle">Silme Uyarısı</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <p>
+               Geri Getirilemeyecek Şekilde Silinecektir Emin Misiniz?
+            </p>
+         </div>
+         <div class="modal-footer">
+            <a class="btn btn-label-danger" href="{% url 'questions_delete' data.slug %}">Sil</a>
+            <button type="button" class="btn btn-label-primary" data-bs-dismiss="modal">Vazgeç</button>
+         </div>
+      </div>
+   </div>
+ </div>
 {% endblock content %}
-
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/comments/comment-comments.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 {% endblock extra_javascript %}
-

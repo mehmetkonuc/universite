@@ -6,6 +6,14 @@ class FolderForm(forms.ModelForm):
         model = DocumentsFolderModel
         fields = ['name']
 
+        labels = {
+        'name': 'Klasör Adı',
+    }
+        help_texts = {
+        'name': 'Klasörün adını yazınız..',
+    }
+
+
 class DocumentAddForm(forms.ModelForm):
     STATUS_CHOICES = [
         (False, 'Taslaklara Kaydet'),
@@ -27,6 +35,26 @@ class DocumentAddForm(forms.ModelForm):
     class Meta:
         model = DocumentsModel
         fields = ['folder', 'title', 'content', 'is_published']
+
+        widgets = {
+            'folder': forms.Select(attrs={
+                'class': 'selectpicker w-100',
+                'data-style': 'btn-default',
+                'data-live-search': 'true'
+            }),
+        }
+        labels = {
+        'folder': 'Klasör',
+        'title': 'Başlık',
+        'content': 'Açıklama',
+    }
+        help_texts = {
+        'folder': 'Klasör seçin veya oluşturun.',
+        'title': 'Dökümanlarınıza uygun başlık girin. 150 harften fazla olamaz.',
+        'content': 'Dökümanlarınızı açıklayınız.',
+    }
+
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Kullanıcıyı kwargs'tan alıyoruz
         super(DocumentAddForm, self).__init__(*args, **kwargs)

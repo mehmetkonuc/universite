@@ -49,21 +49,8 @@
          </div>
          <div class="card mb-4">
             <div class="card-body">
-               <label for="category" class="form-label">{{ form.category.label }}<span class="asteriskField">*</span></label>
-               {{ form.category.errors }}
-               <select id="category" name="category" class="selectpicker w-100" data-style="btn-default" data-live-search="true">
-                  <option value="" data-tokens="">Kategori Seçin</option>
-                  {% for category in categories %}
-                  <option value="{{ category.id }}" data-tokens="{{ category.name }}" {% if instance.category.id == category.id %} selected{%endif%}>{{ category.name }}</option>
-                  {% for child in category.get_children %}
-                  <option value="{{ child.id }}" data-tokens="{{ child.name }}" {% if instance.category == child %} selected{%endif%}>--- {{ child.name }}</option>
-                  {% for childs in child.get_children %}
-                  <option value="{{ childs.id }}" data-tokens="{{ childs.name }}" {% if instance.category == childs %} selected{%endif%}>------ {{ childs.name }}</option>
-                  {% endfor %}
-                  {% endfor %}
-                  {% endfor %}
-               </select>
-               <div id="id_category_helptext" class="form-text mb-4">{{ form.category.help_text }}</div>
+               {{form.category|as_crispy_field}}
+
             </div>
          </div>
          <div class="card mb-4">

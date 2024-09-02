@@ -64,10 +64,10 @@ class MarketPlaceAddView(View):
     }
     def get(self, request):
         form = self.form_marketplace()
-        categories = self.model_category.objects.filter(parent__isnull=True)
+        # categories = self.model_category.objects.filter(parent__isnull=True)
         self.context.update({
             'form' : form,
-            'categories' : categories
+            # 'categories' : categories
         })
         return render(request, self.template, self.context)
 
@@ -87,11 +87,11 @@ class MarketPlaceAddView(View):
                 )
             return redirect('marketplace_details', slug=form_data.slug)
 
-        categories = self.model_category.objects.filter(parent__isnull=True)
+        # categories = self.model_category.objects.filter(parent__isnull=True)
 
         self.context.update({
             'form': form,
-            'categories' : categories
+            # 'categories' : categories
         })
 
         return render(request, self.template, self.context)
@@ -122,12 +122,12 @@ class MarketPlaceEditView(View):
     template = 'marketplace/add.html'
 
     def get_context_data(self, instance=None, form=None):
-        categories = self.model_category.objects.filter(parent__isnull=True)
+        # categories = self.model_category.objects.filter(parent__isnull=True)
         return {
             'siteTitle': 'İlan Oluştur',
             'form': form,
             'instance': instance,
-            'categories': categories,
+            # 'categories': categories,
         }
 
     def get(self, request, slug):

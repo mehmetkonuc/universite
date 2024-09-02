@@ -53,7 +53,7 @@
 <!-- Makale İçeriği -->
 <div class="row justify-content-center mt-4">
    <div class="col-lg-8">
-      <div class="card">
+      <div class="card card-border-shadow-primary">
          <div class="card-header bg-label-primary mb-4">
             <h5 class="text-primary mb-0 fw-bold">İçerik</h5>
          </div>
@@ -62,19 +62,10 @@
             <div class="d-flex align-items-center border-top">
                <div class="d-flex align-items-center mt-4">
                   <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
-                  <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %}"></i>
+                  <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %} text-primary"></i>
                   <span class="like-count text-body">{{ data.likes.count }}</span>
                   </a>
-                  <i class="ti ti-message-plus me-1"></i> {{ data.comments.count }}
-                  <div class="dropdown ms-2">
-                     <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     <i class="ti ti-share"></i>
-                     </button>
-                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                        <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Sil</a>
-                     </div>
-                  </div>
+                  <i class="ti ti-message-filled text-danger me-1"></i> {{ data.comments.count }}
                </div>
                <div class="ms-auto">
                </div>

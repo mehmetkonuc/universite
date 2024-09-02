@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
 
 {{form.media}}
 <style>
@@ -54,5 +55,6 @@
 
 {% endblock content %}
 {% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
 
 {% endblock extra_javascript %}

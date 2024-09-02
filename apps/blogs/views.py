@@ -65,11 +65,11 @@ class ArticleAddView(View):
 
     def get(self, request):
         form = self.form_article()
-        categories = self.model_categories.objects.filter(parent__isnull=True)
+        # categories = self.model_categories.objects.filter(parent__isnull=True)
 
         self.context.update({
             'form': form,
-            'categories' : categories
+            # 'categories' : categories
         })
         return render(request, self.template, self.context)
 
@@ -83,11 +83,11 @@ class ArticleAddView(View):
 
             return redirect('article_details', slug=form_data.slug)
 
-        categories = self.model_categories.objects.filter(parent__isnull=True)
+        # categories = self.model_categories.objects.filter(parent__isnull=True)
 
         self.context.update({
             'form': form,
-            'categories' : categories
+            # 'categories' : categories
         })
 
         return render(request, self.template, self.context)
@@ -147,12 +147,12 @@ class ArticleEditView(View):
     def get(self, request, slug):
         instance = self.model_article.objects.filter(slug=slug).first()
         form = self.form_article(instance = instance)
-        categories = self.model_categories.objects.filter(parent__isnull=True)
+        # categories = self.model_categories.objects.filter(parent__isnull=True)
 
         self.context.update({
             'form': form,
             'instance':instance,
-            'categories' : categories,
+            # 'categories' : categories,
             'futured_image_url': instance.futured_image.url if instance.futured_image else None,
         })
         return render(request, self.template, self.context)
@@ -168,12 +168,12 @@ class ArticleEditView(View):
 
             return redirect('article_details', slug=form_data.slug)
 
-        categories = self.model_categories.objects.filter(parent__isnull=True)
+        # categories = self.model_categories.objects.filter(parent__isnull=True)
 
         self.context.update({
             'form': form,
             'instance':instance,
-            'categories' : categories
+            # 'categories' : categories
         })
 
         return render(request, self.template, self.context)

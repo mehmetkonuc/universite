@@ -63,7 +63,10 @@ class DocumentsModel(models.Model):
     
     def __str__(self):
         return self.title
-
+    class Meta:
+        verbose_name = "Doküman"
+        verbose_name_plural = "Dokümanlar"
+        
 @receiver(pre_save, sender=DocumentsModel)
 def pre_save_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

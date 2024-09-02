@@ -183,17 +183,33 @@
           </li>
         </ul>
       </li>
-      <li class="menu-item {% if current_page == 'questions' %} active{% endif %}">
-        <a href="{% url 'questions' %}" class="menu-link">
+      <li class="menu-item {% if '/questions/' in request.path %} active open{% endif %}">
+        <a href="" class="menu-link menu-toggle">
           <i class="menu-icon ti-icons ti ti-message-2-question"></i>
           <div>Sorular</div>
         </a>
-      </li>
-      <li class="menu-item">
-        <a href="#" class="menu-link">
-          <i class="menu-icon tf-icons ti ti-calendar-stats"></i>
-          <div><del>Etkinlikler</del></div>
-        </a>
+        <ul class="menu-sub">
+          <li class="menu-item {% if current_page == 'questions' %} active{% endif %}">
+            <a href="{% url 'questions' %}" class="menu-link">
+              <small>Tüm Sorular</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'my_questions' %} active{% endif %}">
+            <a href="{% url 'my_questions' %}" class="menu-link">
+              <small>Sorularım</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'draft_questions' %} active{% endif %}">
+            <a href="{% url 'draft_questions' %}" class="menu-link">
+              <small>Taslaklarım</small>
+            </a>
+          </li>
+          <li class="menu-item {% if current_page == 'questions_add' or current_page == 'questions_edit' %} active{% endif %}">
+            <a href="{% url 'questions_add' %}" class="menu-link">
+              <small>Soru Sor</small>
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
     {% endwith %}
