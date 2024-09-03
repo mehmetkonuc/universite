@@ -6,14 +6,18 @@ from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.comments.views import CommentView
 from django.db.models import Q, Count
-
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 # Create your views here.
+
 class ArticlesView(View):
     model_article = ArticlesModel
     filter_model = UserFilterModel
     filter_form = UserFilterForm
     template = 'blogs/index.html'
     context = {'siteTitle': 'Makaleler'}
+    paginate_by = 4  # Her sayfada gösterilecek makale sayısı
 
     def get(self, request):
         filter_instance = self.filter_model.objects.filter(user=request.user).first()
@@ -48,8 +52,18 @@ class ArticlesView(View):
         if search_query:
             articles = articles.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
 
+        paginator = Paginator(articles, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        # is_ajax yerine request.headers ile kontrol
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
+            has_next = page_obj.has_next()  # Daha fazla sayfa olup olmadığını kontrol et
+            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
+
         filter_form = self.filter_form(instance=filter_instance)
-        self.context.update({'data': articles, 'filter_form': filter_form})
+        self.context.update({'data': page_obj, 'filter_form': filter_form})
         return render(request, self.template, self.context)
 
     def post(self, request):
