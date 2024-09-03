@@ -15,11 +15,43 @@
 {% block content %}
 <div class="row justify-content-center">
    <div class="col-lg-8 mb-4">
-      <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
-      <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
-      </button>
+
+
+      <div class="d-flex bd-highlight">
+         <div class="w-100 bd-highlight">
+                  <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+                  <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+            </button>
+         </div>
+         <div class="flex-shrink-1 bd-highlight">
+            <div class="dropdown">
+               <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <i class="ti ti-dots-vertical ti-sm"></i>
+               </button>
+               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                  <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                  {% if data.user.username == user.username or user.is_superuser %}
+                  <a class="dropdown-item" href="{% url 'article_edit' slug=data.slug %}">Düzenle</a>
+                  <a class="dropdown-item text-danger" href="#"
+                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
+                  {%endif%}
+               </div>
+            </div>
+         </div>
+       </div>
+
+
+
+
+
+
+
+
+
+
    </div>
 </div>
+
 <div class="row justify-content-center">
    <div class="col-lg-8">
       {% if messages %}
@@ -38,19 +70,7 @@
          <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
          <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
       </div>
-      <div class="dropdown">
-         <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-         <i class="ti ti-dots-vertical ti-sm"></i>
-         </button>
-         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-            <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-            {% if data.user.username == user.username or user.is_superuser %}
-            <a class="dropdown-item" href="{% url 'article_edit' slug=data.slug %}">Düzenle</a>
-            <a class="dropdown-item text-danger" href="#"
-               data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
-            {%endif%}
-         </div>
-      </div>
+
    </div>
 </div>
 <!-- Makale Ana Görseli -->

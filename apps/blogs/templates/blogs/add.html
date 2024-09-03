@@ -8,7 +8,7 @@
 {% endblock extra_css%}
 {% block content %}
 <div class="row justify-content-center">
-   <div class="col-md-8 col-xxl-8">
+   <div class="col-lg-8 col-xxl-8">
       <div class="card shadow-none bg-label-primary mb-4">
          <div class="card-header d-flex justify-content-between">
             <div class="card-title mb-0">
@@ -28,7 +28,6 @@
                <label for="id_futured_image" class="form-label requiredField">
                Öne Çıkan Görsel<span class="asteriskField">*</span>
                </label>
-               {{ form.futured_image.errors }}
                <!-- Custom file upload area -->
                <div id="upload-container" class="upload-container" onclick="triggerFileInput()">
                   <input type="file" id="futured_image" name="futured_image" accept="image/*" onchange="previewImage(event)" style="display:none;">
@@ -45,6 +44,9 @@
                   {% endif %}
                </div>
                <div id="id_futured_image_helptext" class="form-text mb-4">{{ form.futured_image.help_text }}</div>
+               <div class="col-lg-12 bg-label-danger rounded">
+                  <h6 class="alert-heading text-danger mb-2">{{ form.futured_image.errors }}</h6>
+               </div>
             </div>
          </div>
          <div class="card mb-4">
@@ -56,6 +58,9 @@
          <div class="card mb-4">
             <div class="card-body">
                {{form.content|as_crispy_field}}
+               <div class="col-lg-12 bg-label-danger rounded">
+                  <h6 class="alert-heading text-danger mb-2">{{ form.content.errors }}</h6>
+               </div>
             </div>
          </div>
          <div class="card mb-4">
