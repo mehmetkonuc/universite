@@ -17,7 +17,7 @@ def upload_to(instance, filename):
     return f'blogs/{now().year}/{now().month}/{filename}'
 
 
-class UserFilterModel(models.Model):
+class FilterModel(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     order_by = models.CharField(max_length=155, null=True, blank=True)
     category = TreeForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)

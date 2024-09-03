@@ -1,9 +1,10 @@
 from django import forms
-from apps.blogs.models import ArticlesModel, UserFilterModel
+from apps.blogs.models import ArticlesModel, FilterModel, Category
 from django.core.exceptions import ValidationError
+from mptt.forms import TreeNodeChoiceField
 
 
-class UserFilterForm(forms.ModelForm):
+class FilterForm(forms.ModelForm):
     order_by = forms.ChoiceField(
         choices=[
             ('', '---------'),
@@ -21,7 +22,7 @@ class UserFilterForm(forms.ModelForm):
     )
 
     class Meta:
-        model = UserFilterModel
+        model = FilterModel
         fields = ['search_query', 'order_by', 'category', 'country', 'university', 'department', 'status']
         widgets = {
             'category': forms.Select(attrs={'class': 'selectpicker w-100', 'data-style': 'btn-default', 'data-live-search': 'true'}),
@@ -37,6 +38,40 @@ class UserFilterForm(forms.ModelForm):
             'department': 'Yazarın Bölümü',
             'status': 'Yazarın Durumu',
         }
+
+
+class MyFilterForm(forms.Form):
+    search_query = forms.CharField(
+        required=False,
+        label='Arama',
+        widget=forms.TextInput(attrs={'placeholder': 'Başlık veya içerikte ara'})
+    )
+    
+    order_by = forms.ChoiceField(
+        choices=[
+            ('', '---------'),
+            ('likes', 'Beğeni Sayısına Göre'),
+            ('comments', 'Yorum Sayısına Göre'),
+            ('create_at', 'Yayım Tarihine Göre'),
+        ],
+        required=False,
+        label='Sırala'
+    )
+
+    category = TreeNodeChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="Kategori Seçin",
+        widget=forms.Select(attrs={
+            'class': 'selectpicker w-100',
+            'data-style': 'btn-default',
+            'data-live-search': 'true'
+        }),
+        label="Kategori",
+        required=False,
+        
+    )
+
+
 
 class ArticleAddForm(forms.ModelForm):
     STATUS_CHOICES = [

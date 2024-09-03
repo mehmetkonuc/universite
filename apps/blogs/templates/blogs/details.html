@@ -20,12 +20,23 @@
       </button>
    </div>
 </div>
+<div class="row justify-content-center">
+   <div class="col-lg-8">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+         {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+   </div>
+</div>
 <!-- Makale Başlığı -->
 <div class="row justify-content-center">
    <div class="col-lg-8 d-flex justify-content-between">
       <div>
-      <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
-      <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
+         <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
+         <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
       </div>
       <div class="dropdown">
          <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,7 +69,7 @@
             <h5 class="text-primary mb-0 fw-bold">İçerik</h5>
          </div>
          <div class="card-body">
-               {{ data.content | safe }}
+            {{ data.content | safe }}
             <div class="d-flex align-items-center border-top">
                <div class="d-flex align-items-center mt-4">
                   <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
@@ -74,7 +85,6 @@
       </div>
    </div>
 </div>
-
 <!-- Yazar Bilgisi -->
 <div class="row justify-content-center mt-4">
    <div class="col-lg-8">
@@ -106,7 +116,6 @@
       </div>
    </div>
 </div>
-
 <!-- Yorum Formu -->
 <div class="row justify-content-center mt-4">
    <div class="col-lg-8">
@@ -117,7 +126,6 @@
       <!-- End Comment Form -->
    </div>
 </div>
-
 {% if comments %}
 <div class="row justify-content-center">
    <div class="col-lg-8">
@@ -136,7 +144,6 @@
       <!-- End Comments -->
    </div>
 </div>
-
 <!-- Delete Article Modal -->
 <div class="modal fade" id="modalCenter_{{data.id}}" tabindex="-1" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered" role="document">
@@ -156,7 +163,7 @@
          </div>
       </div>
    </div>
- </div>
+</div>
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>

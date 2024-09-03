@@ -5,7 +5,7 @@
    <div class="card card-border-shadow-primary h-100">
       <!-- Makale Resmi -->
       <a href="{% url 'article_details' item.slug %}">
-         <img src="{{item.futured_image.url}}" class="card-img-top" alt="{{ item.title }}">
+         <img src="{{item.futured_image.url}}" class="card-img-top border" alt="{{ item.title }}">
       </a>
       <div class="card-body">
          <!-- Makale Başlığı -->
@@ -43,8 +43,8 @@
             </div>
             <!-- Beğeni ve Yorum Sayısı -->
             <div>
-               <span class="me-3"><i class="ti ti-heart-filled text-danger"></i> {{ item.likes.count }}</span>
-               <span><i class="ti ti-message-dots text-primary"></i> {{ item.comments.count }}</span>
+               <span class="me-3"><i class="ti ti-heart-filled text-primary"></i> {{ item.likes.count }}</span>
+               <span><i class="ti ti-message-filled text-danger"></i> {{ item.comments.count }}</span>
             </div>
          </div>
       </div>

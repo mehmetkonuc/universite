@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from apps.blogs.forms import ArticleAddForm, UserFilterForm
-from apps.blogs.models import ArticlesModel, Category, UserFilterModel
+from apps.blogs.forms import ArticleAddForm, FilterForm, MyFilterForm
+from apps.blogs.models import ArticlesModel, Category, FilterModel
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.comments.views import CommentView
@@ -9,15 +9,16 @@ from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-# Create your views here.
+from django.contrib import messages
+
 
 class ArticlesView(View):
     model_article = ArticlesModel
-    filter_model = UserFilterModel
-    filter_form = UserFilterForm
+    filter_model = FilterModel
+    filter_form = FilterForm
     template = 'blogs/index.html'
     context = {'siteTitle': 'Makaleler'}
-    paginate_by = 4  # Her sayfada gösterilecek makale sayısı
+    paginate_by = 12
 
     def get(self, request):
         filter_instance = self.filter_model.objects.filter(user=request.user).first()
@@ -90,33 +91,129 @@ class ArticlesView(View):
 
 class MyArticlesView(View):
     model_article = ArticlesModel
+    filter_form = MyFilterForm
     template = 'blogs/my_articles.html'
+    paginate_by = 12
     context = {
         'siteTitle': 'Makaleler',
     }
 
     def get(self, request):
-        articles = self.model_article.objects.filter(is_published=True, user=request.user)
+        articles = self.model_article.objects.filter(is_published=True, user=request.user).order_by('-create_at')
+        filter_form = self.filter_form()
+        
+        paginator = Paginator(articles, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-        self.context.update({
-            'data':articles
-        })
+        # is_ajax yerine request.headers ile kontrol
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
+            has_next = page_obj.has_next()  # Daha fazla sayfa olup olmadığını kontrol et
+            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
+
+        self.context.update({'data': page_obj, 'filter_form': filter_form})
+        
         return render(request, self.template, self.context)
 
+    def post(self, request):
+        if 'reset_filter' in request.POST:
+            return self.get(request)
+        
+        filter_form = self.filter_form(request.POST)
 
-class MyDraftArticlesView(View):
+        if filter_form.is_valid():
+            articles = self.model_article.objects.filter(is_published=True, user=request.user).order_by('-create_at')
+            filter_conditions = Q()
+            if filter_form.cleaned_data['category']:
+                filter_conditions &= Q(category=filter_form.cleaned_data['category'])
+                
+            articles = articles.filter(filter_conditions)
+            
+            if filter_form.cleaned_data['order_by'] == 'likes':
+                articles = articles.annotate(like_count=Count('likes')).order_by('-like_count')
+            elif filter_form.cleaned_data['order_by'] == 'comments':
+                articles = articles.annotate(comment_count=Count('comments')).order_by('-comment_count')      
+            
+            if filter_form.cleaned_data['search_query']:
+                articles = articles.filter(Q(title__icontains=filter_form.cleaned_data['search_query']) | Q(content__icontains=filter_form.cleaned_data['search_query']))
+            
+            
+        paginator = Paginator(articles, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        # is_ajax yerine request.headers ile kontrol
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
+            has_next = page_obj.has_next()  # Daha fazla sayfa olup olmadığını kontrol et
+            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
+
+        self.context.update({'data': page_obj, 'filter_form': filter_form})
+        return render(request, self.template, self.context)
+  
+        
+class DraftArticlesView(View):
     model_article = ArticlesModel
-    template = 'blogs/my_darft_articles.html'
+    filter_form = MyFilterForm
+    template = 'blogs/darft_articles.html'
+    paginate_by = 12
     context = {
         'siteTitle': 'Makaleler',
     }
 
     def get(self, request):
-        articles = self.model_article.objects.filter(is_published=False, user=request.user)
+        articles = self.model_article.objects.filter(is_published=False, user=request.user).order_by('-create_at')
+        filter_form = self.filter_form()
+        
+        paginator = Paginator(articles, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-        self.context.update({
-            'data':articles
-        })
+        # is_ajax yerine request.headers ile kontrol
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
+            has_next = page_obj.has_next()  # Daha fazla sayfa olup olmadığını kontrol et
+            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
+
+        self.context.update({'data': page_obj, 'filter_form': filter_form})
+        
+        return render(request, self.template, self.context)
+
+    def post(self, request):
+        if 'reset_filter' in request.POST:
+            return self.get(request)
+        
+        filter_form = self.filter_form(request.POST)
+
+        if filter_form.is_valid():
+            articles = self.model_article.objects.filter(is_published=False, user=request.user).order_by('-create_at')
+            filter_conditions = Q()
+            if filter_form.cleaned_data['category']:
+                filter_conditions &= Q(category=filter_form.cleaned_data['category'])
+                
+            articles = articles.filter(filter_conditions)
+            
+            if filter_form.cleaned_data['order_by'] == 'likes':
+                articles = articles.annotate(like_count=Count('likes')).order_by('-like_count')
+            elif filter_form.cleaned_data['order_by'] == 'comments':
+                articles = articles.annotate(comment_count=Count('comments')).order_by('-comment_count')      
+            
+            if filter_form.cleaned_data['search_query']:
+                articles = articles.filter(Q(title__icontains=filter_form.cleaned_data['search_query']) | Q(content__icontains=filter_form.cleaned_data['search_query']))
+            
+            
+        paginator = Paginator(articles, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        # is_ajax yerine request.headers ile kontrol
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
+            has_next = page_obj.has_next()  # Daha fazla sayfa olup olmadığını kontrol et
+            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
+
+        self.context.update({'data': page_obj, 'filter_form': filter_form})
         return render(request, self.template, self.context)
 
 
@@ -145,7 +242,11 @@ class ArticleAddView(View):
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
-
+            if form_data.is_published:
+                messages.success(request, 'Makale Başarıyla Yayınlandı')
+            else:
+                messages.success(request, 'Makale Başarıyla Taslaklara Kaydedildi.')
+                
             return redirect('article_details', slug=form_data.slug)
 
         # categories = self.model_categories.objects.filter(parent__isnull=True)
@@ -230,7 +331,10 @@ class ArticleEditView(View):
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
-
+            if form_data.is_published:
+                messages.success(request, 'Makale Başarıyla Düzenlendi ve Yayınlandı')
+            else:
+                messages.success(request, 'Makale Başarıyla Düzenlendi ve Taslaklara Kaydedildi.')
             return redirect('article_details', slug=form_data.slug)
 
         # categories = self.model_categories.objects.filter(parent__isnull=True)
@@ -249,5 +353,6 @@ def delete_article(request, article_id):
 
     if delete_article.user == request.user or request.user.is_superuser:
         delete_article.delete()
+        messages.success(request, 'Makale Başarıyla silindi.')
 
-    return redirect('articles')
+    return redirect('my_articles')
