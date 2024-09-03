@@ -11,10 +11,24 @@ from django.dispatch import receiver
 from apps.blogs.utils import slugify_tr
 from django.core.files.storage import default_storage
 from django.utils.timezone import now
-
+import apps.inputs.models as inputs
 # Create your models here.
 def upload_to(instance, filename):
     return f'blogs/{now().year}/{now().month}/{filename}'
+
+
+class UserFilterModel(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order_by = models.CharField(max_length=155, null=True, blank=True)
+    category = TreeForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(inputs.DepartmentsModel, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.ForeignKey(inputs.StatusModel, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Filters"
+
 
 
 class Category(MPTTModel):
