@@ -7,8 +7,6 @@ from apps.likes.models import Like
 from apps.comments.views import CommentView
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
-from django.http import JsonResponse, Http404
-from django.template.loader import render_to_string
 from django.contrib import messages
 
 
@@ -55,17 +53,7 @@ class ArticlesView(View):
 
         paginator = Paginator(articles, self.paginate_by)
         page_number = request.GET.get('page')
-        
-        # Eğer sayfa numarası mevcut verilerle uyumlu değilse 404 döndür
-        if page_number and int(page_number) > paginator.num_pages:
-            raise Http404("Sayfa bulunamadı.")  # Bu sayfa mevcut değil
-
-        page_obj = paginator.get_page(page_number)
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
-            has_next = page_obj.has_next()
-            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
+        page_obj = paginator.get_page(page_number) 
 
         filter_form = self.filter_form(instance=filter_instance)
         self.context.update({'data': page_obj, 'filter_form': filter_form})
@@ -100,7 +88,7 @@ class MyArticlesView(View):
     model_article = ArticlesModel
     filter_form = MyFilterForm
     template = 'blogs/my_articles.html'
-    paginate_by = 12
+    paginate_by = 4
     context = {
         'siteTitle': 'Makaleler',
     }
@@ -111,17 +99,7 @@ class MyArticlesView(View):
         
         paginator = Paginator(articles, self.paginate_by)
         page_number = request.GET.get('page')
-        
-        # Eğer sayfa numarası mevcut verilerle uyumlu değilse 404 döndür
-        if page_number and int(page_number) > paginator.num_pages:
-            raise Http404("Sayfa bulunamadı.")  # Bu sayfa mevcut değil
-
         page_obj = paginator.get_page(page_number)
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
-            has_next = page_obj.has_next()
-            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
 
         self.context.update({'data': page_obj, 'filter_form': filter_form})
         return render(request, self.template, self.context)
@@ -150,17 +128,7 @@ class MyArticlesView(View):
             
         paginator = Paginator(articles, self.paginate_by)
         page_number = request.GET.get('page')
-        
-        # Eğer sayfa numarası mevcut verilerle uyumlu değilse 404 döndür
-        if page_number and int(page_number) > paginator.num_pages:
-            raise Http404("Sayfa bulunamadı.")  # Bu sayfa mevcut değil
-
         page_obj = paginator.get_page(page_number)
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
-            has_next = page_obj.has_next()
-            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
 
         self.context.update({'data': page_obj, 'filter_form': filter_form})
         return render(request, self.template, self.context)
@@ -181,17 +149,7 @@ class DraftArticlesView(View):
         
         paginator = Paginator(articles, self.paginate_by)
         page_number = request.GET.get('page')
-        
-        # Eğer sayfa numarası mevcut verilerle uyumlu değilse 404 döndür
-        if page_number and int(page_number) > paginator.num_pages:
-            raise Http404("Sayfa bulunamadı.")  # Bu sayfa mevcut değil
-
         page_obj = paginator.get_page(page_number)
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
-            has_next = page_obj.has_next()
-            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
 
         self.context.update({'data': page_obj, 'filter_form': filter_form})
         return render(request, self.template, self.context)
@@ -221,17 +179,7 @@ class DraftArticlesView(View):
             
         paginator = Paginator(articles, self.paginate_by)
         page_number = request.GET.get('page')
-        
-        # Eğer sayfa numarası mevcut verilerle uyumlu değilse 404 döndür
-        if page_number and int(page_number) > paginator.num_pages:
-            raise Http404("Sayfa bulunamadı.")  # Bu sayfa mevcut değil
-
         page_obj = paginator.get_page(page_number)
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            article_list_html = render_to_string('blogs/article_list.html', {'data': page_obj})
-            has_next = page_obj.has_next()
-            return JsonResponse({'article_list_html': article_list_html, 'has_next': has_next})
 
         self.context.update({'data': page_obj, 'filter_form': filter_form})
         return render(request, self.template, self.context)

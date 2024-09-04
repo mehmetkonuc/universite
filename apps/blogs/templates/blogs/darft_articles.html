@@ -4,14 +4,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
 <link rel="stylesheet" href="{% static 'assets/vendor/libs/spinkit/spinkit.css' %}" />
-
-<style>
-   .card img {
-   height: 200px; /* İstediğiniz yükseklik */
-   object-fit: cover; /* Resmi alanın tamamına sığdır */
-   width: 100%; /* Resmi genişliğe yay */
-   }
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/pages/blogs/index.css' %}" />
 {% endblock extra_css%}
 {% block content %}
 <div class="d-flex bd-highlight mb-4">
@@ -23,27 +16,28 @@
    <div class="bd-highlight">
       <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
    </div>
- </div>
+</div>
 
 <div  class="mb-4">
    <h3 class="mb-0 fw-bold">Taslak Makalelerim</h3>
 </div>
-   <!-- Makaleler Grid Yapısı -->
-   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="article-container">
-      {% include 'blogs/article_list.html' %}
+<div class="row justify-content-center">
+   <div class="col">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+         {{ message }}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
    </div>
-   <!-- Yükleniyor Görüntüsü -->
-   <div id="loading" style="display: none; text-align: center;">
-      <div class="col d-flex justify-content-center  align-items-center">
-         <!-- Circle -->
-         <div class="sk-fold sk-primary">
-            <div class="sk-fold-cube"></div>
-            <div class="sk-fold-cube"></div>
-            <div class="sk-fold-cube"></div>
-            <div class="sk-fold-cube"></div>
-          </div>
-       </div>
-   </div>
+</div>
+
+<!--Articles Grid Card -->
+{% include 'blogs/article_list.html' %}
+<!-- End Articles Grid Card -->
+
 <!-- Canvas -->
 <div
    class="offcanvas offcanvas-end"
@@ -77,6 +71,7 @@
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
-<script src="{% static 'assets/js/pages/blogs/infinite-scroll.js' %}"></script>
-
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 {% endblock extra_javascript %}
