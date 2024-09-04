@@ -12,6 +12,8 @@ from apps.blogs.utils import slugify_tr
 from django.core.files.storage import default_storage
 from django.utils.timezone import now
 import apps.inputs.models as inputs
+from django.db.models import Count
+
 # Create your models here.
 def upload_to(instance, filename):
     return f'blogs/{now().year}/{now().month}/{filename}'
@@ -57,7 +59,9 @@ class ArticlesModel(models.Model):
 
     def __str__(self):
         return self.title
-
+    
+    class Meta:
+        ordering = ['-create_at']
 
 @receiver(pre_save, sender=ArticlesModel)
 def handle_article_pre_save(sender, instance, **kwargs):

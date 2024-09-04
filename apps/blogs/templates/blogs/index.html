@@ -43,6 +43,8 @@
       {% endif %}
    </div>
 </div>
+
+
 <!--Articles Grid Card -->
 {% include 'blogs/article_list.html' %}
 <!-- End Articles Grid Card -->
@@ -61,9 +63,9 @@
          aria-label="Close"></button>
    </div>
    <div class="offcanvas-body mx-0 flex-grow-0">
-      <form method="post">
-         {% csrf_token %}
-         {{filter_form|crispy}}
+      <form method="get">
+
+         {{ filter.form|crispy}}
          <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
          <button type="submit" class="btn btn-danger mb-2 d-grid w-100" name="reset_filter">Filtreyi Temizle</button>
          <button

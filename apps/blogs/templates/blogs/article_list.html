@@ -43,8 +43,8 @@
                </a>
                <!-- Beğeni ve Yorum Sayısı -->
                <div>
-                  <span class="me-3"><i class="ti ti-heart-filled text-primary"></i> {{ item.likes.count }}</span>
-                  <span><i class="ti ti-message-filled text-danger"></i> {{ item.comments.count }}</span>
+                  <span class="me-3"><i class="ti ti-heart-filled text-primary"></i> {{ item.like_count }}</span>
+                  <span><i class="ti ti-message-filled text-danger"></i> {{ item.comment_count }}</span>
                </div>
             </div>
          </div>
@@ -97,7 +97,7 @@
 <div class="row">
    <div class="col-lg-8">
       {% if data.has_next %}
-      <a class="infinite-more-link" href="?page={{ data.next_page_number }}">Sonraki</a>
+      <a class="infinite-more-link" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ data.next_page_number }}">Sonraki</a>
       {% endif %}
    </div>
 </div>

@@ -8,80 +8,43 @@ from apps.comments.views import CommentView
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from django.contrib import messages
+from apps.blogs.filters import ArticleFilter
 
 
 class ArticlesView(View):
     model_article = ArticlesModel
-    filter_model = FilterModel
-    filter_form = FilterForm
+    filter_form = ArticleFilter
     template = 'blogs/index.html'
     context = {'siteTitle': 'Makaleler'}
     paginate_by = 4
 
     def get(self, request):
-        filter_instance = self.filter_model.objects.filter(user=request.user).first()
+        # Base query set
         articles = self.model_article.objects.filter(is_published=True).order_by('-create_at')
-
-        filter_conditions = Q()
         
-        if filter_instance:
-            if filter_instance.category:
-                filter_conditions &= Q(category=filter_instance.category)
-
-            if filter_instance.university:
-                filter_conditions &= Q(user__educationalinformationmodel__University=filter_instance.university)
-
-            if filter_instance.department:
-                filter_conditions &= Q(user__educationalinformationmodel__Department=filter_instance.department)
-
-            if filter_instance.status:
-                filter_conditions &= Q(user__educationalinformationmodel__Status=filter_instance.status)
-
-            if filter_instance.country:
-                filter_conditions &= Q(user__educationalinformationmodel__Country=filter_instance.country)
-
-            articles = articles.filter(filter_conditions)
-
-            if filter_instance.order_by == 'likes':
-                articles = articles.annotate(like_count=Count('likes')).order_by('-like_count')
-            elif filter_instance.order_by == 'comments':
-                articles = articles.annotate(comment_count=Count('comments')).order_by('-comment_count')
-            
-        search_query = request.POST.get('search_query')
-        if search_query:
-            articles = articles.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
-
-        paginator = Paginator(articles, self.paginate_by)
+        # Annotate with like_count and comment_count
+        articles = articles.annotate(
+            like_count=Count('likes'),
+            comment_count=Count('comments')
+        )
+        
+        # Apply filters
+        filter = self.filter_form(request.GET, queryset=articles)
+        filtered_articles = filter.qs
+        
+        # Apply sorting
+        sorted_articles = filtered_articles
+        
+        # Pagination
+        paginator = Paginator(sorted_articles, self.paginate_by)
         page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number) 
+        page_obj = paginator.get_page(page_number)
 
-        filter_form = self.filter_form(instance=filter_instance)
-        self.context.update({'data': page_obj, 'filter_form': filter_form})
+        self.context.update({
+            'data': page_obj,
+            'filter': filter
+        })
         return render(request, self.template, self.context)
-
-    def post(self, request):
-        filter = self.filter_model.objects.filter(user=request.user).first()
-
-        if 'reset_filter' in request.POST:
-            if filter:
-                filter.category = None
-                filter.university = None
-                filter.department = None
-                filter.status = None
-                filter.country = None
-                filter.order_by = None
-                filter.save()
-                messages.success(request, 'Filtre Temizlendi.')
-                
-        else:
-            filter_form = self.filter_form(request.POST, instance=filter)
-            if filter_form.is_valid():
-                filter_form_data = filter_form.save(commit=False)
-                filter_form_data.user = request.user
-                filter_form_data.save()
-                messages.success(request, 'Filtre uygulandı ve kaydedildi.')
-
-        return self.get(request)
 
 
 class MyArticlesView(View):
