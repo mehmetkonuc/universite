@@ -17,9 +17,8 @@
       <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
    </div>
 </div>
-
 <div  class="mb-4">
-   <h3 class="mb-0 fw-bold">Taslak Makalelerim</h3>
+   <h3 class="mb-0 fw-bold">Makalelerim</h3>
 </div>
 <div class="row justify-content-center">
    <div class="col">
@@ -34,10 +33,10 @@
    </div>
 </div>
 
+
 <!--Articles Grid Card -->
 {% include 'blogs/article_list.html' %}
 <!-- End Articles Grid Card -->
-
 <!-- Canvas -->
 <div
    class="offcanvas offcanvas-end"
@@ -52,10 +51,9 @@
          data-bs-dismiss="offcanvas"
          aria-label="Close"></button>
    </div>
-   <div class="offcanvas-body">
-      <form method="post">
-         {% csrf_token %}
-         {{filter_form|crispy}}
+   <div class="offcanvas-body mx-0 flex-grow-0">
+      <form method="GET">
+         {{ filter.form|crispy}}
          <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
          <button type="submit" class="btn btn-danger mb-2 d-grid w-100" name="reset_filter">Filtreyi Temizle</button>
          <button

@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from ckeditor_uploader.fields import RichTextUploadingField
+# from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.inputs.models import CountriesModel, City, Currency
@@ -11,7 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.files.storage import default_storage
 from django.utils.timezone import now
-
+from ckeditor.fields import RichTextField
 # Create your models here.
 def upload_to(instance, filename):
     return f'marketplace/{now().year}/{now().month}/{filename}'
@@ -49,7 +49,7 @@ class MarketPlaceModel(models.Model):
                         on_delete=models.CASCADE)
     title = models.CharField(max_length=155)
     images = GenericRelation(MarketPlaceImagesModel)
-    description = RichTextUploadingField()
+    description = RichTextField()
     currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)

@@ -1,27 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from apps.blogs.forms import ArticleAddForm, FilterForm, MyFilterForm
-from apps.blogs.models import ArticlesModel, Category, FilterModel
+from apps.blogs.forms import ArticleAddForm, UserFilterForm
+from apps.blogs.models import ArticlesModel, Category, UserFilterModel
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
 from apps.comments.views import CommentView
-from django.db.models import Q, Count
+from django.db.models import Count
 from django.core.paginator import Paginator
 from django.contrib import messages
-from apps.blogs.filters import ArticleFilter
+from apps.blogs.filters import ArticleFilter, MyArticleFilter
+from django.forms.models import model_to_dict
 
 
 class ArticlesView(View):
     model_article = ArticlesModel
+    user_filter_model = UserFilterModel
     filter_form = ArticleFilter
+    user_filter_form = UserFilterForm
     template = 'blogs/index.html'
     context = {'siteTitle': 'Makaleler'}
     paginate_by = 4
 
     def get(self, request):
-        # Base query set
+        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
         articles = self.model_article.objects.filter(is_published=True).order_by('-create_at')
-        
         # Annotate with like_count and comment_count
         articles = articles.annotate(
             like_count=Count('likes'),
@@ -29,7 +31,7 @@ class ArticlesView(View):
         )
         
         # Apply filters
-        filter = self.filter_form(request.GET, queryset=articles)
+        filter = self.filter_form(model_to_dict(user_filter), queryset=articles)
         filtered_articles = filter.qs
         
         # Apply sorting
@@ -42,109 +44,122 @@ class ArticlesView(View):
 
         self.context.update({
             'data': page_obj,
-            'filter': filter
+            'filter': filter,
+            'user_filter': user_filter,
         })
         return render(request, self.template, self.context)
+    
+    def post(self, request):
+        user_filter = self.user_filter_model.objects.get(user=request.user)
+        
+        if 'reset_filter' in request.POST:
+            # Tüm filtre alanlarını temizle
+            for field in model_to_dict(user_filter).keys():
+                if field not in ['id', 'user']:  # user ve id hariç tüm alanları temizle
+                    setattr(user_filter, field, None)
+            user_filter.save()
+            return self.get(request)  
+        else:
+            form = self.user_filter_form(request.POST, instance = user_filter)
+            if form.is_valid():
+                form_data = form.save(commit=False)
+                form_data.user=request.user
+                form_data.save()
+            articles = self.model_article.objects.filter(is_published=True).order_by('-create_at')
+            articles = articles.annotate(
+                like_count=Count('likes'),
+                comment_count=Count('comments')
+                )  
+            filter = self.filter_form(data=request.POST, queryset=articles)
+            filtered_articles = filter.qs
+            # Apply sorting
+            sorted_articles = filtered_articles
+            
+            # Pagination
+            paginator = Paginator(sorted_articles, self.paginate_by)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
+            self.context.update({
+                'data': page_obj,
+                'filter': filter,
+                'user_filter': user_filter,
+            })
+            return render(request, self.template, self.context)
 
 
 class MyArticlesView(View):
     model_article = ArticlesModel
-    filter_form = MyFilterForm
-    template = 'blogs/my_articles.html'
+    filter_form = MyArticleFilter
+    template = 'blogs/my.html'
+    context = {'siteTitle': 'Makalelerim'}
     paginate_by = 4
-    context = {
-        'siteTitle': 'Makaleler',
-    }
 
     def get(self, request):
         articles = self.model_article.objects.filter(is_published=True, user=request.user).order_by('-create_at')
-        filter_form = self.filter_form()
+        articles = articles.annotate(
+            like_count=Count('likes'),
+            comment_count=Count('comments')
+        )
         
-        paginator = Paginator(articles, self.paginate_by)
-        page_number = request.GET.get('page')
+        # Apply filters
+        if 'reset_filter' in request.GET:
+            filter = self.filter_form(queryset=articles)
+        else:
+            filter = self.filter_form(request.GET, queryset=articles)
+            
+        filtered_articles = filter.qs
+        
+        # Apply sorting
+        sorted_articles = filtered_articles
+        
+        # Pagination
+        paginator = Paginator(sorted_articles, self.paginate_by)
+        page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
 
-        self.context.update({'data': page_obj, 'filter_form': filter_form})
+        self.context.update({
+            'data': page_obj,
+            'filter': filter,
+        })
         return render(request, self.template, self.context)
 
-    def post(self, request):
-        if 'reset_filter' in request.POST:
-            return self.get(request)
-        
-        filter_form = self.filter_form(request.POST)
-
-        if filter_form.is_valid():
-            articles = self.model_article.objects.filter(is_published=True, user=request.user).order_by('-create_at')
-            filter_conditions = Q()
-            if filter_form.cleaned_data['category']:
-                filter_conditions &= Q(category=filter_form.cleaned_data['category'])
-                
-            articles = articles.filter(filter_conditions)
-            
-            if filter_form.cleaned_data['order_by'] == 'likes':
-                articles = articles.annotate(like_count=Count('likes')).order_by('-like_count')
-            elif filter_form.cleaned_data['order_by'] == 'comments':
-                articles = articles.annotate(comment_count=Count('comments')).order_by('-comment_count')      
-            
-            if filter_form.cleaned_data['search_query']:
-                articles = articles.filter(Q(title__icontains=filter_form.cleaned_data['search_query']) | Q(content__icontains=filter_form.cleaned_data['search_query']))
-            
-        paginator = Paginator(articles, self.paginate_by)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        self.context.update({'data': page_obj, 'filter_form': filter_form})
-        return render(request, self.template, self.context)
   
         
 class DraftArticlesView(View):
     model_article = ArticlesModel
-    filter_form = MyFilterForm
-    template = 'blogs/darft_articles.html'
-    paginate_by = 12
-    context = {
-        'siteTitle': 'Makaleler',
-    }
+    filter_form = MyArticleFilter
+    template = 'blogs/draft.html'
+    context = {'siteTitle': 'Makalelerim'}
+    paginate_by = 4
 
     def get(self, request):
         articles = self.model_article.objects.filter(is_published=False, user=request.user).order_by('-create_at')
-        filter_form = self.filter_form()
+        articles = articles.annotate(
+            like_count=Count('likes'),
+            comment_count=Count('comments')
+        )
         
-        paginator = Paginator(articles, self.paginate_by)
-        page_number = request.GET.get('page')
+        # Apply filters
+        if 'reset_filter' in request.GET:
+            filter = self.filter_form(queryset=articles)
+        else:
+            filter = self.filter_form(request.GET, queryset=articles)
+            
+        filtered_articles = filter.qs
+        
+        # Apply sorting
+        sorted_articles = filtered_articles
+        
+        # Pagination
+        paginator = Paginator(sorted_articles, self.paginate_by)
+        page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
 
-        self.context.update({'data': page_obj, 'filter_form': filter_form})
-        return render(request, self.template, self.context)
-
-    def post(self, request):
-        if 'reset_filter' in request.POST:
-            return self.get(request)
-        
-        filter_form = self.filter_form(request.POST)
-
-        if filter_form.is_valid():
-            articles = self.model_article.objects.filter(is_published=False, user=request.user).order_by('-create_at')
-            filter_conditions = Q()
-            if filter_form.cleaned_data['category']:
-                filter_conditions &= Q(category=filter_form.cleaned_data['category'])
-                
-            articles = articles.filter(filter_conditions)
-            
-            if filter_form.cleaned_data['order_by'] == 'likes':
-                articles = articles.annotate(like_count=Count('likes')).order_by('-like_count')
-            elif filter_form.cleaned_data['order_by'] == 'comments':
-                articles = articles.annotate(comment_count=Count('comments')).order_by('-comment_count')      
-            
-            if filter_form.cleaned_data['search_query']:
-                articles = articles.filter(Q(title__icontains=filter_form.cleaned_data['search_query']) | Q(content__icontains=filter_form.cleaned_data['search_query']))
-            
-            
-        paginator = Paginator(articles, self.paginate_by)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        self.context.update({'data': page_obj, 'filter_form': filter_form})
+        self.context.update({
+            'data': page_obj,
+            'filter': filter,
+        })
         return render(request, self.template, self.context)
 
 
