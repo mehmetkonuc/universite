@@ -4,13 +4,22 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.comments.models import Comment
 from apps.likes.models import Like
-from apps.inputs.models import UniversitiesModel
+from apps.inputs.models import UniversitiesModel, CountriesModel
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from apps.blogs.utils import slugify_tr
 
 
-# Create your models here.
+class UserConfessionsFilterModel(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    country = models.ForeignKey(CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    university = models.ForeignKey(UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    sort_by = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s filter"
+
+
 class ConfessionsModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                             on_delete=models.CASCADE)
@@ -19,6 +28,8 @@ class ConfessionsModel(models.Model):
     comments = GenericRelation(Comment)
     likes = GenericRelation(Like)
     create_at = models.DateTimeField(auto_now_add=True)
+    country = models.ForeignKey(CountriesModel,
+                        on_delete=models.CASCADE)
     university = models.ForeignKey(UniversitiesModel,
                         on_delete=models.CASCADE)
     is_privacy = models.BooleanField(default=True)

@@ -1,35 +1,162 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import DocumentsModel, DocumentsUploadModel, DocumentsFolderModel
-from .forms import DocumentAddForm, FolderForm
+from .models import DocumentsModel, DocumentsUploadModel, DocumentsFolderModel, UserDocumentsFilterModel
+from .forms import DocumentAddForm, FolderForm, UserFilterForm
 from django.views import View
 from apps.likes.models import Like
 from apps.comments.views import CommentView
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+from .filters import UserFilter, MyFilter
+from django.forms.models import model_to_dict
+from django.core.paginator import Paginator
+from django.db.models import Count
 
 
 class DocumentsView(View):
+    model_data = DocumentsModel
+    user_filter_model = UserDocumentsFilterModel
+    filter_form = UserFilter
+    user_filter_form = UserFilterForm
+    template = 'documents/index.html'
+    context = {'siteTitle': 'Dökümanlar'}
+    paginate_by = 4
+
     def get(self, request):
-        data = DocumentsModel.objects.filter(is_published=True)
-        context = {'data':data}
+        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
+        data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
+        data = data.annotate(
+            like_count=Count('likes', distinct=True),
+            comment_count=Count('comments', distinct=True)
+        )
         
-        return render(request, 'documents/index.html', context)
+        # Apply filters
+        filter = self.filter_form(model_to_dict(user_filter), queryset=data)
+        filtered_data = filter.qs
+        
+        # Apply sorting
+        sorted_data = filtered_data
+        
+        # Pagination
+        paginator = Paginator(sorted_data, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        self.context.update({
+            'data': page_obj,
+            'filter': filter,
+            'user_filter': user_filter,
+        })
+        return render(request, self.template, self.context)
+
+    def post(self, request):
+        user_filter = self.user_filter_model.objects.get(user=request.user)
+
+        if 'reset_filter' in request.POST:
+            # Tüm filtre alanlarını temizle
+            for field in model_to_dict(user_filter).keys():
+                if field not in ['id', 'user']:  # user ve id hariç tüm alanları temizle
+                    setattr(user_filter, field, None)
+            user_filter.save()
+            return self.get(request)  
+        else:
+            form = self.user_filter_form(request.POST, instance = user_filter)
+            if form.is_valid():
+                form_data = form.save(commit=False)
+                form_data.user=request.user
+                form_data.save()
+            data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
+            data = data.annotate(
+                like_count=Count('likes', distinct=True),
+                comment_count=Count('comments', distinct=True)
+        )
+            filter = self.filter_form(data=request.POST, queryset=data)
+            filtered_data = filter.qs
+            # Apply sorting
+            sorted_data = filtered_data
+            
+            # Pagination
+            paginator = Paginator(sorted_data, self.paginate_by)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
+            self.context.update({
+                'data': page_obj,
+                'filter': filter,
+                'user_filter': user_filter,
+            })
+            return render(request, self.template, self.context)
 
 
 class MyDocumentsView(View):
+    model_data = DocumentsModel
+    filter_form = MyFilter
+    template = 'documents/my.html'
+    context = {'siteTitle': 'Dokümanlarım'}
+    paginate_by = 4
+
     def get(self, request):
-        data = DocumentsModel.objects.filter(user=request.user, is_published = True)
-        context = {'data':data}
+        data = self.model_data.objects.filter(is_published=True, user=request.user).order_by('-create_at')
+        data = data.annotate(
+            like_count=Count('likes', distinct=True),
+            comment_count=Count('comments', distinct=True)
+        )
+        # Apply filters
+        if 'reset_filter' in request.GET:
+            filter = self.filter_form(queryset=data)
+        else:
+            filter = self.filter_form(request.GET, queryset=data)
+            
+        filtered_data = filter.qs
         
-        return render(request, 'documents/my_documents.html', context)
+        # Apply sorting
+        sorted_data = filtered_data
+        
+        # Pagination
+        paginator = Paginator(sorted_data, self.paginate_by)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        self.context.update({
+            'data': page_obj,
+            'filter': filter,
+        })
+        return render(request, self.template, self.context)
 
 
 class MyDraftDocumentsView(View):
+    model_data = DocumentsModel
+    filter_form = MyFilter
+    template = 'documents/draft.html'
+    context = {'siteTitle': 'Taslaklarım'}
+    paginate_by = 4
+
     def get(self, request):
-        data = DocumentsModel.objects.filter(user=request.user, is_published = False)
-        context = {'data':data}
+        data = self.model_data.objects.filter(is_published=False, user=request.user).order_by('-create_at')
+        data = data.annotate(
+            like_count=Count('likes', distinct=True),
+            comment_count=Count('comments', distinct=True)
+        )  
+        # Apply filters
+        if 'reset_filter' in request.GET:
+            filter = self.filter_form(queryset=data)
+        else:
+            filter = self.filter_form(request.GET, queryset=data)
+
+        filtered_data = filter.qs
         
-        return render(request, 'documents/my_draft_documents.html', context)
+        # Apply sorting
+        sorted_data = filtered_data
+        
+        # Pagination
+        paginator = Paginator(sorted_data, self.paginate_by)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        self.context.update({
+            'data': page_obj,
+            'filter': filter,
+        })
+        return render(request, self.template, self.context)
 
 
 class MyFoldersView(View):

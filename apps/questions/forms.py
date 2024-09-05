@@ -1,6 +1,16 @@
 from django import forms
 from apps.questions import models
 
+
+class UserFilterForm(forms.ModelForm):
+    class Meta:
+        model=models.UserQuestionsFilterModel
+        fields= ['category', 'country', 'university', 'department', 'status', 'sort_by' ]
+        labels = {
+            'category': 'Kategori',
+        } 
+
+
 class QuestionsAddForm(forms.ModelForm):
     STATUS_CHOICES = [
         (False, 'Taslaklara Kaydet'),

@@ -12,7 +12,7 @@ from django.utils.timezone import now
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.files.storage import default_storage
-
+import apps.inputs.models as inputs
 
 # Create your models here.
 def upload_to(instance, filename):
@@ -47,6 +47,20 @@ class DocumentsFolderModel(models.Model):
     def __str__(self):
         return self.name
 
+
+class UserDocumentsFilterModel(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(inputs.DepartmentsModel, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.ForeignKey(inputs.StatusModel, on_delete=models.SET_NULL, null=True, blank=True)
+    sort_by = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s filter"
+
+
 class DocumentsModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                             on_delete=models.CASCADE)
@@ -55,7 +69,7 @@ class DocumentsModel(models.Model):
     title = models.CharField(max_length=255)
     content = RichTextUploadingField()
     documents = GenericRelation(DocumentsUploadModel)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
     is_published = models.BooleanField(default=False)
     comments = GenericRelation(Comment)
@@ -63,6 +77,7 @@ class DocumentsModel(models.Model):
     
     def __str__(self):
         return self.title
+    
     class Meta:
         verbose_name = "Doküman"
         verbose_name_plural = "Dokümanlar"

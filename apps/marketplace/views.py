@@ -3,7 +3,7 @@ from django.views import View
 from apps.marketplace.models import MarketPlaceModel, UserMarketPlaceFilterModel, Category, MarketPlaceImagesModel
 from apps.marketplace.forms import MarketPlaceForm, UserFilterForm
 from django.contrib.contenttypes.models import ContentType
-from apps.marketplace.filters import UserMarketPlaceFilter, MyMarketPlaceFilter
+from apps.marketplace.filters import UserFilter, MyFilter
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 class MarketPlaceView(View):
     model_data = MarketPlaceModel
     user_filter_model = UserMarketPlaceFilterModel
-    filter_form = UserMarketPlaceFilter
+    filter_form = UserFilter
     user_filter_form = UserFilterForm
     template = 'marketplace/index.html'
     context = {'siteTitle': 'İlanlar'}
@@ -76,9 +76,10 @@ class MarketPlaceView(View):
             })
             return render(request, self.template, self.context)
 
+
 class MyMarketPlaceView(View):
     model_data = MarketPlaceModel
-    filter_form = MyMarketPlaceFilter
+    filter_form = MyFilter
     template = 'marketplace/my.html'
     context = {'siteTitle': 'İlanlarım'}
     paginate_by = 4
@@ -111,9 +112,9 @@ class MyMarketPlaceView(View):
 
 class DraftMarketPlaceView(View):
     model_data = MarketPlaceModel
-    filter_form = MyMarketPlaceFilter
+    filter_form = MyFilter
     template = 'marketplace/draft.html'
-    context = {'siteTitle': 'İlanlarım'}
+    context = {'siteTitle': 'Taslaklarım'}
     paginate_by = 4
 
     def get(self, request):

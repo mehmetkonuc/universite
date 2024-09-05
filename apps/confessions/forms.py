@@ -1,5 +1,12 @@
 from django import forms
-from apps.confessions.models import ConfessionsModel
+from apps.confessions.models import ConfessionsModel, UserConfessionsFilterModel
+
+
+class UserFilterForm(forms.ModelForm):
+    class Meta:
+        model=UserConfessionsFilterModel
+        fields= ['country', 'university', 'sort_by' ]
+
 
 class ConfessionsForm(forms.ModelForm):
     STATUS_CHOICES = [
@@ -20,7 +27,7 @@ class ConfessionsForm(forms.ModelForm):
     )
     class Meta:
         model = ConfessionsModel
-        fields = ['title', 'description', 'university', 'is_privacy', 'is_published']
+        fields = ['title', 'description', 'country', 'university', 'is_privacy', 'is_published']
         widgets = {
             'university': forms.Select(attrs={
                 'class': 'selectpicker w-100',

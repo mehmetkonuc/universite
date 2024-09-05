@@ -1,0 +1,77 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/spinkit/spinkit.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/blogs/index.css' %}" />
+{% endblock extra_css%}
+
+{% block content %}
+ <div class="d-flex bd-highlight mb-4">
+   <div class="p-2 flex-grow-1 bd-highlight">
+   </div>
+   <div class="bd-highlight me-4">
+      <a href="{% url 'documents_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
+   </div>
+   <div class="bd-highlight">
+      <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+   </div>
+</div>
+<div  class="mb-4">
+   <h3 class="mb-0 fw-bold">Dokümanlarım</h3>
+</div>
+<div class="row justify-content-center">
+   <div class="col">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+         {{ message }}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+   </div>
+</div>
+<!--Articles Grid Card -->
+{% include 'documents/list.html' %}
+<!-- End Articles Grid Card -->
+<!-- Canvas -->
+<div
+   class="offcanvas offcanvas-end"
+   tabindex="-1"
+   id="filter-canvas"
+   aria-labelledby="offcanvasEndLabel">
+   <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title">Filtrele</h5>
+      <button
+         type="button"
+         class="btn-close text-reset"
+         data-bs-dismiss="offcanvas"
+         aria-label="Close"></button>
+   </div>
+   <div class="offcanvas-body mx-0 flex-grow-0">
+      <form method="GET">
+         {{ filter.form|crispy}}
+         <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
+         <button type="submit" class="btn btn-danger mb-2 d-grid w-100" name="reset_filter">Filtreyi Temizle</button>
+         <button
+            type="button"
+            class="btn btn-label-secondary d-grid w-100"
+            data-bs-dismiss="offcanvas">
+         Vazgeç
+         </button>
+      </form>
+   </div>
+</div>
+<!-- End Canvas -->
+{% endblock content %}
+
+{% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
+{% endblock extra_javascript %}
+

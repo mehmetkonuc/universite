@@ -1,5 +1,15 @@
 from django import forms
-from .models import DocumentsModel, DocumentsFolderModel
+from .models import DocumentsModel, DocumentsFolderModel, UserDocumentsFilterModel
+
+
+class UserFilterForm(forms.ModelForm):
+    class Meta:
+        model=UserDocumentsFilterModel
+        fields= ['country', 'university', 'department', 'status', 'sort_by' ]
+        labels = {
+            'category': 'Kategori',
+        } 
+
 
 class FolderForm(forms.ModelForm):
     class Meta:

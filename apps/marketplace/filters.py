@@ -3,7 +3,7 @@ from .models import MarketPlaceModel, Category
 from apps.inputs.models import UniversitiesModel, CountriesModel, DepartmentsModel, StatusModel
 from django import forms
 
-class UserMarketPlaceFilter(django_filters.FilterSet):
+class UserFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='icontains', label='Arama', help_text = 'Makale Başlıklarında Kelime Ara')
     category = django_filters.ModelChoiceFilter(
         queryset=Category.objects.all(),
@@ -95,7 +95,7 @@ class UserMarketPlaceFilter(django_filters.FilterSet):
         }
 
 
-class MyMarketPlaceFilter(django_filters.FilterSet):
+class MyFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='icontains', label='Arama', help_text = 'Makale Başlıklarında Kelime Ara')
     category = django_filters.ModelChoiceFilter(queryset=Category.objects.all(), label='Kategori', help_text ='Makalenin Kategorisi', empty_label='Tüm Kategoriler')
     

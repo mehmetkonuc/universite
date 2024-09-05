@@ -9,7 +9,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from apps.blogs.utils import slugify_tr
-
+import apps.inputs.models as inputs
 # Create your models here.
 class Category(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
@@ -20,6 +20,21 @@ class Category(MPTTModel):
 
     def __str__(self):
         return self.name
+
+
+class UserQuestionsFilterModel(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    category = TreeForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(inputs.DepartmentsModel, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.ForeignKey(inputs.StatusModel, on_delete=models.SET_NULL, null=True, blank=True)
+    sort_by = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s filter"
+
 
 class QuestionsModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
