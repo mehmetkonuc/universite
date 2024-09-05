@@ -1,6 +1,14 @@
 from django import forms
-from apps.marketplace.models import MarketPlaceModel
+from apps.marketplace.models import MarketPlaceModel, UserMarketPlaceFilterModel
 from apps.inputs.models import Currency
+
+class UserFilterForm(forms.ModelForm):
+    class Meta:
+        model=UserMarketPlaceFilterModel
+        fields= ['category', 'country', 'city', 'university', 'department', 'status', 'sort_by' ]
+        labels = {
+            'category': 'Kategori',
+        } 
 
 class MarketPlaceForm(forms.ModelForm):
     STATUS_CHOICES = [

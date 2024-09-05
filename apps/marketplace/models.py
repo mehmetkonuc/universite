@@ -3,7 +3,7 @@ from django.conf import settings
 # from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
-from apps.inputs.models import CountriesModel, City, Currency
+import apps.inputs.models as inputs
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_delete
 from apps.blogs.utils import slugify_tr
@@ -43,6 +43,20 @@ class Category(MPTTModel):
     def __str__(self):
         return self.name
 
+class UserMarketPlaceFilterModel(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    category = TreeForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey(inputs.City, on_delete=models.SET_NULL, null=True, blank=True)
+    university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(inputs.DepartmentsModel, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.ForeignKey(inputs.StatusModel, on_delete=models.SET_NULL, null=True, blank=True)
+    sort_by = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s filter"
+
 
 class MarketPlaceModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -50,11 +64,11 @@ class MarketPlaceModel(models.Model):
     title = models.CharField(max_length=155)
     images = GenericRelation(MarketPlaceImagesModel)
     description = RichTextField()
-    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
+    currency = models.ForeignKey(inputs.Currency, on_delete=models.SET_NULL, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
-    country = models.ForeignKey(CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey(inputs.City, on_delete=models.SET_NULL, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
