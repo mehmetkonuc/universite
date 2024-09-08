@@ -19,7 +19,7 @@ class ArticlesView(View):
     user_filter_form = UserFilterForm
     template = 'blogs/index.html'
     context = {'siteTitle': 'Makaleler'}
-    paginate_by = 4
+    paginate_by = 2
 
     def get(self, request):
         user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)

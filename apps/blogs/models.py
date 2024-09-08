@@ -11,6 +11,7 @@ from apps.blogs.utils import slugify_tr
 from django.core.files.storage import default_storage
 from django.utils.timezone import now
 import apps.inputs.models as inputs
+from django.urls import reverse
 
 # Create your models here.
 def upload_to(instance, filename):
@@ -56,6 +57,9 @@ class ArticlesModel(models.Model):
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
+    def get_absolute_url(self):
+        return reverse('article_details', kwargs={'slug': self.slug})
+    
     def __str__(self):
         return self.title
     

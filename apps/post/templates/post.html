@@ -22,22 +22,22 @@
                <a href="{% url 'profile' post.User.username %}" class="d-flex text-decoration-none">
                   <div class="avatar avatar-md me-2 flex-shrink-0">
                      {% if post.User.profilepicturemodel.profile_photo %}
-                        <img src="{{ post.User.profilepicturemodel.profile_photo.url }}" 
-                             alt="Avatar" 
-                             class="rounded-circle" 
-                             />
+                     <img src="{{ post.User.profilepicturemodel.profile_photo.url }}" 
+                        alt="Avatar" 
+                        class="rounded-circle" 
+                        />
                      {% else %}
-                        <img src="{% static 'assets/img/avatars/14.png' %}" 
-                             alt="Avatar" 
-                             class="rounded-circle" 
-                             />
+                     <img src="{% static 'assets/img/avatars/14.png' %}" 
+                        alt="Avatar" 
+                        class="rounded-circle" 
+                        />
                      {% endif %}
                   </div>
                   <div class="d-flex flex-column">
                      <div class="me-2 h5 mb-1" style="line-height: 1.2; margin-bottom: 0;">
                         {{ post.User.first_name }} {{ post.User.last_name }} 
                         <small class="text-muted h6">
-                           bir gönderi paylaştı.
+                        bir gönderi paylaştı.
                         </small>
                      </div>
                      <small class="text-muted">{{ post.User.educationalinformationmodel.University }} | {{ post.PublishDate }}</small>
@@ -46,7 +46,7 @@
             </div>
             <div class="dropdown">
                <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+               <i class="ti ti-dots-vertical ti-sm text-muted"></i>
                </button>
                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
@@ -56,63 +56,56 @@
                </div>
             </div>
          </div>
-         
-         
-         
          <div class="card-body">
-          <p class="text-black"> {{ post.Content }} </p>
-          <div class="gallery-container mt-4">
-            {% for image in post.photos.all %}
-            <div class="gallery-item">
-               <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
-               <img src="{{ image.photo.url }}" class="border" alt="Post Image">
-               </a>
+            <p class="text-black"> {{ post.Content }} </p>
+            <div class="gallery-container mt-4">
+               {% for image in post.photos.all %}
+               <div class="gallery-item">
+                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                  <img src="{{ image.photo.url }}" class="border" alt="Post Image">
+                  </a>
+               </div>
+               {% endfor %}
             </div>
-            {% endfor %}
-         </div>
-
-         <hr />
-         <div class="d-flex align-items-center">
+            <hr />
             <div class="d-flex align-items-center">
-               <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
+               <div class="d-flex align-items-center">
+                  <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
                   <i class="ti ti-heart{% if post.id in liked %}-filled{% endif %} text-primary"></i>
                   <span class="like-count text-body">{{ post.likes.count }}</span>
-              </a>
-               <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
-                  ><i class="ti ti-message-filled text-danger"></i> {{ post.comments.count }}</a>
+                  </a>
                   <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
-                  ><i class="ti ti-repeat text-success"></i> {{ post.comments.count }}</a>
+                     ><i class="ti ti-message-filled text-danger"></i> {{ post.comments.count }}</a>
+                  <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
+                     ><i class="ti ti-repeat text-success"></i> {{ post.comments.count }}</a>
+               </div>
+               <div class="ms-auto">
+               </div>
             </div>
-            <div class="ms-auto">
-            </div>
-         </div>
          </div>
       </div>
    </div>
 </div>
-
 <div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-     <div class="modal-content">
-        <div class="modal-header">
-           <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
-           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-           <p>
-              Paylaşımı Silmek İstediğinizden emin misiniz?
-           </p>
-        </div>
-        <div class="modal-footer">
-           <a class="btn btn-primary" href="{% url 'delete_post' post.id %}">Sil</a>
-           <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
-        </div>
-     </div>
-  </div>
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <p>
+               Paylaşımı Silmek İstediğinizden emin misiniz?
+            </p>
+         </div>
+         <div class="modal-footer">
+            <a class="btn btn-primary" href="{% url 'delete_post' post.id %}">Sil</a>
+            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+         </div>
+      </div>
+   </div>
 </div>
-
 {% endfor %}
-
 <!-- Modals -->
 <div class="modal fade" id="add-post" tabindex="-1" aria-hidden="true">
    <div class="modal-dialog" role="document">
@@ -127,7 +120,7 @@
          </div>
          <form id="post-form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-         <div class="modal-body">
+            <div class="modal-body">
                <div class="d-flex justify-content-between align-items-center mb-6">
                   <div class="d-flex align-items-center">
                      <div class="avatar avatar-md me-2">
@@ -153,16 +146,15 @@
                </div>
                <textarea name="Content" id="autosize-demo border-0 shadow-none" placeholder="Yorumunu Fakula!!!" rows="3" class="form-control"></textarea>
                <div id="preview-container" class="d-flex flex-wrap"></div>
-         </div>
-         <div class="modal-footer">
-            <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
-            <label for="id_images">
-            <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i><span class="align-middle"></span>
-            </label>
-            <button type="submit" class="btn btn-label-primary btn-sm rounded-pill"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
-         </div>
-      </form>
-
+            </div>
+            <div class="modal-footer">
+               <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
+               <label for="id_images">
+               <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i><span class="align-middle"></span>
+               </label>
+               <button type="submit" class="btn btn-label-primary btn-sm rounded-pill"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
+            </div>
+         </form>
       </div>
    </div>
 </div>
@@ -197,5 +189,4 @@
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/post.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
-
 {% endblock extra_javascript %}

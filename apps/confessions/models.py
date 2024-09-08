@@ -8,6 +8,7 @@ from apps.inputs.models import UniversitiesModel, CountriesModel
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from apps.blogs.utils import slugify_tr
+from django.urls import reverse
 
 
 class UserConfessionsFilterModel(models.Model):
@@ -36,6 +37,9 @@ class ConfessionsModel(models.Model):
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
+    def get_absolute_url(self):
+        return reverse('confession_details', kwargs={'slug': self.slug})
+    
 @receiver(pre_save, sender=ConfessionsModel)
 def pre_save_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

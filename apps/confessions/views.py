@@ -21,7 +21,7 @@ class ConfessionsView(View):
     user_filter_form = UserFilterForm
     template = 'confessions/index.html'
     context = {'siteTitle': 'İtiraflar'}
-    paginate_by = 4
+    paginate_by = 2
 
     def get(self, request):
         user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)

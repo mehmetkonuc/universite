@@ -1,7 +1,8 @@
 {% load static %}
-<div class="row infinite-container row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 " id="article-container">
+
+<div class="row infinite-container">
    {% for item in data %}
-   <div class="col infinite-item">
+   <div class="col-lg-4 mb-4 infinite-item">
       <div class="card card-border-shadow-primary h-100">
          <!-- Makale Resmi -->
          <a href="{% url 'article_details' item.slug %}">
@@ -60,40 +61,43 @@
       </div>
    </div>
    {% endfor %}
+
 </div>
-<div class="loading" style="display:none;">
-   <div class="card card-border-shadow-primary h-100">
-      <!-- Skeleton Resim -->
-      <div class="skeleton" style="height: 200px;"></div>
-      <div class="card-body">
-         <!-- Skeleton Başlık -->
-         <div class="skeleton" style="height: 25px; width: 80%; margin-bottom: 10px;"></div>
-         <!-- Skeleton Tarih ve Kategori -->
-         <div class="skeleton" style="height: 15px; width: 50%; margin-bottom: 20px;"></div>
-         <!-- Skeleton Özet -->
-         <div class="skeleton" style="height: 50px; width: 100%;"></div>
-      </div>
-      <div class="card-footer">
-         <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-               <!-- Skeleton Profil Fotoğrafı -->
-               <div class="skeleton rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"></div>
-               <div>
-                  <!-- Skeleton Yazar Adı -->
-                  <div class="skeleton" style="height: 15px; width: 70%; margin-bottom: 5px;"></div>
-                  <!-- Skeleton Üniversite -->
-                  <div class="skeleton" style="height: 15px; width: 50%;"></div>
+<div class="col-lg-4 loading-container">
+   <div class="loading" style="display:none;">
+      <div class="card card-border-shadow-primary h-100">
+         <!-- Skeleton Resim -->
+         <div class="skeleton" style="height: 200px;"></div>
+         <div class="card-body">
+            <!-- Skeleton Başlık -->
+            <div class="skeleton" style="height: 25px; width: 80%; margin-bottom: 10px;"></div>
+            <!-- Skeleton Tarih ve Kategori -->
+            <div class="skeleton" style="height: 15px; width: 50%; margin-bottom: 20px;"></div>
+            <!-- Skeleton Özet -->
+            <div class="skeleton" style="height: 50px; width: 100%;"></div>
+         </div>
+         <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+               <div class="d-flex align-items-center">
+                  <!-- Skeleton Profil Fotoğrafı -->
+                  <div class="skeleton rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"></div>
+                  <div>
+                     <!-- Skeleton Yazar Adı -->
+                     <div class="skeleton" style="height: 15px; width: 70%; margin-bottom: 5px;"></div>
+                     <!-- Skeleton Üniversite -->
+                     <div class="skeleton" style="height: 15px; width: 50%;"></div>
+                  </div>
                </div>
-            </div>
-            <!-- Skeleton Beğeni ve Yorum -->
-            <div style="display: flex;">
-               <div class="skeleton" style="width: 30px; height: 15px; margin-right: 10px;"></div>
-               <div class="skeleton" style="width: 30px; height: 15px;"></div>
+               <!-- Skeleton Beğeni ve Yorum -->
+               <div style="display: flex;">
+                  <div class="skeleton" style="width: 30px; height: 15px; margin-right: 10px;"></div>
+                  <div class="skeleton" style="width: 30px; height: 15px;"></div>
+               </div>
             </div>
          </div>
       </div>
    </div>
-</div>
+   </div>
 <div class="row">
    <div class="col-lg-8">
       {% if data.has_next %}
@@ -101,3 +105,4 @@
       {% endif %}
    </div>
 </div>
+

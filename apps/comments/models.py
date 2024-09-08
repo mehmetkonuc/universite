@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.likes.models import Like
 from apps.photos.models import PhotosModel
+from django.urls import reverse
 
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -26,3 +27,6 @@ class Comment(models.Model):
 
     def get_replies(self):
         return self.replies.all()
+    
+    def get_absolute_url(self):
+        return reverse('comment_detail', kwargs={'comment_id': self.id})
