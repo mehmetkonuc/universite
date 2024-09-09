@@ -15,12 +15,10 @@
 {% block content %}
 <div class="row justify-content-center">
    <div class="col-lg-8 mb-4">
-
-
       <div class="d-flex bd-highlight">
          <div class="w-100 bd-highlight">
-                  <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
-                  <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+            <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+            <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
             </button>
          </div>
          <div class="flex-shrink-1 bd-highlight">
@@ -38,20 +36,9 @@
                </div>
             </div>
          </div>
-       </div>
-
-
-
-
-
-
-
-
-
-
+      </div>
    </div>
 </div>
-
 <div class="row justify-content-center">
    <div class="col-lg-8">
       {% if messages %}
@@ -70,7 +57,6 @@
          <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
          <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
       </div>
-
    </div>
 </div>
 <!-- Makale Ana Görseli -->
@@ -96,7 +82,9 @@
                   <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %} text-primary"></i>
                   <span class="like-count text-body">{{ data.likes.count }}</span>
                   </a>
-                  <i class="ti ti-message-filled text-danger me-1"></i> {{ data.comments.count }}
+                  <a href="#comments_form" class="text-body me-3">
+                  <i class="ti ti-message-filled text-danger"></i> {{ data.comments.count }}
+                  </a>
                </div>
                <div class="ms-auto">
                </div>
@@ -137,7 +125,7 @@
    </div>
 </div>
 <!-- Yorum Formu -->
-<div class="row justify-content-center mt-4">
+<div class="row justify-content-center mt-4"  id="comments_form">
    <div class="col-lg-8">
       <!-- Comment Form -->
       {% block comment-form %}

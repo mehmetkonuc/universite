@@ -6,13 +6,19 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Like
+from django.db.models import Count
+
 
 class CommentView():
     model_comments = Comment
     form_class = CommentForm
 
     def comment_get(content_type, object_id):
-        comments = CommentView.model_comments.objects.filter(content_type=content_type, object_id=object_id, parent__isnull=True).order_by('-created_at')
+        comments = CommentView.model_comments.objects.filter(content_type=content_type, object_id=object_id, parent__isnull=True)
+        comments = comments.annotate(
+            like_count=Count('likes', distinct=True),
+        )
+        comments = comments.order_by('-likes')
         return comments
     
     def comment_post(request, content_type, object_id, parent_id=None):
@@ -47,14 +53,16 @@ class CommentCommentsView(View):
         'siteTitle': 'Paylaşımlar',
     }
     def get(self, request, comment_id):
-        comments = CommentView.model_comments.objects.filter(id=comment_id).first()
+        comments = CommentView.model_comments.objects.get(id=comment_id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-
+        content = comments.content_object.get_notifications_comment_context()
         form = CommentView.form_class()
         self.context.update({
             'comments' : comments,
             'liked_comment' : liked_comment,
-            'form' : form
+            'form' : form,
+            'content' : content,
+            
         })
         return render(request, 'comments/comment-comments.html', self.context)
     

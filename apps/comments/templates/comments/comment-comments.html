@@ -3,121 +3,216 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-comments.css' %}" />
-
 {%endblock%}
 {% block content %}
-<div class="row justify-content-center">
-   <div class="col-lg-8 mb-4">
-         <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
-           <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
-         </button>
-     </div>
+<div class="row justify-content-center mb-6">
+   <div class="col-lg-8">
+      <button type="button" onclick="history.back()" class="btn btn-sm btn-label-primary rounded-pill waves-effect">
+      <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
+      </button>
    </div>
+</div>
 <div class="row justify-content-center">
    <div class="col-md-8 col-xxl-8 mb-4">
-      <div class="card card-border-shadow-primary mb-4">
-         <div class="card-header d-flex justify-content-between mb-0">
-            <div class="card-title mb-0">
-               <div class="d-flex">
-                  <div class="d-flex">
-                     <a href="{% url 'profile' comments.user.username %}">
-                        <div class="avatar avatar-md me-2">
-                           {% if comments.user.profilepicturemodel.profile_photo %}
-                           {% with profile_photo_url=comments.user.profilepicturemodel.profile_photo.url %}
-                           <img
-                              src="{{ profile_photo_url }}"
-                              alt="Avatar"
-                              class="rounded-circle" />
-                           {% endwith %}
-                           {% else %}
-                           <img
-                              src="{% static 'assets/img/avatars/14.png' %}"
-                              alt="Avatar"
-                              class="rounded-circle" />
-                           {% endif %}
+      <ul class="timeline mb-0">
+         <li class="timeline-item timeline-item-transparent">
+            <span class="timeline-point timeline-point-primary"></span>
+            <div class="timeline-event">
+               <div class="card card-border-shadow-primary">
+                  <div class="card-header bg-warning mb-4">
+                     <h5 class="text-white mb-0 fw-bold">Yorumlanan İçerik</h5>
+                  </div>
+                  <div class="card-body d-flex align-items-center">
+                     <a href="{{content.content_url}}">
+                        <h1>{{content.content_title}}</h1>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </li>
+         {% if comments.parent %}
+         <li class="timeline-item timeline-item-transparent">
+            <span class="timeline-point timeline-point-warning"></span>
+            <div class="timeline-event">
+               <div class="card card-border-shadow-primary mb-4">
+                  <div class="card-header d-flex justify-content-between mb-0">
+                     <div class="card-title mb-0">
+                        <div class="d-flex">
+                           <div class="d-flex">
+                              <a href="{% url 'profile' comments.parent.user.username %}">
+                                 <div class="avatar avatar-md me-2">
+                                    {% if comments.parent.user.profilepicturemodel.profile_photo %}
+                                    {% with profile_photo_url=comments.parent.user.profilepicturemodel.profile_photo.url %}
+                                    <img
+                                       src="{{ profile_photo_url }}"
+                                       alt="Avatar"
+                                       class="rounded-circle" />
+                                    {% endwith %}
+                                    {% else %}
+                                    <img
+                                       src="{% static 'assets/img/avatars/14.png' %}"
+                                       alt="Avatar"
+                                       class="rounded-circle" />
+                                    {% endif %}
+                                 </div>
+                           </div>
+                           <div class="flex-grow-1 ms-1">
+                           <div class="me-2 h5 mb-0">{{ comments.parent.user.first_name }} {{ comments.parent.user.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                           <small class="text-muted">{{ comments.parent.created_at }}</small>
+                           </div>
                         </div>
+                     </div>
+                     <div class="dropdown">
+                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                           {% if comments.parent.user.username == user.username or user.is_superuser %}
+                           <a class="dropdown-item text-danger" href="#"
+                              data-bs-toggle="modal" data-bs-target="#modalCenter_{{comments.parent.id}}">Sil</a>
+                           {%endif%}
+                        </div>
+                     </div>
                   </div>
-                  <div class="flex-grow-1 ms-1">
-                  <div class="me-2 h5 mb-0">{{ comments.user.first_name }} {{ comments.user.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
-                  <small class="text-muted">{{ comments.created_at }}</small>
+                  <div class="card-body">
+                     {{ comments.parent.text }}
+                     <div class="gallery-container mt-4">
+                        {% for image in comments.parent.photos.all %}
+                        <div class="gallery-item">
+                           <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                           <img src="{{ image.photo.url }}" alt="Post Image">
+                           </a>
+                        </div>
+                        {% endfor %}
+                     </div>
+                     <hr />
+                     <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+                           <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comments.parent.likes.content_type.id}}" data-object-id="{{comments.parent.id}}">
+                           <i class="ti ti-heart{% if comments.parent.id in liked_comment %}-filled{% endif %} text-primary"></i>
+                           <span class="like-count text-body">{{ comments.parent.likes.count }}</span>
+                           </a>
+                           <a href="{% url 'comment_detail' comments.parent.id %}" class="text-body me-3"
+                              ><i class="ti ti-message-filled text-danger"></i> {{ comments.parent.replies.count }}</a
+                              >
+                        </div>
+                        <div class="ms-auto">
+                        </div>
+                     </div>
                   </div>
                </div>
             </div>
-            <div class="dropdown">
-               <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="ti ti-dots-vertical ti-sm text-muted"></i>
-               </button>
-               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                  <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                  {% if comments.user.username == user.username or user.is_superuser %}
-                  <a class="dropdown-item text-danger" href="#"
-                     data-bs-toggle="modal" data-bs-target="#modalCenter_{{comments.id}}">Sil</a>
-                  {%endif%}
+         </li>
+         {%endif%}
+         <li class="timeline-item timeline-item-transparent">
+            <span class="timeline-point timeline-point-success"></span>
+            <div class="timeline-event">
+               <div class="card card-border-shadow-primary mb-4">
+                  <div class="card-header d-flex justify-content-between mb-0">
+                     <div class="card-title mb-0">
+                        <div class="d-flex">
+                           <div class="d-flex">
+                              <a href="{% url 'profile' comments.user.username %}">
+                                 <div class="avatar avatar-md me-2">
+                                    {% if comments.user.profilepicturemodel.profile_photo %}
+                                    {% with profile_photo_url=comments.user.profilepicturemodel.profile_photo.url %}
+                                    <img
+                                       src="{{ profile_photo_url }}"
+                                       alt="Avatar"
+                                       class="rounded-circle" />
+                                    {% endwith %}
+                                    {% else %}
+                                    <img
+                                       src="{% static 'assets/img/avatars/14.png' %}"
+                                       alt="Avatar"
+                                       class="rounded-circle" />
+                                    {% endif %}
+                                 </div>
+                           </div>
+                           <div class="flex-grow-1 ms-1">
+                           <div class="me-2 h5 mb-0">{{ comments.user.first_name }} {{ comments.user.last_name }} <small class="text-muted h6"> bir gönderi paylaştı</small></div></a>
+                           <small class="text-muted">{{ comments.created_at }}</small>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="dropdown">
+                        <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                           {% if comments.user.username == user.username or user.is_superuser %}
+                           <a class="dropdown-item text-danger" href="#"
+                              data-bs-toggle="modal" data-bs-target="#modalCenter_{{comments.id}}">Sil</a>
+                           {%endif%}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card-body">
+                     {{ comments.text }}
+                     <div class="gallery-container mt-4">
+                        {% for image in comments.photos.all %}
+                        <div class="gallery-item">
+                           <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                           <img src="{{ image.photo.url }}" alt="Post Image">
+                           </a>
+                        </div>
+                        {% endfor %}
+                     </div>
+                     <hr />
+                     <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+                           <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comments.likes.content_type.id}}" data-object-id="{{comments.id}}">
+                           <i class="ti ti-heart{% if comments.id in liked_comment %}-filled{% endif %} text-primary"></i>
+                           <span class="like-count text-body">{{ comments.likes.count }}</span>
+                           </a>
+                           <a href="{% url 'comment_detail' comments.id %}" class="text-body me-3"
+                              ><i class="ti ti-message-filled text-danger"></i> {{ comments.replies.count }}</a
+                              >
+                        </div>
+                        <div class="ms-auto">
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
+         </li>
+      </ul>
+   </div>
+</div>
+<div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
-         <div class="card-body">
-          {{ comments.text }}
-          <div class="gallery-container mt-4">
-            {% for image in comments.photos.all %}
-            <div class="gallery-item">
-               <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
-               <img src="{{ image.photo.url }}" alt="Post Image">
-               </a>
-            </div>
-            {% endfor %}
+         <div class="modal-body">
+            <p>
+               Paylaşımı Silmek İstediğinizden emin misiniz?
+            </p>
          </div>
-
-         <hr />
-         <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center">
-               <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comments.likes.content_type.id}}" data-object-id="{{comments.id}}">
-                  <i class="ti ti-heart{% if comments.id in liked_comment %}-filled{% endif %} text-primary"></i>
-                  <span class="like-count text-body">{{ comments.likes.count }}</span>
-              </a>
-               <a href="{% url 'comment_detail' comments.id %}" class="text-body me-3"
-                  ><i class="ti ti-message-filled text-danger"></i> {{ comments.replies.count }}</a
-                  >
-            </div>
-            <div class="ms-auto">
-            </div>
-         </div>
+         <div class="modal-footer">
+            <a class="btn btn-primary" href="{% url 'delete_comment' comments.id %}">Sil</a>
+            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
          </div>
       </div>
-
-      <div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
-         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-               <div class="modal-header">
-                  <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-               <div class="modal-body">
-                  <p>
-                     Paylaşımı Silmek İstediğinizden emin misiniz?
-                  </p>
-               </div>
-               <div class="modal-footer">
-                  <a class="btn btn-primary" href="{% url 'delete_comment' comments.id %}">Sil</a>
-                  <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
-               </div>
-            </div>
-         </div>
-       </div>
-
-       {% block comment-form %}
-          {% include 'comments/form-comment.html' %}
-       {% endblock comment-form %}
-
+   </div>
+</div>
+<div class="row justify-content-center" id="comments_form">
+   <div class="col-md-8 col-xxl-8 mb-4">
+      {% block comment-form %}
+      {% include 'comments/form-comment.html' %}
+      {% endblock comment-form %}
       {% for comment in comments.replies.all %}
-         {% block comment %}
-            {% include 'comments/comments.html' %}
-         {% endblock comment %}
+      {% block comment %}
+      {% include 'comments/comments.html' %}
+      {% endblock comment %}
       {% endfor %}
    </div>
 </div>
- {%endblock%}
-
+{%endblock%}
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/comments/comment-comments.js' %}"></script>
