@@ -13,6 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.files.storage import default_storage
 import apps.inputs.models as inputs
+from django.urls import reverse
 
 # Create your models here.
 def upload_to(instance, filename):
@@ -77,6 +78,22 @@ class DocumentsModel(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def get_notifications_comment_context(self):
+        context = {
+        'message' : 'dökümanınıza yorum yaptı.',
+        'content_title' : self.title,
+        'content_url' : reverse('document_details', kwargs={'slug': self.slug}),
+        }
+        return context
+
+    def get_notifications_like_context(self):
+        context = {
+        'message' : 'dökümanınızı beğendi.',
+        'content_title' : self.title,
+        'content_url' : reverse('document_details', kwargs={'slug': self.slug}),
+        }
+        return context
     
     class Meta:
         verbose_name = "Doküman"

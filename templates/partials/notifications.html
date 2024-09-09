@@ -1,0 +1,25 @@
+<li class="list-group-item list-group-item-action dropdown-notifications-item">
+    <div class="d-flex">
+      <div class="flex-shrink-0 me-3">
+      <a href="/profile/{{message.action_user_name}}/">
+        <div class="avatar">
+          <img src="{{message.profile_photo_url}}" alt class="rounded-circle" />
+        </div>
+        </a>
+      </div>
+      <div class="flex-grow-1">
+      <a href="/profile/{{message.action_user_name}}/">
+        <h6 class="small mb-1">{{message.action_user}}<small class="text-muted"> {{message.message}}</small></h6>
+        </a>
+        <a href="{{message.content_url}}">
+       <h6 class="mb-1 d-block text-body"> {{message.content_title}}</h6>
+        </a>
+        <small class="text-muted">{{message.created_at}}</small>
+      </div>
+      <div class="flex-shrink-0 dropdown-notifications-actions">
+        <a href="javascript:void(0)" class="dropdown-notifications-read"
+          ><span class="badge badge-dot" id="badge-notifications"></span
+        ></a>
+      </div>
+    </div>
+  </li>

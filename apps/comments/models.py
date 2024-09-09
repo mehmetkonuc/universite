@@ -27,6 +27,19 @@ class Comment(models.Model):
 
     def get_replies(self):
         return self.replies.all()
-    
-    def get_absolute_url(self):
-        return reverse('comment_detail', kwargs={'comment_id': self.id})
+
+    def get_notifications_comment_context(self):
+        context = {
+        'message' : 'yorumunuza yorum yaptı.',
+        'content_title' : self.text,
+        'content_url' : reverse('comment_detail', kwargs={'comment_id': self.id}),
+        }
+        return context
+
+    def get_notifications_like_context(self):
+        context = {
+        'message' : 'yorumunuzu beğendi.',
+        'content_title' : self.text,
+        'content_url' : reverse('comment_detail', kwargs={'comment_id': self.id}),
+        }
+        return context

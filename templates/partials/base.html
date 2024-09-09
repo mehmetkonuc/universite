@@ -106,9 +106,9 @@
      
          notificationSocket.onmessage = function(e) {
              const data = JSON.parse(e.data);
-             const notificationList = $('#notifications');
+             const notificationList = $('#notifications_content');
              const notificationCountElement = document.getElementById('notifications_count');
-             const noNotificationsMessage = document.getElementById('no-notifications-message');
+             const noNotificationsMessage = document.getElementById('no_notifications_message');
      
              // Yeni bildirimi listeye ekliyoruz
              notificationList.prepend(data.html);
@@ -119,19 +119,15 @@
              }
      
              // Badge'i güncelle
-             const badge = document.getElementById('#badge-notifications');
-             const notificationContainer = document.getElementById('notification-container');
+             const badge = document.getElementById('notifications_badge');
+             const notificationContainer = document.getElementById('notifications_alert');
              
-             if (badge) {
-                 // Badge varsa, görünür hale getir
-                 badge.classList.remove('d-none');
-             } else {
-                 // Eğer badge yoksa, yeni badge oluştur ve container'a ekle
-                 const newBadge = document.createElement('span');
-                 newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
-                 newBadge.id = 'badge-notifications';
-                 notificationContainer.appendChild(newBadge);
-             }
+             if (!badge) {  // Eğer badge yoksa
+               // Yeni badge oluştur ve container'a ekle
+               const newBadge = document.createElement('span');
+               newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
+               newBadge.id = 'notifications_badge';
+               notificationContainer.appendChild(newBadge);}
      
              // Okunmamış bildirim sayısını güncelle
              if (notificationCountElement) {
@@ -148,49 +144,60 @@
      
      
       <script>
-         document.getElementById('mark_all_as_read').addEventListener('click', function () {
-           const url = this.getAttribute('data-url');  // URL'yi data-url özelliğinden al
-         
-           fetch(url, {
-             method: 'POST',
-             headers: {
-               'X-CSRFToken': getCookie('csrftoken'),  // CSRF koruması için
-               'Content-Type': 'application/json',
-             },
-             body: JSON.stringify({}),
-           })
-           .then(response => {
-             if (response.ok) {
-               // Başarılı olduysa, notification count'u sıfırla
-               document.getElementById('notifications_count').textContent = '0 Okunmamış';
-         
-               // Okunmamış bildirimler varsa, bunları okundu olarak işaretleyebilirsin
-               const unreadBadges = document.querySelectorAll('#badge-notifications');
-               unreadBadges.forEach(badge => {
-                 badge.remove();  // Okunmamış bildirim işaretlerini kaldırıyoruz
-               });
-             }
-           })
-           .catch(error => {
-             console.error('Error:', error);
-           });
-         });
-         
-         // CSRF tokeni almak için Django'nun CSRF cookie'sini kullanacağız
-         function getCookie(name) {
-           let cookieValue = null;
-           if (document.cookie && document.cookie !== '') {
-             const cookies = document.cookie.split(';');
-             for (let i = 0; i < cookies.length; i++) {
-               const cookie = cookies[i].trim();
-               if (cookie.substring(0, name.length + 1) === name + '=') {
-                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                 break;
-               }
-             }
-           }
-           return cookieValue;
-         }
+document.getElementById("mark_all_as_read").addEventListener("click", function() {
+    // AJAX çağrısı ile arka planda bildirimleri okundu olarak işaretle
+    fetch('/notifications/notifications/mark-all-as-read/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),  // CSRF token ekle
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Bildirim ikonundaki badge'in silinmesi
+            var badge = document.getElementById("notifications_badge");
+            if (badge) {
+                badge.remove(); // Badge siliniyor
+            }
+
+            // Bildirim içeriklerinin silinmesi ve "Okunmamış bildiriminiz yok." yazısının eklenmesi
+            var notificationsContent = document.getElementById("notifications_content");
+            if (notificationsContent) {
+                notificationsContent.innerHTML = "<li class='list-group-item' id='no_notifications_message' >Okunmamış bildiriminiz yok.</li>";
+            }
+
+            // Bildirim sayısının sıfırlanması
+            var notificationsCount = document.getElementById("notifications_count");
+            if (notificationsCount) {
+                notificationsCount.textContent = 0 + " Okunmamış";
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+    });
+});
+
+// CSRF tokenini almak için yardımcı fonksiyon
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Bu cookie'nin ismi verilen isme eşitse, değeri dön
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
       </script>
    </body>
 </html>

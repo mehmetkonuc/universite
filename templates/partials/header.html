@@ -303,21 +303,18 @@
          {% if user.is_authenticated %}
          <!-- Notification -->
          <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
-            <a
-               class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
+            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
                href="javascript:void(0);"
                data-bs-toggle="dropdown"
                data-bs-auto-close="outside"
-               aria-expanded="false"
-               >
+               aria-expanded="false">
             <span class="position-relative">
-            <i class="ti ti-bell ti-md"></i>
-            <div id="notification-container">
+            <i class="ti ti-bell ti-md" id="notifications_icon"></i>
+            <div id="notifications_alert">
                {% if notifications_header.count > 0 %}
-               <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="badge-notifications"></span>
+               <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="notifications_badge"></span>
                {% endif %}
            </div>
-           
             </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-0">
@@ -333,16 +330,15 @@
                            data-bs-placement="top"
                            title="Tümünü Oku"
                            id="mark_all_as_read"
-                           data-url="{% url 'notifications_mark_all_as_read' %}"
                            ><i class="ti ti-mail-opened text-heading"></i
                            ></a>
                      </div>
                   </div>
                </li>
                <li class="dropdown-notifications-list scrollable-container">
-                  <ul class="list-group list-group-flush" id="notifications">
+                  <ul class="list-group list-group-flush" id="notifications_content">
                      {%for notification in notifications_header %}
-                     <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="notification_content">
                         <div class="d-flex">
                            <div class="flex-shrink-0 me-3 card-text ">
                               <a href="{% url 'profile' notification.action_user.username %}">
@@ -357,24 +353,26 @@
                            </div>
                            <div class="flex-grow-1">
                               <a href="{% url 'profile' notification.action_user.username %}">
-                                 <h6 class="small mb-1">{{notification.action_user.first_name}} {{notification.action_user.last_name}}<small class="text-muted"> {{notification.message}}</small></h6>
+                                 <h6 class="small mb-0">{{notification.action_user.first_name}} {{notification.action_user.last_name}}<small class="text-muted"> {{notification.message}}</small></h6>
                               </a>
                               <a href="{{notification.content_object.get_absolute_url }}">
-                                 <h6 class="mb-1 d-block text-body">{{ notification.content_object.title|truncatechars:40 }}</h6>
+                                 <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.title|truncatechars:40 }}</span>
                               </a>
                               <small class="text-muted">{{notification.created_at}}</small>
                            </div>
-                           {% if not notification.is_read %}
-                           <div class="flex-shrink-0 dropdown-notifications-actions">
-                              <a href="javascript:void(0)" class="dropdown-notifications-read">
-                                <span class="badge badge-dot" id="badge-notifications"></span>
-                              </a>
+                           <div id="content_notifications_alert">
+                              {% if not notification.is_read %}
+                              <div class="flex-shrink-0 dropdown-notifications-actions">
+                                 <a href="javascript:void(0)" class="dropdown-notifications-read">
+                                 <span class="badge badge-dot" id="content_notifications_badge"></span>
+                                 </a>
+                              </div>
+                              {%endif%}
                            </div>
-                           {%endif%}
                         </div>
                      </li>
                      {% empty %}
-                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="no-notifications-message">
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="no_notifications_message">
                         <div class="d-flex">
                            <div class="flex-shrink-0 me-3">
                               Okunmamış bildiriminiz yok.
@@ -382,7 +380,6 @@
                         </div>
                      </li>
                      {% endfor %}
-                     
                   </ul>
                </li>
                <li class="border-top">

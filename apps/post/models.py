@@ -7,6 +7,7 @@ from apps.photos.models import PhotosModel
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse
 
 
 # Create your models here.
@@ -27,6 +28,22 @@ class PostsModel(models.Model):
         
     def __str__(self):
         return self.Content[:50]  # Özet gösterimi
+
+    def get_notifications_comment_context(self):
+        context = {
+        'message' : 'gönderinize yorum yaptı.',
+        'content_title' : self.Content,
+        'content_url' : reverse('comment_detail', kwargs={'comment_id': self.id}),
+        }
+        return context
+
+    def get_notifications_like_context(self):
+        context = {
+        'message' : 'gönderinizi beğendi.',
+        'content_title' : self.Content,
+        'content_url' : reverse('comment_detail', kwargs={'comment_id': self.id}),
+        }
+        return context
 
 @receiver(post_delete, sender=PostsModel)
 def delete_related_photos(sender, instance, **kwargs):

@@ -37,9 +37,22 @@ class ConfessionsModel(models.Model):
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
-    def get_absolute_url(self):
-        return reverse('confession_details', kwargs={'slug': self.slug})
-    
+    def get_notifications_comment_context(self):
+        context = {
+        'message' : 'itirafınıza yorum yaptı.',
+        'content_title' : self.title,
+        'content_url' : reverse('confession_details', kwargs={'slug': self.slug}),
+        }
+        return context
+
+    def get_notifications_like_context(self):
+        context = {
+        'message' : 'itirafınızı beğendi.',
+        'content_title' : self.title,
+        'content_url' : reverse('confession_details', kwargs={'slug': self.slug}),
+        }
+        return context
+
 @receiver(pre_save, sender=ConfessionsModel)
 def pre_save_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

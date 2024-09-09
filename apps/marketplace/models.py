@@ -12,6 +12,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.files.storage import default_storage
 from django.utils.timezone import now
 from ckeditor.fields import RichTextField
+from django.urls import reverse
+
 # Create your models here.
 def upload_to(instance, filename):
     return f'marketplace/{now().year}/{now().month}/{filename}'
@@ -73,6 +75,7 @@ class MarketPlaceModel(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
+
 
 @receiver(pre_save, sender=MarketPlaceModel)
 def pre_save_slug(sender, instance, *args, **kwargs):

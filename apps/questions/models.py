@@ -10,6 +10,8 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from apps.blogs.utils import slugify_tr
 import apps.inputs.models as inputs
+from django.urls import reverse
+
 # Create your models here.
 class Category(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
@@ -50,6 +52,22 @@ class QuestionsModel(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_notifications_comment_context(self):
+        context = {
+        'message' : 'sorunuza cevap verdi.',
+        'content_title' : self.title,
+        'content_url' : reverse('question_details', kwargs={'slug': self.slug}),
+        }
+        return context
+
+    def get_notifications_like_context(self):
+        context = {
+        'message' : 'sorunuzu beğendi.',
+        'content_title' : self.title,
+        'content_url' : reverse('question_details', kwargs={'slug': self.slug}),
+        }
+        return context
 
 @receiver(pre_save, sender=QuestionsModel)
 def pre_save_slug(sender, instance, *args, **kwargs):

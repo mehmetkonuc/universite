@@ -14,179 +14,184 @@
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/app-email.css' %}" />
 {% endblock extra_css%}
 {% block content %}
-<h2 >Bildirimler</h2>
-
+<h3 class="mb-2 fw-bold" >Bildirimler</h3>
 <div class="app-email">
    <div class="row g-0">
       <!-- Emails List -->
       <div class="col app-emails-list">
          <div class="card">
-             <div class="card-body emails-list-header p-3 py-2">
-                 <div class="d-flex justify-content-between align-items-center ps-1">
-                     <div class="d-flex align-items-center">
-                         <div class="form-check mb-0 ms-0">
-                             <input class="form-check-input" type="checkbox" id="email-select-all" />
-                             <label class="form-check-label" for="email-select-all"></label>
-                         </div>
-                         <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
-                             <i class="ti ti-trash ti-md email-list-delete cursor-pointer"></i>
-                         </div>
-                         <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
-                             <i class="ti ti-mail-opened ti-md email-list-read cursor-pointer"></i>
-                         </div>
+            <div class="card-body emails-list-header p-3 py-2">
+               <div class="d-flex justify-content-between align-items-center ps-1">
+                  <div class="d-flex align-items-center">
+                     <div class="form-check mb-0 ms-0">
+                        <input class="form-check-input" type="checkbox" id="email-select-all" />
+                        <label class="form-check-label" for="email-select-all"></label>
                      </div>
-                 </div>
-             </div>
-             <hr class="container-m-nx m-0" />
-             <div class="email-list pt-0" id="notification-container">
-                 <ul id="notifications" class="list-group">
-                     {% for notification in notifications %}
-                     <li class="email-list-item {% if not notification.is_read %} email-marked-read {%endif%} d-flex justify-content-between" data-notification-id="{{ notification.id }}">
-                         <div class="d-flex align-items-center w-100">
-                             <div class="form-check mb-0 ms-2 me-2">
-                                 <input class="email-list-item-input form-check-input" type="checkbox" />
-                                 <label class="form-check-label"></label>
-                             </div>
-                             <div class="d-flex align-items-center">
-                                 <div class="avatar avatar-md me-2 flex-shrink-0">
-                                     {% if notification.action_user.profilepicturemodel.profile_photo %}
-                                     <img src="{{ notification.action_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
-                                     {% else %}
-                                     <img src="{% static '/assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle" height="32" width="32" />
-                                     {% endif %}
-                                 </div>
-                                 <div class="d-flex flex-column">
-                                     <a href="{% url 'profile' notification.action_user.username %}">
-                                         <div class="me-2 h6 mb-1">{{ notification.action_user.first_name }} {{ notification.action_user.last_name }}
-                                             <small class="text-muted h6">{{ notification.message }}</small>
-                                         </div>
-                                     </a>
-                                     <small class="text-muted">{{ notification.content_object.title }}</small>
-                                 </div>
-                             </div>
-                             <div class="email-list-item-meta ms-auto d-flex align-items-center">
-                                 <small class="text-muted">{{ notification.created_at|date:"d M Y, H:i" }}</small>
-                                 <ul class="list-inline email-list-item-actions">
-                                     <li class="list-inline-item email-read btn btn-icon btn-text-secondary rounded-pill">
-                                         <i class="ti ti-mail ti-md"></i>
-                                     </li>
-                                     <li class="list-inline-item email-delete btn btn-icon btn-text-secondary rounded-pill">
-                                         <i class="ti ti-trash ti-md"></i>
-                                     </li>
-                                 </ul>
-                             </div>
-                         </div>
-                     </li>
-                     {% empty %}
-                     <li class="list-group-item">Henüz bir bildiriminiz yok.</li>
-                     {% endfor %}
-                 </ul>
-             </div>
+                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
+                        <i class="ti ti-trash ti-md email-list-delete cursor-pointer"></i>
+                     </div>
+                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
+                        <i class="ti ti-mail-opened ti-md email-list-read cursor-pointer"></i>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <hr class="container-m-nx m-0" />
+            <div class="email-list pt-0" id="notification-container">
+               <ul id="notifications" class="list-group">
+                  {% for notification in notifications %}
+                  <li class="email-list-item {% if not notification.is_read %} email-marked-read {%endif%} d-flex align-items-start" data-notification-id="{{ notification.id }}">
+                     <div class="d-flex align-items-center">
+                        <div>
+                           <div class="form-check mb-0 ms-2 me-2">
+                              <input class="email-list-item-input form-check-input" type="checkbox" />
+                              <label class="form-check-label"></label>
+                           </div>
+                        </div>
+                        <div>
+                           <div class="avatar avatar-md me-2 flex-shrink-0">
+                              {% if notification.action_user.profilepicturemodel.profile_photo %}
+                              <img src="{{ notification.action_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                              {% else %}
+                              <img src="{% static '/assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                              {% endif %}
+                           </div>
+                        </div>
+                     </div>
+                     <div>
+                        <div>
+                           <a href="{% url 'profile' notification.action_user.username %}">
+                              <div class="me-2 h6 mb-0">{{ notification.action_user.first_name }} {{ notification.action_user.last_name }}
+                                 <small class="text-muted h6">{{ notification.message }}</small>
+                              </div>
+                           </a>
+                        </div>
+                        <div>
+                           <small class="text-muted">{{ notification.action_user.educationalinformationmodel.University }} | {{ notification.created_at|date:"d M Y, H:i" }}</small>
+                        </div>
+                        <div class="mt-1">
+                           <span class="h6"> {{ notification.content_object.title }}</span>
+                        </div>
+                     </div>
+                     <div class="email-list-item-meta ms-auto d-flex align-items-center">
+                        <ul class="list-inline email-list-item-actions">
+                           <li class="list-inline-item email-read btn btn-icon btn-text-secondary rounded-pill">
+                              <i class="ti ti-mail ti-md"></i>
+                           </li>
+                           <li class="list-inline-item email-delete btn btn-icon btn-text-secondary rounded-pill">
+                              <i class="ti ti-trash ti-md"></i>
+                           </li>
+                        </ul>
+                     </div>
+                  </li>
+                  {% empty %}
+                  <li class="list-group-item">Henüz bir bildiriminiz yok.</li>
+                  {% endfor %}
+               </ul>
+            </div>
          </div>
-     </div>
-     
+      </div>
       <!-- /Emails List -->
    </div>
 </div>
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/js/app-email.js' %}"></script>
-
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const selectAllCheckbox = document.getElementById("email-select-all");
-    const individualCheckboxes = document.querySelectorAll(".email-list-item-input");
-    const deleteAllButton = document.querySelector(".email-list-delete");
-    const markAllReadButton = document.querySelector(".email-list-read");
-
-    // Toplu seçme/deselect
-    selectAllCheckbox.addEventListener("change", function () {
-        individualCheckboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
-        });
-    });
-
-    // Toplu silme
-    deleteAllButton.addEventListener("click", function () {
-        let selectedNotifications = getSelectedNotificationIds();
-        if (selectedNotifications.length > 0) {
-            deleteNotifications(selectedNotifications);
-        }
-    });
-
-    // Toplu okundu olarak işaretleme
-    markAllReadButton.addEventListener("click", function () {
-        let selectedNotifications = getSelectedNotificationIds();
-        if (selectedNotifications.length > 0) {
-            markNotificationsAsRead(selectedNotifications);
-        }
-    });
-
-    // Her bildirimin silinme ve okundu olarak işaretlenmesi
-    document.querySelectorAll(".email-delete").forEach(trashIcon => {
-        trashIcon.addEventListener("click", function () {
-            let notificationId = getNotificationIdFromElement(this);
-            deleteNotifications([notificationId]);
-        });
-    });
-
-    document.querySelectorAll(".email-read").forEach(mailIcon => {
-        mailIcon.addEventListener("click", function () {
-            let notificationId = getNotificationIdFromElement(this);
-            markNotificationsAsRead([notificationId]);
-        });
-    });
-
-    // Bildirim ID'lerini alma
-    function getSelectedNotificationIds() {
-        let ids = [];
-        document.querySelectorAll(".email-list-item-input:checked").forEach(checkbox => {
-            let notificationId = getNotificationIdFromElement(checkbox);
-            ids.push(notificationId);
-        });
-        return ids;
-    }
-
-    function getNotificationIdFromElement(element) {
-        return element.closest(".email-list-item").dataset.notificationId;
-    }
-
-    // AJAX ile bildirim silme
-    function deleteNotifications(notificationIds) {
-        fetch("{% url 'delete_notifications' %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ notification_ids: notificationIds }),
-        }).then(response => {
-            if (response.ok) {
-                notificationIds.forEach(id => {
-                    document.querySelector(`[data-notification-id="${id}"]`).remove();
-                });
-            }
-        });
-    }
-
-    // AJAX ile bildirim okundu olarak işaretleme
-    function markNotificationsAsRead(notificationIds) {
-        fetch("{% url 'mark_notifications_as_read' %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ notification_ids: notificationIds }),
-        }).then(response => {
-            if (response.ok) {
-                notificationIds.forEach(id => {
-                    document.querySelector(`[data-notification-id="${id}"]`).classList.remove("email-marked-read");
-                });
-            }
-        });
-    }
-});
-
+   document.addEventListener("DOMContentLoaded", function () {
+       const selectAllCheckbox = document.getElementById("email-select-all");
+       const individualCheckboxes = document.querySelectorAll(".email-list-item-input");
+       const deleteAllButton = document.querySelector(".email-list-delete");
+       const markAllReadButton = document.querySelector(".email-list-read");
+   
+       // Toplu seçme/deselect
+       selectAllCheckbox.addEventListener("change", function () {
+           individualCheckboxes.forEach(checkbox => {
+               checkbox.checked = selectAllCheckbox.checked;
+           });
+       });
+   
+       // Toplu silme
+       deleteAllButton.addEventListener("click", function () {
+           let selectedNotifications = getSelectedNotificationIds();
+           if (selectedNotifications.length > 0) {
+               deleteNotifications(selectedNotifications);
+           }
+       });
+   
+       // Toplu okundu olarak işaretleme
+       markAllReadButton.addEventListener("click", function () {
+           let selectedNotifications = getSelectedNotificationIds();
+           if (selectedNotifications.length > 0) {
+               markNotificationsAsRead(selectedNotifications);
+           }
+       });
+   
+       // Her bildirimin silinme ve okundu olarak işaretlenmesi
+       document.querySelectorAll(".email-delete").forEach(trashIcon => {
+           trashIcon.addEventListener("click", function () {
+               let notificationId = getNotificationIdFromElement(this);
+               deleteNotifications([notificationId]);
+           });
+       });
+   
+       document.querySelectorAll(".email-read").forEach(mailIcon => {
+           mailIcon.addEventListener("click", function () {
+               let notificationId = getNotificationIdFromElement(this);
+               markNotificationsAsRead([notificationId]);
+           });
+       });
+   
+       // Bildirim ID'lerini alma
+       function getSelectedNotificationIds() {
+           let ids = [];
+           document.querySelectorAll(".email-list-item-input:checked").forEach(checkbox => {
+               let notificationId = getNotificationIdFromElement(checkbox);
+               ids.push(notificationId);
+           });
+           return ids;
+       }
+   
+       function getNotificationIdFromElement(element) {
+           return element.closest(".email-list-item").dataset.notificationId;
+       }
+   
+       // AJAX ile bildirim silme
+       function deleteNotifications(notificationIds) {
+           fetch("{% url 'delete_notifications' %}", {
+               method: "POST",
+               headers: {
+                   "X-CSRFToken": "{{ csrf_token }}",
+                   "Content-Type": "application/json",
+               },
+               body: JSON.stringify({ notification_ids: notificationIds }),
+           }).then(response => {
+               if (response.ok) {
+                   notificationIds.forEach(id => {
+                       document.querySelector(`[data-notification-id="${id}"]`).remove();
+                   });
+               }
+           });
+       }
+   
+       // AJAX ile bildirim okundu olarak işaretleme
+       function markNotificationsAsRead(notificationIds) {
+           fetch("{% url 'mark_notifications_as_read' %}", {
+               method: "POST",
+               headers: {
+                   "X-CSRFToken": "{{ csrf_token }}",
+                   "Content-Type": "application/json",
+               },
+               body: JSON.stringify({ notification_ids: notificationIds }),
+           }).then(response => {
+               if (response.ok) {
+                   notificationIds.forEach(id => {
+                       document.querySelector(`[data-notification-id="${id}"]`).classList.remove("email-marked-read");
+                   });
+               }
+           });
+       }
+   });
+   
 </script>
 {% endblock extra_javascript %}
