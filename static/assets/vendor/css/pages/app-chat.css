@@ -178,7 +178,7 @@
   cursor: zoom-in;
 }
 .app-chat .app-chat-history .chat-history-body .chat-history .chat-message:not(:last-child) {
-  margin-bottom: 3rem;
+  margin-bottom: 0.5rem;
 }
 .app-chat .app-chat-history .chat-history-footer {
   padding: 0.5rem;

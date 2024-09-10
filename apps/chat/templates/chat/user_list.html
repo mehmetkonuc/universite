@@ -1,0 +1,11 @@
+<h2>Kullanıcılar</h2>
+
+<ul class="list-group">
+    {% for user in users %}
+        <li class="list-group-item">
+            <a href="{% url 'start_chat' user.id %}">
+                {{ user.username }} ile sohbet başlat
+            </a>
+        </li>
+    {% endfor %}
+</ul>

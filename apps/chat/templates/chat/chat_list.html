@@ -1,0 +1,11 @@
+<h2>Sohbetler</h2>
+
+<ul class="list-group">
+    {% for chat_info in chat_data %}
+        <li class="list-group-item">
+            <a href="{% url 'chat_view' chat_info.chat.id %}">
+                Sohbet: {{ chat_info.other_participant.username }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

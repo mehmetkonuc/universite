@@ -1,0 +1,245 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/app-chat.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.css' %}" />
+
+{% endblock extra_css%}
+
+{% block content %}
+<div class="app-chat card overflow-hidden">
+    <div class="row g-0">
+       <!-- Chat & Contacts -->
+       <div
+          class="col app-chat-contacts app-sidebar flex-grow-0 overflow-hidden border-end"
+          id="app-chat-contacts">
+          <div class="sidebar-header h-px-75 px-5 border-bottom d-flex align-items-center">
+             <div class="d-flex align-items-center me-6 me-lg-0">
+                <div
+                   class="flex-shrink-0 avatar avatar-online me-4"
+                   data-bs-toggle="sidebar"
+                   data-overlay="app-overlay-ex"
+                   data-target="#app-chat-sidebar-left">
+                   <img
+                      class="user-avatar rounded-circle cursor-pointer"
+                      src="{% static 'assets/img/avatars/1.png' %}"
+                      alt="Avatar" />
+                </div>
+                <div class="flex-grow-1 input-group input-group-merge">
+                   <span class="input-group-text" id="basic-addon-search31"><i class="ti ti-search"></i></span>
+                   <input
+                      type="text"
+                      class="form-control chat-search-input"
+                      placeholder="Search..."
+                      aria-label="Search..."
+                      aria-describedby="basic-addon-search31" />
+                </div>
+             </div>
+             <i
+                class="ti ti-x ti-lg cursor-pointer position-absolute top-50 end-0 translate-middle d-lg-none d-block"
+                data-overlay
+                data-bs-toggle="sidebar"
+                data-target="#app-chat-contacts"></i>
+          </div>
+          <div class="sidebar-body">
+             <!-- Chats -->
+             <ul class="list-unstyled chat-contact-list py-2 mb-0" id="chat-list">
+                <li class="chat-contact-list-item active mb-1">
+                   <a class="d-flex align-items-center">
+                      <div class="flex-shrink-0 avatar avatar-offline">
+                         <img src="{% static 'assets/img/avatars/4.png' %}" alt="Avatar" class="rounded-circle" />
+                      </div>
+                      <div class="chat-contact-info flex-grow-1 ms-4">
+                         <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="chat-contact-name text-truncate fw-normal m-0">Felecia Rower</h6>
+                            <small class="text-muted">30 Minutes</small>
+                         </div>
+                         <small class="chat-contact-status text-truncate">I will purchase it for sure. 👍</small>
+                      </div>
+                   </a>
+                </li>
+             </ul>
+          </div>
+       </div>
+       <!-- /Chat contacts -->
+       <!-- Chat History -->
+       <div class="col app-chat-history">
+          <div class="chat-history-wrapper">
+             <div class="chat-history-header border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                   <div class="d-flex overflow-hidden align-items-center">
+                      <i
+                         class="ti ti-menu-2 ti-lg cursor-pointer d-lg-none d-block me-4"
+                         data-bs-toggle="sidebar"
+                         data-overlay
+                         data-target="#app-chat-contacts"></i>
+                      <div class="flex-shrink-0 avatar">
+                         <img
+                            src="{{other_participant.profilepicturemodel.profile_photo.url}}"
+                            alt="Avatar"
+                            class="rounded-circle"
+                            data-bs-toggle="sidebar"
+                            data-overlay
+                            data-target="#app-chat-sidebar-right" />
+                      </div>
+                      <div class="chat-contact-info flex-grow-1 ms-4">
+                         <h6 class="m-0 fw-normal">{{other_participant.first_name}} {{other_participant.last_name}}</h6>
+                         <small class="user-status text-body">{{other_participant.educationalinformationmodel.University}}</small>
+                      </div>
+                   </div>
+                   <div class="d-flex align-items-center">
+                      <i
+                         class="ti ti-phone ti-md cursor-pointer d-sm-inline-flex d-none me-1 btn btn-sm btn-text-secondary text-secondary btn-icon rounded-pill"></i>
+                      <i
+                         class="ti ti-video ti-md cursor-pointer d-sm-inline-flex d-none me-1 btn btn-sm btn-text-secondary text-secondary btn-icon rounded-pill"></i>
+                      <i
+                         class="ti ti-search ti-md cursor-pointer d-sm-inline-flex d-none me-1 btn btn-sm btn-text-secondary text-secondary btn-icon rounded-pill"></i>
+                      <div class="dropdown">
+                         <button
+                            class="btn btn-sm btn-icon btn-text-secondary text-secondary rounded-pill dropdown-toggle hide-arrow"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="true"
+                            id="chat-header-actions">
+                         <i class="ti ti-dots-vertical ti-md"></i>
+                         </button>
+                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="chat-header-actions">
+                            <a class="dropdown-item" href="javascript:void(0);">View Contact</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Mute Notifications</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Block Contact</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Clear Chat</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Report</a>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <div class="chat-history-body">
+                <ul class="list-unstyled chat-history" id="scroollll">
+                    {% for messages in grouped_messages %}
+                    <li class="chat-message {% if messages.sender == user %}chat-message-right{% endif %}">
+                        <div class="d-flex overflow-hidden">
+                            <div class="chat-message-wrapper flex-grow-1">
+                                <div class="chat-message-text">
+                                    <p class="mb-0">{{ messages.content }}</p>
+                                </div>
+                                <div class="{% if messages.sender == user %}text-end{% endif %} text-muted mt-1">
+                                    <small>{{ messages.timestamp }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+             </div>
+             <!-- Chat message form -->
+             <div class="chat-history-footer shadow-xs">
+                <form method="post" class="d-flex justify-content-between align-items-center" id="chat-form">
+                    {% csrf_token %}
+                   <input
+                      class="form-control border-0 me-4 shadow-none"
+                      id="chat-message-input" name="message" placeholder="Mesajınızı yazın"
+                      />
+                   <div class="message-actions d-flex align-items-center">
+                      <label for="attach-doc" class="form-label mb-0">
+                      <i
+                         class="ti ti-paperclip ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading"></i>
+                      <input type="file" id="attach-doc" hidden />
+                      </label>
+                      <button class="btn btn-primary d-flex send-msg-btn" id="chat-message-submit">
+                      <span class="align-middle d-md-inline-block d-none">Gönder</span>
+                      <i class="ti ti-send ti-16px ms-md-2 ms-0"></i>
+                      </button>
+                   </div>
+                </form>
+             </div>
+          </div>
+       </div>
+       <!-- /Chat History -->
+       <div class="app-overlay"></div>
+    </div>
+ </div>
+
+
+
+{% endblock content %}
+
+{% block extra_javascript %}
+
+<script src="{% static 'assets/js/app-chat.js' %}"></script>
+
+<script>
+const chatId = "{{ chat.id }}";
+const userId = "{{ request.user.id }}";
+const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/' + 1 + '/'
+);
+const chatHistory = document.querySelector('.chat-history-body'); // Chat penceresinin sınıf adını doğru seçtiğinizden emin olun
+const scrolss = document.querySelector('.chat-history'); // Chat penceresinin sınıf adını doğru seçtiğinizden emin olun
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const message = data.message;
+    const senderId = data.sender_id;
+
+    const messageElement = document.createElement('li');
+    messageElement.classList.add('chat-message');
+    
+    if (senderId === userId) {
+        messageElement.classList.add('chat-message-right');
+        messageElement.innerHTML = `
+        <div class="d-flex overflow-hidden">
+        <div class="chat-message-wrapper flex-grow-1">
+            <div class="chat-message-text">
+                <p class="mb-0">${message}</p>
+            </div>
+            <div class="text-end text-muted mt-1">
+                <small>${new Date().toLocaleTimeString()}</small>
+            </div>
+        </div>
+        </div>`;
+    } else {
+        messageElement.classList.add('chat-message');
+        messageElement.innerHTML = `
+        <div class="d-flex overflow-hidden">
+        <div class="chat-message-wrapper flex-grow-1">
+            <div class="chat-message-text">
+                <p class="mb-0">${message}</p>
+            </div>
+            <div class="text-end text-muted mt-1"><small>${new Date().toLocaleTimeString()}</small></div>
+        </div>
+        </div>        `;
+    }
+
+    scrolss.appendChild(messageElement);
+
+
+    // Mesajlar arasında kaydırma yapılmasını sağlayın
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+};
+
+chatSocket.onclose = function(e) {
+    console.error('WebSocket kapandı.');
+};
+
+document.querySelector('#chat-message-input').focus();
+
+// Formun submit olayını engelleme
+document.querySelector('#chat-form').onsubmit = function(e) {
+    e.preventDefault(); // Varsayılan form gönderimini engelle
+    const messageInputDom = document.querySelector('#chat-message-input');
+    const message = messageInputDom.value;
+    if (message) {
+    chatSocket.send(JSON.stringify({
+        'message': message,
+        'sender_id': userId
+    }));
+}
+
+    messageInputDom.value = ''; // Mesaj gönderildikten sonra input'u temizle
+};
+
+</script>
+
+{% endblock extra_javascript %}

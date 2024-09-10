@@ -52,4 +52,5 @@ urlpatterns = [
     path('questions/', include('apps.questions.urls')),
     path('documents/', include('apps.documents.urls')),
     path('notifications/', include('apps.notifications.urls')),
+    path('chat/', include('apps.chat.urls')),
 ]
