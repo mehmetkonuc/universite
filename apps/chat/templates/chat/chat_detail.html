@@ -16,16 +16,6 @@
           id="app-chat-contacts">
           <div class="sidebar-header h-px-75 px-5 border-bottom d-flex align-items-center">
              <div class="d-flex align-items-center me-6 me-lg-0">
-                <div
-                   class="flex-shrink-0 avatar avatar-online me-4"
-                   data-bs-toggle="sidebar"
-                   data-overlay="app-overlay-ex"
-                   data-target="#app-chat-sidebar-left">
-                   <img
-                      class="user-avatar rounded-circle cursor-pointer"
-                      src="{% static 'assets/img/avatars/1.png' %}"
-                      alt="Avatar" />
-                </div>
                 <div class="flex-grow-1 input-group input-group-merge">
                    <span class="input-group-text" id="basic-addon-search31"><i class="ti ti-search"></i></span>
                    <input
@@ -45,20 +35,22 @@
           <div class="sidebar-body">
              <!-- Chats -->
              <ul class="list-unstyled chat-contact-list py-2 mb-0" id="chat-list">
+               {% for chat_info in chats %}
                 <li class="chat-contact-list-item active mb-1">
-                   <a class="d-flex align-items-center">
-                      <div class="flex-shrink-0 avatar avatar-offline">
-                         <img src="{% static 'assets/img/avatars/4.png' %}" alt="Avatar" class="rounded-circle" />
+                   <a href="{% url 'chat_view' chat_info.chat.id %}" class="d-flex align-items-center">
+                      <div class="flex-shrink-0 avatar">
+                         <img src="{{chat_info.other_participant.profilepicturemodel.profile_photo.url}}" alt="Avatar" class="rounded-circle" />
                       </div>
                       <div class="chat-contact-info flex-grow-1 ms-4">
                          <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="chat-contact-name text-truncate fw-normal m-0">Felecia Rower</h6>
-                            <small class="text-muted">30 Minutes</small>
+                            <h6 class="chat-contact-name text-truncate fw-normal m-0">{{ chat_info.other_participant.first_name }} {{chat_info.other_participant.last_name}}</h6>
+                            <small class="text-muted"></small>
                          </div>
-                         <small class="chat-contact-status text-truncate">I will purchase it for sure. 👍</small>
+                         <small class="text-muted">{{chat_info.other_participant.educationalinformationmodel.University}}</small>
                       </div>
                    </a>
                 </li>
+                {%endfor%}
              </ul>
           </div>
        </div>
@@ -74,27 +66,29 @@
                          data-bs-toggle="sidebar"
                          data-overlay
                          data-target="#app-chat-contacts"></i>
+                         {% for other_user in chat.participants.all %}
+                         {% if other_user != user %}
                       <div class="flex-shrink-0 avatar">
+                        <a href="{% url 'profile' other_user.username %}">
                          <img
-                            src="{{other_participant.profilepicturemodel.profile_photo.url}}"
+                            src="{{other_user.profilepicturemodel.profile_photo.url}}"
                             alt="Avatar"
                             class="rounded-circle"
                             data-bs-toggle="sidebar"
                             data-overlay
                             data-target="#app-chat-sidebar-right" />
+                        </a>
                       </div>
                       <div class="chat-contact-info flex-grow-1 ms-4">
-                         <h6 class="m-0 fw-normal">{{other_participant.first_name}} {{other_participant.last_name}}</h6>
-                         <small class="user-status text-body">{{other_participant.educationalinformationmodel.University}}</small>
+                        <a href="{% url 'profile' other_user.username %}">
+                         <h6 class="m-0 fw-normal">{{other_user.first_name}} {{other_user.last_name}}</h6>
+                         <small class="user-status text-body">{{other_user.educationalinformationmodel.University}}</small>
+                        </a>
                       </div>
+                      {%endif%}
+                      {%endfor%}
                    </div>
                    <div class="d-flex align-items-center">
-                      <i
-                         class="ti ti-phone ti-md cursor-pointer d-sm-inline-flex d-none me-1 btn btn-sm btn-text-secondary text-secondary btn-icon rounded-pill"></i>
-                      <i
-                         class="ti ti-video ti-md cursor-pointer d-sm-inline-flex d-none me-1 btn btn-sm btn-text-secondary text-secondary btn-icon rounded-pill"></i>
-                      <i
-                         class="ti ti-search ti-md cursor-pointer d-sm-inline-flex d-none me-1 btn btn-sm btn-text-secondary text-secondary btn-icon rounded-pill"></i>
                       <div class="dropdown">
                          <button
                             class="btn btn-sm btn-icon btn-text-secondary text-secondary rounded-pill dropdown-toggle hide-arrow"
@@ -116,15 +110,15 @@
              </div>
              <div class="chat-history-body">
                 <ul class="list-unstyled chat-history" id="scroollll">
-                    {% for messages in grouped_messages %}
-                    <li class="chat-message {% if messages.sender == user %}chat-message-right{% endif %}">
+                    {% for message in messages %}
+                    <li class="chat-message {% if message.sender == user %}chat-message-right{% endif %}">
                         <div class="d-flex overflow-hidden">
                             <div class="chat-message-wrapper flex-grow-1">
                                 <div class="chat-message-text">
-                                    <p class="mb-0">{{ messages.content }}</p>
+                                    <p class="mb-0">{{ message.content }}</p>
                                 </div>
-                                <div class="{% if messages.sender == user %}text-end{% endif %} text-muted mt-1">
-                                    <small>{{ messages.timestamp }}</small>
+                                <div class="{% if message.sender == user %}text-end{% endif %} text-muted mt-1">
+                                    <small>{{ message.timestamp }}</small>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +166,7 @@
 const chatId = "{{ chat.id }}";
 const userId = "{{ request.user.id }}";
 const chatSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/chat/' + 1 + '/'
+    'ws://' + window.location.host + '/ws/chat/' + chatId + '/'
 );
 const chatHistory = document.querySelector('.chat-history-body'); // Chat penceresinin sınıf adını doğru seçtiğinizden emin olun
 const scrolss = document.querySelector('.chat-history'); // Chat penceresinin sınıf adını doğru seçtiğinizden emin olun

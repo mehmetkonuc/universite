@@ -16,6 +16,7 @@
   <!-- Connection Cards -->
   <div class="row g-6">
     {% for member in members %}
+    {% if user != member %}
     <div class="col-xl-4 col-lg-6 col-md-6">
       <div class="card card-border-shadow-primary">
         <div class="card-body text-center">
@@ -66,13 +67,15 @@
             <a href="javascript:;" class="btn btn-label-primary rounded-pill d-flex align-items-center me-4"
               ><i class="ti ti-user-plus me-1"></i>Arkadaş Ekle</a
             >
-            <a href="javascript:;" class="btn btn-label-success btn-icon rounded-pill"
+            <a href="{% url 'start_chat' member.id %}" class="btn btn-label-success btn-icon rounded-pill"
               ><i class="ti ti-mail ti-md"></i
             ></a>
           </div>
         </div>
       </div>
     </div>
+    {% endif %}
+
     {% endfor %}
   </div>
   <!--/ Connection Cards -->

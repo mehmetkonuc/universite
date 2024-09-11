@@ -1,11 +1,172 @@
-<h2>Sohbetler</h2>
+{% extends 'partials/base.html' %}
+{% load static %}
 
-<ul class="list-group">
-    {% for chat_info in chat_data %}
-        <li class="list-group-item">
-            <a href="{% url 'chat_view' chat_info.chat.id %}">
-                Sohbet: {{ chat_info.other_participant.username }}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/app-chat.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.css' %}" />
+
+{% endblock extra_css%}
+
+{% block content %}
+<div class="app-chat card overflow-hidden">
+    <div class="row g-0">
+       <!-- Chat & Contacts -->
+       <div
+          class="col app-chat-contacts app-sidebar flex-grow-0 overflow-hidden border-end show"
+          id="app-chat-contacts">
+          <div class="sidebar-header h-px-75 px-5 border-bottom d-flex align-items-center">
+             <div class="d-flex align-items-center me-6 me-lg-0">
+                <div class="flex-grow-1 input-group input-group-merge">
+                   <span class="input-group-text" id="basic-addon-search31"><i class="ti ti-search"></i></span>
+                   <input
+                      type="text"
+                      class="form-control chat-search-input"
+                      placeholder="Search..."
+                      aria-label="Search..."
+                      aria-describedby="basic-addon-search31" />
+                </div>
+             </div>
+             <i
+                class="ti ti-x ti-lg cursor-pointer position-absolute top-50 end-0 translate-middle d-lg-none d-block"
+                data-overlay
+                data-bs-toggle="sidebar"
+                data-target="#app-chat-contacts"></i>
+          </div>
+          <div class="sidebar-body">
+             <!-- Chats -->
+             <ul class="list-unstyled chat-contact-list py-2 mb-0" id="chat-list">
+               <li class="chat-contact-list-item chat-contact-list-item-title mt-0">
+                  <h5 class="text-primary mb-0">Sohbetler</h5>
+                </li>
+                <li class="chat-contact-list-item chat-list-item-0 {% if chats %}d-none{%else%}{%endif%}">
+                  <h6 class="text-muted mb-0">Sohbet Bulunamadı</h6>
+                </li>
+               {% for chat_info in chats %}
+                <li class="chat-contact-list-item mb-1">
+                   <a href="{% url 'chat_view' chat_info.chat.id %}" class="d-flex align-items-center">
+                      <div class="flex-shrink-0 avatar">
+                         <img src="{{chat_info.other_participant.profilepicturemodel.profile_photo.url}}" alt="Avatar" class="rounded-circle" />
+                      </div>
+                      <div class="chat-contact-info flex-grow-1 ms-4">
+                         <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="chat-contact-name text-truncate fw-normal m-0">{{ chat_info.other_participant.first_name }} {{chat_info.other_participant.last_name}}</h6>
+                            <small class="text-muted"></small>
+                         </div>
+                         <small class="text-muted">{{chat_info.other_participant.educationalinformationmodel.University}}</small>
+                      </div>
+                   </a>
+                </li>
+                {%endfor%}
+             </ul>
+          </div>
+       </div>
+       <!-- /Chat contacts -->
+       <!-- Chat History -->
+       <div class="col app-chat-history">
+          <div class="chat-history-wrapper">
+             <div class="chat-history-header border-bottom d-lg-none">
+                <div class="d-flex justify-content-between align-items-center">
+                   <div class="d-flex overflow-hidden align-items-center">
+                      <i
+                         class="ti ti-menu-2 ti-lg cursor-pointer d-lg-none d-block me-4"
+                         data-bs-toggle="sidebar"
+                         data-overlay
+                         data-target="#app-chat-contacts"></i>
+
+                   </div>
+                </div>
+             </div>
+             <div class="chat-history-body">
+
+             </div>
+
+          </div>
+       </div>
+       <!-- /Chat History -->
+       <div class="app-overlay"></div>
+    </div>
+ </div>
+
+
+
+{% endblock content %}
+
+{% block extra_javascript %}
+
+<script src="{% static 'assets/js/app-chat.js' %}"></script>
+
+<script>
+const chatId = "{{ chat.id }}";
+const userId = "{{ request.user.id }}";
+const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/' + 1 + '/'
+);
+const chatHistory = document.querySelector('.chat-history-body'); // Chat penceresinin sınıf adını doğru seçtiğinizden emin olun
+const scrolss = document.querySelector('.chat-history'); // Chat penceresinin sınıf adını doğru seçtiğinizden emin olun
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const message = data.message;
+    const senderId = data.sender_id;
+
+    const messageElement = document.createElement('li');
+    messageElement.classList.add('chat-message');
+    
+    if (senderId === userId) {
+        messageElement.classList.add('chat-message-right');
+        messageElement.innerHTML = `
+        <div class="d-flex overflow-hidden">
+        <div class="chat-message-wrapper flex-grow-1">
+            <div class="chat-message-text">
+                <p class="mb-0">${message}</p>
+            </div>
+            <div class="text-end text-muted mt-1">
+                <small>${new Date().toLocaleTimeString()}</small>
+            </div>
+        </div>
+        </div>`;
+    } else {
+        messageElement.classList.add('chat-message');
+        messageElement.innerHTML = `
+        <div class="d-flex overflow-hidden">
+        <div class="chat-message-wrapper flex-grow-1">
+            <div class="chat-message-text">
+                <p class="mb-0">${message}</p>
+            </div>
+            <div class="text-end text-muted mt-1"><small>${new Date().toLocaleTimeString()}</small></div>
+        </div>
+        </div>        `;
+    }
+
+    scrolss.appendChild(messageElement);
+
+
+    // Mesajlar arasında kaydırma yapılmasını sağlayın
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+};
+
+chatSocket.onclose = function(e) {
+    console.error('WebSocket kapandı.');
+};
+
+document.querySelector('#chat-message-input').focus();
+
+// Formun submit olayını engelleme
+document.querySelector('#chat-form').onsubmit = function(e) {
+    e.preventDefault(); // Varsayılan form gönderimini engelle
+    const messageInputDom = document.querySelector('#chat-message-input');
+    const message = messageInputDom.value;
+    if (message) {
+    chatSocket.send(JSON.stringify({
+        'message': message,
+        'sender_id': userId
+    }));
+}
+
+    messageInputDom.value = ''; // Mesaj gönderildikten sonra input'u temizle
+};
+
+</script>
+
+{% endblock extra_javascript %}
