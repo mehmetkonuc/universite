@@ -2,8 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('chats/', views.chat_list, name='chat_list'),
-    path('users/', views.user_list, name='user_list'),
-    path('chat/<int:chat_id>/', views.chat_view, name='chat_view'),
-    path('start_chat/<int:user_id>/', views.start_chat, name='start_chat'),
+    path('', views.index, name="chat_index"),
+    path('get-messages/', views.get_messages, name='get_messages'),
+
+    path('<int:chat_id>', views.chat, name="chat"),
+    path('send-message/', views.send_message, name="send_message"),
+
+    path('start/<int:second_user_id>', views.start_chat, name="start_chat"),
 ]

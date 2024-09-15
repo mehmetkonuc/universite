@@ -7,7 +7,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         self.group_name = f'user_{self.user.id}'
-
         # Kullanıcıya özel bir grup oluşturuyoruz
         await self.channel_layer.group_add(
             self.group_name,
@@ -25,7 +24,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     # Bildirim alındığında tetiklenecek fonksiyon
     async def send_notification(self, event):
         rendered_notification = render_to_string('partials/notifications.html', {'message': event['message']})
-
         # Bildirimi WebSocket üzerinden gönderiyoruz
         await self.send(text_data=json.dumps({
             'html': rendered_notification,

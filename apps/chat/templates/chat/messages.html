@@ -1,0 +1,84 @@
+{% load static %}
+
+<div class="chat-history-wrapper" style="height: 100%;">
+  <div class="chat-history-header border-bottom">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex overflow-hidden align-items-center">
+        <i class="ti ti-menu-2 ti-lg cursor-pointer d-lg-none d-block me-4" data-bs-toggle="sidebar" data-overlay data-target="#app-chat-contacts"></i>
+        {% if chat.id %}
+        {% if user == chat.first_user %}
+        <div class="flex-shrink-0 avatar">
+          <img src="{{ chat.second_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+        </div>
+        <div class="chat-contact-info flex-grow-1 ms-4">
+            <h6 class="m-0 fw-normal">{{ chat.second_user.first_name }} {{ chat.second_user.last_name }}</h6>
+            <small class="user-status text-body">{{ chat.second_user.educationalinformationmodel.University }}</small>
+        </div>
+        {% else %}
+        <div class="flex-shrink-0 avatar">
+          <img src="{{ chat.first_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+        </div>
+        <div class="chat-contact-info flex-grow-1 ms-4">
+            <h6 class="m-0 fw-normal">{{ chat.first_user.first_name }} {{ chat.first_user.last_name }}</h6>
+            <small class="user-status text-body">{{ chat.first_user.educationalinformationmodel.University }}</small>
+        </div>
+        {% endif %}
+        {% endif %}
+      </div>
+      {% if chat.id %}
+      <div class="d-flex align-items-center">
+        <div class="dropdown">
+          <button class="btn btn-sm btn-icon btn-text-secondary text-secondary rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="true" id="chat-header-actions">
+            <i class="ti ti-dots-vertical ti-md"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="chat-header-actions">
+            <a class="dropdown-item" href="javascript:void(0);">View Contact</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div id="chat-import" class="position-relative" style="height: 100%;">
+    {% if chat.id %}
+    <div class="chat-history-body">
+      <ul class="list-unstyled chat-history">
+        {% for message in messages %}
+        <li class="chat-message {% if user == message.sender %}chat-message-right{% endif %}">
+          <div class="d-flex overflow-hidden">
+            <div class="chat-message-wrapper flex-grow-1">
+              <div class="chat-message-text">
+                <p class="mb-0">{{ message.content }}</p>
+              </div>
+              <div class="text-end text-muted mt-1">
+                <i class="ti ti-check ti-16px me-1"></i>
+                <small>{{ message.timestamp }}</small>
+              </div>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- Chat message form -->
+    <div class="chat-history-footer shadow-xs">
+      <form class="form-send-message d-flex justify-content-between align-items-center" data-chat-id="{{ chat.id }}" user-id="{{user.id}}">
+        {% csrf_token %}
+        <input class="form-control message-input border-0 me-4 shadow-none" placeholder="Type your message here..." />
+        <div class="message-actions d-flex align-items-center">
+          <label for="attach-doc" class="form-label mb-0">
+            <i class="ti ti-paperclip ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading"></i>
+            <input type="file" id="attach-doc" hidden />
+          </label>
+          <button type="submit" class="btn btn-primary d-flex send-msg-btn">
+            <span class="align-middle d-md-inline-block d-none">Send</span>
+            <i class="ti ti-send ti-16px ms-md-2 ms-0"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+    {% else %}
+    <!-- No chat selected -->
+    {% endif %}
+  </div>
+</div>
