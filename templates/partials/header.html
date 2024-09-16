@@ -191,6 +191,7 @@
          </li>
          <!-- Friends  -->
          <!-- Messages -->
+         {% if user.is_authenticated %}
          <li class="nav-item dropdown-notifications navbar-dropdown dropdown">
             <a
                class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
@@ -198,31 +199,104 @@
                data-bs-toggle="dropdown"
                data-bs-auto-close="outside"
                aria-expanded="false">
-            <span class="position-relative">
-            <i class="ti ti-message ti-md"></i>
-            <span class="badge rounded-pill bg-danger badge-dot badge-notifications border d-none"></span>
-            </span>
+               <span class="position-relative">
+                  <i class="ti ti-message ti-md" id="messages_icon"></i>
+                  <div id="messages_alert">
+                     {% if chats_header.count > 0 %}
+                     <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="messages_badge"></span>
+                     {% endif %}
+                  </div>
+               </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-0">
                <li class="dropdown-menu-header border-bottom">
                   <div class="dropdown-header d-flex align-items-center py-3">
                      <h6 class="mb-0 me-auto">Mesajlar</h6>
                      <div class="d-flex align-items-center h6 mb-0">
-                        <span class="badge bg-label-primary me-2">0 Okunmamış</span>
+                        <span class="badge bg-label-primary me-2"  id="message_count">{{chats_header.count}} Okunmamış</span>
                         <a
                            href="javascript:void(0)"
                            class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
                            title="Mark all as read"
+                           id="messages_mark_all_as_read"
                            ><i class="ti ti-mail-opened text-heading"></i
                            ></a>
                      </div>
                   </div>
                </li>
                <li class="dropdown-notifications-list scrollable-container">
-                  <ul class="list-group list-group-flush">
-
+                  <ul class="list-group list-group-flush" id="messages_content">
+                     {%for chat in chats_header %}
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item d-flex align-items-center" id="message_content">
+                        {% if user == chat.first_user %}
+                        <div class="flex-shrink-0 avatar">
+                           <a href="{% url 'chat' chat.id %}">
+                              <img
+                                 src="{{ chat.second_user.profilepicturemodel.profile_photo.url }}"
+                                 alt="Avatar"
+                                 class="rounded-circle"
+                                 />
+                           </a>
+                        </div>
+                        <div class="chat-contact-info flex-grow-1 ms-4">
+                           <a href="{% url 'chat' chat.id %}">
+                              <div class="d-flex justify-content-between align-items-center">
+                                 <h6 class="chat-contact-name text-truncate fw-normal m-0">
+                                    {{ chat.second_user.first_name }} {{ chat.second_user.last_name }}
+                                 </h6>
+                                 <div id="message_alert">
+                                    <span
+                                       class="badge rounded-pill bg-danger badge-dot border"
+                                       id="message_badge"
+                                       ></span>
+                                 </div>
+                              </div>
+                              <small class="text-muted">
+                              {{ chat.second_user.educationalinformationmodel.University }}
+                              </small>
+                           </a>
+                        </div>
+                        {%else%}
+                        <div class="flex-shrink-0 avatar">
+                           <a href="{% url 'chat' chat.id %}">
+                              <img
+                                 src="{{ chat.first_user.profilepicturemodel.profile_photo.url }}"
+                                 alt="Avatar"
+                                 class="rounded-circle"
+                              />
+                           </a>
+                        </div>
+                        <div class="chat-contact-info flex-grow-1 ms-4">
+                           <a href="{% url 'chat' chat.id %}">
+                              <div class="d-flex justify-content-between align-items-center">
+                                 <h6 class="chat-contact-name text-truncate fw-normal m-0">
+                                    {{ chat.first_user.first_name }} {{ chat.first_user.last_name }}
+                                 </h6>
+                                 <div id="message_alert">
+                                    <span
+                                       class="badge rounded-pill bg-danger badge-dot border"
+                                       id="message_badge"
+                                       ></span>
+                                 </div>
+                              </div>
+                              <small class="text-muted">
+                              {{ chat.first_user.educationalinformationmodel.University }}
+                              </small>
+                           </a>
+                        </div>
+                        {%endif%}
+                     </li>
+                     {% empty %}
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="no_notifications_messages">
+                        <div class="d-flex">
+                           <div class="flex-shrink-0 me-3">
+                              Okunmamış mesajınız yok.
+                           </div>
+                        </div>
+                     </li>
+                     {%endfor%}
                   </ul>
                </li>
                <li class="border-top">
@@ -234,6 +308,7 @@
                </li>
             </ul>
          </li>
+         {%endif%}
          <!-- Messages -->
          {% if user.is_authenticated %}
          <!-- Notification -->
@@ -243,14 +318,14 @@
                data-bs-toggle="dropdown"
                data-bs-auto-close="outside"
                aria-expanded="false">
-            <span class="position-relative">
-            <i class="ti ti-bell ti-md" id="notifications_icon"></i>
-            <div id="notifications_alert">
-               {% if notifications_header.count > 0 %}
-               <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="notifications_badge"></span>
-               {% endif %}
-           </div>
-            </span>
+               <span class="position-relative">
+                  <i class="ti ti-bell ti-md" id="notifications_icon"></i>
+                  <div id="notifications_alert">
+                     {% if notifications_header.count > 0 %}
+                     <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="notifications_badge"></span>
+                     {% endif %}
+                  </div>
+               </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-0">
                <li class="dropdown-menu-header border-bottom">
@@ -264,7 +339,7 @@
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
                            title="Tümünü Oku"
-                           id="mark_all_as_read"
+                           id="notifications_mark_all_as_read"
                            ><i class="ti ti-mail-opened text-heading"></i
                            ></a>
                      </div>
@@ -291,7 +366,7 @@
                                  <h6 class="small mb-0">{{notification.action_user.first_name}} {{notification.action_user.last_name}}<small class="text-muted"> {{notification.message}}</small></h6>
                               </a>
                               <a href="{{notification.content_object.get_absolute_url }}">
-                                 <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.title|truncatechars:40 }}</span>
+                              <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.title|truncatechars:40 }}</span>
                               </a>
                               <small class="text-muted">{{notification.created_at}}</small>
                            </div>
@@ -307,7 +382,7 @@
                         </div>
                      </li>
                      {% empty %}
-                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="no_notifications_message">
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="no_notifications">
                         <div class="d-flex">
                            <div class="flex-shrink-0 me-3">
                               Okunmamış bildiriminiz yok.

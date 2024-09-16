@@ -43,22 +43,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=message
         )
 
-        # Mesajı alıcıya gönder
-        recipient_group_name = f'chat_user_{receiver_id}'
-        await self.channel_layer.group_send(
-            recipient_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'sender_id': sender_id,
-            }
-        )
+    #     # Mesajı alıcıya gönder
+    #     recipient_group_name = f'chat_user_{receiver_id}'
+    #     await self.channel_layer.group_send(
+    #         recipient_group_name,
+    #         {
+    #             'type': 'chat_message',
+    #             'message': message,
+    #             'sender_id': sender_id,
+    #         }
+    #     )
 
-    async def chat_message(self, event):
-        message = event['message']
-        sender_id = event['sender_id']
-        # Mesajı WebSocket üzerinden gönder
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'sender_id': sender_id
-        }))
+    # async def chat_message(self, event):
+    #     message = event['message']
+    #     sender_id = event['sender_id']
+    #     # Mesajı WebSocket üzerinden gönder
+    #     await self.send(text_data=json.dumps({
+    #         'message': message,
+    #         'sender_id': sender_id
+    #     }))

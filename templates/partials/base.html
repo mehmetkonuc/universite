@@ -83,119 +83,186 @@
          <!-- Drag Target Area To SlideIn Menu On Small Screens -->
          <div class="drag-target"></div>
       </div>
-      <!-- / Layout wrapper -->
-      <!-- Core JS -->
-      <!-- build:js assets/vendor/js/core.js -->
-      <script src="{% static 'assets/vendor/libs/jquery/jquery.js' %}"></script>
-      <script src="{% static 'assets/vendor/libs/popper/popper.js' %}"></script>
-      <script src="{% static 'assets/vendor/js/bootstrap.js' %}"></script>
-      <script src="{% static 'assets/vendor/libs/node-waves/node-waves.js' %}"></script>
-      <script src="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
-      <script src="{% static 'assets/vendor/libs/hammer/hammer.js' %}"></script>
-      <script src="{% static 'assets/vendor/libs/typeahead-js/typeahead.js' %}"></script>
-      <script src="{% static 'assets/vendor/js/menu.js' %}"></script>
-      <!-- endbuild -->
-      <!-- Vendors JS -->
-      <!-- Main JS -->
-      <script src="{% static 'assets/js/main.js' %}"></script>
-      <!-- Page JS -->
-      {% block extra_javascript %}
-      {% endblock extra_javascript %}
-      <script>
-         const notificationSocket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
-     
-         notificationSocket.onmessage = function(e) {
-             const data = JSON.parse(e.data);
-             const notificationList = $('#notifications_content');
-             const notificationCountElement = document.getElementById('notifications_count');
-             const noNotificationsMessage = document.getElementById('no_notifications_message');
-     
-             // Yeni bildirimi listeye ekliyoruz
-             notificationList.prepend(data.html);
-     
-             // "Okunmamış bildiriminiz yok." mesajını gizle
-             if (noNotificationsMessage) {
-                 noNotificationsMessage.style.display = 'none';
-             }
-     
-             // Badge'i güncelle
-             const badge = document.getElementById('notifications_badge');
-             const notificationContainer = document.getElementById('notifications_alert');
-             
-             if (!badge) {  // Eğer badge yoksa
-               // Yeni badge oluştur ve container'a ekle
-               const newBadge = document.createElement('span');
-               newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
-               newBadge.id = 'notifications_badge';
-               notificationContainer.appendChild(newBadge);}
-     
-             // Okunmamış bildirim sayısını güncelle
-             if (notificationCountElement) {
-                 let currentCount = parseInt(notificationCountElement.textContent.split(' ')[0]);
-                 notificationCountElement.textContent = (currentCount + 1) + ' Okunmamış';
-             }
-         };
-     
-         notificationSocket.onclose = function(e) {
-             console.error('WebSocket kapandı!');
-         };
-     </script>
-     
-      <script>
-document.getElementById("mark_all_as_read").addEventListener("click", function() {
-    // AJAX çağrısı ile arka planda bildirimleri okundu olarak işaretle
-    fetch('/notifications/notifications/mark-all-as-read/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken'),  // CSRF token ekle
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            // Bildirim ikonundaki badge'in silinmesi
-            var badge = document.getElementById("notifications_badge");
-            if (badge) {
-                badge.remove(); // Badge siliniyor
-            }
+        <!-- / Layout wrapper -->
+        <!-- Core JS -->
+        <!-- build:js assets/vendor/js/core.js -->
+        <script src="{% static 'assets/vendor/libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'assets/vendor/libs/popper/popper.js' %}"></script>
+        <script src="{% static 'assets/vendor/js/bootstrap.js' %}"></script>
+        <script src="{% static 'assets/vendor/libs/node-waves/node-waves.js' %}"></script>
+        <script src="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+        <script src="{% static 'assets/vendor/libs/hammer/hammer.js' %}"></script>
+        <script src="{% static 'assets/vendor/libs/typeahead-js/typeahead.js' %}"></script>
+        <script src="{% static 'assets/vendor/js/menu.js' %}"></script>
+        <!-- endbuild -->
+        <!-- Vendors JS -->
+        <!-- Main JS -->
+        <script src="{% static 'assets/js/main.js' %}"></script>
+        <!-- Page JS -->
+        {% block extra_javascript %}
+        {% endblock extra_javascript %}
+        <script>
+            const socket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
+            const pageType = window.location.pathname.includes('/chat/') ? 'chat' : 'notification';
+            // socket.onopen = function() {
+            //     socket.send(JSON.stringify({
+            //         'page_type': pageType
+            //     }));
+            // };
+            if (pageType != 'chat' ) {
+                socket.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                if (data.type == "send_notification") {
+                    const notificationList = $('#notifications_content');
+                    const notificationCountElement = document.getElementById('notifications_count');
+                    const noNotificationsMessage = document.getElementById('no_notifications');
 
-            // Bildirim içeriklerinin silinmesi ve "Okunmamış bildiriminiz yok." yazısının eklenmesi
-            var notificationsContent = document.getElementById("notifications_content");
-            if (notificationsContent) {
-                notificationsContent.innerHTML = "<li class='list-group-item' id='no_notifications_message' >Okunmamış bildiriminiz yok.</li>";
-            }
+                    // Yeni bildirimi listeye ekliyoruz
+                    notificationList.prepend(data.html);
 
-            // Bildirim sayısının sıfırlanması
-            var notificationsCount = document.getElementById("notifications_count");
-            if (notificationsCount) {
-                notificationsCount.textContent = 0 + " Okunmamış";
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Hata:', error);
-    });
-});
+                    // "Okunmamış bildiriminiz yok." mesajını gizle
+                    if (noNotificationsMessage) {
+                        noNotificationsMessage.style.display = 'none';
+                    }
 
-// CSRF tokenini almak için yardımcı fonksiyon
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Bu cookie'nin ismi verilen isme eşitse, değeri dön
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
+                    // Badge'i güncelle
+                    const badge = document.getElementById('notifications_badge');
+                    const notificationContainer = document.getElementById('notifications_alert');
 
-      </script>
-   </body>
+                    if (!badge) { // Eğer badge yoksa
+                        // Yeni badge oluştur ve container'a ekle
+                        const newBadge = document.createElement('span');
+                        newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
+                        newBadge.id = 'notifications_badge';
+                        notificationContainer.appendChild(newBadge);
+                    }
+
+                    // Okunmamış bildirim sayısını güncelle
+                    if (notificationCountElement) {
+                        let currentCount = parseInt(notificationCountElement.textContent.split(' ')[0]);
+                        notificationCountElement.textContent = (currentCount + 1) + ' Okunmamış';
+                    }
+                } else if (data.type == "message_notification") {
+                    const messageList = $('#messages_content');
+                    const messageCountElement = document.getElementById('message_count');
+                    const noMessagesMessage = document.getElementById('no_notifications_messages');
+                    messageList.prepend(data.html);
+
+                    if (noMessagesMessage) {
+                        noMessagesMessage.style.display = 'none';
+                    }
+                    const badge = document.getElementById('messages_badge');
+                    const messageContainer = document.getElementById('messages_alert');
+                    if (!badge) { // Eğer badge yoksa
+                        const newBadge = document.createElement('span');
+                        newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
+                        newBadge.id = 'messages_badge';
+                        messageContainer.appendChild(newBadge);
+                    }
+
+                    // Okunmamış bildirim sayısını güncelle
+                    if (messageCountElement) {
+                        let currentCount = parseInt(messageCountElement.textContent.split(' ')[0]);
+                        messageCountElement.textContent = (currentCount + 1) + ' Okunmamış';
+                    }
+                }
+                };
+            };
+            socket.onclose = function (e) {
+            console.error('WebSocket kapandı!');
+            };
+        </script>
+        <script>
+            document.getElementById("notifications_mark_all_as_read").addEventListener("click", function () {
+            // AJAX çağrısı ile arka planda bildirimleri okundu olarak işaretle
+            fetch("{% url 'notifications_mark_all_as_read' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'), // CSRF token ekle
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Bildirim ikonundaki badge'in silinmesi
+                        var badge = document.getElementById("notifications_badge");
+                        if (badge) {
+                        badge.remove(); // Badge siliniyor
+                        }
+
+                        // Bildirim içeriklerinin silinmesi ve "Okunmamış bildiriminiz yok." yazısının eklenmesi
+                        var notificationsContent = document.getElementById("notifications_content");
+                        if (notificationsContent) {
+                        notificationsContent.innerHTML = "<li class='list-group-item' id='no_notifications' >Okunmamış bildiriminiz yok.</li>";
+                        }
+
+                        // Bildirim sayısının sıfırlanması
+                        var notificationsCount = document.getElementById("notifications_count");
+                        if (notificationsCount) {
+                        notificationsCount.textContent = 0 + " Okunmamış";
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                });
+            });
+
+
+            document.getElementById("messages_mark_all_as_read").addEventListener("click", function () {
+                fetch("{% url 'messages_mark_all_as_read' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'), // CSRF token ekle
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Bildirim ikonundaki badge'in silinmesi
+                        var badge = document.getElementById("messages_badge");
+                        if (badge) {
+                        badge.remove(); // Badge siliniyor
+                        }
+
+                        // Bildirim içeriklerinin silinmesi ve "Okunmamış bildiriminiz yok." yazısının eklenmesi
+                        var notificationsContent = document.getElementById("messages_content");
+                        if (notificationsContent) {
+                        notificationsContent.innerHTML = "<li class='list-group-item' id='no_notifications_messages' >Okunmamış mesajınız yok.</li>";
+                        }
+
+                        // Bildirim sayısının sıfırlanması
+                        var notificationsCount = document.getElementById("message_count");
+                        if (notificationsCount) {
+                        notificationsCount.textContent = 0 + " Okunmamış";
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                });
+            });
+
+            // CSRF tokenini almak için yardımcı fonksiyon
+            function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Bu cookie'nin ismi verilen isme eşitse, değeri dön
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+            }
+        </script>
+    </body>
 </html>

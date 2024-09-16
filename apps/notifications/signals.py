@@ -1,12 +1,33 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail  # Örnek olarak e-posta gönderimi için kullanılabilir
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from apps.comments.models import Comment
 from apps.likes.models import Like
 from apps.notifications.models import Notification
+from apps.chat.models import Message
+
+
+@receiver(post_save, sender=Message)
+def create_message_notification(sender, instance, created, **kwargs):
+    context = Message.get_notifications_message_context(instance)
+    context.update({
+        'sender_user_id': instance.sender.id,
+        'sender_user': instance.sender.first_name + ' ' + instance.sender.last_name,
+        'sender_user_university': str(instance.sender.educationalinformationmodel.University),
+        'time': instance.timestamp.strftime("%d %b %Y, %H:%M"),
+        'profile_photo_url': instance.sender.profilepicturemodel.profile_photo.url if instance.sender.profilepicturemodel.profile_photo else '/static/assets/img/avatars/1.png',
+        })
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f'notifications_{instance.receiver.id}',  # Bildirim alıcısı
+        {
+            'type': 'message_notification',
+            'message': context,
+        }
+    )
+
 
 @receiver(post_save, sender=Comment)
 def create_comment_notification(sender, instance, created, **kwargs):
@@ -68,7 +89,7 @@ def create_like_notification(sender, instance, created, **kwargs):
         # WebSocket bildirimi gönderiyoruz
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            f'user_{instance.content_object.user.id}',  # Bildirim alıcısı makale sahibi
+            f'notifications_{instance.content_object.user.id}',  # Bildirim alıcısı makale sahibi
             {
                 'type': 'send_notification',
                 'message': context,

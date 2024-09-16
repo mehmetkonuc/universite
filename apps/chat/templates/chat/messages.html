@@ -7,21 +7,31 @@
         <i class="ti ti-menu-2 ti-lg cursor-pointer d-lg-none d-block me-4" data-bs-toggle="sidebar" data-overlay data-target="#app-chat-contacts"></i>
         {% if chat.id %}
         {% if user == chat.first_user %}
-        <div class="flex-shrink-0 avatar">
-          <img src="{{ chat.second_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
-        </div>
-        <div class="chat-contact-info flex-grow-1 ms-4">
-            <h6 class="m-0 fw-normal">{{ chat.second_user.first_name }} {{ chat.second_user.last_name }}</h6>
-            <small class="user-status text-body">{{ chat.second_user.educationalinformationmodel.University }}</small>
-        </div>
+          <div class="flex-shrink-0 avatar">
+          <a href="{% url 'profile' chat.second_user.username %}">
+            <img src="{{ chat.second_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+          </a>
+          </div>
+          <a href="{% url 'profile' chat.second_user.username %}">
+
+          <div class="current-user chat-contact-info flex-grow-1 ms-4" data-user-id="{{chat.second_user.id}}">
+              <h6 class="m-0 fw-normal">{{ chat.second_user.first_name }} {{ chat.second_user.last_name }}</h6>
+              <small class="user-status text-body">{{ chat.second_user.educationalinformationmodel.University }}</small>
+          </div>
+        </a>
         {% else %}
-        <div class="flex-shrink-0 avatar">
-          <img src="{{ chat.first_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
-        </div>
-        <div class="chat-contact-info flex-grow-1 ms-4">
-            <h6 class="m-0 fw-normal">{{ chat.first_user.first_name }} {{ chat.first_user.last_name }}</h6>
-            <small class="user-status text-body">{{ chat.first_user.educationalinformationmodel.University }}</small>
-        </div>
+        <a href="{% url 'profile' chat.first_user.username %}">
+          <div class="flex-shrink-0 avatar">
+            <img src="{{ chat.first_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+          </div>
+        </a>
+        <a href="{% url 'profile' chat.first_user.username %}">
+
+          <div class="current-user chat-contact-info flex-grow-1 ms-4" data-user-id="{{chat.first_user.id}}">
+              <h6 class="m-0 fw-normal">{{ chat.first_user.first_name }} {{ chat.first_user.last_name }}</h6>
+              <small class="user-status text-body">{{ chat.first_user.educationalinformationmodel.University }}</small>
+          </div>
+        </a>
         {% endif %}
         {% endif %}
       </div>
@@ -33,6 +43,8 @@
           </button>
           <div class="dropdown-menu dropdown-menu-end" aria-labelledby="chat-header-actions">
             <a class="dropdown-item" href="javascript:void(0);">View Contact</a>
+            <a class="dropdown-item text-danger" href="#"
+            data-bs-toggle="modal" data-bs-target="#modalCenter_{{chat.id}}">Sohbeti Sil</a>
           </div>
         </div>
       </div>
@@ -64,14 +76,14 @@
     <div class="chat-history-footer shadow-xs">
       <form class="form-send-message d-flex justify-content-between align-items-center" data-chat-id="{{ chat.id }}" user-id="{{user.id}}">
         {% csrf_token %}
-        <input class="form-control message-input border-0 me-4 shadow-none" placeholder="Type your message here..." />
+        <input class="form-control message-input border-0 me-4 shadow-none" placeholder="Mesajınızı buraya yazın..." />
         <div class="message-actions d-flex align-items-center">
           <label for="attach-doc" class="form-label mb-0">
             <i class="ti ti-paperclip ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading"></i>
             <input type="file" id="attach-doc" hidden />
           </label>
           <button type="submit" class="btn btn-primary d-flex send-msg-btn">
-            <span class="align-middle d-md-inline-block d-none">Send</span>
+            <span class="align-middle d-md-inline-block d-none">Gönder</span>
             <i class="ti ti-send ti-16px ms-md-2 ms-0"></i>
           </button>
         </div>
@@ -82,3 +94,26 @@
     {% endif %}
   </div>
 </div>
+
+{% if chat.id %}
+<!-- Delete Chat Modal -->
+<div class="modal fade" id="modalCenter_{{chat.id}}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <p>
+             Sohbeti Silmek İstediğinizden Emin Misiniz?
+           </p>
+        </div>
+        <div class="modal-footer">
+           <a class="btn btn-primary" href="{% url 'delete_chat' chat.id %}">Sil</a>
+           <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        </div>
+     </div>
+  </div>
+</div>
+{%endif%}

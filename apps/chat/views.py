@@ -6,6 +6,8 @@ from .models import Message, Chat
 from django.template.loader import render_to_string
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
+
 
 def index(request):
     chats = Chat.objects.filter(
@@ -13,15 +15,18 @@ def index(request):
     ).annotate(
         last_message_time=Max('message__timestamp')
     ).order_by('-last_message_time')
+    
     chat_list = []
     for chat in chats:
-        messages = Message.objects.filter(chat=chat, receiver=request.user, is_read=False)
-        if messages:
-            is_read = False
-        else:
-            is_read = True
-        chat_list.append({'chat':chat, 'is_read': is_read})
-    return render(request, 'chat/index.html', {'chats':chat_list})
+        # Mesaj var mı kontrol et, yoksa chat'i atla
+        if Message.objects.filter(chat=chat).exists():
+            # Okunmamış mesaj var mı kontrol et
+            is_read = not Message.objects.filter(chat=chat, receiver=request.user, is_read=False).exists()
+            chat_list.append({'chat': chat, 'is_read': is_read})
+
+    return render(request, 'chat/index.html', {'chats': chat_list})
+
+
 
 def start_chat(request, second_user_id=None):
     first_user = request.user
@@ -38,30 +43,41 @@ def start_chat(request, second_user_id=None):
         return redirect('chat', chat.id)
 
 def chat(request, chat_id):
+    # Kullanıcıya ait tüm chatleri al
     chats = Chat.objects.filter(
         Q(first_user=request.user) | Q(second_user=request.user)
     ).distinct()
-    chat_user = chats.get(id=chat_id)
+
+    # Chat'i ID'ye göre al, eğer yoksa 404 döndür
+    chat_user = get_object_or_404(chats, id=chat_id)
+
+    # Mesajları al ve okunmamış mesajları işaretle
+    messages = Message.objects.filter(chat=chat_user)
+    messages.filter(receiver=request.user, is_read=False).update(is_read=True)
+
+    # Son mesaj zamanına göre sıralı chat listesini hazırla
     chats = chats.annotate(
         last_message_time=Max('message__timestamp')
     ).order_by('-last_message_time')
+
+    # Chat listesi oluştur, is_read durumunu tek bir sorguyla al
     chat_list = []
     for chat in chats:
-        messages = Message.objects.filter(chat=chat)
-        if messages.exists():
-            message = messages.filter(chat=chat, receiver=request.user, is_read=False)
-            if message:
-                is_read = False
-            else:
-                is_read = True
-            chat_list.append({'chat':chat, 'is_read': is_read})
+        # Mesaj var mı kontrol et, yoksa chat'i atla
+        if Message.objects.filter(chat=chat).exists():
+            # Okunmamış mesaj var mı kontrol et
+            is_read = not Message.objects.filter(chat=chat, receiver=request.user, is_read=False).exists()
+            chat_list.append({'chat': chat, 'is_read': is_read})
 
+    # Şablona gönderilecek context
+    context = {
+        'chats': chat_list,
+        'chat': chat_user,
+        'messages': messages
+    }
 
+    return render(request, 'chat/index.html', context)
 
-    # chats = [chat for chat in chats if Message.objects.filter(chat=chat).exists()]
-    messages = Message.objects.filter(chat=chat_user)
-
-    return render(request, 'chat/index.html', {'chats' : chat_list, 'chat':chat_user, 'messages':messages})
 
 def send_message(request):
     if request.method == 'POST':
@@ -105,3 +121,20 @@ def get_messages(request):
         except (Chat.DoesNotExist, json.JSONDecodeError) as e:
             return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+
+# @login_required
+def messages_mark_all_as_read(request):
+    if request.method == 'POST':
+        Message.objects.filter(receiver=request.user, is_read=False).update(is_read=True)
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'failed'}, status=400)
+
+
+def delete_chat(request, chat_id):
+    Message.objects.filter(chat_id=chat_id).delete()
+    # Chat.objects.get(id=chat_id).delete()
+    messages.success(request, 'Sohbet Başarıyla silindi.')
+
+    return redirect('chat_index')
