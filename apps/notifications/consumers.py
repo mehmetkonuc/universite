@@ -11,10 +11,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         self.user = self.scope["user"]
         self.notification_group = f"notifications_{self.user.id}"
         self.chat_group = f"chat_{self.user.id}"
+        self.follower_group = f"follower_{self.user.id}"
 
         # Bildirimler kanalına abone et
         await self.channel_layer.group_add(self.notification_group, self.channel_name)
         await self.channel_layer.group_add(self.chat_group, self.channel_name)
+        await self.channel_layer.group_add(self.follower_group, self.channel_name)
         
         await self.accept()
 
@@ -90,7 +92,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     # Bildirim alındığında tetiklenecek fonksiyon
     async def send_notification(self, event):
-        rendered_notification = render_to_string('partials/notifications.html', {'message': event['message']})
+        rendered_notification = render_to_string('notifications/header_notifications.html', {'message': event['message']})
         # Bildirimi WebSocket üzerinden gönderiyoruz
         await self.send(text_data=json.dumps({
             'type': 'send_notification',
@@ -99,9 +101,19 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     # Bildirim alındığında tetiklenecek fonksiyon
     async def message_notification(self, event):
-        rendered_notification = render_to_string('partials/messages.html', {'message': event['message']})
+        rendered_notification = render_to_string('notifications/header_messages.html', {'message': event['message']})
         # Bildirimi WebSocket üzerinden gönderiyoruz
         await self.send(text_data=json.dumps({
             'type': 'message_notification',
+            'html': rendered_notification,
+        }))
+    
+
+        # Bildirim alındığında tetiklenecek fonksiyon
+    async def follower_notification(self, event):
+        rendered_notification = render_to_string('notifications/header_follow.html', {'message': event['message']})
+        # Bildirimi WebSocket üzerinden gönderiyoruz
+        await self.send(text_data=json.dumps({
+            'type': 'follower_notification',
             'html': rendered_notification,
         }))

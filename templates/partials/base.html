@@ -165,6 +165,29 @@
                         let currentCount = parseInt(messageCountElement.textContent.split(' ')[0]);
                         messageCountElement.textContent = (currentCount + 1) + ' Okunmamış';
                     }
+                } else if (data.type == "follower_notification") {
+                    const followersList = $('#followers_content');
+                    const followCountElement = document.getElementById('followers_count');
+                    const noFollowerMessage = document.getElementById('no_notifications_followers');
+                    followersList.prepend(data.html);
+
+                    if (noFollowerMessage) {
+                        noFollowerMessage.style.display = 'none';
+                    }
+                    const badge = document.getElementById('followers_badge');
+                    const followerContainer = document.getElementById('followers_alert');
+                    if (!badge) { // Eğer badge yoksa
+                        const newBadge = document.createElement('span');
+                        newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
+                        newBadge.id = 'followers_badge';
+                        followerContainer.appendChild(newBadge);
+                    }
+
+                    // Okunmamış bildirim sayısını güncelle
+                    if (followCountElement) {
+                        let currentCount = parseInt(followCountElement.textContent.split(' ')[0]);
+                        followCountElement.textContent = (currentCount + 1) + ' Okunmamış';
+                    }
                 }
                 };
             };

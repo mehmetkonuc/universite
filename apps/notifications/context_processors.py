@@ -1,7 +1,7 @@
 from .models import Notification
 from apps.chat.models import Chat, Message
 from django.db.models import Q, Max
-
+from apps.follow.models import Follow
 def processors(request):
     context = {
             
@@ -20,8 +20,11 @@ def processors(request):
             if not messages:
                 chats = chats.exclude(id=chat.id)
 
+        followers = Follow.objects.filter(following=request.user, is_read=False)
+
         context.update({
                 'notifications_header': notifications_header,
                 'chats_header' : chats,
+                'followers_header' : followers,
             })
     return context

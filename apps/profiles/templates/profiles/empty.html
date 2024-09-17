@@ -2,36 +2,49 @@
 {% load static %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
+<style>
+  /* Yuvarlak önizleme */
+.cropper-crop-box, .cropper-view-box {
+    border-radius: 50%;  /* Yuvarlak kırpma kutusu */
+}
+
+.cropper-modal {
+  background-color : #fff !important
+}
+/* Yuvarlak önizleme kutusu */
+.preview {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;  /* Yuvarlak çerçeve */
+    overflow: hidden;
+    margin: 10px auto;
+}
+#image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;  /* Yuvarlak resim görünümü */
+    object-fit: cover;  /* Resmin düzgün kırpılmasını sağlar */
+}
+</style>
 {% endblock extra_css%}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-xxl-6 mb-4">
         <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <div class="card-title mb-0">
-                    <h5 class="mb-1">Örnek Başlık</h5>
-                    <p class="card-subtitle">Alt Başlık</p>
-                  </div>
-                  <div class="dropdown">
-                    <button
-                      class="btn btn-text-secondary rounded-pill text-muted border-0 p-2 me-n1"
-                      type="button"
-                      id="MonthlyCampaign"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false">
-                      <i class="ti ti-dots-vertical ti-md text-muted"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                      <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                      <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                      <a class="dropdown-item" href="javascript:void(0);">View All</a>
-                    </div>
-                  </div>
-            </div>
             <div class="card-body">
-                Card içeriği!!!
+              <div class="preview"></div>  <!-- Yuvarlak önizleme kutusu -->
+              <form method="post" enctype="multipart/form-data" id="profileImageForm">
+                {% csrf_token %}
+                {{ form.profile_photo }}
+                <img id="image" src="{% if user.profilepicturemodel.profile_photo %}{{ user.profilepicturemodel.profile_photo.url }}{% else %}default.jpg{% endif %}" alt="Profile Image">
+                <input type="hidden" id="cropped_image_data" name="cropped_image_data">
+                <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1">
+
+                <button type="submit">Save</button>
+              </form>
+              
             </div>
         </div>
     </div>
@@ -39,5 +52,35 @@
 {% endblock content %}
 
 {% block extra_javascript %}
+<script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+<script>
+  var image = document.getElementById('image');
+  var cropper = new Cropper(image, {
+    aspectRatio: 1,  // Kare oranı (yuvarlak görünüm için)
+    viewMode: 1,  // Resim tam serbest hareket edebilecek
+    dragMode: 'move',  // Resmi hareket ettir
+    cropBoxMovable: false,  // Kırpma kutusu sabit
+    cropBoxResizable: false,  // Boyutunu değiştirme
+    background: false,  // Arka planı gizle
+    zoomable: true,  // Zoom yapabilme
+    zoomOnWheel: true,  // Fare tekerleği ile zoom yapabilme
+    preview: '.preview',
+    minContainerWidth: 500,
+    minContainerHeight: 500,
+    crop(event) {
+        var canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function(blob) {
+            var formData = new FormData();
+            formData.append('cropped_image_data', blob);
+        });
+    }
+});
+
+    // Slider ile zoom yapma
+    var zoomSlider = document.getElementById('zoomSlider');
+    zoomSlider.addEventListener('input', function() {
+        cropper.zoomTo(parseFloat(this.value));
+    });
+</script>
 {% endblock extra_javascript %}
 

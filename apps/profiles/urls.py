@@ -4,6 +4,7 @@ from . import views
 
 
 urlpatterns = [
+    path('upload/', views.profile_edit_view, name='upload'),
     path('settings/', views.ProfileSettingsView.as_view(), name='profile_settings'),
     path('upload_image/', views.PictureSettingsView.as_view(), name='upload_image'),
     path('settings/additional/', views.AdditionalInformationView.as_view(), name='additional_settings'),

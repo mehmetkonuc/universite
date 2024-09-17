@@ -27,11 +27,10 @@
             </div>
             <div class="flex-grow-1 mt-3 mt-lg-5">
                <div
-                  class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
+                  class="d-flex align-items-md-end justify-content-md-between  mx-5 flex-md-row flex-column gap-4">
                   <div class="user-profile-info">
                      <h4 class="mb-0 mt-lg-6">{{profile.first_name}} {{profile.last_name}} <span class="badge badge-center bg-success bg-glow">8.2</span></h4>
                      <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kullanıcı Adı">@{{profile.username}}</span>
-                     
                      <ul
                         class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
@@ -44,18 +43,37 @@
                            <i class="ti ti-school ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.Status}}</span>
                         </li>
                      </ul>
+                     <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                           <span class="badge bg-label-success" id="follower-count"><strong>{{profile.followers.count}}</strong> Takipçi</span>
+                        </li>
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                           <span class="badge bg-label-primary"><strong>{{profile.following.count}}</strong> Takip</span>
+                        </li>
+                        </ul>
                   </div>
+                  <div class="ms-end">
                   {%if user.username == profile.username %}
-
-                  <a href="{% url 'profile_settings' %}" class="btn btn-primary mb-1">
-                  <i class="ti ti-settings ti-xs me-2"></i>Hesap Ayarları
-                  </a>
-                  {%else%}
-                  <a href="{% url 'start_chat' profile.id %}" class="btn btn-primary mb-1">
-                     <i class="ti ti-user-check ti-xs me-2"></i>Arkadaş Ekle
+                     <a href="{% url 'profile_settings' %}" class="btn btn-primary mb-1">
+                     <i class="ti ti-settings  me-2"></i>Hesap Ayarları
                      </a>
+                  {%else%}
+                  {% if request.user != profile %}
+                     {% if followers %}
+                        <button class="btn btn-sm btn-danger mb-1" id="follow-btn" data-user-id="{{ profile.id }}">
+                           <i class="ti ti-user-x me-2"></i>Takibi Bırak
+                        </button>
+                     {% else %}
+                     <button class="btn btn-sm btn-primary mb-1" id="follow-btn" data-user-id="{{ profile.id }}">
+                        <i class="ti ti-user-plus me-2"></i>Takip Et
+                     </button>
                      {% endif %}
-
+                  {% endif %}
+                     <a href="{% url 'start_chat' profile.id %}" class="btn btn-sm btn-success mb-1">
+                        <i class="ti ti-mail-forward"></i>
+                     </a>
+                  {% endif %}
+                  </div>
                </div>
             </div>
          </div>
@@ -73,4 +91,48 @@
 
 {% endblock %}
 {% block extra_javascript %}
+<script>
+   $(document).ready(function(){
+       $('#follow-btn').click(function(){
+           var $btn = $(this);
+           var $followerCount = $('#follower-count strong');
+           var userId = $btn.data('user-id');
+           
+           $.ajax({
+               url: "{% url 'toggle_follow' %}",
+               type: "POST",
+               data: {
+                   'user_id': userId,
+                   'csrfmiddlewaretoken': '{{ csrf_token }}'  // CSRF token zorunlu
+               },
+               success: function(response) {
+                   if(response.status === 'followed') {
+                       // Takip ediliyor durumu
+                       $btn.removeClass('btn-primary').addClass('btn-danger');
+                       $btn.find('i').removeClass('ti-user-plus').addClass('ti-user-x');
+                       $btn.html('<i class="ti ti-user-x me-2"></i> Takibi Bırak');
+                       
+                       // Takipçi sayısını arttır
+                       var count = parseInt($followerCount.text()) + 1;
+                       $followerCount.text(count);
+                   } else if(response.status === 'unfollowed') {
+                       // Takip et durumu
+                       $btn.removeClass('btn-danger').addClass('btn-primary');
+                       $btn.find('i').removeClass('ti-user-x').addClass('ti-user-plus');
+                       $btn.html('<i class="ti ti-user-plus me-2"></i> Takip Et');
+                       
+                       // Takipçi sayısını azalt
+                       var count = parseInt($followerCount.text()) - 1;
+                       $followerCount.text(count);
+                   }
+               },
+               error: function() {
+                   alert('Bir hata oluştu.');
+               }
+           });
+       });
+   });
+</script>
+
+
 {% endblock %}

@@ -13,7 +13,35 @@ from apps.marketplace.models import MarketPlaceModel
 from apps.documents.models import DocumentsModel
 from apps.confessions.models import ConfessionsModel
 from apps.questions.models import QuestionsModel
+from apps.follow.models import Follow
 from django.contrib.contenttypes.models import ContentType
+from PIL import Image
+import io
+
+def profile_edit_view(request):
+    if request.method == 'POST':
+        profile_picture_instance = models.ProfilePictureModel.objects.filter(user=request.user).first()
+
+        form = forms.ProfilePictureForm(request.POST, request.FILES, instance=profile_picture_instance)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user=request.user
+
+            # Kırpılan fotoğrafı al
+            cropped_image_data = request.FILES.get('cropped_image_data')
+
+            if cropped_image_data:
+                image = Image.open(cropped_image_data)
+                output = io.BytesIO()
+                image.save(output, format='JPEG')
+                profile.profile_photo.save(f'{request.user.username}_profile.jpg', output, save=True)
+
+            profile.save()
+    else:
+        form = forms.ProfilePictureForm()
+
+    return render(request, 'profiles/empty.html', {'form': form})
+
 
 class ProfileView(LoginRequiredMixin, View):
     model = models.EducationalInformationModel
@@ -34,7 +62,8 @@ class ProfileView(LoginRequiredMixin, View):
         documents = DocumentsModel.objects.filter(user=profile).count()
         confessions = ConfessionsModel.objects.filter(user=profile, is_privacy=False).count()
         questions = QuestionsModel.objects.filter(user=profile).count()
-        
+        followers = profile.followers.filter(follower=request.user)
+
         self.context.update(
             {'profile': profile,
             'article': article,
@@ -44,7 +73,9 @@ class ProfileView(LoginRequiredMixin, View):
             'confessions': confessions,
             'questions': questions,
             'like': like,
-            'posts':posts}
+            'posts':posts,
+            'followers':followers,
+            }
         )
         return render(request, self.template, self.context)
 

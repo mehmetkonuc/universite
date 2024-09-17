@@ -3,6 +3,21 @@
 {% load crispy_forms_tags %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/cropper/cropper.css' %}" />
+<style>
+   .cropper-modal {
+  background-color : #fff !important
+}
+.cropper-crop-box, .cropper-view-box {
+    border-radius: 50%;  /* Yuvarlak kırpma kutusu */
+}
+
+#image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;  /* Yuvarlak resim görünümü */
+    object-fit: cover;  /* Resmin düzgün kırpılmasını sağlar */
+}
+</style>
 {% endblock %}
 {% block profileSettings %}
 <form method="POST" enctype="multipart/form-data" id="image-form">
@@ -56,6 +71,7 @@
                </div>
                <div class="modal-body">
                 <div id="image-box" class="mb-3"></div>
+                <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1">
 
                </div>
                <div class="modal-footer">
@@ -100,6 +116,10 @@
 
 
 <script>
+       var zoomSlider = document.getElementById('zoomSlider');
+    zoomSlider.addEventListener('input', function() {
+        cropper.zoomTo(parseFloat(this.value));
+    });
     const alertBox = document.getElementById('alert-box');
     const imageBox = document.getElementById('image-box');
     const imageForm = document.getElementById('image-form');
@@ -123,7 +143,18 @@
         }
         const image = document.getElementById('image');
         cropper = new Cropper(image, {
-            aspectRatio: 1 / 1,
+            aspectRatio: 1,  // Kare oranı (yuvarlak görünüm için)
+            viewMode: 1,  // Resim tam serbest hareket edebilecek
+            dragMode: 'move',  // Resmi hareket ettir
+            cropBoxMovable: false,  // Kırpma kutusu sabit
+            cropBoxResizable: false,  // Boyutunu değiştirme
+            background: false,  // Arka planı gizle
+            zoomable: true,  // Zoom yapabilme
+            zoomOnWheel: true,  // Fare tekerleği ile zoom yapabilme
+            preview: '.preview',
+            guides: false,
+            minContainerWidth: 500,
+            minContainerHeight: 500,
             crop(event) {
                 console.log(event.detail);
             }

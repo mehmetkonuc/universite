@@ -7,6 +7,37 @@ from apps.comments.models import Comment
 from apps.likes.models import Like
 from apps.notifications.models import Notification
 from apps.chat.models import Message
+from apps.follow.models import Follow
+
+
+
+@receiver(post_save, sender=Follow)
+def create_follow_notification(sender, instance, created, **kwargs):
+    if created:
+        follower = instance.follower
+        following = instance.following
+
+        # Takip edilen kullanıcıya bildirim göndermek için gerekli veriler
+        context = {
+            'follower_user_id': follower.id,
+            'follower_user': follower.first_name + ' ' + follower.last_name,
+            'follower_user_university': str(follower.educationalinformationmodel.University) if hasattr(follower, 'educationalinformationmodel') else 'Bilinmiyor',
+            'time': instance.created_at.strftime("%d %b %Y, %H:%M"),
+            'profile_photo_url': follower.profilepicturemodel.profile_photo.url if hasattr(follower, 'profilepicturemodel') and follower.profilepicturemodel.profile_photo else '/static/assets/img/avatars/1.png',
+        }
+
+        # Bildirim gönderme
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'follower_{following.id}',  # Bildirim alıcısı (takip edilen kullanıcı)
+            {
+                'type': 'follower_notification',
+                'message': context,
+            }
+        )
+
+
+
 
 
 @receiver(post_save, sender=Message)

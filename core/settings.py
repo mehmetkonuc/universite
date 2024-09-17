@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'apps.documents',
     'apps.notifications',
     'apps.chat',
+    'apps.follow',
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
