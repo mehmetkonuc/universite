@@ -5,7 +5,7 @@ from .filters import UserFilter, MyFilter
 from apps.photos.models import PhotosModel
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from apps.comments.views import CommentView
 from django.contrib import messages
 from django.db.models import Count
@@ -166,22 +166,26 @@ class DraftConfessionsView(View):
 
 class ConfessionDetailView(View):
     model_confessions = ConfessionsModel
-    model_likes = Like
+    model_likes = Likes
     template = 'confessions/details.html'
+    paginate_by = 2
     context = {
         }
 
     def get(self, request, slug):
         confession = get_object_or_404(self.model_confessions, slug=slug)
-        content_type = ContentType.objects.get_for_model(confession)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=confession.id)
+        liked = confession.likes.filter(user=request.user)
+        comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(confession), object_id=confession.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        paginator = Paginator(comments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         self.context.update({
             'siteTitle':confession.title,
             'data': confession,
-            'comments': comments,
+            'comments': page_obj,
             'liked' : liked,
             'liked_comment' : liked_comment,
         })
@@ -192,14 +196,18 @@ class ConfessionDetailView(View):
         confession = get_object_or_404(self.model_confessions, slug=slug)
         content_type = ContentType.objects.get_for_model(confession)
         form = CommentView.comment_post(request=request, content_type=content_type, object_id=confession.id)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=confession.id)
+        liked = confession.likes.filter(user=request.user)
+        comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(confession), object_id=confession.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        paginator = Paginator(comments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         self.context.update({
             'form': form,
             'data' : confession,
-            'comments': comments,
+            'comments': page_obj,
             'liked' : liked,
             'liked_comment' : liked_comment,
             })
@@ -217,8 +225,8 @@ class ConfessionsAddView(View):
 
     def get(self, request):
         
-        initial = {'country': request.user.educationalinformationmodel.Country,
-                   'university': request.user.educationalinformationmodel.University,
+        initial = {'country': request.user.educational_information.country,
+                   'university': request.user.educational_information.university,
                    }
         form = self.form_confessions(initial = initial)
 
@@ -228,8 +236,8 @@ class ConfessionsAddView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
-        initial = {'country': request.user.educationalinformationmodel.Country,
-            'university': request.user.educationalinformationmodel.University,
+        initial = {'country': request.user.educational_information.country,
+            'university': request.user.educational_information.university,
             }
         form = self.form_confessions(request.POST, initial=initial)
 
@@ -237,6 +245,10 @@ class ConfessionsAddView(View):
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
+            if form_data.is_published:
+                messages.success(request, 'Başarıyla Kaydedildi ve Yayınlandı')
+            else:
+                messages.success(request, 'Başarıyla Kaydedildi ve Taslaklara Eklendi.')
             return redirect('confession_details', slug=form_data.slug)
 
 
@@ -274,6 +286,10 @@ class ConfessionsEditView(View):
             form_data = form.save(commit=False)
             form_data.user = request.user
             form_data.save()
+            if form_data.is_published:
+                messages.success(request, 'Başarıyla Düzenlendi ve Yayınlandı')
+            else:
+                messages.success(request, 'Başarıyla Düzenlendi ve Taslaklara Kaydedildi.')
             return redirect('confession_details', slug=form_data.slug)
 
 

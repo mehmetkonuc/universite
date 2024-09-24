@@ -1,0 +1,24 @@
+{% extends 'profiles/settings/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block profileSettings %}
+<div class="card mb-4">
+    <h5 class="card-header">Gizlilik Ayarları</h5>
+    <!-- Account -->
+    <hr class="my-0">
+    <div class="card-body">
+        <form method="POST">
+          {% csrf_token %}
+
+            <div class="row">
+                   {{ form|crispy}}
+             </div>
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary me-2">Kaydet</button>
+            </div>
+        </form>
+    </div>
+    <!-- /Account -->
+</div>
+{% endblock %}

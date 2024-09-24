@@ -10,7 +10,8 @@
    }
 </style>
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-comments.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comments.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-form.css' %}" />
 {% endblock extra_css%}
 {% block content %}
 <div class="row justify-content-center">
@@ -55,7 +56,7 @@
    <div class="col-lg-8 d-flex justify-content-between">
       <div>
          <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
-         <small class="text-muted">Kategori: {{ data.category.name }} | Yayınlanma Tarihi: {{ data.create_at }}</small>
+         <small class="text-muted">Kategori: {{ data.category.name }}</small>
       </div>
    </div>
 </div>
@@ -76,25 +77,28 @@
          </div>
          <div class="card-body">
             {{ data.content | safe }}
-            <div class="d-flex align-items-center border-top">
-               <div class="d-flex align-items-center mt-4">
+            <hr />
+            <div class="d-flex align-items-center mt-4">
+               <div class="d-flex align-items-center">
                   <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
-                  <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %} text-primary"></i>
-                  <span class="like-count text-body">{{ data.likes.count }}</span>
+                  <i class="ti ti-heart{% if liked %}-filled{% endif %} text-primary"></i>
+                  <span class="like-count text-body">{% if liked %}Beğendin {% else %}Beğen{% endif %} ({{ data.likes.count }})</span>
                   </a>
-                  <a href="#comments_form" class="text-body me-3">
-                  <i class="ti ti-message-filled text-danger"></i> {{ data.comments.count }}
+                  <a href="#comments" class="text-body me-3">
+                  <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ data.comments.count }})
                   </a>
                </div>
                <div class="ms-auto">
+                  <small class="text-muted">{{ data.create_at }}</small>
                </div>
+               
             </div>
          </div>
       </div>
    </div>
 </div>
 <!-- Yazar Bilgisi -->
-<div class="row justify-content-center mt-4">
+<div class="row justify-content-center mt-4 mb-4">
    <div class="col-lg-8">
       <div class="card card-border-shadow-primary">
          <div class="card-header bg-warning mb-4">
@@ -102,56 +106,50 @@
          </div>
          <div class="card-body d-flex align-items-center">
             <a href="{% url 'profile' data.user.username %}">
-               <div class="avatar avatar-xl me-3">
-                  {% if data.user.profilepicturemodel.profile_photo %}
-                  <img src="{{ data.user.profilepicturemodel.profile_photo.url }}" 
+               <div class="avatar avatar-lg me-3">
+                  {% if data.user.profile_photo.profile_photo %}
+                  <img src="{{ data.user.profile_photo.profile_photo.url }}" 
                      class="rounded-circle" 
                      alt="Yazar Profil Fotoğrafı">
                   {% else %}
-                  <img src="{% static 'assets/img/avatars/11.png' %}" 
-                     class="rounded-circle" 
-                     alt="Yazar Profil Fotoğrafı">
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{ data.user.first_name|first }}{{ data.user.last_name|first }}</span>
                   {% endif %}
                </div>
             </a>
             <a href="{% url 'profile' data.user.username %}">
                <div>
                   <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
-                  <small class="text-body">{{ data.user.educationalinformationmodel.University }} > {{ data.user.educationalinformationmodel.Department }} > {{ data.user.educationalinformationmodel.Status }}</small>
+                  <small class="text-body">{{ data.user.educational_information.university }} > {{ data.user.educational_information.department }} > {{ data.user.educational_information.status }}</small>
                </div>
             </a>
          </div>
       </div>
    </div>
 </div>
-<!-- Yorum Formu -->
-<div class="row justify-content-center mt-4"  id="comments_form">
-   <div class="col-lg-8">
-      <!-- Comment Form -->
-      {% block comment-form %}
-      {% include 'comments/form-comment.html' %}
-      {% endblock comment-form %}
-      <!-- End Comment Form -->
-   </div>
-</div>
+
 {% if comments %}
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-2">
    <div class="col-lg-8">
       <h4 class="fw-bold mb-0">Yorumlar</h4>
    </div>
 </div>
 {%endif%}
-<div class="row justify-content-center mt-4">
-   <div class="col-lg-8">
-      <!-- Comments -->
-      {% for comment in comments %}
-      {% block comment %}
-      {% include 'comments/comments.html' %}
-      {% endblock comment %}
-      {% endfor %}
-      <!-- End Comments -->
-   </div>
-</div>
+
+<!-- Yorum Formu -->
+   <!-- Comment Form -->
+   {% block comment-form %}
+   {% include 'comments/form-comment.html' %}
+   {% endblock comment-form %}
+   <!-- End Comment Form -->
+
+
+
+<!-- Comments -->
+{% block comment %}
+{% include 'comments/comments.html' %}
+{% endblock comment %}
+<!-- End Comments -->
+
 <!-- Delete Article Modal -->
 <div class="modal fade" id="modalCenter_{{data.id}}" tabindex="-1" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered" role="document">
@@ -175,7 +173,13 @@
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
-<script src="{% static 'assets/js/pages/comments/comment-comments.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
+<script src="{% static 'assets/js/pages/comments/comment-form.js' %}"></script>
+<script src="{% static 'assets/js/pages/comments/comments.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 <script>
    CKEDITOR.replace('editor', {

@@ -1,8 +1,8 @@
 from .models import SiteSettingsModel
 
 def processors(request):
-    siteSettings = SiteSettingsModel.objects.filter().first()
+    site_settings = SiteSettingsModel.objects.filter().first()
     context = {
-            'siteSettings': siteSettings,
+            'site_settings': site_settings,
         }
     return context

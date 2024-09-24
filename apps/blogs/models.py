@@ -3,7 +3,7 @@ from django.conf import settings
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.comments.models import Comment
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
@@ -30,9 +30,9 @@ class Category(MPTTModel):
 
 
 class UserFilterModel(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blogs_filter')
     title = models.CharField(max_length=255, blank=True, null=True)
-    # category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
+    following_only = models.CharField(max_length=255, blank=True, null=True)
     category = TreeForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
     university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
@@ -46,12 +46,12 @@ class UserFilterModel(models.Model):
 
 class ArticlesModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                            on_delete=models.CASCADE)
+                            on_delete=models.CASCADE, related_name='blogs')
     title = models.CharField(max_length=155)
     content = RichTextUploadingField()
     futured_image = models.ImageField(upload_to=upload_to)
     comments = GenericRelation(Comment)
-    likes = GenericRelation(Like)
+    likes = GenericRelation(Likes)
     create_at = models.DateTimeField(auto_now_add=True)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
     is_published = models.BooleanField(default=False)

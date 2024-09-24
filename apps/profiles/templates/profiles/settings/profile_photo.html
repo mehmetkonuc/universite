@@ -1,0 +1,127 @@
+{% extends 'visitor/partials/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/cropper/cropper.css' %}" />
+<style>
+   .cropper-crop-box, .cropper-view-box {
+   border-radius: 50%;  /* Yuvarlak kırpma kutusu */
+   }
+   .cropper-face {
+   background-color: transparent !important;
+   }
+   .cropper-modal {
+   background-color : #fff !important
+   }
+   #image {
+   width: 100%;  /* Genişliği %100 yaparak ekran boyutuna göre küçülmesini sağlar */
+   height: 100%; /* Yüksekliği orantılı olarak otomatik ayarlanır */
+   max-width: 400px;  /* Maksimum genişliği sabitle */
+   max-height: 400px;  /* Maksimum genişliği sabitle */
+   border-radius: 50%;  /* Yuvarlak resim görünümü */
+   object-fit: cover;  /* Resmin düzgün kırpılmasını sağlar */
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;" >
+   <div class="card">
+      <div class="card-header">
+         <h5>Profil Fotoğrafı Yükle</h5>
+      </div>
+      <div class="card-body">
+         <form method="post" enctype="multipart/form-data" id="image-form">
+          {% csrf_token %}
+
+          <div id="image-box" class="position-relative">
+            {% if user.profile_photo.profile_photo %}
+            {% with profile_photo_url=user.profile_photo.profile_photo.url %}
+            <img src="{{ profile_photo_url }}" class="img-fluid" id="image" />
+            {% endwith %}
+            {% else %}
+            <img src="{% static 'assets/img/avatars/privacy.jpg' %}" id="image" class="img-fluid">
+            {% endif %}
+
+
+            
+         </div>
+         <div class="d-flex justify-content-between mt-4">
+            <label for="profile_picture" class="btn btn-success" tabindex="0">
+            <span class="d-none d-sm-block">Fotoğraf Seç</span>
+            <i class="ti ti-upload d-block d-sm-none"></i>
+            <input
+               type="file"
+               name="profile_photo"
+               id="profile_picture"
+               class="account-file-input"
+               hidden
+               accept="image/png, image/jpeg">
+            </label>
+            <button type="button" class="btn btn-primary" id="confirm-profile">İlerle</button>
+          </div>
+         </form>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block extra_javascript %}
+<script src="{% static 'assets/cropper/cropper.js' %}"></script>
+<script>
+   const imageBox = document.getElementById('image-box');
+   const imageForm = document.getElementById('image-form');
+   const confirmBtn = document.getElementById('confirm-profile');
+   const input = document.getElementById('profile_picture');
+   
+   input.addEventListener('change', function() {
+    const img_data = input.files[0];
+    const url = URL.createObjectURL(img_data);
+    imageBox.innerHTML = `<img src="${url}" id="image" class="img-fluid mb-4">`;
+
+    var image = document.getElementById('image');
+    var cropper = new Cropper(image, {
+        aspectRatio: 1,  // Kare oranı (yuvarlak görünüm için)
+        viewMode: 1,  // Resim tam serbest hareket edebilecek
+        dragMode: 'move',  // Resmi hareket ettir
+        cropBoxMovable: false,  // Kırpma kutusu sabit
+        cropBoxResizable: false,  // Boyutunu değiştirme
+        background: false,  // Arka planı gizle
+        zoomable: true,  // Zoom yapabilme
+        zoomOnWheel: true,  // Fare tekerleği ile zoom yapabilme
+        guides: false,
+
+    });
+
+    // 'Bitir' butonuna basıldığında kırpılan resmi gönder
+    confirmBtn.addEventListener('click', function(event) {
+        event.preventDefault();  // Sayfanın yeniden yüklenmesini engelle
+        var canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function(blob) {
+            var formData = new FormData(imageForm);  // Mevcut form verilerini al
+            formData.append('profile_photo', blob, input.files[0].name);  // Kırpılmış resmi ekle
+
+            $.ajax({
+                type:'POST',
+                url: imageForm.action,
+                enctype: 'multipart/form-data',
+                data: formData,
+                success: function(response){
+                    window.location.href = "/profile/settings/";  // Yeni sayfa URL'si
+
+                },
+                error: function(error){
+                    console.log('error', error)
+                    alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                                            Ups...something went wrong
+                                        </div>`
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        });
+    });
+});
+
+</script>
+{% endblock %}

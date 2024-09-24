@@ -5,7 +5,7 @@ from apps.questions import models
 class UserFilterForm(forms.ModelForm):
     class Meta:
         model=models.UserQuestionsFilterModel
-        fields= ['category', 'country', 'university', 'department', 'status', 'sort_by' ]
+        fields= ['following_only', 'category', 'country', 'university', 'department', 'status', 'sort_by' ]
         labels = {
             'category': 'Kategori',
         } 

@@ -3,7 +3,7 @@ from django.conf import settings
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.comments.models import Comment
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from apps.inputs.models import UniversitiesModel, CountriesModel
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
@@ -12,7 +12,7 @@ from django.urls import reverse
 
 
 class UserConfessionsFilterModel(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='confessions_filter')
     country = models.ForeignKey(CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
     university = models.ForeignKey(UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
     sort_by = models.CharField(max_length=255, blank=True, null=True)
@@ -23,11 +23,12 @@ class UserConfessionsFilterModel(models.Model):
 
 class ConfessionsModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                            on_delete=models.CASCADE)
+                            on_delete=models.CASCADE, related_name='confessions')
     title = models.CharField(max_length=155)
-    description = RichTextUploadingField()
+    # description = RichTextUploadingField()
+    description = models.TextField(blank=True, null=True)
     comments = GenericRelation(Comment)
-    likes = GenericRelation(Like)
+    likes = GenericRelation(Likes)
     create_at = models.DateTimeField(auto_now_add=True)
     country = models.ForeignKey(CountriesModel,
                         on_delete=models.CASCADE)

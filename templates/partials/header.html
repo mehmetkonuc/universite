@@ -126,7 +126,7 @@
                         <div class="flex-shrink-0 avatar">
                            <a href="{% url 'profile' follower.follower.username %}">
                               <img
-                                 src="{{ follower.follower.profilepicturemodel.profile_photo.url }}"
+                                 src="{{ follower.follower.profile_photo.profile_photo.url }}"
                                  alt="Avatar"
                                  class="rounded-circle"
                                  />
@@ -146,7 +146,7 @@
                                  </div>
                               </div>
                               <small class="text-muted">
-                              {{ follower.follower.educationalinformationmodel.University }}
+                              {{ follower.follower.educationalinformationmodel.university }}
                               </small>
                            </a>
                         </div>
@@ -215,7 +215,7 @@
                         <div class="flex-shrink-0 avatar">
                            <a href="{% url 'chat' chat.id %}">
                               <img
-                                 src="{{ chat.second_user.profilepicturemodel.profile_photo.url }}"
+                                 src="{{ chat.second_user.profile_photo.profile_photo.url }}"
                                  alt="Avatar"
                                  class="rounded-circle"
                                  />
@@ -235,7 +235,7 @@
                                  </div>
                               </div>
                               <small class="text-muted">
-                              {{ chat.second_user.educationalinformationmodel.University }}
+                              {{ chat.second_user.educationalinformationmodel.university }}
                               </small>
                            </a>
                         </div>
@@ -243,7 +243,7 @@
                         <div class="flex-shrink-0 avatar">
                            <a href="{% url 'chat' chat.id %}">
                               <img
-                                 src="{{ chat.first_user.profilepicturemodel.profile_photo.url }}"
+                                 src="{{ chat.first_user.profile_photo.profile_photo.url }}"
                                  alt="Avatar"
                                  class="rounded-circle"
                               />
@@ -263,7 +263,7 @@
                                  </div>
                               </div>
                               <small class="text-muted">
-                              {{ chat.first_user.educationalinformationmodel.University }}
+                              {{ chat.first_user.educationalinformationmodel.university }}
                               </small>
                            </a>
                         </div>
@@ -332,8 +332,8 @@
                            <div class="flex-shrink-0 me-3 card-text ">
                               <a href="{% url 'profile' notification.action_user.username %}">
                                  <div class="avatar">
-                                    {% if notification.action_user.profilepicturemodel.profile_photo %}
-                                    <img src="{{ notification.action_user.profilepicturemodel.profile_photo.url }}" alt class="rounded-circle" />
+                                    {% if notification.action_user.profile_photo.profile_photo %}
+                                    <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt class="rounded-circle" />
                                     {% else %}
                                     <img src="{% static 'assets/img/avatars/1.png' %}" alt class="rounded-circle" />
                                     {% endif %}
@@ -387,13 +387,13 @@
                class="nav-link dropdown-toggle hide-arrow p-0"
                href="javascript:void(0);"
                data-bs-toggle="dropdown">
-               <div class="avatar avatar-online">
-                  {% if user.profilepicturemodel.profile_photo %}
-                  {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+               <div class="avatar">
+                  {% if user.profile_photo.profile_photo %}
+                  {% with profile_photo_url=user.profile_photo.profile_photo.url %}
                   <img src="{{ profile_photo_url }}" alt class="rounded-circle" />
                   {% endwith %}
                   {% else %}
-                  <img src="{% static 'assets/img/avatars/14.png' %}" alt class="rounded-circle" />
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{ user.first_name|first }}{{ user.last_name|first }}</span>
                   {% endif %}
                </div>
             </a>
@@ -402,13 +402,13 @@
                   <a class="dropdown-item mt-0" href="{% url 'profile' user.username %}">
                      <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-2">
-                           <div class="avatar avatar-online">
-                              {% if user.profilepicturemodel.profile_photo %}
-                              {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+                           <div class="avatar">
+                              {% if user.profile_photo.profile_photo %}
+                              {% with profile_photo_url=user.profile_photo.profile_photo.url %}
                               <img src="{{ profile_photo_url }}" alt class="rounded-circle" />
                               {% endwith %}
                               {% else %}
-                              <img src="{% static 'assets/img/avatars/14.png' %}" alt class="rounded-circle" />
+                              <span class="avatar-initial rounded-circle bg-label-primary">{{ user.first_name|first }}{{ user.last_name|first }}</span>
                               {% endif %}
                            </div>
                         </div>
@@ -429,13 +429,19 @@
                <li>
                   <a class="dropdown-item" href="{% url 'profile' user.username %}">
                   <i class="ti ti-user-check me-2"></i>
-                  <span class="align-middle">Profil</span>
+                  <span class="align-middle">Profilim</span>
                   </a>
                </li>
                <li>
                   <a class="dropdown-item" href="{% url 'profile_settings' %}">
                   <i class="ti ti-settings me-2"></i>
-                  <span class="align-middle">Settings</span>
+                  <span class="align-middle">Hesap Ayarları</span>
+                  </a>
+               </li>
+               <li>
+                  <a class="dropdown-item" href="{% url 'privacy_settings' %}">
+                  <i class="ti ti-lock me-2"></i>
+                  <span class="align-middle">Gizlilik Ayarları</span>
                   </a>
                </li>
                <li>

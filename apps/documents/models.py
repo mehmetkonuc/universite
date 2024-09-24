@@ -6,7 +6,7 @@ from django.db.models.signals import pre_save, post_delete
 from apps.blogs.utils import slugify_tr
 from ckeditor_uploader.fields import RichTextUploadingField
 from apps.comments.models import Comment
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.timezone import now
 from django.contrib.contenttypes.models import ContentType
@@ -42,7 +42,7 @@ def delete_documents_file(sender, instance, **kwargs):
 
 
 class DocumentsFolderModel(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='documents_folders')
     name = models.CharField(max_length=155)
     
     def __str__(self):
@@ -50,8 +50,9 @@ class DocumentsFolderModel(models.Model):
 
 
 class UserDocumentsFilterModel(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='documents_filter')
     title = models.CharField(max_length=255, blank=True, null=True)
+    following_only = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
     university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
     department = models.ForeignKey(inputs.DepartmentsModel, on_delete=models.SET_NULL, null=True, blank=True)
@@ -64,17 +65,18 @@ class UserDocumentsFilterModel(models.Model):
 
 class DocumentsModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                            on_delete=models.CASCADE)
+                            on_delete=models.CASCADE, related_name='documents')
     folder = models.ForeignKey(DocumentsFolderModel,
                             on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    content = RichTextUploadingField()
+    # content = RichTextUploadingField()
+    content = models.TextField()
     documents = GenericRelation(DocumentsUploadModel)
     create_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
     is_published = models.BooleanField(default=False)
     comments = GenericRelation(Comment)
-    likes = GenericRelation(Like)
+    likes = GenericRelation(Likes)
     
     def __str__(self):
         return self.title

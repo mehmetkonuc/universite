@@ -1,4 +1,4 @@
-.card img {
+.card img{
     height: 200px; /* İstediğiniz yükseklik */
     object-fit: cover; /* Resmi alanın tamamına sığdır */
     width: 100%; /* Resmi genişliğe yay */

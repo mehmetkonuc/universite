@@ -6,7 +6,7 @@ from mptt.forms import TreeNodeChoiceField
 class UserFilterForm(forms.ModelForm):
     class Meta:
         model=UserFilterModel
-        fields= ['category', 'country', 'university', 'department', 'status', 'sort_by' ]
+        fields= ['category', 'following_only', 'country', 'university', 'department', 'status', 'sort_by' ]
         labels = {
             'category': 'Kategori',
         } 

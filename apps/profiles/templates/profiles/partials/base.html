@@ -10,37 +10,37 @@
       <div class="card mb-6">
          <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
             <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-               {% if profile.profilepicturemodel.profile_photo %}
-               {% with profile_photo_url=profile.profilepicturemodel.profile_photo.url %}
+               {% if profile.profile_photo.profile_photo %}
+               {% with profile_photo_url=profile.profile_photo.profile_photo.url %}
                <img
                   src="{{ profile_photo_url }}"
                   alt="user image"
                   class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
                {% endwith %}
                {% else %}
+               <!-- <span class="avatar-initial rounded-circle bg-warning">{{ user.first_name|first }}{{ user.last_name|first }}</span> -->
                <img
-                  src="{% static 'assets/img/avatars/14.png' %}"
+                  src="{% static 'assets/img/avatars/privacy.jpg' %}"
                   alt="user image"
                   class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
                {% endif %}
-
             </div>
             <div class="flex-grow-1 mt-3 mt-lg-5">
                <div
                   class="d-flex align-items-md-end justify-content-md-between  mx-5 flex-md-row flex-column gap-4">
                   <div class="user-profile-info">
-                     <h4 class="mb-0 mt-lg-6">{{profile.first_name}} {{profile.last_name}} <span class="badge badge-center bg-success bg-glow">8.2</span></h4>
+                     <h4 class="mb-0 mt-lg-6">{{profile.first_name}} {{profile.last_name}} {% if profile.privacy.is_private %}<i class="ti ti-lock"></i>{%endif%}</h4>
                      <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kullanıcı Adı">@{{profile.username}}</span>
                      <ul
                         class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                           <i class="ti ti-building-bank ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.University}}</span>
+                           <i class="ti ti-building-bank ti-lg"></i><span class="fw-medium">{{profile.educational_information.university}}</span>
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                           <i class="ti ti-address-book ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.Department}}</span>
+                           <i class="ti ti-address-book ti-lg"></i><span class="fw-medium">{{profile.educational_information.department}}</span>
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                           <i class="ti ti-school ti-lg"></i><span class="fw-medium">{{profile.educationalinformationmodel.Status}}</span>
+                           <i class="ti ti-school ti-lg"></i><span class="fw-medium">{{profile.educational_information.status}}</span>
                         </li>
                      </ul>
                      <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
@@ -81,15 +81,24 @@
    </div>
 </div>
 <!--/ Header -->
+
+{%if profile.privacy.is_private and profile != user and not followers  %}
+
+Profil Gizli
+
+{%else %}
 {% block profile-nav %}
 {% include 'profiles/partials/profile-nav.html' %}            
 {% endblock %}
 
 {% block profile_content %}
 {% endblock %}
-
+{%endif%}
 
 {% endblock %}
+
+
+
 {% block extra_javascript %}
 <script>
    $(document).ready(function(){
@@ -133,6 +142,8 @@
        });
    });
 </script>
-
-
 {% endblock %}
+
+{% block profile_javascript %}
+
+{%endblock%}

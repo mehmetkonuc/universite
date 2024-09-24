@@ -2,9 +2,27 @@ import django_filters
 from .models import MarketPlaceModel, Category
 from apps.inputs.models import UniversitiesModel, CountriesModel, DepartmentsModel, StatusModel
 from django import forms
+from apps.follow.models import Follow
+from django.db.models import Q
 
-class UserFilter(django_filters.FilterSet):
+
+class Filter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='icontains', label='Arama', help_text = 'Makale Başlıklarında Kelime Ara')
+
+    # Takip edilen kullanıcıların paylaşımlarını filtrelemek için ChoiceField
+    following_only = django_filters.ChoiceFilter(
+        choices=[
+            ('following', 'Sadece Takip Ettiklerim')
+        ],
+        method='filter_following_choice',
+        label='Gösterim Seçeneği',
+        empty_label='Herkes',
+        widget=forms.Select(attrs={
+            'class': 'selectpicker w-100',
+            'data-style': 'btn-default',
+        })
+    )
+
     category = django_filters.ModelChoiceFilter(
         queryset=Category.objects.all(),
         label='Kategori',
@@ -19,7 +37,7 @@ class UserFilter(django_filters.FilterSet):
     
     country = django_filters.ModelChoiceFilter(
         queryset=CountriesModel.objects.all(),
-        field_name='user__educationalinformationmodel__Country',
+        field_name='user__educationalinformationmodel__country',
         label='Ülke',
         help_text ='Yazarın Ülkesi',
         empty_label='Tüm Ülkeler',
@@ -31,7 +49,7 @@ class UserFilter(django_filters.FilterSet):
     )
     university = django_filters.ModelChoiceFilter(
         queryset=UniversitiesModel.objects.all(),
-        field_name='user__educationalinformationmodel__University',
+        field_name='user__educationalinformationmodel__university',
         label='Üniversite',
         help_text ='Yazarın Üniversitesi',
         empty_label='Tüm Üniversiteler',
@@ -44,7 +62,7 @@ class UserFilter(django_filters.FilterSet):
 
     department = django_filters.ModelChoiceFilter(
         queryset=DepartmentsModel.objects.all(),
-        field_name='user__educationalinformationmodel__Department',
+        field_name='user__educationalinformationmodel__department',
         label='Bölüm',
         help_text ='Yazarın Bölümü',
         empty_label='Tüm Bölümler',
@@ -57,7 +75,7 @@ class UserFilter(django_filters.FilterSet):
 
     status = django_filters.ModelChoiceFilter(
         queryset=StatusModel.objects.all(),
-        field_name='user__educationalinformationmodel__Status',
+        field_name='user__educationalinformationmodel__status',
         label='Durum',
         help_text ='Yazarın Mezuniyet Durumu',
         empty_label='Tüm Durumlar',
@@ -85,14 +103,39 @@ class UserFilter(django_filters.FilterSet):
 
     class Meta:
         model = MarketPlaceModel
-        fields = ['sort_by', 'title', 'category', 'price_min', 'price_max', 'country', 'city', 'university', 'department', 'status']
+        fields = ['sort_by', 'following_only', 'title', 'category', 'price_min', 'price_max', 'country', 'city', 'university', 'department', 'status']
         
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.filters["sort_by"].field.widget.attrs = {
+    #         'class': 'selectpicker w-100',
+    #         'data-style': 'btn-default',       
+    #     }
+
+    def filter_following_choice(self, queryset, name, value):
+        if value == 'following':
+            # Kullanıcının takip ettiği kişilerin ve kendisinin makaleleri filtreleniyor
+            following_users = Follow.objects.filter(follower=self.request.user).values_list('following', flat=True)
+            return queryset.filter(user__in=list(following_users) + [self.request.user])
+        return queryset  # Eğer 'all' seçiliyse, tüm makaleleri getir
+    
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        # Her zaman gizlilik kontrolünü çalıştırmak için
+        super().__init__(data, queryset, request=request, prefix=prefix)
         self.filters["sort_by"].field.widget.attrs = {
             'class': 'selectpicker w-100',
             'data-style': 'btn-default',       
         }
+        if request and hasattr(request, 'user'):
+            # Takip edilen kullanıcıları filtrele
+            following_users = Follow.objects.filter(follower=request.user).select_related('following').values_list('following', flat=True)
+            
+            # Profil gizli değil veya privacy kaydı yoksa (isnull) kullanıcıları göster
+            self.queryset = self.queryset.filter(
+                Q(user__privacy__is_private=False) | 
+                Q(user__privacy__isnull=True) |  # privacy kaydı olmayan kullanıcılar
+                Q(user__in=list(following_users) + [request.user])
+            )
 
 
 class MyFilter(django_filters.FilterSet):

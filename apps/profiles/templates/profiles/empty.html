@@ -38,7 +38,7 @@
               <form method="post" enctype="multipart/form-data" id="profileImageForm">
                 {% csrf_token %}
                 {{ form.profile_photo }}
-                <img id="image" src="{% if user.profilepicturemodel.profile_photo %}{{ user.profilepicturemodel.profile_photo.url }}{% else %}default.jpg{% endif %}" alt="Profile Image">
+                <img id="image" src="{% if user.profile_photo.profile_photo %}{{ user.profile_photo.profile_photo.url }}{% else %}default.jpg{% endif %}" alt="Profile Image">
                 <input type="hidden" id="cropped_image_data" name="cropped_image_data">
                 <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1">
 

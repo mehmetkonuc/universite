@@ -5,7 +5,7 @@ from .models import DocumentsModel, DocumentsFolderModel, UserDocumentsFilterMod
 class UserFilterForm(forms.ModelForm):
     class Meta:
         model=UserDocumentsFilterModel
-        fields= ['country', 'university', 'department', 'status', 'sort_by' ]
+        fields= ['following_only', 'country', 'university', 'department', 'status', 'sort_by' ]
         labels = {
             'category': 'Kategori',
         } 

@@ -18,27 +18,13 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.views.static import serve
-from . import views
-from django.contrib.auth import views as auth_views
-from apps.post.views import PostView
+
+
 urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root' : settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root' : settings.STATIC_ROOT}),
+    path('', include('apps.visitor.urls')),
     path('admin/', admin.site.urls),
-    path('', PostView.as_view(), name='home'),
-    #MİSAFİR KULLANICI ALANI
-    path('login/', views.login_view, name='login'),
-    path('register/', views.register_view, name='register'),
-    path('register/two-step', views.register_two_step_view, name='register_two_step'),
-    path('logout/', views.logout_view, name='logout'),
-    path('password_reset/', views.CustomPasswordResetView.as_view(
-        template_name='guest/password_reset.html'), name='password_reset'),
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(
-        template_name='guest/password_reset_done.html'), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
-        template_name='guest/password_reset_confirm.html'), name='password_reset_confirm'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
-        template_name='guest/password_reset_complete.html'), name='password_reset_complete'),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     #UYGULAMALARIM
     path('profile/', include('apps.profiles.urls')),

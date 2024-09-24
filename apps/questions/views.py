@@ -4,7 +4,7 @@ from .forms import QuestionsAddForm, UserFilterForm
 from .filters import UserFilter, MyFilter
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from apps.comments.views import CommentView
 from django.contrib import messages
 from django.db.models import Count
@@ -31,7 +31,7 @@ class QuestionsView(View):
         )
         
         # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data)
+        filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
         filtered_data = filter.qs
         
         # Apply sorting
@@ -70,7 +70,7 @@ class QuestionsView(View):
                 like_count=Count('likes', distinct=True),
                 comment_count=Count('comments', distinct=True)
                 )  
-            filter = self.filter_form(data=request.POST, queryset=data)
+            filter = self.filter_form(data=request.POST, queryset=data, request=request)
             filtered_data = filter.qs
             # Apply sorting
             sorted_data = filtered_data
@@ -164,22 +164,30 @@ class DraftQuestionsView(View):
 
 class QuestionsDetailsView(View):
     model_questions = QuestionsModel
-    model_likes = Like
+    model_likes = Likes
     template = 'questions/details.html'
+    paginate_by = 2
     context = {
         }
 
     def get(self, request, slug):
         data = get_object_or_404(self.model_questions, slug=slug)
-        content_type = ContentType.objects.get_for_model(data)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        liked = data.likes.filter(user=request.user)
+        comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        # content_type = ContentType.objects.get_for_model(data)
+        # liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        # comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        # liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        paginator = Paginator(comments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         self.context.update({
             'siteTitle':data.title,
             'data': data,
-            'comments': comments,
+            'comments': page_obj,
             'liked' : liked,
             'liked_comment' : liked_comment,
         })
@@ -188,16 +196,20 @@ class QuestionsDetailsView(View):
 
     def post(self, request, slug):
         data = get_object_or_404(self.model_questions, slug=slug)
-        content_type = ContentType.objects.get_for_model(data)
-        form = CommentView.comment_post(request=request, content_type=content_type, object_id=data.id)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        form = CommentView.comment_post(request=request, content_type=ContentType.objects.get_for_model(data), object_id=data.id)
+
+        liked = data.likes.filter(user=request.user)
+        comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        paginator = Paginator(comments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         self.context.update({
             'form': form,
             'data' : data,
-            'comments': comments,
+            'comments': page_obj,
             'liked' : liked,
             'liked_comment' : liked_comment,
             })

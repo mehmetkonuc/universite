@@ -299,8 +299,8 @@ id="layout-navbar">
         data-bs-toggle="dropdown">
         <div class="avatar avatar-online">
 
-          {% if user.profilepicturemodel.profile_photo %}
-          {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+          {% if user.profile_photo.profile_photo %}
+          {% with profile_photo_url=user.profile_photo.profile_photo.url %}
           <img src="{{ profile_photo_url }}" alt class="rounded-circle" />
           {% endwith %}
           {% else %}
@@ -321,8 +321,8 @@ id="layout-navbar">
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0 me-2">
                 <div class="avatar avatar-online">
-                  {% if user.profilepicturemodel.profile_photo %}
-                  {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+                  {% if user.profile_photo.profile_photo %}
+                  {% with profile_photo_url=user.profile_photo.profile_photo.url %}
                   <img src="{{ profile_photo_url }}" alt class="rounded-circle" />
                   {% endwith %}
                   {% else %}

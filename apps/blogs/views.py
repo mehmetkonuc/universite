@@ -3,7 +3,7 @@ from django.views import View
 from apps.blogs.forms import ArticleAddForm, UserFilterForm
 from apps.blogs.models import ArticlesModel, Category, UserFilterModel
 from django.contrib.contenttypes.models import ContentType
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from apps.comments.views import CommentView
 from django.db.models import Count
 from django.core.paginator import Paginator
@@ -31,7 +31,7 @@ class ArticlesView(View):
         )
         
         # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data)
+        filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
         filtered_data = filter.qs
         
         # Apply sorting
@@ -70,7 +70,7 @@ class ArticlesView(View):
                 like_count=Count('likes', distinct=True),
                 comment_count=Count('comments', distinct=True)
                 )  
-            filter = self.filter_form(data=request.POST, queryset=data)
+            filter = self.filter_form(data=request.POST, queryset=data, request=request)
             filtered_data = filter.qs
             # Apply sorting
             sorted_data = filtered_data
@@ -206,22 +206,28 @@ class ArticleAddView(View):
 
 class ArticlesDetailsView(View):
     model_article = ArticlesModel
-    model_likes = Like
+    model_likes = Likes
     template = 'blogs/details.html'
+    paginate_by = 12
     context = {
         }
 
     def get(self, request, slug):
         data = get_object_or_404(self.model_article, slug=slug)
-        content_type = ContentType.objects.get_for_model(data)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        liked = data.likes.filter(user=request.user)
+        comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        # comments = data.comments.filter(parent__isnull=True)
+        # liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        paginator = Paginator(comments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         self.context.update({
             'siteTitle':data.title,
             'data': data,
-            'comments': comments,
+            'comments': page_obj,
             'liked' : liked,
             'liked_comment' : liked_comment,
         })
@@ -231,15 +237,20 @@ class ArticlesDetailsView(View):
     def post(self, request, slug):
         data = get_object_or_404(self.model_article, slug=slug)
         content_type = ContentType.objects.get_for_model(data)
-        form = CommentView.comment_post(request=request, content_type=content_type, object_id=data.id)
-        liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
+        liked = data.likes.filter(user=request.user)
+        comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
         liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        
+        form = CommentView.comment_post(request=request, content_type=content_type, object_id=data.id)
+
+        paginator = Paginator(comments, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         self.context.update({
             'form': form,
             'data' : data,
-            'comments': comments,
+            'comments': page_obj,
             'liked' : liked,
             'liked_comment' : liked_comment,
             })
@@ -298,6 +309,6 @@ def delete_article(request, article_id):
 
     if delete_article.user == request.user or request.user.is_superuser:
         delete_article.delete()
-        messages.success(request, 'Makale Başarıyla silindi.')
+        messages.success(request, 'Başarıyla silindi.')
 
     return redirect('my_articles')

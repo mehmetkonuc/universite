@@ -1,0 +1,141 @@
+<div class="row justify-content-center infinite-container">
+    {% for post in data %}
+    <div class="col-lg-8 mb-4 infinite-item">
+       <!-- Posts List  -->
+       <div class="card card-border-shadow-primary">
+          <div class="card-header d-flex justify-content-between mb-0">
+             <div class="d-flex align-items-center">
+                <a href="{% url 'profile' post.user.username %}" class="d-flex text-decoration-none">
+                   <div class="avatar avatar-md me-2 flex-shrink-0">
+                      {% if post.user.profile_photo.profile_photo %}
+                      <img src="{{ post.user.profile_photo.profile_photo.url }}" 
+                         alt="Avatar" 
+                         class="rounded-circle" 
+                         />
+                      {% else %}
+                      <span class="avatar-initial rounded-circle bg-label-primary">{{ post.user.first_name|first }}{{ post.user.last_name|first }}</span>
+                      {% endif %}
+                   </div>
+                   <div class="d-flex flex-column">
+                      <div class="me-2 h5 mb-1" style="line-height: 1.2; margin-bottom: 0;">
+                         {{ post.user.first_name }} {{ post.user.last_name }} 
+                         <small class="text-muted h6">
+                         bir gönderi paylaştı.
+                         </small>
+                      </div>
+                      <small class="text-muted">{{ post.user.educational_information.university }}</small>
+                   </div>
+                </a>
+             </div>
+             <div class="dropdown">
+                <button class="btn p-0" type="button" data-id="{{ post.id }}" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                   {% if post.user.username == user.username or user.is_superuser %}
+                   <a class="dropdown-item text-danger delete-post-btn" href="#" data-id="{{ post.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Sil</a>
+                   {% endif %}
+                </div>
+             </div>
+          </div>
+          <div class="card-body">
+             <p class="text-black"> {{ post.content }} </p>
+             <div class="gallery-container mt-4">
+                {% for image in post.photos.all %}
+                <div class="gallery-item">
+                   <a href="{{ image.image.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                   <img src="{{ image.image.url }}" class="border" alt="Post Image">
+                   </a>
+                </div>
+                {% endfor %}
+             </div>
+             <hr />
+             <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center">
+                   <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
+                   <i class="ti ti-heart{% if post.id in liked %}-filled{% endif %} text-primary"></i>
+                   <span class="like-count">{% if post.id in liked %}Beğendin {% else %}Beğen{% endif %} ({{ post.likes.count }})</span>
+                   </a>
+                   <a href="{% url 'post_detail' post.id %}#comments" class="text-body me-3">
+                   <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ post.comments.count }})
+                   </a>
+                </div>
+                <div class="ms-auto">
+                   <small class="text-muted">{{ post.create_at }}</small>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+    {% endfor %}
+ </div>
+<!-- Post Delete Modal -->
+ <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="deleteModalTitle">Silme Uyarısı</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+         <p>Paylaşımı Silmek İstediğinizden emin misiniz?</p>
+       </div>
+       <div class="modal-footer">
+         <!-- Bu link dinamik olarak güncellenecek -->
+         <a class="btn btn-primary" id="confirmDeleteBtn" href="#">Sil</a>
+         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
+       </div>
+     </div>
+   </div>
+ </div>
+ 
+
+
+ <!-- loading  -->
+<div class="row justify-content-center justify-content-center">
+ <div class="col-lg-8 loading-container">
+   <div class="loading" style="display: none;" >
+      <div class="card card-border-shadow-primary">
+         <div class="card-header d-flex justify-content-between mb-0">
+           <div class="d-flex align-items-center">
+             <div class="avatar avatar-md me-2 flex-shrink-0">
+               <!-- Skeleton for Avatar -->
+               <div class="skeleton skeleton-circle skeleton-avatar"></div>
+             </div>
+             <div class="d-flex flex-column">
+               <!-- Skeleton for Name and University -->
+               <div class="skeleton skeleton-text skeleton-name"></div>
+               <div class="skeleton skeleton-text skeleton-university mt-1"></div>
+             </div>
+           </div>
+           <!-- Skeleton for Dropdown Button -->
+           <div class="skeleton skeleton-icon skeleton-dots"></div>
+         </div>
+         <div class="card-body">
+           <!-- Skeleton for Post Content -->
+           <div class="skeleton skeleton-text skeleton-content mb-2"></div>
+           <div class="skeleton skeleton-text skeleton-content"></div>
+           <hr />
+     
+           <!-- Skeleton for Buttons and Date -->
+           <div class="d-flex justify-content-center align-items-center">
+             <div class="skeleton skeleton-text skeleton-btn"></div>
+             <div class="skeleton skeleton-text skeleton-btn ms-3"></div>
+             <div class="ms-auto">
+               <div class="skeleton skeleton-text skeleton-date"></div>
+             </div>
+           </div>
+         </div>
+       </div>
+   </div>
+   </div>
+</div>
+<!-- paginator -->
+ <div class="row">
+    <div class="col-lg-8">
+       {% if data.has_next %}
+       <a class="infinite-more-link" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ data.next_page_number }}">Sonraki</a>
+       {% endif %}
+    </div>
+ </div>

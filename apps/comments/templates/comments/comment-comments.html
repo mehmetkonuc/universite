@@ -2,7 +2,8 @@
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-comments.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comments.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-form.css' %}" />
 {%endblock%}
 {% block content %}
 <div class="row justify-content-center mb-6">
@@ -13,7 +14,7 @@
    </div>
 </div>
 <div class="row justify-content-center">
-   <div class="col-md-8 col-xxl-8 mb-4">
+   <div class="col-lg-8 mb-4">
       <ul class="timeline mb-0">
          <li class="timeline-item timeline-item-transparent">
             <span class="timeline-point timeline-point-primary"></span>
@@ -24,7 +25,7 @@
                   </div>
                   <div class="card-body d-flex align-items-center">
                      <a href="{{content.content_url}}">
-                        <h1>{{content.content_title}}</h1>
+                        <h4>{{content.content_title}}</h4>
                      </a>
                   </div>
                </div>
@@ -41,8 +42,8 @@
                            <div class="d-flex">
                               <a href="{% url 'profile' comments.parent.user.username %}">
                                  <div class="avatar avatar-md me-2">
-                                    {% if comments.parent.user.profilepicturemodel.profile_photo %}
-                                    {% with profile_photo_url=comments.parent.user.profilepicturemodel.profile_photo.url %}
+                                    {% if comments.parent.user.profile_photo.profile_photo %}
+                                    {% with profile_photo_url=comments.parent.user.profile_photo.profile_photo.url %}
                                     <img
                                        src="{{ profile_photo_url }}"
                                        alt="Avatar"
@@ -80,8 +81,8 @@
                      <div class="gallery-container mt-4">
                         {% for image in comments.parent.photos.all %}
                         <div class="gallery-item">
-                           <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
-                           <img src="{{ image.photo.url }}" alt="Post Image">
+                           <a href="{{ image.image.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                           <img src="{{ image.image.url }}" alt="Post Image">
                            </a>
                         </div>
                         {% endfor %}
@@ -115,8 +116,8 @@
                            <div class="d-flex">
                               <a href="{% url 'profile' comments.user.username %}">
                                  <div class="avatar avatar-md me-2">
-                                    {% if comments.user.profilepicturemodel.profile_photo %}
-                                    {% with profile_photo_url=comments.user.profilepicturemodel.profile_photo.url %}
+                                    {% if comments.user.profile_photo.profile_photo %}
+                                    {% with profile_photo_url=comments.user.profile_photo.profile_photo.url %}
                                     <img
                                        src="{{ profile_photo_url }}"
                                        alt="Avatar"
@@ -154,8 +155,8 @@
                      <div class="gallery-container mt-4">
                         {% for image in comments.photos.all %}
                         <div class="gallery-item">
-                           <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
-                           <img src="{{ image.photo.url }}" alt="Post Image">
+                           <a href="{{ image.image.url }}" data-fancybox="gallery-{{ post.post.id }}">
+                           <img src="{{ image.image.url }}" alt="Post Image">
                            </a>
                         </div>
                         {% endfor %}
@@ -181,6 +182,7 @@
       </ul>
    </div>
 </div>
+
 <div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -200,21 +202,26 @@
       </div>
    </div>
 </div>
-<div class="row justify-content-center" id="comments_form">
-   <div class="col-md-8 col-xxl-8 mb-4">
+
       {% block comment-form %}
-      {% include 'comments/form-comment.html' %}
+         {% include 'comments/form-comment.html' %}
       {% endblock comment-form %}
-      {% for comment in comments.replies.all %}
-      {% block comment %}
-      {% include 'comments/comments.html' %}
-      {% endblock comment %}
-      {% endfor %}
-   </div>
-</div>
+
+      {% with comments=comments.replies.all %}
+         {% block comment %}
+            {% include 'comments/comments.html' %}
+         {% endblock comment %}
+      {% endwith %}
+
 {%endblock%}
 {% block extra_javascript %}
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
-<script src="{% static 'assets/js/pages/comments/comment-comments.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
+<script src="{% static 'assets/js/pages/comments/comment-form.js' %}"></script>
+<script src="{% static 'assets/js/pages/comments/comments.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 {%endblock%}

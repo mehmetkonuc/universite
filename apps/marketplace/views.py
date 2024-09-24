@@ -1,29 +1,30 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from apps.marketplace.models import MarketPlaceModel, UserMarketPlaceFilterModel, Category, MarketPlaceImagesModel
-from apps.marketplace.forms import MarketPlaceForm, UserFilterForm
+from apps.marketplace.models import MarketPlaceModel, MarketPlaceFilterModel, Category, MarketPlaceImagesModel
+from apps.marketplace.forms import MarketPlaceForm, FilterForm
 from django.contrib.contenttypes.models import ContentType
-from apps.marketplace.filters import UserFilter, MyFilter
+from apps.marketplace.filters import Filter, MyFilter
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 # Create your views here.
 class MarketPlaceView(View):
     model_data = MarketPlaceModel
-    user_filter_model = UserMarketPlaceFilterModel
-    filter_form = UserFilter
-    user_filter_form = UserFilterForm
+    filter_model = MarketPlaceFilterModel
+    filter = Filter
+    filter_form = FilterForm
     template = 'marketplace/index.html'
     context = {'siteTitle': 'İlanlar'}
     paginate_by = 4
 
     def get(self, request):
-        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
+        user_filter, created = self.filter_model.objects.get_or_create(user=request.user)
         data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
         
         # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data)
+        filter = self.filter(model_to_dict(user_filter), queryset=data, request=request)
         filtered_data = filter.qs
         
         # Apply sorting
@@ -42,7 +43,7 @@ class MarketPlaceView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
-        user_filter = self.user_filter_model.objects.get(user=request.user)
+        user_filter = self.filter_model.objects.get(user=request.user)
         
         if 'reset_filter' in request.POST:
             # Tüm filtre alanlarını temizle
@@ -52,14 +53,14 @@ class MarketPlaceView(View):
             user_filter.save()
             return self.get(request)  
         else:
-            form = self.user_filter_form(request.POST, instance = user_filter)
+            form = self.filter_form(request.POST, instance = user_filter)
             if form.is_valid():
                 form_data = form.save(commit=False)
                 form_data.user=request.user
                 form_data.save()
             data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
  
-            filter = self.filter_form(data=request.POST, queryset=data)
+            filter = self.filter(data=request.POST, queryset=data, request=request)
             filtered_data = filter.qs
             # Apply sorting
             sorted_data = filtered_data
@@ -175,6 +176,11 @@ class MarketPlaceAddView(View):
                     object_id=form_data.pk,
                     image=image
                 )
+            if form_data.is_published:
+                messages.success(request, 'Başarıyla Yayınlandı')
+            else:
+                messages.success(request, 'Başarıyla Taslaklara Kaydedildi.')
+
             return redirect('marketplace_details', slug=form_data.slug)
 
         # categories = self.model_category.objects.filter(parent__isnull=True)
@@ -250,6 +256,10 @@ class MarketPlaceEditView(View):
             if deleted_images:
                 image_ids = deleted_images.split(',')
                 self.model_images.objects.filter(id__in=image_ids).delete()
+            if form_data.is_published:
+                messages.success(request, 'Başarıyla Yayınlandı')
+            else:
+                messages.success(request, 'Başarıyla Taslaklara Kaydedildi.')
 
             return redirect('marketplace_details', slug=form_data.slug)
 
@@ -263,5 +273,6 @@ def delete_marketplace(request, marketplace_id):
 
     if delete.user == request.user or request.user.is_superuser:
         delete.delete()
+        messages.success(request, 'Başarıyla silindi.')
 
-    return redirect('marketplace')
+    return redirect('my_marketplace')

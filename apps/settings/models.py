@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class SiteSettingsModel(models.Model):
-    siteName = models.CharField(max_length=50, verbose_name="Site Adı")
-    siteDescription = models.TextField(verbose_name="Site Açıklaması")
+    site_name = models.CharField(max_length=50, verbose_name="Site Adı")
+    site_description = models.TextField(verbose_name="Site Açıklaması")
     
     def __str__(self):
-        return self.siteName
+        return self.site_name
     
     class Meta:
         verbose_name = "Site Ayarı"

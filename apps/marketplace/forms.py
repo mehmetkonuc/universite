@@ -1,11 +1,11 @@
 from django import forms
-from apps.marketplace.models import MarketPlaceModel, UserMarketPlaceFilterModel
+from apps.marketplace.models import MarketPlaceModel, MarketPlaceFilterModel
 from apps.inputs.models import Currency
 
-class UserFilterForm(forms.ModelForm):
+class FilterForm(forms.ModelForm):
     class Meta:
-        model=UserMarketPlaceFilterModel
-        fields= ['category', 'country', 'city', 'university', 'department', 'status', 'sort_by' ]
+        model=MarketPlaceFilterModel
+        fields= ['following_only', 'category', 'country', 'city', 'university', 'department', 'status', 'sort_by' ]
         labels = {
             'category': 'Kategori',
         } 

@@ -3,18 +3,45 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from apps.photos.models import PhotosModel
 from django.urls import reverse
+from django.utils.timezone import now
+from django.core.files.storage import default_storage
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+
+def upload_to(instance, filename):
+    return f'comments/{now().year}/{now().month}/{filename}'
+
+
+class CommentPhotos(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_photos')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    image = models.ImageField(upload_to=upload_to)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+@receiver(post_delete, sender=CommentPhotos)
+def delete_photo_file(sender, instance, **kwargs):
+    if instance.image:
+        if default_storage.exists(instance.image.name):
+            default_storage.delete(instance.image.name)
+
+
 
 class Comment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     text = models.TextField()
-    likes = GenericRelation(Like)
-    photos = GenericRelation(PhotosModel)
+    likes = GenericRelation(Likes)
+    photos = GenericRelation(CommentPhotos)
     created_at = models.DateTimeField(auto_now_add=True)
 
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')

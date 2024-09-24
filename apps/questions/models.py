@@ -4,7 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.photos.models import PhotosModel
 from apps.comments.models import Comment
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -25,8 +25,9 @@ class Category(MPTTModel):
 
 
 class UserQuestionsFilterModel(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='questions_filter')
     title = models.CharField(max_length=255, blank=True, null=True)
+    following_only = models.CharField(max_length=255, blank=True, null=True)
     category = TreeForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
     university = models.ForeignKey(inputs.UniversitiesModel, on_delete=models.SET_NULL, null=True, blank=True)
@@ -40,11 +41,12 @@ class UserQuestionsFilterModel(models.Model):
 
 class QuestionsModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                            on_delete=models.CASCADE)
+                            on_delete=models.CASCADE, related_name='questions')
     title = models.CharField(max_length=155)
-    content = RichTextUploadingField()
+    # content = RichTextUploadingField()
+    content = models.TextField(blank=True, null=True)
     comments = GenericRelation(Comment)
-    likes = GenericRelation(Like)
+    likes = GenericRelation(Likes)
     create_at = models.DateTimeField(auto_now_add=True)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
     is_published = models.BooleanField(default=False)

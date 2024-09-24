@@ -1,114 +1,114 @@
 {% extends 'partials/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/css/pages/post.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/post/index.css' %}" />
+
 {% endblock extra_css%}
 {% block content %}
-<div class="row">
-   <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
-      <div class="d-flex gap-4">
-         <button class="btn btn-sm btn-label-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#add-post"><i class="ti ti-plus me-1"></i>Oluştur</button>
-         <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
+<div class="row justify-content-center">
+   <div class="col-lg-8">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+         {{ message }}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      {% endfor %}
+      {% endif %}
    </div>
 </div>
-{% for post in posts %}
+
+
 <div class="row justify-content-center">
    <div class="col-lg-8 mb-4">
-      <div class="card card-border-shadow-primary">
-         <div class="card-header d-flex justify-content-between mb-0">
-            <div class="d-flex align-items-center">
-               <a href="{% url 'profile' post.User.username %}" class="d-flex text-decoration-none">
-                  <div class="avatar avatar-md me-2 flex-shrink-0">
-                     {% if post.User.profilepicturemodel.profile_photo %}
-                     <img src="{{ post.User.profilepicturemodel.profile_photo.url }}" 
-                        alt="Avatar" 
-                        class="rounded-circle" 
-                        />
-                     {% else %}
-                     <img src="{% static 'assets/img/avatars/14.png' %}" 
-                        alt="Avatar" 
-                        class="rounded-circle" 
-                        />
-                     {% endif %}
-                  </div>
-                  <div class="d-flex flex-column">
-                     <div class="me-2 h5 mb-1" style="line-height: 1.2; margin-bottom: 0;">
-                        {{ post.User.first_name }} {{ post.User.last_name }} 
-                        <small class="text-muted h6">
-                        bir gönderi paylaştı.
-                        </small>
-                     </div>
-                     <small class="text-muted">{{ post.User.educationalinformationmodel.University }} | {{ post.PublishDate }}</small>
-                  </div>
-               </a>
-            </div>
-            <div class="dropdown">
-               <button class="btn p-0" type="button" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="ti ti-dots-vertical ti-sm text-muted"></i>
-               </button>
-               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                  <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                  {% if post.User.username == user.username or user.is_superuser %}
-                  <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#modalCenter_{{post.id}}">Sil</a>
+      <div class="card card-border-shadow-primary mb-8">
+         <div class="card-header mb-0">
+            <form id="post-form" method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+            <div class="d-flex align-items-between">
+               <div class="avatar avatar-md me-2 flex-shrink-0">
+                  {% if user.profile_photo.profile_photo %}
+                  <img src="{{ user.profile_photo.profile_photo.url }}" 
+                     alt="Avatar" 
+                     class="rounded-circle" 
+                     />
+                  {% else %}
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{ user.first_name|first }}{{ user.last_name|first }}</span>
                   {% endif %}
                </div>
+               <!-- <input class="form-control message-input  me-4 shadow-none" placeholder="Aklındakini Fakula!!!"> -->
+               <textarea id="autosize-demo" name="content" rows="3" placeholder="Aklındakini Fakula!!!" class="form-control border-0 shadow-none border-bottom "></textarea>
+
             </div>
-         </div>
-         <div class="card-body">
-            <p class="text-black"> {{ post.Content }} </p>
-            <div class="gallery-container mt-4">
-               {% for image in post.photos.all %}
-               <div class="gallery-item">
-                  <a href="{{ image.photo.url }}" data-fancybox="gallery-{{ post.post.id }}">
-                  <img src="{{ image.photo.url }}" class="border" alt="Post Image">
-                  </a>
+            <div class="d-flex flex-row-reverse bd-highlight mt-4">
+               <div class="bd-highlight">
+                  <button type="submit" class="btn btn-sm btn-success waves-effect rounded-pill"><i class="ti ti-brand-telegram ti-sm me-1"></i>Gönder</button>
                </div>
-               {% endfor %}
-            </div>
-            <hr />
-            <div class="d-flex align-items-center">
-               <div class="d-flex align-items-center">
-                  <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
-                  <i class="ti ti-heart{% if post.id in liked %}-filled{% endif %} text-primary"></i>
-                  <span class="like-count text-body">{{ post.likes.count }}</span>
-                  </a>
-                  <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
-                     ><i class="ti ti-message-filled text-danger"></i> {{ post.comments.count }}</a>
-                  <a href="{% url 'post_detail' post.id %}" class="text-body me-3"
-                     ><i class="ti ti-repeat text-success"></i> {{ post.comments.count }}</a>
-               </div>
-               <div class="ms-auto">
+               <div class="bd-highlight">
+                <button class="btn btn-sm btn-label-primary me-1 waves-effect rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  <i class="ti ti-photo ti-sm me-1"></i>Fotoğraf
+                </button>
                </div>
             </div>
-         </div>
+            <div class="collapse mt-4" id="collapseExample">
+               <div id="upload-container" class="upload-container">
+                  <input type="file" id="images" name="images" accept="image/*" onchange="previewImages(event)" multiple style="display:none;">
+                  <input type="hidden" id="deleted-images" name="deleted_images">
+                  <div id="upload-area" class="upload-area text-center">
+                     <i class="ti ti-library-photo ti-28px mb-4"></i>
+                     <p>Resim Yüklemek İçin Tıkla</p>
+                  </div>
+               </div>
+               <div id="image-previews" class="image-previews">
+               </div>
+            </div>
+            </form>
       </div>
+            <!-- <a href="#" class="stretched-link" data-bs-toggle="modal" data-bs-target="#add-post"></a> -->
+   </div>
+      <div class="d-flex justify-content-between align-items-between bd-highlight">
+         <div class="flex-grow-1 bd-highlight">
+            <small>
+               {% if user_filter.country or user_filter.following_only or user_filter.university or user_filter.department or user_filter.status %}
+                     {% if user_filter.following_only %}
+                     <span class="badge rounded-pill bg-label-success">Takip Ettiklerim</span>
+                     {% endif %}
+                     {% if user_filter.country %}
+                     <span class="badge rounded-pill bg-label-success">{{ user_filter.country }}</span>
+                     {% endif %}
+                     {% if user_filter.university %}
+                     <span class="badge rounded-pill bg-label-success">{{ user_filter.university }}</span>
+                     {% endif %}
+                     {% if user_filter.department %}
+                     <span class="badge rounded-pill bg-label-success">{{ user_filter.department }}</span>
+                     {% endif %}
+                     {% if user_filter.status %}
+                     <span class="badge rounded-pill bg-label-success">{{ user_filter.status }}</span>
+                     {% endif %}
+               {%else%}
+               <span class="badge rounded-pill bg-label-success">Filtre Yok</span>
+
+               {% endif %}
+            </small>
+         </div>
+         <div class="bd-highlight">
+            <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtrele</button>
+         </div>
+       </div>
    </div>
 </div>
-<div class="modal fade" id="modalCenter_{{post.id}}" tabindex="-1" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title" id="modalCenterTitle">Silme Uyarısı</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            <p>
-               Paylaşımı Silmek İstediğinizden emin misiniz?
-            </p>
-         </div>
-         <div class="modal-footer">
-            <a class="btn btn-primary" href="{% url 'delete_post' post.id %}">Sil</a>
-            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Vazgeç</button>
-         </div>
-      </div>
-   </div>
-</div>
-{% endfor %}
+
+<!--Posts Lists -->
+{% include 'posts_list.html' %}
+<!-- End Posts List -->
+
 <!-- Modals -->
 <div class="modal fade" id="add-post" tabindex="-1" aria-hidden="true">
-   <div class="modal-dialog" role="document">
+   <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
          <div class="modal-header justify-content-center">
             <h5 class="modal-title" id="modalCenterTitle">Gönderi Oluştur</h5>
@@ -121,21 +121,18 @@
          <form id="post-form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-body">
-               <div class="d-flex justify-content-between align-items-center mb-6">
+               <div class="d-flex justify-content-between align-items-center mb-4">
                   <div class="d-flex align-items-center">
                      <div class="avatar avatar-md me-2">
-                        {% if user.profilepicturemodel.profile_photo %}
-                        {% with profile_photo_url=user.profilepicturemodel.profile_photo.url %}
+                        {% if user.profile_photo.profile_photo %}
+                        {% with profile_photo_url=user.profile_photo.profile_photo.url %}
                         <img
                            src="{{ profile_photo_url }}"
                            alt="Avatar"
                            class="rounded-circle" />
                         {% endwith %}
                         {% else %}
-                        <img
-                           src="{% static 'assets/img/avatars/14.png' %}"
-                           alt="Avatar"
-                           class="rounded-circle" />
+                        <span class="avatar-initial rounded-circle bg-label-primary">{{ user.first_name|first }}{{ user.last_name|first }}</span>
                         {% endif %}
                      </div>
                      <div>
@@ -144,16 +141,32 @@
                      </div>
                   </div>
                </div>
-               <textarea name="Content" id="autosize-demo border-0 shadow-none" placeholder="Yorumunu Fakula!!!" rows="3" class="form-control"></textarea>
-               <div id="preview-container" class="d-flex flex-wrap"></div>
+               <textarea id="autosize-demo" name="content" rows="3" placeholder="Yorumunu Fakula!!!" class="form-control"></textarea>
+
+            <div class="d-flex flex-row-reverse bd-highlight mt-4 mb-4">
+               <div class="bd-highlight">
+                  <button type="submit" class="btn btn-label-success waves-effect"><i class="ti ti-brand-telegram me-1 "></i>Gönder</button>
+               </div>
+               <div class="bd-highlight">
+                <button class="btn btn-label-primary me-1 waves-effect waves-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  <span class="ti ti-photo ti-md"></span>
+                </button>
+               </div>
             </div>
-            <div class="modal-footer">
-               <input type="file" id="id_images" name="images" multiple accept="image/*" style="display: none;">
-               <label for="id_images">
-               <i class="ti ti-photo ti-md cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill mx-1 text-heading waves-effect waves-light"></i><span class="align-middle"></span>
-               </label>
-               <button type="submit" class="btn btn-label-primary btn-sm rounded-pill"><i class="ti ti-brand-telegram me-1 ti-sm"></i>Gönder</button>
+
+            <div class="collapse" id="collapseExample">
+               <div id="upload-container" class="upload-container">
+                  <input type="file" id="images" name="images" accept="image/*" onchange="previewImages(event)" multiple style="display:none;">
+                  <input type="hidden" id="deleted-images" name="deleted_images">
+                  <div id="upload-area" class="upload-area text-center">
+                     <i class="ti ti-library-photo ti-32px mb-4"></i>
+                     <p>Resim Yüklemek İçin Tıkla</p>
+                  </div>
+               </div>
+               <div id="image-previews" class="image-previews">
+               </div>
             </div>
+         </div>
          </form>
       </div>
    </div>
@@ -173,20 +186,35 @@
          data-bs-dismiss="offcanvas"
          aria-label="Close"></button>
    </div>
-   <div class="offcanvas-body my-auto mx-0 flex-grow-0">
-      <button type="button" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
-      <button
-         type="button"
-         class="btn btn-label-secondary d-grid w-100"
-         data-bs-dismiss="offcanvas">
-      Vazgeç
-      </button>
+   <div class="offcanvas-body mx-0 flex-grow-0">
+
+      <form method="POST">
+         {% csrf_token %}
+
+         {{ filter.form|crispy}}
+         <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
+         <button type="submit" class="btn btn-danger mb-2 d-grid w-100" name="reset_filter">Filtreyi Temizle</button>
+         <button
+            type="button"
+            class="btn btn-label-secondary d-grid w-100"
+            data-bs-dismiss="offcanvas">
+         Vazgeç
+         </button>
+      </form>
+
    </div>
 </div>
 <!-- End Canvas -->
 {% endblock content %}
 {% block extra_javascript %}
+<script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
 <script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
-<script src="{% static 'assets/js/pages/post.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
+<script src="{% static 'assets/js/pages/post.js' %}"></script>
+
 {% endblock extra_javascript %}

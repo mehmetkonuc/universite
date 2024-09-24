@@ -2,13 +2,12 @@ from django.db import models
 from django.conf import settings
 # from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import MPTTModel, TreeForeignKey
-from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 import apps.inputs.models as inputs
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_delete
 from apps.blogs.utils import slugify_tr
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.files.storage import default_storage
 from django.utils.timezone import now
 from ckeditor.fields import RichTextField
@@ -45,9 +44,10 @@ class Category(MPTTModel):
     def __str__(self):
         return self.name
 
-class UserMarketPlaceFilterModel(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+class MarketPlaceFilterModel(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='marketplace_filter')
     title = models.CharField(max_length=255, blank=True, null=True)
+    following_only = models.CharField(max_length=255, blank=True, null=True)
     category = TreeForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.ForeignKey(inputs.CountriesModel, on_delete=models.SET_NULL, null=True, blank=True)
     city = models.ForeignKey(inputs.City, on_delete=models.SET_NULL, null=True, blank=True)
@@ -62,10 +62,11 @@ class UserMarketPlaceFilterModel(models.Model):
 
 class MarketPlaceModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                        on_delete=models.CASCADE)
+                        on_delete=models.CASCADE, related_name='marketplace')
     title = models.CharField(max_length=155)
     images = GenericRelation(MarketPlaceImagesModel)
-    description = RichTextField()
+    # description = RichTextField()
+    description = models.TextField(blank=True, null=True)
     currency = models.ForeignKey(inputs.Currency, on_delete=models.SET_NULL, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = TreeForeignKey(Category, on_delete=models.CASCADE)

@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
-from apps.likes.models import Like
+from apps.likes.models import Likes
 import json
 
 # Create your views here.
@@ -15,7 +15,7 @@ def like_object(request):
     model_class = content_type.model_class()
     obj = get_object_or_404(model_class, id=object_id)
 
-    like, created = Like.objects.get_or_create(
+    like, created = Likes.objects.get_or_create(
         user=request.user,
         content_type=content_type,
         object_id=obj.id
@@ -27,6 +27,6 @@ def like_object(request):
     else:
         liked = True
 
-    like_count = Like.objects.filter(content_type=content_type, object_id=obj.id).count()
+    like_count = Likes.objects.filter(content_type=content_type, object_id=obj.id).count()
 
     return JsonResponse({'liked': liked, 'like_count': like_count})

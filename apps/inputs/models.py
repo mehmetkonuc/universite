@@ -2,43 +2,42 @@ from django.db import models
 
 # Create your models here.
 class CountriesModel(models.Model):
-    Countries = models.CharField(max_length=255)
+    countries = models.CharField(max_length=255)
     
     def __str__(self):
-        return self.Countries
+        return self.countries
 
 class UniversitiesModel(models.Model):
-    Countries = models.ForeignKey(CountriesModel, on_delete=models.CASCADE)
-    Universities = models.CharField(max_length=255)
+    countries = models.ForeignKey(CountriesModel, on_delete=models.CASCADE)
+    universities = models.CharField(max_length=255)
     
     def __str__(self):
-        return self.Universities
+        return self.universities
 
 class DepartmentsModel(models.Model):
-    Universities = models.ManyToManyField(UniversitiesModel)
-    Departments = models.CharField(max_length=255)
+    universities = models.ManyToManyField(UniversitiesModel)
+    departments = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.Departments
+        return self.departments
 
 class StatusModel(models.Model):
-    Status = models.CharField(max_length=55)
+    status = models.CharField(max_length=55)
 
     def __str__(self):
-        return self.Status
+        return self.status
 
 class City(models.Model):
-    name = models.CharField(max_length=100)
     country = models.ForeignKey(CountriesModel, on_delete=models.CASCADE)
+    city = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.name}, {self.country.Countries}"
+        return f"{self.city}, {self.country.countries}"
 
 
 class Currency(models.Model):
-    name = models.CharField(max_length=100)
-# class GrandeModel(models.Model):
-#     Grande = models.CharField(max_length=55)
+    currency = models.CharField(max_length=100)
+
 
     def __str__(self):
-        return self.name
+        return self.currency

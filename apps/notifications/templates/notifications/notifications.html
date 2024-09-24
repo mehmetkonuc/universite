@@ -50,8 +50,8 @@
                         </div>
                         <div>
                            <div class="avatar avatar-md me-2 flex-shrink-0">
-                              {% if notification.action_user.profilepicturemodel.profile_photo %}
-                              <img src="{{ notification.action_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                              {% if notification.action_user.profile_photo.profile_photo %}
+                              <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
                               {% else %}
                               <img src="{% static '/assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle" height="32" width="32" />
                               {% endif %}
@@ -67,7 +67,7 @@
                            </a>
                         </div>
                         <div>
-                           <small class="text-muted">{{ notification.action_user.educationalinformationmodel.University }} | {{ notification.created_at|date:"d M Y, H:i" }}</small>
+                           <small class="text-muted">{{ notification.action_user.educationalinformationmodel.university }} | {{ notification.created_at|date:"d M Y, H:i" }}</small>
                         </div>
                         <div class="mt-1">
                            <span class="h6"> {{ notification.content_object.title }}</span>

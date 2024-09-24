@@ -1,16 +1,17 @@
 from apps.comments.forms import CommentForm
-from apps.comments.models import Comment
+from apps.comments.models import Comment, CommentPhotos
 from apps.blogs.models import ArticlesModel
 from apps.photos.views import photos_save
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
-from apps.likes.models import Like
+from apps.likes.models import Likes
 from django.db.models import Count
 
 
 class CommentView():
     model_comments = Comment
+    model_photos = CommentPhotos
     form_class = CommentForm
 
     def comment_get(content_type, object_id):
@@ -32,7 +33,14 @@ class CommentView():
             if parent_id:
                 comment.parent_id = parent_id
             comment.save()
-            photos_save(request=request, model=comment)
+            images = request.FILES.getlist('images')
+            for image in images:
+                CommentView.model_photos.objects.create(
+                    user=request.user,
+                    content_type=ContentType.objects.get_for_model(comment),
+                    object_id=comment.id,
+                    image=image
+                )
 
     def delete_comment(request, comment_id):
         delete_comment = Comment.objects.get(id=comment_id)
@@ -48,7 +56,7 @@ class CommentView():
 
 class CommentCommentsView(View):
     model_comment = Comment
-    model_likes = Like
+    model_likes = Likes
     context = {
         'siteTitle': 'Paylaşımlar',
     }

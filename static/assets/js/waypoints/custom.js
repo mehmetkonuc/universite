@@ -9,5 +9,4 @@ var infinite = new Waypoint.Infinite({
     onAfterPageLoad: function () {
         $('.loading').hide();
     }
-
 });

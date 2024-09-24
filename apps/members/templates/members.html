@@ -18,7 +18,7 @@
     {% for member in members %}
     {% if user != member %}
     <div class="col-xl-4 col-lg-6 col-md-6">
-      <div class="card card-border-shadow-primary">
+      <div class="card card-border-shadow-primary h-100">
         <div class="card-body text-center">
           <div class="dropdown btn-pinned">
             <button
@@ -37,47 +37,46 @@
               <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
             </ul>
           </div>
-          <div class="mx-auto my-6">
+          <div class="mx-auto my-6 d-flex justify-content-center">
           <a href="{% url 'profile' member.username %}">
 
-            {% if member.profilepicturemodel.profile_photo %}
-            {% with profile_photo_url=member.profilepicturemodel.profile_photo.url %}
+            {% if member.profile_photo.profile_photo %}
+            {% with profile_photo_url=member.profile_photo.profile_photo.url %}
             <img src="{{ profile_photo_url }}" alt="Avatar Image" class="rounded-circle w-px-100" />
             {% endwith %}
             {% else %}
-            <img src="{% static 'assets/img/avatars/14.png' %}" alt="Avatar Image" class="rounded-circle w-px-100" />
+            <div class="avatar avatar-xl me-8 mb-8">
+              <span class="uye avatar-initial rounded-circle bg-label-primary w-px-100 h-px-100">{{ member.first_name|first }}{{ member.last_name|first }}</span>
+            </div>
+
+            <!-- <img src="{% static 'assets/img/avatars/14.png' %}" alt="Avatar Image" class="rounded-circle w-px-100" /> -->
             {% endif %}
           </a>
           </div>
           <a href="{% url 'profile' member.username %}">
             <!-- <h5 class="mb-0 card-title">{{member.first_name}} {{member.last_name}}</h5> -->
-            <h4 class="card-title fw-bold mb-0">{{member.first_name}} {{member.last_name}}</h4>
+            <h4 class="card-title fw-bold mb-0">{{member.first_name}} {{member.last_name}} {% if member.privacy.is_private %}<i class="ti ti-lock"></i>{%endif%}</h4>
 
             <span class="text-body">@{{member.username}}</span>
           </a>
-          <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
-            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-building-bank"></i>{{member.educationalinformationmodel.University}}</span>
-            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-address-book"></i>{{member.educationalinformationmodel.Department}}</span>
-          </div>
-          <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
-            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill mb-3"><i class="ti ti-school me-1"></i>{{member.educationalinformationmodel.Status}}</span>
-          </div>
-
-          <div class="d-flex align-items-center justify-content-center">
-            {% if member_following_status|default:"false" %}
-               <button class="btn btn-sm btn-danger mb-1" id="follow-btn" data-user-id="{{ member.id }}">
-                  <i class="ti ti-user-x me-2"></i>Takibi Bırak
-               </button>
-            {% else %}
-            <button class="btn btn-sm btn-primary mb-1" id="follow-btn" data-user-id="{{ member.id }}">
-               <i class="ti ti-user-plus me-2"></i>Takip Et
-            </button>
-            {% endif %}
-            <a href="{% url 'start_chat' member.id %}" class="btn btn-sm btn-success ms-4 mb-1">
-               <i class="ti ti-mail-forward"></i>
-            </a>
-          </div>
+          <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-center gap-4 my-2">
+            <li class="list-inline-item d-flex gap-2 align-items-center">
+               <span class="badge bg-label-success" id="follower-count"><strong>{{member.followers.count}}</strong> Takipçi</span>
+            </li>
+            <li class="list-inline-item d-flex gap-2 align-items-center">
+               <span class="badge bg-label-primary"><strong>{{member.following.count}}</strong> Takip</span>
+            </li>
+            </ul>
         </div>
+        <div class="card-footer">
+          <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
+            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-building-bank"></i>{{member.educational_information.university}}</span>
+            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-address-book"></i>{{member.educational_information.department}}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
+            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill mb-3"><i class="ti ti-school me-1"></i>{{member.educational_information.status}}</span>
+          </div>
+            </div>
       </div>
     </div>
     {% endif %}

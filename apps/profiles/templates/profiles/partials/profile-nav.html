@@ -5,12 +5,18 @@
       <span class="navbar-brand d-lg-none">
       {% if current_page == 'profile' %}
       Bilgi
-      {% elif current_page == 'education_settings' %}
-      Eğitim Ayarı
-      {% elif current_page == 'additional_settings' %}
-      Ek Bilgiler
-      {% elif current_page == 'profile_delete' %}
-      Hesabı Sil
+      {% elif current_page == 'posts_profile' %}
+      Gönderiler
+      {% elif current_page == 'articles_profile' %}
+      Makaleler
+      {% elif current_page == 'marketplace_profile' %}
+      İlanlar
+      {% elif current_page == 'documents_profile' %}
+      Ders Notları
+      {% elif current_page == 'confessions_profile' %}
+      İtiraflar
+      {% elif current_page == 'questions_profile' %}
+      Sorular
       {% endif %}
       </span>
       <button
@@ -28,13 +34,11 @@
             </li>
             <li class="nav-item">
                <a class="nav-link {% if current_page == 'posts_profile' %}active{% endif %}" href="{% url 'posts_profile' username=profile.username %}"
-                  ><i class="tf-icons navbar-icon ti ti-ballpen me-1"></i> Gönderiler</a
-                  >
+                  ><i class="tf-icons navbar-icon ti ti-ballpen me-1"></i> Gönderiler</a>
             </li>
             <li class="nav-item">
                <a class="nav-link {% if current_page == 'articles_profile' %}active{% endif %}" href="{% url 'articles_profile' username=profile.username %}"
-                  ><i class="tf-icons navbar-icon ti ti-blockquote me-1"></i> Makaleler</a
-                  >
+                  ><i class="tf-icons navbar-icon ti ti-blockquote me-1"></i> Makaleler</a>
             </li>
             <li class="nav-item">
                <a class="nav-link {% if current_page == 'marketplace_profile' %}active{% endif %}" href="{% url 'marketplace_profile' username=profile.username %}"
@@ -47,18 +51,13 @@
                   >
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="javascript:void(0);"
+               <a class="nav-link {% if current_page == 'confessions_profile' %}active{% endif %}" href="{% url 'confessions_profile' username=profile.username %}"
                   ><i class="tf-icons navbar-icon ti ti-spy me-1"></i> İtiraflar</a
                   >
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="javascript:void(0);"
+               <a class="nav-link {% if current_page == 'questions_profile' %}active{% endif %}" href="{% url 'questions_profile' username=profile.username %}"
                   ><i class="tf-icons navbar-icon ti ti-message-2-question me-1"></i> Sorular</a
-                  >
-            </li>
-            <li class="nav-item">
-               <a class="nav-link" href="javascript:void(0);"
-                  ><i class="tf-icons navbar-icon ti ti-calendar-stats me-1"></i> Etkinlikler</a
                   >
             </li>
          </ul>
@@ -86,16 +85,24 @@
                case 'profile':
                    navbarText.textContent = "Bilgi";
                    break;
-               case 'education_settings':
-                   navbarText.textContent = "Eğitim Ayarı";
+               case 'posts_profile':
+                   navbarText.textContent = "Gönderiler";
                    break;
-               case 'additional_settings':
-                   navbarText.textContent = "Ek Bilgiler";
+               case 'articles_profile':
+                   navbarText.textContent = "Makaleler";
                    break;
-               case 'profile_delete':
-                   navbarText.textContent = "Hesabı Sil";
+               case 'marketplace_profile':
+                   navbarText.textContent = "İlanlar";
                    break;
-   
+               case 'documents_profile':
+                   navbarText.textContent = "Ders Notları";
+                   break;
+               case 'confessions_profile':
+                   navbarText.textContent = "İtiraflar";
+                   break;
+               case 'questions_profile':
+                   navbarText.textContent = "Sorular";
+                   break;
            }
        }
    }

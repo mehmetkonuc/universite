@@ -9,27 +9,27 @@
         {% if user == chat.first_user %}
           <div class="flex-shrink-0 avatar">
           <a href="{% url 'profile' chat.second_user.username %}">
-            <img src="{{ chat.second_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+            <img src="{{ chat.second_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
           </a>
           </div>
           <a href="{% url 'profile' chat.second_user.username %}">
 
           <div class="current-user chat-contact-info flex-grow-1 ms-4" data-user-id="{{chat.second_user.id}}">
               <h6 class="m-0 fw-normal">{{ chat.second_user.first_name }} {{ chat.second_user.last_name }}</h6>
-              <small class="user-status text-body">{{ chat.second_user.educationalinformationmodel.University }}</small>
+              <small class="user-status text-body">{{ chat.second_user.educationalinformationmodel.university }}</small>
           </div>
         </a>
         {% else %}
         <a href="{% url 'profile' chat.first_user.username %}">
           <div class="flex-shrink-0 avatar">
-            <img src="{{ chat.first_user.profilepicturemodel.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+            <img src="{{ chat.first_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
           </div>
         </a>
         <a href="{% url 'profile' chat.first_user.username %}">
 
           <div class="current-user chat-contact-info flex-grow-1 ms-4" data-user-id="{{chat.first_user.id}}">
               <h6 class="m-0 fw-normal">{{ chat.first_user.first_name }} {{ chat.first_user.last_name }}</h6>
-              <small class="user-status text-body">{{ chat.first_user.educationalinformationmodel.University }}</small>
+              <small class="user-status text-body">{{ chat.first_user.educationalinformationmodel.university }}</small>
           </div>
         </a>
         {% endif %}

@@ -26,11 +26,13 @@
             <!-- Burada, dar ekranda görünecek olan metni ekliyoruz -->
             <span class="nav-link d-lg-none">
                 {% if current_page == 'profile_settings' %}
-                    Hesap Ayarı
+                    Hesap Bilgileri
                 {% elif current_page == 'education_settings' %}
-                    Eğitim Ayarı
+                    Eğitim Bilgileri
                 {% elif current_page == 'additional_settings' %}
                     Ek Bilgiler
+                {% elif current_page == 'privacy_settings' %}
+                    Gizlilik Ayarları
                 {% elif current_page == 'profile_delete' %}
                     Hesabı Sil
                 {% endif %}
@@ -47,17 +49,22 @@
                     <ul class="nav nav-pills flex-column flex-md-row">
                         <li class="nav-item">
                             <a class="nav-link {% if current_page == 'profile_settings' %}active{% endif %}" href="{% url 'profile_settings' %}">
-                                <i class="ti-xs ti ti-users me-1"></i> Hesap Ayarı
+                                <i class="ti-xs ti ti-users me-1"></i> Hesap Bilgileri
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if current_page == 'education_settings' %}active{% endif %}" href="{% url 'education_settings' %}">
-                                <i class="fa fa-solid fa-graduation-cap me-1"></i> Eğitim Ayarı
+                                <i class="ti ti-vocabulary me-1"></i> Eğitim Bilgileri
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if current_page == 'additional_settings' %}active{% endif %}" href="{% url 'additional_settings' %}">
-                                <i class="fa fa-solid fa-graduation-cap me-1"></i> Ek Bilgiler
+                                <i class="ti ti-copy-plus me-1"></i> Ek Bilgiler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_page == 'privacy_settings' %}active{% endif %}" href="{% url 'privacy_settings' %}">
+                                <i class="ti ti-lock"></i> Gizlilik Ayarları
                             </a>
                         </li>
                         <li class="nav-item">
@@ -65,6 +72,12 @@
                                 <i class="ti ti-trash-x"></i> Hesabı Sil
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' user.username %}">
+                                <i class="ti ti-user"></i> Profili Görüntüle
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -100,13 +113,16 @@ function updateNavbarText() {
     if (navbarText) {
         switch (currentPage) {
             case 'profile_settings':
-                navbarText.textContent = "Hesap Ayarı";
+                navbarText.textContent = "Hesap Bilgileri";
                 break;
             case 'education_settings':
-                navbarText.textContent = "Eğitim Ayarı";
+                navbarText.textContent = "Eğitim Bilgileri";
                 break;
             case 'additional_settings':
                 navbarText.textContent = "Ek Bilgiler";
+                break;
+            case 'privacy_settings':
+                navbarText.textContent = "Gizlilik Ayarları";
                 break;
             case 'profile_delete':
                 navbarText.textContent = "Hesabı Sil";

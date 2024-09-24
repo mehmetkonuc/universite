@@ -2,7 +2,9 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-comments.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comments.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/comments/comment-form.css' %}" />
 {% endblock extra_css%}
 {% block content %}
 <div class="row justify-content-center">
@@ -28,9 +30,8 @@
    <div class="row justify-content-center mb-4">
     <div class="col-lg-8 d-flex justify-content-between">
        <div>
-
        <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
-       <small class="text-muted">Klasör: <a href="">{{ data.folder.name }}</a> | Yayınlanma Tarihi: {{ data.uploaded_at }}</small>
+       <small class="text-muted">Klasör: <a href="">{{ data.folder.name }}</a></small>
        </div>
        <div class="dropdown">
           <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -76,22 +77,27 @@
                {% endif %}
             </div>
          </div>
-
+      </div>
+   </div>
+   <div class="row justify-content-center">
+      <div class="col-lg-8">
          <div class="card mb-4 card-border-shadow-primary">
             <div class="card-header bg-primary mb-4">
                <h5 class="text-white mb-0 fw-bold">Açıklama</h5>
             </div>
             <div class="card-body">
-               {{ data.content|safe }}
-               <div class="d-flex align-items-center border-top">
-                  <div class="d-flex align-items-center mt-4">
+               {{ data.content }}
+               <hr />
+               <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center">
                      <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
-                     <i class="ti ti-heart{% if data.id in liked %}-filled{% endif %} text-primary"></i>
-                     <span class="like-count text-body">{{ data.likes.count }}</span>
+                     <i class="ti ti-heart{% if liked %}-filled{% endif %} text-primary"></i>
+                     <span class="like-count text-body">{% if liked %}Beğendin {% else %}Beğen{% endif %} ({{ data.likes.count }})</span>
                      </a>
-                     <i class="ti ti-message-filled text-danger me-1"></i> {{ data.comments.count }}
+                     <i class="ti ti-message-filled text-danger me-1"></i> Yorum Yap ({{ data.comments.count }})
                   </div>
                   <div class="ms-auto">
+                  <small class="text-muted">{{ data.create_at }}</small>
                   </div>
                </div>
             </div>
@@ -109,22 +115,20 @@
          </div>
          <div class="card-body d-flex align-items-center">
             <a href="{% url 'profile' data.user.username %}">
-               <div class="avatar avatar-xl me-3">
-                  {% if data.user.profilepicturemodel.profile_photo %}
-                  <img src="{{ data.user.profilepicturemodel.profile_photo.url }}" 
+               <div class="avatar avatar-lg me-3">
+                  {% if data.user.profile_photo.profile_photo %}
+                  <img src="{{ data.user.profile_photo.profile_photo.url }}" 
                      class="rounded-circle" 
                      alt="Yazar Profil Fotoğrafı">
                   {% else %}
-                  <img src="{% static 'assets/img/avatars/11.png' %}" 
-                     class="rounded-circle" 
-                     alt="Yazar Profil Fotoğrafı">
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{ data.user.first_name|first }}{{ data.user.last_name|first }}</span>
                   {% endif %}
                </div>
             </a>
             <a href="{% url 'profile' data.user.username %}">
                <div>
                   <h5 class="mb-1">{{ data.user.first_name }} {{ data.user.last_name }}</h5>
-                  <small class="text-body">{{ data.user.educationalinformationmodel.University }} > {{ data.user.educationalinformationmodel.Department }} > {{ data.user.educationalinformationmodel.Status }}</small>
+                  <small class="text-body">{{ data.user.educational_information.university }} > {{ data.user.educational_information.department }} > {{ data.user.educational_information.status }}</small>
                </div>
             </a>
          </div>
@@ -132,26 +136,21 @@
    </div>
 </div> 
    <!-- Yorum Formu -->
-   <div class="row justify-content-center mb-4">
-      <div class="col-lg-8">
-         <!-- Comment Form -->
-         {% block comment-form %}
-         {% include 'comments/form-comment.html' %}
-         {% endblock comment-form %}
-         <!-- End Comment Form -->
-      </div>
-   </div>
-   <div class="row justify-content-center">
-      <div class="col-lg-8">
-         <!-- Comments -->
-         {% for comment in data.comments.all %}
-         {% block comment %}
-         {% include 'comments/comments.html' %}
-         {% endblock comment %}
-         {% endfor %}
-         <!-- End Comments -->
-      </div>
-   </div>
+
+   <!-- Comment Form -->
+   {% block comment-form %}
+   {% include 'comments/form-comment.html' %}
+   {% endblock comment-form %}
+   <!-- End Comment Form -->
+
+   <!-- Comments -->
+   {% for comment in data.comments.all %}
+   {% block comment %}
+   {% include 'comments/comments.html' %}
+   {% endblock comment %}
+   {% endfor %}
+   <!-- End Comments -->
+
 
    <!-- Delete Documents Modal -->
 <div class="modal fade" id="modalCenter_{{ data.id}}" tabindex="-1" aria-hidden="true">
@@ -175,6 +174,13 @@
   </div>
 {% endblock content %}
 {% block extra_javascript %}
-<script src="{% static 'assets/js/pages/comments/comment-comments.js' %}"></script>
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/autosize/autosize.js' %}"></script>
+<script src="{% static 'assets/js/forms-extras.js' %}"></script>
+<script src="{% static 'assets/js/pages/comments/comment-form.js' %}"></script>
+<script src="{% static 'assets/js/pages/comments/comments.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 {% endblock extra_javascript %}

@@ -19,29 +19,29 @@
    </div>
 </div>
 <div  class="mb-4">
-   <h3 class="mb-0 fw-bold">Tüm İlanlar</h3>
+   <h3 class="mb-0 fw-bold">Tüm Dökümanlar</h3>
    <small>
-      {% if user_filter.category or user_filter.city or user_filter.university or user_filter.department or user_filter.status %}
-      Aktif Filtreler:
-            {% if user_filter.category %}
-                {{ user_filter.category }},
+      {% if user_filter.country or user_filter.following_only or user_filter.university or user_filter.department or user_filter.status %}
+
+            {% if user_filter.following_only %}
+            <span class="badge rounded-pill bg-label-success">Takip Ettiklerim</span>
             {% endif %}
             {% if user_filter.country %}
-                {{ user_filter.country }},
+            <span class="badge rounded-pill bg-label-success">{{ user_filter.country }}</span>
             {% endif %}
-            {% if user_filter.city %}
-                {{ user_filter.city }},
-            {% endif %}
+
             {% if user_filter.university %}
-                {{ user_filter.university }},
+            <span class="badge rounded-pill bg-label-success">{{ user_filter.university }}</span>
             {% endif %}
             {% if user_filter.department %}
-                {{ user_filter.department }},
+            <span class="badge rounded-pill bg-label-success">{{ user_filter.department }}</span>
             {% endif %}
             {% if user_filter.status %}
-               {{ user_filter.status }},
+            <span class="badge rounded-pill bg-label-success">{{ user_filter.status }}</span>
             {% endif %}
-      {% endif %}
+            {%else%}
+            <span class="badge rounded-pill bg-label-success">Filtre Yok</span>
+         {% endif %}
    </small>
 </div>
 <div class="row justify-content-center">

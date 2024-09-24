@@ -25,23 +25,23 @@
            <div class="d-flex justify-content-between align-items-center">
               <!-- Yazar Bilgisi -->
               <div class="d-flex align-items-center text-muted">
-                    {% if item.user.profilepicturemodel.profile_photo %}
-                       <img src="{{ item.user.profilepicturemodel.profile_photo.url }}" 
+               <div class="avatar avatar-md me-2 flex-shrink-0">
+
+                    {% if item.user.profile_photo.profile_photo %}
+                       <img src="{{ item.user.profile_photo.profile_photo.url }}" 
                             alt="Yazar Profil Fotoğrafı" 
                             class="rounded-circle me-2" 
                             style="width: 40px; height: 40px;">
                     {% else %}
-                       <img src="{% static 'assets/img/avatars/11.png' %}" 
-                            alt="Yazar Profil Fotoğrafı" 
-                            class="rounded-circle me-2" 
-                            style="width: 40px; height: 40px;">
+                    <span class="avatar-initial rounded-circle bg-label-primary">{{ item.user.first_name|first }}{{ item.user.last_name|first }}</span>
                     {% endif %}
+               </div>
                     <div>
                        <a href="{% url 'profile' item.user.username %}">
                           <small class="text-body">{{ item.user.first_name }} {{ item.user.last_name }}</small>
                        </a>
                        <div>
-                          <small>{{ item.user.educationalinformationmodel.University }}</small>
+                          <small>{{ item.user.educational_information.university }}</small>
                        </div>
                     </div>
               </div>
