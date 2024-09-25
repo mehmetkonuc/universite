@@ -29,11 +29,19 @@ class EducationalInformationForm(forms.ModelForm):
 
 
 class PrivacyForm(forms.ModelForm):
-    is_private = forms.BooleanField(label="Hesabı Gizle", help_text='Hesap gizliyken paylaşımlarınızı takipçileriniz dışında hiç kimse göremez.', required=False)
+    MESSAGE_PRIVACY_CHOICES = [
+        ('nobody', 'Hiç Kimse'),
+        ('followers', 'Sadece Takipçilerim'),
+        ('everyone', 'Herkes')
+    ]
 
+    is_private = forms.BooleanField(label="Hesabı Gizle", help_text='Hesap gizliyken paylaşımlarınızı takipçileriniz dışında hiç kimse göremez.', required=False)
+    message_privacy = forms.ChoiceField(choices=MESSAGE_PRIVACY_CHOICES, required=True, label='Mesaj Gizliliği', help_text='Size kimlerin mesaj atabileceğini seçiniz.')
     class Meta:
         model = models.PrivacyModel
-        fields = ['is_private']
+        fields = ['is_private', 'message_privacy']
+
+
 
 class AdditionalInformationForm(forms.ModelForm):
 

@@ -62,11 +62,15 @@
             id="user-{{chat.chat.second_user.id}}"
           >
             <div class="flex-shrink-0 avatar">
-              <img
-                src="{{ chat.chat.second_user.profile_photo.profile_photo.url }}"
-                alt="Avatar"
-                class="rounded-circle"
-              />
+              {% if chat.chat.second_user.profile_photo.profile_photo %}
+                <img
+                  src="{{ chat.chat.second_user.profile_photo.profile_photo.url }}"
+                  alt="Avatar"
+                  class="rounded-circle"
+                />
+              {%else%}
+              <span class="avatar-initial rounded-circle bg-label-primary">{{chat.chat.second_user.first_name|first}}{{chat.chat.second_user.last_name|first}}</span>
+              {%endif%}
             </div>
             <div class="chat-contact-info flex-grow-1 ms-4">
               <div class="d-flex justify-content-between align-items-center">
@@ -95,11 +99,16 @@
             id="user-{{chat.chat.first_user.id}}"
           >
             <div class="flex-shrink-0 avatar">
+              {% if chat.chat.first.profile_photo.profile_photo %}
+
               <img
                 src="{{ chat.chat.first_user.profile_photo.profile_photo.url }}"
                 alt="Avatar"
                 class="rounded-circle"
               />
+              {%else%}
+              <span class="avatar-initial rounded-circle bg-label-primary">{{chat.chat.first_user.first_name|first}}{{chat.chat.first_user.last_name|first}}</span>
+              {%endif%}
             </div>
             <div class="chat-contact-info flex-grow-1 ms-4">
               <div class="d-flex justify-content-between align-items-center">
@@ -358,14 +367,29 @@
                 chatElement.setAttribute("data-chat-id", `${data.chat_id}`);
                 chatElement.setAttribute("data-user-id", `${data.sender_id}`);
                 chatElement.setAttribute("id", `user-${data.sender_id}`);
+                let profilePhotoHtml = '';
+                const first_word = data.sender_name.charAt(0).toUpperCase();
+
+                if (data.sender_profile_photo) {
+                  profilePhotoHtml = `
+                    <div class="flex-shrink-0 avatar">
+                      <img
+                        src="${data.sender_profile_photo}"
+                        alt="Avatar"
+                        class="rounded-circle"
+                      />
+                    </div>
+                  `;
+                } else {
+                  profilePhotoHtml = `
+                    <div class="flex-shrink-0 avatar">
+
+                  <span class="avatar-initial rounded-circle bg-label-primary"> ${first_word}</span>
+                    </div>
+                  `
+                };
                 chatElement.innerHTML = `
-                      <div class="flex-shrink-0 avatar">
-                        <img
-                          src="${data.sender_profile_photo}"
-                          alt="Avatar"
-                          class="rounded-circle"
-                        />
-                      </div>
+                    ${profilePhotoHtml}
                       <div class="chat-contact-info flex-grow-1 ms-4">
                         <div class="d-flex justify-content-between align-items-center">
                           <h6 class="chat-contact-name text-truncate fw-normal m-0">
@@ -384,6 +408,10 @@
                       </div>`
 
                 // userList.appendChild(chatElement);
+                const noChat = document.getElementById("no_chat");
+                if (noChat) {
+                  noChat.remove()
+                }
                 userList.prepend(chatElement);
                 handleChatListClicks();
               } else {

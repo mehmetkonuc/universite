@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib.auth.models import User
 from django.db.models import Q, Max
 from .models import Message, Chat
@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-
+from apps.follow.models import Follow
 
 def index(request):
     chats = Chat.objects.filter(
@@ -28,19 +28,45 @@ def index(request):
 
 
 
-def start_chat(request, second_user_id=None):
+def start_chat(request, username=None):
     first_user = request.user
-    second_user = get_object_or_404(User, pk=second_user_id)
+    second_user = get_object_or_404(User, username=username)
+    
+    # Kullanıcının mesaj gizlilik ayarını al
+    message_privacy = second_user.privacy.message_privacy
+
+    # Eğer kullanıcı "nobody" seçeneğini seçtiyse 404 hatası döndür
+    if message_privacy == 'nobody':
+        raise Http404("Bu kullanıcıya mesaj gönderemezsiniz.")
+    
+    # Eğer gizlilik ayarı "everyone" ise sohbeti başlat
+    if message_privacy == 'everyone':
+        # Mevcut bir sohbet olup olmadığını kontrol et
+        chat = Chat.objects.filter(
+            Q(first_user=first_user, second_user=second_user) | Q(first_user=second_user, second_user=first_user)
+        ).first()
+        if chat:
+            return redirect('chat', chat.id)
+        else:
+            chat = Chat.objects.create(first_user=first_user, second_user=second_user)
+            return redirect('chat', chat.id)
         
-    # Check if a chat already exists between these two users (regardless of who initiated it)
-    chat = Chat.objects.filter(
-        (Q(first_user=first_user, second_user=second_user) | Q(first_user=second_user, second_user=first_user))
-    ).first()
-    if chat:
-        return redirect('chat', chat.id)
-    else:
-        chat = Chat.objects.create(first_user=first_user, second_user=second_user)
-        return redirect('chat', chat.id)
+    # Eğer gizlilik ayarı "followers" ise takip ilişkisini kontrol et
+    elif message_privacy == 'followers':
+        is_following = second_user.followers.filter(follower=first_user).exists()  # İkinci kullanıcının takipçileri arasında birinci kullanıcı var mı kontrol et
+        if is_following:
+            # Mevcut bir sohbet olup olmadığını kontrol et
+            chat = Chat.objects.filter(
+                Q(first_user=first_user, second_user=second_user) | Q(first_user=second_user, second_user=first_user)
+            ).first()
+            if chat:
+                return redirect('chat', chat.id)
+            else:
+                chat = Chat.objects.create(first_user=first_user, second_user=second_user)
+                return redirect('chat', chat.id)
+        else:
+            raise Http404("Bu kullanıcıya sadece takipçileri mesaj gönderebilir.")
+        
 
 def chat(request, chat_id):
     # Kullanıcıya ait tüm chatleri al

@@ -7,23 +7,36 @@ from apps.comments.models import Comment
 from apps.likes.models import Likes
 from apps.notifications.models import Notification
 from apps.chat.models import Message
-from apps.follow.models import Follow
+from apps.follow.models import FollowRequest
 
 
 
-@receiver(post_save, sender=Follow)
+@receiver(post_save, sender=FollowRequest)
 def create_follow_notification(sender, instance, created, **kwargs):
     if created:
         follower = instance.follower
         following = instance.following
 
+        #Takip Edilmek İstenen Kullanıcının Gizlilik Kontrolü
+        is_private = following.privacy.is_private
+
+        #Takip Etmek İsteyeninin Profil Fotoğraf Kontrolü
+        try:
+            profile_photo_url= follower.profile_photo.profile_photo.url
+        except:
+            profile_photo_url = None
+
+
         # Takip edilen kullanıcıya bildirim göndermek için gerekli veriler
         context = {
+            'following_is_private' : is_private,
             'follower_user_id': follower.id,
-            'follower_user': follower.first_name + ' ' + follower.last_name,
-            'follower_user_university': str(follower.educationalinformationmodel.university) if hasattr(follower, 'educationalinformationmodel') else 'Bilinmiyor',
+            'follower_user_username': follower.username,
+            'follower_user_first_name': follower.first_name,
+            'follower_user_last_name': follower.last_name,
+            'follower_user_university': str(follower.educational_information.university) if hasattr(follower, 'educational_information') else 'Bilinmiyor',
             'time': instance.created_at.strftime("%d %b %Y, %H:%M"),
-            'profile_photo_url': follower.profile_photo.profile_photo.url if hasattr(follower, 'profilepicturemodel') and follower.profile_photo.profile_photo else '/static/assets/img/avatars/1.png',
+            'profile_photo_url': profile_photo_url,
         }
 
         # Bildirim gönderme
@@ -63,37 +76,68 @@ def create_message_notification(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Comment)
 def create_comment_notification(sender, instance, created, **kwargs):
-    # İçeriğin sahibinin yorumu yapan kullanıcı olup olmadığını kontrol et
-    if created and instance.content_object.user != instance.user:
-        content_type = ContentType.objects.get_for_model(instance.content_object)
-        context = instance.content_object.get_notifications_comment_context()
+    # Kullanıcıları ve bildirimleri göndermek için genel bir fonksiyon
+    def send_notification(recipient, context):
+        # Bildirimi oluştur
         notification = Notification.objects.create(
-            user=instance.content_object.user,  # Makale sahibi
-            action_user=instance.user,  # Yorumu yapan kişi
-            message=context['message'],
-            content_type=content_type,
-            object_id=instance.content_object.id,  # Makale ID'si
-            action_object_id=instance.id  # Yoruma ait ID
+            user=recipient,
+            action_user=instance.user,
+            notification_type='comment',
+            content_type=ContentType.objects.get_for_model(instance),
+            object_id=instance.id,
+            action_object_id=context.get('action_object_id')
         )
 
+        # Kullanıcı profili fotoğrafını al
+        try:
+            profile_photo_url = instance.user.profile_photo.profile_photo.url
+        except AttributeError:
+            profile_photo_url = None
+
+        # Bildirim bağlamını güncelle
         context.update({
             'action_user_name': instance.user.username,
-            'action_user': instance.user.first_name + ' ' + instance.user.last_name,
-            'profile_photo_url': notification.action_user.profile_photo.profile_photo.url if notification.action_user.profile_photo.profile_photo else '/static/assets/img/avatars/1.png',
+            'action_user_first_name': instance.user.first_name,
+            'action_user_last_name': instance.user.last_name,
+            'action_user_university': str(instance.user.educational_information.university),
+            'profile_photo_url': profile_photo_url,
             'notification_id': notification.id,
             'is_read': notification.is_read,
             'created_at': notification.created_at.strftime("%d %b %Y, %H:%M"),
         })
-        
-        # WebSocket bildirimi gönderiyoruz
+
+        # WebSocket bildirimi gönder
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            f'user_{instance.content_object.user.id}',  # Bildirim alıcısı
+            f'notifications_{recipient.id}',
             {
                 'type': 'send_notification',
                 'message': context
             }
         )
+
+    # Yorumun alt yorum olup olmadığını kontrol et ve uygun bildirimi gönder
+    if created and instance.parent and instance.parent.user != instance.user:
+        context = instance.get_notifications_comment_context()
+        context['action_object_id'] = instance.parent.id
+        send_notification(instance.parent.user, context)
+
+    # Yorumun, içeriğin sahibine ait olup olmadığını kontrol et
+    content_owner = instance.content_object.user
+    if created and content_owner != instance.user:
+        # Alt yorumların içeriğin sahibine bildirilmesini engelle
+        try:
+            is_parent = instance.parent.user
+        except AttributeError:
+            is_parent = None
+
+        if is_parent != content_owner:
+            context = instance.content_object.get_notifications_comment_context()
+            context.update(instance.content_object.get_notifications_comment_context())  # İki bağlamı birleştir
+            context['action_object_id'] = instance.content_object.id
+            send_notification(content_owner, context)
+
+
 
 @receiver(post_save, sender=Likes)
 def create_like_notification(sender, instance, created, **kwargs):
@@ -101,10 +145,11 @@ def create_like_notification(sender, instance, created, **kwargs):
     if created and instance.content_object.user != instance.user:
         content_type = ContentType.objects.get_for_model(instance.content_object)
         context = instance.content_object.get_notifications_like_context()
+
         notification = Notification.objects.create(
             user=instance.content_object.user,  # Makale sahibi
             action_user=instance.user,  # Beğeniyi yapan kişi
-            message=context['message'],
+            notification_type='like',
             content_type=content_type,
             object_id=instance.content_object.id,  # Makale ID'si
             action_object_id=instance.id  # Beğeniye ait ID
@@ -120,6 +165,7 @@ def create_like_notification(sender, instance, created, **kwargs):
             'action_user_name': instance.user.username,
             'action_user_first_name': instance.user.first_name,
             'action_user_last_name': instance.user.last_name,
+            'action_user_university': str(instance.user.educational_information.university),
             'profile_photo_url': profile_photo,
             'notification_id': notification.id,
             'is_read': notification.is_read,

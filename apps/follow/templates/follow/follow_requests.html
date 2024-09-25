@@ -15,12 +15,6 @@
                         <label class="form-check-label" for="followers-select-all"></label>
                      </div>
                      <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
-                        <i class="ti ti-user-check ti-md followers-approved cursor-pointer"></i>
-                     </div>
-                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
-                        <i class="ti ti-user-x ti-md followeres-rejected cursor-pointer"></i>
-                     </div>
-                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
                         <i class="ti ti-trash ti-md followers-delete cursor-pointer"></i>
                      </div>
                   </div>
@@ -28,9 +22,9 @@
             </div>
             <hr class="container-m-nx m-0" />
             <div class="card-body followers-list p-4 py-0 " id="followers-container">
-               <div id="followers" class="list-group">
+               <div id="followers" class="list-group infinite-container">
                   {% for follower in follow_requests %}
-                  <div class="follower-list-item mt-2" data-follower-id="{{ follower.id }}">
+                  <div class="follower-list-item mt-2 infinite-item" data-follower-id="{{ follower.id }}">
                      <div class="d-flex flex-wrap bd-highlight mb-3">
                         <div class="d-flex align-items-center">
                            <div class="bd-highlight">
@@ -49,13 +43,14 @@
                                  {% endif %}
                               </div>
                            </div>
-                        </div>
                         <div class="bd-highlight">
                            <a href="{% url 'profile' follower.follower.username %}">
                               <div class="me-2 h6 mb-0">{{ follower.follower.first_name }} {{ follower.follower.last_name }} <small class="text-muted">{% if follower.is_approved %} seni takip etti {%else%}takip isteği gönderdi.{%endif%}</small></div>
                            </a>
                            <small class="text-muted">{{ follower.follower.educational_information.university }}</small>
                         </div>
+                    </div>
+
                         <div class="ms-auto bd-highlight">
                            <div class="mb-1">
                               <small class="text-muted"> {{ follower.created_at|date:"d M Y, H:i" }}</small>
@@ -74,14 +69,24 @@
                   <div class="mb-4 mt-2">Henüz bir bildiriminiz yok.</div>
                   {% endfor %}
                </div>
-               
             </div>
          </div>
       </div>
    </div>
-
+   <div class="row">
+    <div class="col-lg-8">
+       {% if follow_requests.has_next %}
+       <a class="infinite-more-link" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ follow_requests.next_page_number }}">Sonraki</a>
+       {% endif %}
+    </div>
+ </div>
 {% endblock content %}
 {% block extra_javascript %}
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
+
+
 <script>
    $(document).ready(function(){
     // Onayla butonuna tıklama olayı
@@ -139,6 +144,62 @@
                 }
             },
             error: function() {
+                alert('Bir hata oluştu.');
+            }
+        });
+    });
+});
+
+</script>
+<script>
+   $(document).ready(function () {
+    // Tüm takip isteklerini seç veya seçimleri kaldır
+    $('#followers-select-all').change(function () {
+        var isChecked = $(this).is(':checked');
+        $('.follower-list-item-input').prop('checked', isChecked);
+    });
+
+    // Seçili takip isteklerini sil
+    $('.followers-delete').click(function () {
+        var selectedFollowers = [];
+        
+        // Seçili takip isteklerini listele
+        $('.follower-list-item-input:checked').each(function () {
+            var followerId = $(this).closest('.follower-list-item').data('follower-id');
+            selectedFollowers.push(followerId);
+        });
+
+        // Eğer seçili takip isteği yoksa kullanıcıya uyarı göster
+        if (selectedFollowers.length === 0) {
+            alert('Lütfen silmek istediğiniz takip isteklerini seçin.');
+            return;
+        }
+
+        // Silme işlemi onayı
+        if (!confirm('Seçili takip isteklerini silmek istediğinizden emin misiniz?')) {
+            return;
+        }
+
+        // AJAX ile silme işlemini gerçekleştir
+        $.ajax({
+            url: "{% url 'follow_requests_delete' %}",  // Bu URL'yi views.py'daki ilgili view ismiyle değiştirmelisiniz.
+            type: "POST",
+            data: {
+                'selected_followers': selectedFollowers,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    // Başarılı işlem sonrası silinen elemanları sayfadan kaldır
+                    selectedFollowers.forEach(function (id) {
+                        $('.follower-list-item[data-follower-id="' + id + '"]').remove();
+                    });
+                    alert('Seçili takip istekleri başarıyla silindi.');
+                } else {
+                    alert('Takip isteklerini silerken bir hata oluştu.');
+                }
+            },
+            error: function () {
                 alert('Bir hata oluştu.');
             }
         });

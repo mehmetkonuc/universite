@@ -3,6 +3,8 @@ from .models import Follow, FollowRequest
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 
 @login_required
@@ -59,7 +61,13 @@ def _handle_public_account_follow(follower, user_to_follow):
 def follow_requests_view(request):
     follow_requests = FollowRequest.objects.filter(following=request.user)
     read = follow_requests.filter(is_read=False).update(is_read=True)
-    return render(request, 'follow/follow_requests.html', {'follow_requests': follow_requests})
+
+    paginator = Paginator(follow_requests, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+
+    return render(request, 'follow/follow_requests.html', {'follow_requests': page_obj})
 
 
 @login_required
@@ -89,3 +97,22 @@ def follow_requests_action(request):
                 return JsonResponse({'status': 'rejected'})
 
     return JsonResponse({'status': 'error'}, status=400)
+
+
+@login_required
+@csrf_exempt
+def follow_requests_delete(request):
+    if request.method == 'POST':
+        selected_followers = request.POST.getlist('selected_followers[]')  # 'selected_followers[]' listesini al
+        if selected_followers:
+            # Kullanıcıya ait verileri sil
+            deleted, _ = FollowRequest.objects.filter(id__in=selected_followers, following=request.user).delete()
+            
+            # Silme işleminin sonucuna göre response dön
+            if deleted:
+                return JsonResponse({'status': 'success', 'message': 'Seçili takip istekleri silindi.'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Takip istekleri silinemedi.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Seçili takip isteği yok.'})
+    return JsonResponse({'status': 'error', 'message': 'Geçersiz istek.'})

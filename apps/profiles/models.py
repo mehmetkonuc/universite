@@ -15,6 +15,8 @@ class PrivacyModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='privacy')
     # is_private = models.BooleanField(default=False)  # Profil gizlilik ayarı
     is_private = models.BooleanField(default=False, db_index=True)
+    message_privacy = models.CharField(max_length=20, default='everyone')  # Choices yok
+
 
 class EducationalInformationModel(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,

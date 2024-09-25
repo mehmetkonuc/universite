@@ -333,18 +333,38 @@
                                     {% if notification.action_user.profile_photo.profile_photo %}
                                     <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt class="rounded-circle" />
                                     {% else %}
-                                    <img src="{% static 'assets/img/avatars/1.png' %}" alt class="rounded-circle" />
+                                    <span class="avatar-initial rounded-circle bg-label-primary">{{ notification.action_user.first_name|first }}{{ notification.action_user.last_name|first }}</span>
                                     {% endif %}
                                  </div>
                               </a>
                            </div>
                            <div class="flex-grow-1">
                               <a href="{% url 'profile' notification.action_user.username %}">
-                                 <h6 class="small mb-0">{{notification.action_user.first_name}} {{notification.action_user.last_name}}<small class="text-muted"> {{notification.message}}</small></h6>
+                                 <h6 class="small mb-0">{{notification.action_user.first_name}} {{notification.action_user.last_name}}
+                                    <small class="text-muted"> 
+                                    {% if notification.notification_type == 'like' %}
+                                       {{notification.content_object.get_notifications_like_context.message}}
+                                    {% elif notification.notification_type == 'comment' %}
+                                       {% if notification.content_object.parent %}
+                                          {{notification.content_object.get_notifications_comment_context.message}}
+                                       {%else%}
+                                          {{notification.content_object.content_object.get_notifications_comment_context.message}}
+                                       {%endif%}
+                                    {%endif%}
+                                    </small>
+                                 </h6>
                               </a>
-                              <a href="{{notification.content_object.get_absolute_url }}">
-                              <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.title|truncatechars:40 }}</span>
+                              <small class="text-muted">{{notification.action_user.educational_information.university}}</small>
+                              <!-- signals.py bölümünde like bildirimi için content_object alanını like'ın content_object ile değiştir. -->
+                              {% if notification.notification_type == 'like' %}
+                              <a href="{{notification.content_object.get_notifications_like_context.content_url }}">
+                              <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.get_notifications_like_context.content_title|truncatechars:40 }}</span>
                               </a>
+                              {% elif notification.notification_type == 'comment' %}
+                              <a href="{{notification.content_object.get_notifications_comment_context.content_url }}">
+                                 <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.get_notifications_comment_context.content_title|truncatechars:40 }}</span>
+                              </a>
+                              {%endif%}
                               <small class="text-muted">{{notification.created_at}}</small>
                            </div>
                            <div id="content_notifications_alert">

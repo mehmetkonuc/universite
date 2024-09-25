@@ -1,29 +1,33 @@
-<li class="list-group-item list-group-item-action dropdown-notifications-item">
-    <div class="d-flex">
-      <div class="flex-shrink-0 me-3">
-      <a href="/profile/{{message.action_user_name}}/">
-        <div class="avatar">
-          {%if profile_photo_url %}
-          <img src="{{message.profile_photo_url}}" alt class="rounded-circle" />
-          {%else%}
-          <span class="avatar-initial rounded-circle bg-label-primary">{{message.action_user_first_name|first}}{{message.action_user_last_name|first}}</span>
-          {%endif%}
+<li class="list-group-item list-group-item-action dropdown-notifications-item" id="notification_content">
+  <div class="d-flex flex-wrap bd-highlight">
+     <div class="d-flex align-items-start mb-3">
+        <div class="bd-highlight">
+           <div class="avatar avatar-md me-2 flex-shrink-0">
+              <a href="{% url 'profile' message.action_user_name %}">
+              {% if message.profile_photo_url %}
+              <img src="{{ message.profile_photo_url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+              {% else %}
+              <span class="avatar-initial rounded-circle bg-label-primary">{{ message.action_user_first_name|first }}{{ message.action_user_last_name|first }}</span>
+              {% endif %}
+              </a>
+           </div>
         </div>
-        </a>
-      </div>
-      <div class="flex-grow-1">
-      <a href="/profile/{{message.action_user_name}}/">
-        <h6 class="small mb-1">{{message.action_user_first_name}} {{message.action_user_last_name}}<small class="text-muted"> {{message.message}}</small></h6>
-        </a>
-        <a href="{{message.content_url}}">
-       <h6 class="mb-1 d-block text-body"> {{message.content_title}}</h6>
-        </a>
-        <small class="text-muted">{{message.created_at}}</small>
-      </div>
-      <div class="flex-shrink-0 dropdown-notifications-actions">
-        <a href="javascript:void(0)" class="dropdown-notifications-read"
-          ><span class="badge badge-dot" id="badge-notifications"></span
-        ></a>
-      </div>
-    </div>
-  </li>
+        <div class="bd-highlight">
+           <a href="{% url 'profile' message.action_user_name %}">
+              <div class="me-2 h6 mb-0">{{ message.action_user_first_name }} {{ message.action_user_last_name }}
+                 <small class="text-muted">
+                 {{message.message}}
+                 </small>
+              </div>
+           </a>
+           <small class="text-muted">{{ message.action_user_university }}</small>
+        </div>
+     </div>
+     <a href="{{message.content_url}}">
+        <h6 class="mb-1 d-block text-body"> {{message.content_title}}</h6>
+     </a>
+     <div class="ms-auto bd-highlight">
+        <small class="text-muted"> {{ message.created_at }}</small>
+     </div>
+  </div>
+</li>

@@ -6,7 +6,7 @@ urlpatterns = [
     path('get-messages/', views.get_messages, name='get_messages'),
     path('<int:chat_id>/', views.chat, name="chat"),
     path('send-message/', views.send_message, name="send_message"),
-    path('start/<int:second_user_id>', views.start_chat, name="start_chat"),
+    path('start/<str:username>', views.start_chat, name="start_chat"),
     path('messages/mark-all-as-read/', views.messages_mark_all_as_read, name='messages_mark_all_as_read'),
     path('delete/<int:chat_id>/', views.delete_chat, name='delete_chat'),
 

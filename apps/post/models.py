@@ -62,7 +62,7 @@ class PostsModel(models.Model):
     def get_notifications_like_context(self):
         context = {
         'message' : 'gönderinizi beğendi.',
-        'content_title' : self.content,
+        'content_title' : self.content[:50],
         'content_url' : reverse('post_detail', kwargs={'post_id': self.id}),
         }
         return context
