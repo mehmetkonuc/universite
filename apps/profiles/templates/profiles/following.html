@@ -1,0 +1,142 @@
+{% extends 'profiles/partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/spinkit/spinkit.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/pages/blogs/index.css' %}" />
+{% endblock extra_css%}
+
+{% block profile_content %}
+<h3 class="mb-4 fw-bold">Takip Ettiklerim</h3>
+
+<div class="row infinite-container row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+   {% for item in data %}
+   <div class="col infinite-item">
+
+      <div class="card card-border-shadow-primary h-100">
+         <div class="card-body text-center">
+           <div class="dropdown btn-pinned">
+             <button
+               type="button"
+               class="btn btn-icon btn-text-secondary rounded-pill dropdown-toggle hide-arrow p-4"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+               <i class="ti ti-dots-vertical ti-md text-muted"></i>
+             </button>
+             <ul class="dropdown-menu dropdown-menu-end">
+               <li><a class="dropdown-item" href="javascript:void(0);">Share connection</a></li>
+               <li><a class="dropdown-item" href="javascript:void(0);">Block connection</a></li>
+               <li>
+                 <hr class="dropdown-divider" />
+               </li>
+               <li><a class="dropdown-item text-danger" href="javascript:void(0);">Delete</a></li>
+             </ul>
+           </div>
+           <div class="mx-auto my-6 d-flex justify-content-center">
+           <a href="{% url 'profile' item.following.username %}">
+ 
+             {% if item.following.profile_photo.profile_photo %}
+             {% with profile_photo_url=item.following.profile_photo.profile_photo.url %}
+             <img src="{{ profile_photo_url }}" alt="Avatar Image" class="rounded-circle h-px-100" />
+             {% endwith %}
+             {% else %}
+             <div class="avatar avatar-xl me-8 mb-8">
+               <span class="uye avatar-initial rounded-circle bg-label-primary w-px-100 h-px-100">{{ item.following.first_name|first }}{{ item.following.last_name|first }}</span>
+             </div>
+ 
+             <!-- <img src="{% static 'assets/img/avatars/14.png' %}" alt="Avatar Image" class="rounded-circle w-px-100" /> -->
+             {% endif %}
+           </a>
+           </div>
+           <a href="{% url 'profile' item.following.username %}">
+             <!-- <h5 class="mb-0 card-title">{{member.first_name}} {{member.last_name}}</h5> -->
+             <h4 class="card-title fw-bold mb-0">{{item.following.first_name}} {{item.following.last_name}} {% if item.following.privacy.is_private %}<i class="ti ti-lock"></i>{%endif%}</h4>
+ 
+             <span class="text-body">@{{item.following.username}}</span>
+           </a>
+           <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-center gap-4 my-2">
+             <li class="list-inline-item d-flex gap-2 align-items-center">
+                <span class="badge bg-label-success" id="follower-count"><strong>{{item.following.followers.count}}</strong> Takipçi</span>
+             </li>
+             <li class="list-inline-item d-flex gap-2 align-items-center">
+                <span class="badge bg-label-primary"><strong>{{item.following.following.count}}</strong> Takip</span>
+             </li>
+             </ul>
+         </div>
+         <div class="card-footer">
+           <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
+             <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-building-bank"></i>{{item.following.educational_information.university}}</span>
+             <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-address-book"></i>{{item.following.educational_information.department}}</span>
+           </div>
+           <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
+             <span class="badge bg-label-secondary d-flex align-items-center rounded-pill mb-3"><i class="ti ti-school me-1"></i>{{item.following.educational_information.status}}</span>
+           </div>
+             </div>
+       </div>
+
+
+
+   </div>
+   {% empty %}
+   <div class="col-lg-12">
+      <div class="col-lg-12 alert alert-danger alert-dismissible d-flex" role="alert">
+         <i class="ti ti-eye-x ti-28px me-4"></i>
+         <div class="d-flex flex-column ps-1">
+            <h5 class="alert-heading mb-2">Herhangi Bir Veri Bulunamadı!</h5>
+         </div>
+      </div>
+   </div>
+   {% endfor %}
+</div>
+<div class="loading" style="display:none;">
+   <div class="card card-border-shadow-primary h-100">
+      <!-- Skeleton Resim -->
+      <div class="skeleton" style="height: 200px;"></div>
+      <div class="card-body">
+         <!-- Skeleton Başlık -->
+         <div class="skeleton" style="height: 25px; width: 80%; margin-bottom: 10px;"></div>
+         <!-- Skeleton Tarih ve Kategori -->
+         <div class="skeleton" style="height: 15px; width: 50%; margin-bottom: 20px;"></div>
+         <!-- Skeleton Özet -->
+         <div class="skeleton" style="height: 50px; width: 100%;"></div>
+      </div>
+      <div class="card-footer">
+         <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+               <!-- Skeleton Profil Fotoğrafı -->
+               <div class="skeleton rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"></div>
+               <div>
+                  <!-- Skeleton Yazar Adı -->
+                  <div class="skeleton" style="height: 15px; width: 70%; margin-bottom: 5px;"></div>
+                  <!-- Skeleton Üniversite -->
+                  <div class="skeleton" style="height: 15px; width: 50%;"></div>
+               </div>
+            </div>
+            <!-- Skeleton Beğeni ve Yorum -->
+            <div style="display: flex;">
+               <div class="skeleton" style="width: 30px; height: 15px; margin-right: 10px;"></div>
+               <div class="skeleton" style="width: 30px; height: 15px;"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-8">
+      {% if data.has_next %}
+      <a class="infinite-more-link" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ data.next_page_number }}">Sonraki</a>
+      {% endif %}
+   </div>
+</div>
+
+
+
+{% endblock %}
+{% block profile_javascript %}
+<script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
+{% endblock %}

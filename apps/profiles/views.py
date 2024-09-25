@@ -43,15 +43,76 @@ class ProfileView(LoginRequiredMixin, View):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
         profile = get_object_or_404(users, username=username)
         confessions = ConfessionsModel.objects.filter(user=profile, is_privacy=False).count()
-        followers = profile.followers.filter(follower=request.user)
 
+        followers = profile.followers.filter(follower=request.user)
+        follow_requests = profile.follow_requests_received.filter(follower=request.user)
+        
         self.context.update(
             {'profile': profile,
             'confessions': confessions,
             'followers':followers,
+            'follow_requests':follow_requests,
             }
         )
         return render(request, self.template, self.context)
+
+
+class FollowersProfileView(LoginRequiredMixin, View):
+    # model_marketplace = MarketPlaceModel
+    template = 'profiles/followers.html'
+    paginate_by = 2
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        users = get_user_model()  # Varsayılan kullanıcı modelini al
+        profile = get_object_or_404(users, username=username)
+        # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
+        followers = profile.followers.all()
+
+        # marketplace = profile.marketplace.filter(is_published = True)
+        paginator = Paginator(followers, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        # followers = profile.followers.filter(follower=request.user)
+
+        self.context.update(
+            {'profile': profile,
+             'data':page_obj,
+            #  'followers':followers,
+             }
+        )
+        return render(request, self.template, self.context)
+
+class FollowingProfileView(LoginRequiredMixin, View):
+    # model_marketplace = MarketPlaceModel
+    template = 'profiles/following.html'
+    paginate_by = 2
+    context = {
+        'siteTitle' : 'Profil',
+    }
+
+    def get(self, request, username):
+        users = get_user_model()  # Varsayılan kullanıcı modelini al
+        profile = get_object_or_404(users, username=username)
+        # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
+        following = profile.following.all()
+
+        # marketplace = profile.marketplace.filter(is_published = True)
+        paginator = Paginator(following, self.paginate_by)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        # followers = profile.followers.filter(follower=request.user)
+
+        self.context.update(
+            {'profile': profile,
+             'data':page_obj,
+            #  'followers':followers,
+             }
+        )
+        return render(request, self.template, self.context)
+
 
 
 class PostsProfileView(LoginRequiredMixin, View):

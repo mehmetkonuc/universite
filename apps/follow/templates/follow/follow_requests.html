@@ -1,0 +1,149 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+{% endblock extra_css%}
+{% block content %}
+<h3 class="mb-2 fw-bold" >Takip İstekleri</h3>
+   <div class="row g-0">
+      <div class="col app-followers-list">
+         <div class="card">
+            <div class="card-body followers-list-header p-3 py-2">
+               <div class="d-flex justify-content-between align-items-center ps-1">
+                  <div class="d-flex align-items-center">
+                     <div class="form-check mb-0 ms-0">
+                        <input class="form-check-input" type="checkbox" id="followers-select-all" />
+                        <label class="form-check-label" for="followers-select-all"></label>
+                     </div>
+                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
+                        <i class="ti ti-user-check ti-md followers-approved cursor-pointer"></i>
+                     </div>
+                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
+                        <i class="ti ti-user-x ti-md followeres-rejected cursor-pointer"></i>
+                     </div>
+                     <div class="btn btn-text-secondary btn-icon rounded-pill me-1">
+                        <i class="ti ti-trash ti-md followers-delete cursor-pointer"></i>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <hr class="container-m-nx m-0" />
+            <div class="card-body followers-list p-4 py-0 " id="followers-container">
+               <div id="followers" class="list-group">
+                  {% for follower in follow_requests %}
+                  <div class="follower-list-item mt-2" data-follower-id="{{ follower.id }}">
+                     <div class="d-flex flex-wrap bd-highlight mb-3">
+                        <div class="d-flex align-items-center">
+                           <div class="bd-highlight">
+                              <div class="form-check mb-0 ms-0">
+                                 <input class="follower-list-item-input form-check-input" type="checkbox" />
+                                 <label class="form-check-label"></label>
+                              </div>
+                           </div>
+                           <div class="bd-highlight">
+                              <div class="avatar avatar-md me-2 flex-shrink-0">
+                                 {% if follower.follower.profile_photo.profile_photo %}
+                                 <img src="{{ follower.follower.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                                 {% else %}
+                                 <span class="avatar-initial rounded-circle bg-label-primary">{{ follower.follower.first_name|first }}{{ follower.follower.last_name|first }}</span>
+
+                                 {% endif %}
+                              </div>
+                           </div>
+                        </div>
+                        <div class="bd-highlight">
+                           <a href="{% url 'profile' follower.follower.username %}">
+                              <div class="me-2 h6 mb-0">{{ follower.follower.first_name }} {{ follower.follower.last_name }} <small class="text-muted">{% if follower.is_approved %} seni takip etti {%else%}takip isteği gönderdi.{%endif%}</small></div>
+                           </a>
+                           <small class="text-muted">{{ follower.follower.educational_information.university }}</small>
+                        </div>
+                        <div class="ms-auto bd-highlight">
+                           <div class="mb-1">
+                              <small class="text-muted"> {{ follower.created_at|date:"d M Y, H:i" }}</small>
+                           </div>
+                           {%if not follower.is_approved %}
+                           <button class="btn btn-label-success btn-sm follow-approve" data-follow-request-id="{{ follower.id }}">Onayla</button>
+                           <button class="btn btn-label-danger btn-sm follow-reject" data-follow-request-id="{{ follower.id }}">Reddet</button>
+                           <!-- Durum mesajını göstereceğimiz yer -->
+                           <span class="follow-status"></span>
+                           {%endif%}
+                        </div>
+                     </div>
+                  </div>
+                  <hr class="container-m-nx m-0" /> 
+                  {% empty %}
+                  <div class="mb-4 mt-2">Henüz bir bildiriminiz yok.</div>
+                  {% endfor %}
+               </div>
+               
+            </div>
+         </div>
+      </div>
+   </div>
+
+{% endblock content %}
+{% block extra_javascript %}
+<script>
+   $(document).ready(function(){
+    // Onayla butonuna tıklama olayı
+    $('.follow-approve').click(function(){
+        var followRequestId = $(this).data('follow-request-id');
+        var $btn = $(this);
+        var $status = $btn.siblings('.follow-status'); // Durum mesajı için span'ı seçiyoruz
+
+        $.ajax({
+            url: "{% url 'follow_requests_action' %}",
+            type: "POST",
+            data: {
+                'follow_request_id': followRequestId,
+                'action': 'approve',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if(response.status === 'approved') {
+                    // Butonları kaldır
+                    $btn.siblings('.follow-reject').remove(); // Reddet butonunu kaldır
+                    $btn.remove(); // Onayla butonunu kaldır
+
+                    // "Onaylandı" mesajını göster
+                    $status.text('Onaylandı').addClass('text-success');
+                }
+            },
+            error: function() {
+                alert('Bir hata oluştu.');
+            }
+        });
+    });
+
+    // Reddet butonuna tıklama olayı
+    $('.follow-reject').click(function(){
+        var followRequestId = $(this).data('follow-request-id');
+        var $btn = $(this);
+        var $status = $btn.siblings('.follow-status'); // Durum mesajı için span'ı seçiyoruz
+
+        $.ajax({
+            url: "{% url 'follow_requests_action' %}",
+            type: "POST",
+            data: {
+                'follow_request_id': followRequestId,
+                'action': 'reject',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if(response.status === 'rejected') {
+                    // Butonları kaldır
+                    $btn.siblings('.follow-approve').remove(); // Onayla butonunu kaldır
+                    $btn.remove(); // Reddet butonunu kaldır
+
+                    // "Reddedildi" mesajını göster
+                    $status.text('Reddedildi').addClass('text-danger');
+                }
+            },
+            error: function() {
+                alert('Bir hata oluştu.');
+            }
+        });
+    });
+});
+
+</script>
+{% endblock extra_javascript %}

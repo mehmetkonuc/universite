@@ -40,7 +40,7 @@
              </div>
           </div>
           <div class="card-body">
-             <p class="text-black"> {{ post.content }} </p>
+             <p class="text-black"> {{ post.content |linebreaks }} </p>
              <div class="gallery-container mt-4">
                 {% for image in post.photos.all %}
                 <div class="gallery-item">

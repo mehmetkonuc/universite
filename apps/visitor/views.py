@@ -6,7 +6,7 @@ from . import forms
 from django.contrib.auth.views import PasswordResetView, PasswordChangeView
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from apps.profiles.models import ProfilePictureModel, EducationalInformationModel
+from apps.profiles.models import ProfilePictureModel, PrivacyModel , EducationalInformationModel
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import io
 
@@ -46,6 +46,9 @@ def register_step2(request):
             educational_info.user = user
             educational_info.save()
 
+            #Hesap Gizliliğini Önceden Ayarla
+            PrivacyModel.objects.get_or_create(user=user)
+            
             # Kullanıcı oturumu aç
             login(request, user)
             

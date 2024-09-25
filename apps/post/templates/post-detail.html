@@ -58,7 +58,7 @@
             </div>
          </div>
          <div class="card-body">
-            {{ post.content }}
+            {{ post.content | linebreaks }}
             <div class="gallery-container mt-4">
                {% for image in post.photos.all %}
                <div class="gallery-item">

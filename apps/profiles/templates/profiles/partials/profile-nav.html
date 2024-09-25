@@ -17,6 +17,10 @@
       İtiraflar
       {% elif current_page == 'questions_profile' %}
       Sorular
+      {% elif current_page == 'followers_profile' %}
+      Takipçilerim
+      {% elif current_page == 'following_profile' %}
+      Takip Ettiklerim
       {% endif %}
       </span>
       <button
@@ -102,6 +106,12 @@
                    break;
                case 'questions_profile':
                    navbarText.textContent = "Sorular";
+                   break;
+               case 'followers_profile':
+                   navbarText.textContent = "Takipçilerim";
+                   break;
+               case 'following_profile':
+                   navbarText.textContent = "Takip Ettiklerim";
                    break;
            }
        }

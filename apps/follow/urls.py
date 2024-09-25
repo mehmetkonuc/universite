@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('follow/<int:user_id>/', views.follow_user, name='follow_user'),
-    path('unfollow/<int:user_id>/', views.unfollow_user, name='unfollow_user'),
     path('toggle-follow/', views.toggle_follow, name='toggle_follow'),
+    path('requests/', views.follow_requests_view, name='follow-requests'),
+    path('follow-requestsaction/', views.follow_requests_action, name='follow_requests_action'),
 ]

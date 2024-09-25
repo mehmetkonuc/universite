@@ -44,9 +44,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 content=message
             )
 
-            profile_photo = messages.sender.profile_photo.profile_photo.url
+            try:
+                profile_photo = messages.sender.profile_photo.profile_photo.url
+            except:
+                profile_photo = None
             sender_name = messages.sender.first_name + ' ' + messages.sender.last_name
-            university = str(messages.sender.educationalinformationmodel.university)
+            university = str(messages.sender.educational_information.university)
 
             # Mesajı alıcıya gönder
             recipient_group_name = f'chat_{receiver_id}'

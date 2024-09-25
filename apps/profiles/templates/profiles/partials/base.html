@@ -45,12 +45,24 @@
                      </ul>
                      <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
+                           {% if user == profile %}
+                           <a href="{% url 'followers_profile' profile.username %}">
                            <span class="badge bg-label-success" id="follower-count"><strong>{{profile.followers.count}}</strong> Takipçi</span>
+                           </a>
+                           {%else%}
+                           <span class="badge bg-label-success" id="follower-count"><strong>{{profile.followers.count}}</strong> Takipçi</span>
+                           {%endif%}
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
+                           {% if user == profile %}
+                           <a href="{% url 'following_profile' profile.username %}">
                            <span class="badge bg-label-primary"><strong>{{profile.following.count}}</strong> Takip</span>
+                           </a>
+                           {%else%}
+                           <span class="badge bg-label-primary"><strong>{{profile.following.count}}</strong> Takip</span>
+                           {%endif%}
                         </li>
-                        </ul>
+                     </ul>
                   </div>
                   <div class="ms-end">
                   {%if user.username == profile.username %}
@@ -63,10 +75,14 @@
                         <button class="btn btn-sm btn-danger mb-1" id="follow-btn" data-user-id="{{ profile.id }}">
                            <i class="ti ti-user-x me-2"></i>Takibi Bırak
                         </button>
+                     {% elif follow_requests %}
+                        <button class="btn btn-sm btn-secondary mb-1" id="follow-btn" data-user-id="{{ profile.id }}">
+                           <i class="ti ti-clock me-2"></i>İsteği İptal Et
+                        </button>
                      {% else %}
-                     <button class="btn btn-sm btn-primary mb-1" id="follow-btn" data-user-id="{{ profile.id }}">
-                        <i class="ti ti-user-plus me-2"></i>Takip Et
-                     </button>
+                        <button class="btn btn-sm btn-primary mb-1" id="follow-btn" data-user-id="{{ profile.id }}">
+                           <i class="ti ti-user-plus me-2"></i>Takip Et
+                        </button>
                      {% endif %}
                   {% endif %}
                      <a href="{% url 'start_chat' profile.id %}" class="btn btn-sm btn-success mb-1">
@@ -83,16 +99,14 @@
 <!--/ Header -->
 
 {%if profile.privacy.is_private and profile != user and not followers  %}
-
-Profil Gizli
-
+   Profil Gizli
 {%else %}
-{% block profile-nav %}
-{% include 'profiles/partials/profile-nav.html' %}            
-{% endblock %}
+   {% block profile-nav %}
+      {% include 'profiles/partials/profile-nav.html' %}            
+   {% endblock %}
 
-{% block profile_content %}
-{% endblock %}
+   {% block profile_content %}
+   {% endblock %}
 {%endif%}
 
 {% endblock %}
@@ -112,7 +126,7 @@ Profil Gizli
                type: "POST",
                data: {
                    'user_id': userId,
-                   'csrfmiddlewaretoken': '{{ csrf_token }}'  // CSRF token zorunlu
+                   'csrfmiddlewaretoken': '{{ csrf_token }}'
                },
                success: function(response) {
                    if(response.status === 'followed') {
@@ -133,6 +147,20 @@ Profil Gizli
                        // Takipçi sayısını azalt
                        var count = parseInt($followerCount.text()) - 1;
                        $followerCount.text(count);
+                  
+                  } else if(response.status === 'cancel_request') {
+                       // Takip et durumu
+                       $btn.removeClass('btn-danger').addClass('btn-primary');
+                       $btn.find('i').removeClass('ti-user-x').addClass('ti-user-plus');
+                       $btn.html('<i class="ti ti-user-plus me-2"></i> Takip Et');
+
+                   } else if(response.status === 'request_sent') {
+                       // Takip isteği gönderildi durumu
+                       $btn.removeClass('btn-primary').addClass('btn-secondary');
+                       $btn.find('i').removeClass('ti-user-plus').addClass('ti-user-clock');
+                       $btn.html('<i class="ti ti-clock me-2"></i> İsteği İptal Et');
+                   } else if(response.status === 'already_requested') {
+                       alert('Zaten takip isteği gönderildi.');
                    }
                },
                error: function() {
@@ -142,6 +170,7 @@ Profil Gizli
        });
    });
 </script>
+
 {% endblock %}
 
 {% block profile_javascript %}

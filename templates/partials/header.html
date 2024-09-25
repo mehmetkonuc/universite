@@ -121,22 +121,20 @@
                <li class="dropdown-notifications-list scrollable-container">
                   <ul class="list-group list-group-flush" id="followers_content">
                      {% for follower in followers_header %}
-
                      <li class="list-group-item list-group-item-action dropdown-notifications-item d-flex" id="follower_content">
                         <div class="flex-shrink-0 avatar">
-                           <a href="{% url 'profile' follower.follower.username %}">
-                              <img
-                                 src="{{ follower.follower.profile_photo.profile_photo.url }}"
-                                 alt="Avatar"
-                                 class="rounded-circle"
-                                 />
-                           </a>
+                              {% if follower.follower.profile_photo.profile_photo %}
+                              <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt class="rounded-circle" />
+                              {% else %}
+                              <span class="avatar-initial rounded-circle bg-label-primary">{{ follower.follower.first_name|first }}{{ follower.follower.last_name|first }}</span>
+                              {% endif %}
+
                         </div>
                         <div class="chat-contact-info flex-grow-1 ms-4">
                            <a href="{% url 'profile' follower.follower.username %}">
                               <div class="d-flex justify-content-between align-items-center">
                                  <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                                    {{ follower.follower.first_name }} {{ follower.follower.last_name }} seni takip etti.
+                                    {{ follower.follower.first_name }} {{ follower.follower.last_name }} <small class="text-muted"> takip isteği gönderdi.</small>
                                  </h6>
                                  <div id="follower_alert">
                                     <span
@@ -146,7 +144,7 @@
                                  </div>
                               </div>
                               <small class="text-muted">
-                              {{ follower.follower.educationalinformationmodel.university }}
+                              {{ follower.follower.educational_information.university }}
                               </small>
                            </a>
                         </div>
@@ -164,8 +162,8 @@
                </li>
                <li class="border-top">
                   <div class="d-grid p-4">
-                     <a class="btn btn-primary btn-sm d-flex" href="javascript:void(0);">
-                     <small class="align-middle">Tüm Takipçiler</small>
+                     <a class="btn btn-primary btn-sm d-flex" href="{% url 'follow-requests' %}">
+                     <small class="align-middle">Tüm İstekler Görüntüle</small>
                      </a>
                   </div>
                </li>

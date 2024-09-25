@@ -42,7 +42,7 @@
 
             {% if member.profile_photo.profile_photo %}
             {% with profile_photo_url=member.profile_photo.profile_photo.url %}
-            <img src="{{ profile_photo_url }}" alt="Avatar Image" class="rounded-circle w-px-100" />
+            <img src="{{ profile_photo_url }}" alt="Avatar Image" class="rounded-circle h-px-100" />
             {% endwith %}
             {% else %}
             <div class="avatar avatar-xl me-8 mb-8">
