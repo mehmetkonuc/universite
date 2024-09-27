@@ -59,8 +59,8 @@ def _handle_public_account_follow(follower, user_to_follow):
 
 @login_required
 def follow_requests_view(request):
-    follow_requests = FollowRequest.objects.filter(following=request.user)
-    read = follow_requests.filter(is_read=False).update(is_read=True)
+    follow_requests = FollowRequest.objects.filter(following=request.user).order_by('-created_at')
+    follow_requests.filter(is_read=False).update(is_read=True)
 
     paginator = Paginator(follow_requests, 12)
     page_number = request.GET.get('page')
@@ -116,3 +116,11 @@ def follow_requests_delete(request):
         else:
             return JsonResponse({'status': 'error', 'message': 'Seçili takip isteği yok.'})
     return JsonResponse({'status': 'error', 'message': 'Geçersiz istek.'})
+
+
+@login_required
+def followers_mark_all_as_read(request):
+    if request.method == 'POST':
+        FollowRequest.objects.filter(following=request.user, is_read=False).update(is_read=True)
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'failed'}, status=400)

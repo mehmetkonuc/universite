@@ -14,7 +14,5 @@ class Notification(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     notification_type = models.CharField(max_length=20)
 
-    action_object_id = models.PositiveIntegerField()  # Yorum veya Beğeni ID'sini tutar
-
     def __str__(self):
         return self.message

@@ -21,11 +21,16 @@
             data-overlay="app-overlay-ex"
             data-target="#app-chat-sidebar-left"
           >
+          {% if user.profile_photo.profile_photo %}
             <img
               class="user-avatar rounded-circle cursor-pointer"
               src="{{ user.profile_photo.profile_photo.url }}"
               alt="Avatar"
             />
+          {%else%}
+          <span class="avatar-initial rounded-circle bg-label-primary">{{user.first_name|first}}{{user.last_name|first}}</span>
+
+          {%endif%}
           </div>
           <div class="flex-grow-1 input-group input-group-merge">
             <span class="input-group-text" id="basic-addon-search31"
@@ -99,7 +104,7 @@
             id="user-{{chat.chat.first_user.id}}"
           >
             <div class="flex-shrink-0 avatar">
-              {% if chat.chat.first.profile_photo.profile_photo %}
+              {% if chat.chat.first_user.profile_photo.profile_photo %}
 
               <img
                 src="{{ chat.chat.first_user.profile_photo.profile_photo.url }}"
@@ -125,7 +130,7 @@
                 </div>
               </div>
               <small class="text-muted"
-                >{{ chat.chat.first_user.educationalinformationmodel.university }}</small
+                >{{ chat.chat.first_user.educational_information.university }}</small
               >
             </div>
           </li>

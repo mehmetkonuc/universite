@@ -16,7 +16,7 @@
              <small class="text-muted">{{ item.create_at }}</small>
              <!-- Makale Özeti -->
              <a href="{% url 'confession_details' item.slug %}">
-                <div class="text-black mt-4">{{ item.description|safe|truncatewords:30 }}</div>
+                <div class="text-body mt-4">{{ item.description|safe|truncatewords:30 }}</div>
              </a>
           </div>
           <div class="card-footer">

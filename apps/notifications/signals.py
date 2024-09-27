@@ -10,7 +10,7 @@ from apps.chat.models import Message
 from apps.follow.models import FollowRequest
 
 
-
+#Takipleşme Bildirimleri
 @receiver(post_save, sender=FollowRequest)
 def create_follow_notification(sender, instance, created, **kwargs):
     if created:
@@ -37,6 +37,7 @@ def create_follow_notification(sender, instance, created, **kwargs):
             'follower_user_university': str(follower.educational_information.university) if hasattr(follower, 'educational_information') else 'Bilinmiyor',
             'time': instance.created_at.strftime("%d %b %Y, %H:%M"),
             'profile_photo_url': profile_photo_url,
+            'request_id' : instance.id,
         }
 
         # Bildirim gönderme
@@ -49,6 +50,8 @@ def create_follow_notification(sender, instance, created, **kwargs):
             }
         )
 
+
+#Mesajlaşma Bildirimleri
 @receiver(post_save, sender=Message)
 def create_message_notification(sender, instance, created, **kwargs):
     try:
@@ -73,7 +76,7 @@ def create_message_notification(sender, instance, created, **kwargs):
         }
     )
 
-
+# Yorumlar Bildirimi
 @receiver(post_save, sender=Comment)
 def create_comment_notification(sender, instance, created, **kwargs):
     # Kullanıcıları ve bildirimleri göndermek için genel bir fonksiyon
@@ -85,7 +88,6 @@ def create_comment_notification(sender, instance, created, **kwargs):
             notification_type='comment',
             content_type=ContentType.objects.get_for_model(instance),
             object_id=instance.id,
-            action_object_id=context.get('action_object_id')
         )
 
         # Kullanıcı profili fotoğrafını al
@@ -133,10 +135,12 @@ def create_comment_notification(sender, instance, created, **kwargs):
 
         if is_parent != content_owner:
             context = instance.content_object.get_notifications_comment_context()
-            context.update(instance.content_object.get_notifications_comment_context())  # İki bağlamı birleştir
+            comment_context = instance.get_notifications_comment_context()
+            context['comment_title'] = comment_context['content_title']
+            context['comment_url'] = comment_context['content_url']
+            # context.update(instance.content_object.get_notifications_comment_context())  # İki bağlamı birleştir
             context['action_object_id'] = instance.content_object.id
             send_notification(content_owner, context)
-
 
 
 @receiver(post_save, sender=Likes)
@@ -150,9 +154,8 @@ def create_like_notification(sender, instance, created, **kwargs):
             user=instance.content_object.user,  # Makale sahibi
             action_user=instance.user,  # Beğeniyi yapan kişi
             notification_type='like',
-            content_type=content_type,
-            object_id=instance.content_object.id,  # Makale ID'si
-            action_object_id=instance.id  # Beğeniye ait ID
+            content_type=ContentType.objects.get_for_model(instance),
+            object_id=instance.id,  # Makale ID'si
         )
 
         # Profil Fotoğraf Kontrolü 
@@ -181,24 +184,27 @@ def create_like_notification(sender, instance, created, **kwargs):
             }
         )
 
-# Yorum silindiğinde bildirimi silmek
-# @receiver(post_delete, sender=Comment)
-# def delete_comment_notification(sender, instance, **kwargs):
-#     Notification.objects.filter(
-#         content_type=ContentType.objects.get_for_model(instance.content_object),
-#         object_id=instance.content_object.id,  # Makale ID'si
-#         action_object_id=instance.id,  # Yoruma ait ID
-#         action_user=instance.user  # Yorumu yapan kişi
-#     ).delete()
 
-# # Beğeni geri çekildiğinde bildirimi silmek
-# @receiver(post_delete, sender=Likes)
-# def delete_like_notification(sender, instance, **kwargs):
-#     Notification.objects.filter(
-#         content_type=ContentType.objects.get_for_model(instance.content_object),
-#         object_id=instance.content_object.id,  # Makale ID'si
-#         action_object_id=instance.id,  # Beğeniye ait ID
-#         action_user=instance.user  # Beğeniyi yapan kişi
-#     ).delete()
+# Yorum silindiğinde bildirimi silmek
+@receiver(post_delete, sender=Comment)
+def delete_comment_notification(sender, instance, **kwargs):
+    Notification.objects.filter(
+        content_type=ContentType.objects.get_for_model(instance),
+        object_id=instance.id,  # Makale ID'si
+        # action_object_id=instance.id,  # Yoruma ait ID
+        # action_user=instance.user  # Yorumu yapan kişi
+    ).delete()
+
+
+# Beğeni geri çekildiğinde bildirimi silmek
+@receiver(post_delete, sender=Likes)
+def delete_like_notification(sender, instance, **kwargs):
+    print('girdi')
+    Notification.objects.filter(
+        content_type=ContentType.objects.get_for_model(instance),
+        object_id=instance.id,  # Makale ID'si
+        # action_object_id=instance.id,  # Beğeniye ait ID
+        # action_user=instance.user  # Beğeniyi yapan kişi
+    ).delete()
 
 

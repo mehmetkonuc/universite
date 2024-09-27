@@ -101,6 +101,7 @@
         <!-- Page JS -->
         {% block extra_javascript %}
         {% endblock extra_javascript %}
+        <!-- Anlık Mesajlaşma - Takipleşme ve Bildirimler WebSocket -->
         <script>
             const socket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
             const pageType = window.location.pathname.includes('/chat/') ? 'chat' : 'notification';
@@ -195,6 +196,8 @@
             console.error('WebSocket kapandı!');
             };
         </script>
+        
+        <!-- Takip - Mesaj ve Bildirimler Akışını Okundu Yapma -->
         <script>
             document.getElementById("notifications_mark_all_as_read").addEventListener("click", function () {
             // AJAX çağrısı ile arka planda bildirimleri okundu olarak işaretle
@@ -270,6 +273,55 @@
                 });
             });
 
+
+            document.getElementById("followers_mark_all_as_read").addEventListener("click", function () {
+                fetch("{% url 'followers_mark_all_as_read' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'), // CSRF token ekle
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Bildirim ikonundaki badge'in silinmesi
+                        var badge = document.getElementById("followers_badge");
+                        if (badge) {
+                        badge.remove(); // Badge siliniyor
+                        }
+
+                        // Bildirim içeriklerinin silinmesi ve "Okunmamış bildiriminiz yok." yazısının eklenmesi
+                        var notificationsContent = document.getElementById("followers_content");
+                        if (notificationsContent) {
+                        notificationsContent.innerHTML = "<li class='list-group-item' id='no_notifications_followers' >Okunmamış takip bildirimi yok.</li>";
+                        }
+
+                        // Bildirim sayısının sıfırlanması
+                        var notificationsCount = document.getElementById("followers_count");
+                        if (notificationsCount) {
+                        notificationsCount.textContent = 0 + " Okunmamış";
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                });
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
             // CSRF tokenini almak için yardımcı fonksiyon
             function getCookie(name) {
             let cookieValue = null;
@@ -287,5 +339,75 @@
             return cookieValue;
             }
         </script>
+
+        <!-- Takip İsteklerini Onaylama -->
+        <script>
+        $(document).ready(function(){
+            // Onayla butonuna tıklama olayı
+            $('#followers_content').on('click', '.follow-approve', function(){
+                var followRequestId = $(this).data('follow-request-id');
+                var $btn = $(this);
+                var $status = $btn.siblings('.follow-status'); // Durum mesajı için span'ı seçiyoruz
+
+                $.ajax({
+                    url: "{% url 'follow_requests_action' %}",
+                    type: "POST",
+                    data: {
+                        'follow_request_id': followRequestId,
+                        'action': 'approve',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if(response.status === 'approved') {
+                            // Butonları kaldır
+                            $btn.siblings('.follow-reject').remove(); // Reddet butonunu kaldır
+                            $btn.remove(); // Onayla butonunu kaldır
+
+                            // "Onaylandı" mesajını göster
+                            $status.text('Onaylandı').addClass('text-success');
+                        }
+                    },
+                    error: function() {
+                        alert('Bir hata oluştu.');
+                    }
+                });
+            });
+
+            // Reddet butonuna tıklama olayı
+            $('#followers_content').on('click', '.follow-reject', function(){
+                var followRequestId = $(this).data('follow-request-id');
+                var $btn = $(this);
+                var $status = $btn.siblings('.follow-status'); // Durum mesajı için span'ı seçiyoruz
+
+                $.ajax({
+                    url: "{% url 'follow_requests_action' %}",
+                    type: "POST",
+                    data: {
+                        'follow_request_id': followRequestId,
+                        'action': 'reject',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if(response.status === 'rejected') {
+                            // Butonları kaldır
+                            $btn.siblings('.follow-approve').remove(); // Onayla butonunu kaldır
+                            $btn.remove(); // Reddet butonunu kaldır
+
+                            // "Reddedildi" mesajını göster
+                            $status.text('Reddedildi').addClass('text-danger');
+                        }
+                    },
+                    error: function() {
+                        alert('Bir hata oluştu.');
+                    }
+                });
+            });
+        });
+
+        
+        </script>
+
+
+
     </body>
 </html>

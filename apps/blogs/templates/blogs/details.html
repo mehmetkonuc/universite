@@ -127,14 +127,6 @@
    </div>
 </div>
 
-{% if comments %}
-<div class="row justify-content-center mb-2">
-   <div class="col-lg-8">
-      <h4 class="fw-bold mb-0">Yorumlar</h4>
-   </div>
-</div>
-{%endif%}
-
 <!-- Yorum Formu -->
    <!-- Comment Form -->
    {% block comment-form %}
@@ -142,7 +134,13 @@
    {% endblock comment-form %}
    <!-- End Comment Form -->
 
-
+   {% if comments %}
+   <div class="row justify-content-center mb-2">
+      <div class="col-lg-8">
+         <h4 class="fw-bold mb-0">Yorumlar</h4>
+      </div>
+   </div>
+   {%endif%}
 
 <!-- Comments -->
 {% block comment %}
@@ -181,22 +179,4 @@
 <script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
 <script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
-<script>
-   CKEDITOR.replace('editor', {
-       extraAllowedContent: 'img[class]',
-       filebrowserImageUploadUrl: '/upload/',
-       on: {
-           instanceReady: function(evt) {
-               evt.editor.dataProcessor.htmlFilter.addRules({
-                   elements: {
-                       img: function(el) {
-                           // Yüklenen tüm resimlere 'ckeditor-img' sınıfı ekle
-                           el.addClass('ckeditor-img');
-                       }
-                   }
-               });
-           }
-       }
-   });
-</script>
 {% endblock extra_javascript %}

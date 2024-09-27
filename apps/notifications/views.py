@@ -4,37 +4,25 @@ from apps.notifications.models import Notification
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.core.paginator import Paginator
 
 
 @login_required
 def notification_list(request):
     # Kullanıcının tüm bildirimlerini alıyoruz
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
-
     # Bildirimlerin okunmadığını işaretleme
-    # notifications.update(is_read=True)
+    notifications.update(is_read=True)
+
+    paginator = Paginator(notifications, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'notifications': notifications,
+        'notifications': page_obj,
     }
     return render(request, 'notifications/notifications.html', context)
 
-
-@csrf_exempt
-def delete_notifications(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        notification_ids = data.get('notification_ids', [])
-        Notification.objects.filter(id__in=notification_ids, user=request.user).delete()
-        return JsonResponse({"status": "success"})
-
-@csrf_exempt
-def mark_notifications_as_read(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        notification_ids = data.get('notification_ids', [])
-        Notification.objects.filter(id__in=notification_ids, user=request.user).update(is_read=True)
-        return JsonResponse({"status": "success"})
 
 @login_required
 def notifications_mark_all_as_read(request):
@@ -42,3 +30,23 @@ def notifications_mark_all_as_read(request):
         Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'failed'}, status=400)
+
+
+@login_required
+@csrf_exempt
+def notifications_requests_delete(request):
+    if request.method == 'POST':
+        selected_notifications = request.POST.getlist('selected_notifications[]')  # 'selected_notifications[]' listesini al
+        print(selected_notifications)
+        if selected_notifications:
+            # Kullanıcıya ait verileri sil
+            deleted, _ = Notification.objects.filter(id__in=selected_notifications).delete()
+            
+            # Silme işleminin sonucuna göre response dön
+            if deleted:
+                return JsonResponse({'status': 'success', 'message': 'Seçili bildirimler silindi.'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Bildirimler silinemedi.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Bildirim yok.'})
+    return JsonResponse({'status': 'error', 'message': 'Geçersiz istek.'})

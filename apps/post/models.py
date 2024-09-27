@@ -36,7 +36,7 @@ def delete_photo_file(sender, instance, **kwargs):
 class PostsModel(models.Model):
     user = models.ForeignKey(User,
                              on_delete=models.CASCADE, related_name='posts')
-    content = models.TextField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True, max_length=400)
     create_at = models.DateTimeField(auto_now_add=True)
     comments = GenericRelation(Comment)
     likes = GenericRelation(Likes)
@@ -55,7 +55,7 @@ class PostsModel(models.Model):
         context = {
         'message' : 'gönderinize yorum yaptı.',
         'content_title' : self.content,
-        'content_url' : reverse('comment_detail', kwargs={'comment_id': self.id}),
+        'content_url' : reverse('post_detail', kwargs={'post_id': self.id}),
         }
         return context
 

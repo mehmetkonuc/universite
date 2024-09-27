@@ -121,9 +121,9 @@ $(function () {
       $(this).maxlength({
         warningClass: 'label label-success bg-success text-white',
         limitReachedClass: 'label label-danger',
-        separator: ' out of ',
-        preText: 'You typed ',
-        postText: ' chars available.',
+        separator: '/',
+        preText: '',
+        postText: '',
         validate: true,
         threshold: +this.getAttribute('maxlength')
       });

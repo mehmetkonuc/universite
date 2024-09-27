@@ -46,7 +46,7 @@
                      <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
                            {% if user == profile %}
-                           <a href="{% url 'followers_profile' profile.username %}">
+                           <a href="{% url 'followers_profile' %}">
                            <span class="badge bg-label-success" id="follower-count"><strong>{{profile.followers.count}}</strong> Takipçi</span>
                            </a>
                            {%else%}
@@ -55,7 +55,7 @@
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
                            {% if user == profile %}
-                           <a href="{% url 'following_profile' profile.username %}">
+                           <a href="{% url 'following_profile' %}">
                            <span class="badge bg-label-primary"><strong>{{profile.following.count}}</strong> Takip</span>
                            </a>
                            {%else%}
@@ -66,8 +66,11 @@
                   </div>
                   <div class="ms-end">
                   {%if user.username == profile.username %}
-                     <a href="{% url 'profile_settings' %}" class="btn btn-primary mb-1">
-                     <i class="ti ti-settings  me-2"></i>Hesap Ayarları
+                     <a href="{% url 'profile_settings' %}" class="btn btn-sm btn-primary mb-1 rounded-pill">
+                        <i class="ti ti-settings  me-2"></i>Hesap Ayarları
+                     </a>
+                     <a href="{% url 'privacy_settings' %}" class="btn btn-sm btn-success mb-1 rounded-pill">
+                        <i class="ti ti-lock me-2"></i>Gizlilik Ayarları
                      </a>
                   {%else%}
                   {% if request.user != profile %}
@@ -127,6 +130,9 @@
 
 
 {% block extra_javascript %}
+{% block profile_javascript %}
+
+{%endblock%}
 <script>
    $(document).ready(function(){
        $('#follow-btn').click(function(){
@@ -185,7 +191,3 @@
 </script>
 
 {% endblock %}
-
-{% block profile_javascript %}
-
-{%endblock%}

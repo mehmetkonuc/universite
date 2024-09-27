@@ -36,7 +36,6 @@ class ProfileView(LoginRequiredMixin, View):
     model_posts = PostsModel
     template = 'profiles/index.html'
     context = {
-        'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
@@ -48,7 +47,9 @@ class ProfileView(LoginRequiredMixin, View):
         follow_requests = profile.follow_requests_received.filter(follower=request.user)
         
         self.context.update(
-            {'profile': profile,
+            {
+            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Profil',
+            'profile': profile,
             'confessions': confessions,
             'followers':followers,
             'follow_requests':follow_requests,
@@ -65,9 +66,9 @@ class FollowersProfileView(LoginRequiredMixin, View):
         'siteTitle' : 'Profil',
     }
 
-    def get(self, request, username):
+    def get(self, request):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
+        profile = get_object_or_404(users, username=request.user.username)
         # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
         followers = profile.followers.all()
 
@@ -78,24 +79,26 @@ class FollowersProfileView(LoginRequiredMixin, View):
         # followers = profile.followers.filter(follower=request.user)
 
         self.context.update(
-            {'profile': profile,
+            {
+            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Takipçileri',
+            'profile': profile,
              'data':page_obj,
             #  'followers':followers,
              }
         )
         return render(request, self.template, self.context)
 
+
 class FollowingProfileView(LoginRequiredMixin, View):
     # model_marketplace = MarketPlaceModel
     template = 'profiles/following.html'
     paginate_by = 2
     context = {
-        'siteTitle' : 'Profil',
     }
 
-    def get(self, request, username):
+    def get(self, request):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
+        profile = get_object_or_404(users, username=request.user.username)
         # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
         following = profile.following.all()
 
@@ -106,8 +109,10 @@ class FollowingProfileView(LoginRequiredMixin, View):
         # followers = profile.followers.filter(follower=request.user)
 
         self.context.update(
-            {'profile': profile,
-             'data':page_obj,
+            {
+            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Takip Ettikleri',
+            'profile': profile,
+            'data':page_obj,
             #  'followers':followers,
              }
         )
@@ -121,7 +126,7 @@ class PostsProfileView(LoginRequiredMixin, View):
     paginate_by = 2
     template = 'profiles/posts.html'
     context = {
-        'siteTitle' : 'Profil',
+
     }
 
     def get(self, request, username):
@@ -137,8 +142,10 @@ class PostsProfileView(LoginRequiredMixin, View):
 
 
         self.context.update(
-            {'profile': profile,
-             'data':page_obj,
+            {
+            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Gönderileri',
+            'profile': profile,
+            'data':page_obj,
             'liked':liked,
             'followers':followers
              }
@@ -165,7 +172,9 @@ class ArticlesProfileView(LoginRequiredMixin, View):
         followers = profile.followers.filter(follower=request.user)
 
         self.context.update(
-            {'profile': profile,
+            {
+            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Makaleleri',    
+            'profile': profile,
              'data':page_obj,
              'followers':followers,
              }

@@ -11,9 +11,10 @@ urlpatterns = [
     path('settings/privacy/', views.PrivacyView.as_view(), name='privacy_settings'),
     path('settings/education/', views.EducationSettingsView.as_view(), name='education_settings'),
     path('delete/', views.ProfileDeleteView.as_view(), name='profile_delete'),
+    path('followers/', views.FollowersProfileView.as_view(), name='followers_profile'),
+    path('following/', views.FollowingProfileView.as_view(), name='following_profile'),
+
     path('<str:username>/', views.ProfileView.as_view(), name='profile'),
-    path('<str:username>/followers/', views.FollowersProfileView.as_view(), name='followers_profile'),
-    path('<str:username>/following/', views.FollowingProfileView.as_view(), name='following_profile'),
     path('<str:username>/posts/', views.PostsProfileView.as_view(), name='posts_profile'),
     path('<str:username>/articles/', views.ArticlesProfileView.as_view(), name='articles_profile'),
     path('<str:username>/marketplace/', views.MarketplaceProfileView.as_view(), name='marketplace_profile'),

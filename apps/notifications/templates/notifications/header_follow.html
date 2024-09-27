@@ -31,6 +31,13 @@
          <div class="mb-1">
             <small class="text-muted"> {{ message.time }}</small>
          </div>
+         {% if message.following_is_private %}
+            <button class="btn btn-label-success btn-xs follow-approve" data-follow-request-id="{{ message.request_id }}">Onayla</button>
+            <button class="btn btn-label-danger btn-xs follow-reject" data-follow-request-id="{{ message.request_id }}">Reddet</button>
+            <!-- Durum mesajını göstereceğimiz yer -->
+            <span class="follow-status"></span>
+         {%endif%}
+
       </div>
    </div>
 </li>

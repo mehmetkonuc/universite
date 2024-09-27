@@ -1,33 +1,61 @@
-<li class="list-group-item list-group-item-action dropdown-notifications-item" id="notification_content">
-  <div class="d-flex flex-wrap bd-highlight">
-     <div class="d-flex align-items-start mb-3">
-        <div class="bd-highlight">
-           <div class="avatar avatar-md me-2 flex-shrink-0">
-              <a href="{% url 'profile' message.action_user_name %}">
-              {% if message.profile_photo_url %}
-              <img src="{{ message.profile_photo_url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
-              {% else %}
-              <span class="avatar-initial rounded-circle bg-label-primary">{{ message.action_user_first_name|first }}{{ message.action_user_last_name|first }}</span>
-              {% endif %}
-              </a>
-           </div>
-        </div>
-        <div class="bd-highlight">
-           <a href="{% url 'profile' message.action_user_name %}">
-              <div class="me-2 h6 mb-0">{{ message.action_user_first_name }} {{ message.action_user_last_name }}
-                 <small class="text-muted">
-                 {{message.message}}
-                 </small>
-              </div>
-           </a>
-           <small class="text-muted">{{ message.action_user_university }}</small>
-        </div>
-     </div>
-     <a href="{{message.content_url}}">
-        <h6 class="mb-1 d-block text-body"> {{message.content_title}}</h6>
-     </a>
-     <div class="ms-auto bd-highlight">
-        <small class="text-muted"> {{ message.created_at }}</small>
-     </div>
-  </div>
+<li class="list-group-item list-group-item-action dropdown-notifications-item infinite-item-notification" id="notification_content">
+   <div class="d-flex flex-wrap bd-highlight mb-3">
+      <div class="d-flex align-items-start">
+         <div class="bd-highlight me-2">
+            <a href="{% url 'profile' message.action_user_name %}">
+               <div class="avatar avatar-md flex-shrink-0">
+                  {% if message.profile_photo_url %}
+                  <img src="{{ message.profile_photo_url }}" alt class="rounded-circle" />
+                  {% else %}
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{ message.action_user_first_name|first }}{{ message.action_user_last_name|first }}</span>
+                  {% endif %}
+               </div>
+            </a>
+         </div>
+   
+         <div class="bd-highlight">
+            <a href="{% url 'profile' message.action_user_name %}">
+               <div class="sme-2 h6 mb-0">{{ message.action_user_first_name }} {{ message.action_user_last_name }}
+                  <small class="text-muted">
+                     {{message.message}}
+                  </small>
+               </div>
+            </a>
+            <small class="text-muted">{{ message.action_user_university }}</small>
+   
+            {% if message.comment_title %}
+               <a href="{{message.comment_url}}">
+                  <span class="mt-1 mb-1 d-block text-body">{{message.comment_title|truncatechars:70}}</span>
+               </a>
+            {%else%}
+               <a href="{{message.content_url}}">
+                  <span class="mt-1 mb-1 d-block text-body">{{message.content_title|truncatechars:70}}</span>
+               </a>
+            {%endif%}
+         </div>
+      </div>
+      <div class="ms-auto bd-highlight">
+         <div class="mb-1">
+            <small class="text-muted">{{message.created_at}}</small>
+         </div>
+      </div>
+   </div>
 </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

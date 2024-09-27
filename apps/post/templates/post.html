@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
 <link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/pages/post/index.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.css' %}" />
+
 
 {% endblock extra_css%}
 {% block content %}
@@ -26,6 +28,9 @@
 <div class="row justify-content-center">
    <div class="col-lg-8 mb-4">
       <div class="card card-border-shadow-primary mb-8">
+         <div class="card-header bg-label-primary mb-4">
+            <h5 class="card-title text-primary mb-0 fw-bold">Durum Paylaşın</h5>
+         </div>
          <div class="card-header mb-0">
             <form id="post-form" method="POST" enctype="multipart/form-data">
                {% csrf_token %}
@@ -41,10 +46,10 @@
                   {% endif %}
                </div>
                <!-- <input class="form-control message-input  me-4 shadow-none" placeholder="Aklındakini Fakula!!!"> -->
-               <textarea id="autosize-demo" name="content" rows="3" placeholder="Aklındakini Fakula!!!" class="form-control border-0 shadow-none border-bottom "></textarea>
+               <textarea id="autosize-demo" name="content" rows="3" maxlength="400" placeholder="Aklındakini Fakula!!!" class="form-control bootstrap-maxlength-example border-0 shadow-none border-bottom "></textarea>
 
             </div>
-            <div class="d-flex flex-row-reverse bd-highlight mt-4">
+            <div class="d-flex flex-row-reverse bd-highlight mt-7">
                <div class="bd-highlight">
                   <button type="submit" class="btn btn-sm btn-success waves-effect rounded-pill"><i class="ti ti-brand-telegram ti-sm me-1"></i>Gönder</button>
                </div>
@@ -216,5 +221,6 @@
 <script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
 <script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 <script src="{% static 'assets/js/pages/post.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.js' %}"></script>
 
 {% endblock extra_javascript %}

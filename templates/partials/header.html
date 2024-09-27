@@ -111,7 +111,7 @@
                            class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
-                           title="Mark all as read"
+                           title="Tümünü Oku"
                            id="followers_mark_all_as_read"
                            ><i class="ti ti-mail-opened text-heading"></i
                            ></a>
@@ -122,32 +122,48 @@
                   <ul class="list-group list-group-flush" id="followers_content">
                      {% for follower in followers_header %}
                      <li class="list-group-item list-group-item-action dropdown-notifications-item d-flex" id="follower_content">
-                        <div class="flex-shrink-0 avatar">
-                              {% if follower.follower.profile_photo.profile_photo %}
-                              <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt class="rounded-circle" />
-                              {% else %}
-                              <span class="avatar-initial rounded-circle bg-label-primary">{{ follower.follower.first_name|first }}{{ follower.follower.last_name|first }}</span>
-                              {% endif %}
-
-                        </div>
-                        <div class="chat-contact-info flex-grow-1 ms-4">
-                           <a href="{% url 'profile' follower.follower.username %}">
-                              <div class="d-flex justify-content-between align-items-center">
-                                 <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                                    {{ follower.follower.first_name }} {{ follower.follower.last_name }} <small class="text-muted"> takip isteği gönderdi.</small>
-                                 </h6>
-                                 <div id="follower_alert">
-                                    <span
-                                       class="badge rounded-pill bg-danger badge-dot border"
-                                       id="follower_badge"
-                                       ></span>
+                        <div class="d-flex flex-wrap bd-highlight mb-3">
+                           <div class="d-flex align-items-start mb-3">
+                              <div class="bd-highlight">
+                                 <div class="avatar avatar-md me-2 flex-shrink-0">
+                                    <a href="{% url 'profile' follower.follower.username %}">
+                                    {% if follower.follower.profile_photo.profile_photo %}
+                                    <img src="{{ follower.follower.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                                    {% else %}
+                                    <span class="avatar-initial rounded-circle bg-label-primary">{{ follower.follower.first_name|first }}{{ follower.follower.last_name|first }}</span>
+                                    {% endif %}
+                                    </a>
                                  </div>
                               </div>
-                              <small class="text-muted">
-                              {{ follower.follower.educational_information.university }}
-                              </small>
-                           </a>
-                        </div>
+
+                              <div class="bd-highlight">
+                                 <a href="{% url 'profile' follower.follower.username %}">
+                                    <div class="me-2 h6 mb-0">
+                                       {{ follower.follower.first_name }} {{ follower.follower.last_name }}
+                                       <small class="text-muted">
+                                          {% if follower.following.privacy.is_private %}
+                                          takip isteği gönderdi.
+                                          {%else%}
+                                          seni takip etti.
+                                          {%endif%}
+                                       </small>
+                                    </div>
+                                 </a>
+                                 <small class="text-muted">{{ follower.follower.educational_information.university }}</small>
+                              </div>
+                              </div>
+                              <div class="ms-auto bd-highlight">
+                                 <div class="mb-1">
+                                    <small class="text-muted"> {{ follower.created_at }}</small>
+                                 </div>
+                                 {% if follower.following.privacy.is_private %}
+                                    <button class="btn btn-label-success btn-xs follow-approve" data-follow-request-id="{{ follower.id }}">Onayla</button>
+                                    <button class="btn btn-label-danger btn-xs follow-reject" data-follow-request-id="{{ follower.id }}">Reddet</button>
+                                    <!-- Durum mesajını göstereceğimiz yer -->
+                                    <span class="follow-status"></span>
+                                 {%endif%}
+                              </div>
+                              </div>
                      </li>
                      {% empty %}
                      <li class="list-group-item list-group-item-action dropdown-notifications-item" id="no_notifications_followers">
@@ -163,7 +179,7 @@
                <li class="border-top">
                   <div class="d-grid p-4">
                      <a class="btn btn-primary btn-sm d-flex" href="{% url 'follow-requests' %}">
-                     <small class="align-middle">Tüm İstekler Görüntüle</small>
+                     <small class="align-middle">Tüm İstekler</small>
                      </a>
                   </div>
                </li>
@@ -181,7 +197,7 @@
                <span class="position-relative">
                   <i class="ti ti-message ti-md" id="messages_icon"></i>
                   <div id="messages_alert">
-                     {% if chats_header.count > 0 %}
+                     {% if chat_count > 0 %}
                      <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="messages_badge"></span>
                      {% endif %}
                   </div>
@@ -192,13 +208,13 @@
                   <div class="dropdown-header d-flex align-items-center py-3">
                      <h6 class="mb-0 me-auto">Mesajlar</h6>
                      <div class="d-flex align-items-center h6 mb-0">
-                        <span class="badge bg-label-primary me-2"  id="message_count">{{chats_header.count}} Okunmamış</span>
+                        <span class="badge bg-label-primary me-2"  id="message_count">{{chat_count}} Okunmamış</span>
                         <a
                            href="javascript:void(0)"
                            class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
-                           title="Mark all as read"
+                           title="Tümünü Oku"
                            id="messages_mark_all_as_read"
                            ><i class="ti ti-mail-opened text-heading"></i
                            ></a>
@@ -225,15 +241,9 @@
                                  <h6 class="chat-contact-name text-truncate fw-normal m-0">
                                     {{ chat.second_user.first_name }} {{ chat.second_user.last_name }}
                                  </h6>
-                                 <div id="message_alert">
-                                    <span
-                                       class="badge rounded-pill bg-danger badge-dot border"
-                                       id="message_badge"
-                                       ></span>
-                                 </div>
                               </div>
                               <small class="text-muted">
-                              {{ chat.second_user.educationalinformationmodel.university }}
+                              {{ chat.second_user.educational_information.university }}
                               </small>
                            </a>
                         </div>
@@ -253,15 +263,9 @@
                                  <h6 class="chat-contact-name text-truncate fw-normal m-0">
                                     {{ chat.first_user.first_name }} {{ chat.first_user.last_name }}
                                  </h6>
-                                 <div id="message_alert">
-                                    <span
-                                       class="badge rounded-pill bg-danger badge-dot border"
-                                       id="message_badge"
-                                       ></span>
-                                 </div>
                               </div>
                               <small class="text-muted">
-                              {{ chat.first_user.educationalinformationmodel.university }}
+                              {{ chat.first_user.educational_information.university }}
                               </small>
                            </a>
                         </div>
@@ -276,6 +280,9 @@
                         </div>
                      </li>
                      {%endfor%}
+                     {% if chat_count > 6 %}
+                        <a href="{% url 'chat_index' %}" class="btn btn-secondary">Sonraki Mesajları Gör</a>
+                     {%endif%}
                   </ul>
                </li>
                <li class="border-top">
@@ -298,7 +305,7 @@
                <span class="position-relative">
                   <i class="ti ti-bell ti-md" id="notifications_icon"></i>
                   <div id="notifications_alert">
-                     {% if notifications_header.count > 0 %}
+                     {% if notifications_count > 0 %}
                      <span class="badge rounded-pill bg-danger badge-dot badge-notifications border" id="notifications_badge"></span>
                      {% endif %}
                   </div>
@@ -309,7 +316,7 @@
                   <div class="dropdown-header d-flex align-items-center py-3">
                      <h6 class="mb-0 me-auto">Bildirimler</h6>
                      <div class="d-flex align-items-center h6 mb-0">
-                        <span class="badge bg-label-primary me-2" id="notifications_count">{{notifications_header.count}} Okunmamış</span>
+                        <span class="badge bg-label-primary me-2" id="notifications_count">{{notifications_count}} Okunmamış</span>
                         <a
                            href="javascript:void(0)"
                            class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all"
@@ -322,59 +329,54 @@
                      </div>
                   </div>
                </li>
-               <li class="dropdown-notifications-list scrollable-container">
-                  <ul class="list-group list-group-flush" id="notifications_content">
+               <li class="dropdown-notifications-list scrollable-container" id="notifications-scroll">
+                  <ul class="list-group list-group-flush infinite-container-notifications" id="notifications_content">
                      {%for notification in notifications_header %}
-                     <li class="list-group-item list-group-item-action dropdown-notifications-item" id="notification_content">
-                        <div class="d-flex">
-                           <div class="flex-shrink-0 me-3 card-text ">
-                              <a href="{% url 'profile' notification.action_user.username %}">
-                                 <div class="avatar">
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item infinite-item-notification" id="notification_content">
+                        <div class="d-flex flex-wrap bd-highlight">
+                           <div class="d-flex align-items-start">
+                              <div class="bd-highlight me-2">
+                                 <div class="avatar avatar-md flex-shrink-0">
                                     {% if notification.action_user.profile_photo.profile_photo %}
-                                    <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt class="rounded-circle" />
+                                    <img src="{{ notification.action_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
                                     {% else %}
                                     <span class="avatar-initial rounded-circle bg-label-primary">{{ notification.action_user.first_name|first }}{{ notification.action_user.last_name|first }}</span>
                                     {% endif %}
                                  </div>
-                              </a>
-                           </div>
-                           <div class="flex-grow-1">
-                              <a href="{% url 'profile' notification.action_user.username %}">
-                                 <h6 class="small mb-0">{{notification.action_user.first_name}} {{notification.action_user.last_name}}
-                                    <small class="text-muted"> 
-                                    {% if notification.notification_type == 'like' %}
-                                       {{notification.content_object.get_notifications_like_context.message}}
-                                    {% elif notification.notification_type == 'comment' %}
-                                       {% if notification.content_object.parent %}
-                                          {{notification.content_object.get_notifications_comment_context.message}}
-                                       {%else%}
-                                          {{notification.content_object.content_object.get_notifications_comment_context.message}}
-                                       {%endif%}
-                                    {%endif%}
-                                    </small>
-                                 </h6>
-                              </a>
-                              <small class="text-muted">{{notification.action_user.educational_information.university}}</small>
-                              <!-- signals.py bölümünde like bildirimi için content_object alanını like'ın content_object ile değiştir. -->
-                              {% if notification.notification_type == 'like' %}
-                              <a href="{{notification.content_object.get_notifications_like_context.content_url }}">
-                              <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.get_notifications_like_context.content_title|truncatechars:40 }}</span>
-                              </a>
-                              {% elif notification.notification_type == 'comment' %}
-                              <a href="{{notification.content_object.get_notifications_comment_context.content_url }}">
-                                 <span class="mt-1 mb-1 d-block text-black">{{ notification.content_object.get_notifications_comment_context.content_title|truncatechars:40 }}</span>
-                              </a>
-                              {%endif%}
-                              <small class="text-muted">{{notification.created_at}}</small>
-                           </div>
-                           <div id="content_notifications_alert">
-                              {% if not notification.is_read %}
-                              <div class="flex-shrink-0 dropdown-notifications-actions">
-                                 <a href="javascript:void(0)" class="dropdown-notifications-read">
-                                 <span class="badge badge-dot" id="content_notifications_badge"></span>
-                                 </a>
                               </div>
-                              {%endif%}
+      
+                              <div class="bd-highlight">
+                                 <a href="{% url 'profile' notification.action_user.username %}">
+                                    <div class="me-2 h6 mb-0">{{ notification.action_user.first_name }} {{ notification.action_user.last_name }}
+                                       <small class="text-muted">
+                                       {% if notification.notification_type == 'like' %}
+                                       {{notification.content_object.content_object.get_notifications_like_context.message}}
+                                       {%elif notification.notification_type == 'comment' %}
+                                       {% if notification.content_object.parent %}
+                                       {{notification.content_object.get_notifications_comment_context.message}}
+                                       {%else%}
+                                       {{notification.content_object.content_object.get_notifications_comment_context.message}}
+                                       {%endif%}
+                                       {%endif%}
+                                       </small>
+                                    </div>
+                                 </a>
+                                 <small class="text-muted">{{ notification.action_user.educational_information.university }}</small>
+                                 {% if notification.notification_type == 'like' %}
+                                 <a href="{{notification.content_object.content_object.get_notifications_like_context.content_url }}">
+                                 <span class="mt-1 mb-1 d-block text-body">{{ notification.content_object.content_object.get_notifications_like_context.content_title|truncatechars:70 }}</span>
+                                 </a>
+                                 {% elif notification.notification_type == 'comment' %}
+                                 <a href="{{notification.content_object.get_notifications_comment_context.content_url }}">
+                                 <span class="mt-1 mb-1 d-block text-body">{{ notification.content_object.get_notifications_comment_context.content_title|truncatechars:70 }}</span>
+                                 </a>
+                                 {%endif%}
+                              </div>
+                           </div>
+                           <div class="ms-auto bd-highlight">
+                              <div class="mb-1">
+                                 <small class="text-muted"> {{ notification.created_at|date:"d M Y, H:i" }}</small>
+                              </div>
                            </div>
                         </div>
                      </li>
@@ -387,7 +389,21 @@
                         </div>
                      </li>
                      {% endfor %}
+                     {% if notifications_count > 6 %}
+                        <a href="{% url 'notifications' %}" class="btn btn-secondary">Sonraki Bildirimleri Gör</a>
+                     {%endif%}
                   </ul>
+                  <div class="col-lg-4 loading-container">
+                     <div class="loading-notifications" style="display:none;">
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-8">
+                        {% if notifications_header.has_next %}
+                        <a class="infinite-more-link-notifications" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ notifications_header.next_page_number }}">Sonraki</a>
+                        {% endif %}
+                     </div>
+                  </div>
                </li>
                <li class="border-top">
                   <div class="d-grid p-4">
