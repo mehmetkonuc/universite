@@ -40,4 +40,5 @@ urlpatterns = [
     path('notifications/', include('apps.notifications.urls')),
     path('chat/', include('apps.chat.urls')),
     path('follow/', include('apps.follow.urls')),
+    path('complaints/', include('apps.complaints.urls')),
 ]

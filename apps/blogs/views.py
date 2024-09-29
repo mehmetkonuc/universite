@@ -70,8 +70,10 @@ class ArticlesView(View):
                 like_count=Count('likes', distinct=True),
                 comment_count=Count('comments', distinct=True)
                 )  
+            
             filter = self.filter_form(data=request.POST, queryset=data, request=request)
             filtered_data = filter.qs
+            
             # Apply sorting
             sorted_data = filtered_data
             

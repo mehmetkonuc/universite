@@ -1,8 +1,9 @@
 from apps.comments.forms import CommentForm
 from apps.comments.models import Comment, CommentPhotos
 from apps.blogs.models import ArticlesModel
+from apps.documents.models import DocumentsModel
 from apps.photos.views import photos_save
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Likes
@@ -43,16 +44,21 @@ class CommentView():
                 )
 
     def delete_comment(request, comment_id):
-        delete_comment = Comment.objects.get(id=comment_id)
-        if delete_comment.user == request.user or request.user.is_superuser:
-            delete_comment.delete()
-            
-        if 'Post' in str(delete_comment.content_type):
-            return redirect('post_detail', post_id=delete_comment.object_id)
-        
-        elif 'Blogs' in str(delete_comment.content_type):
-            article = ArticlesModel.objects.get(id=delete_comment.object_id)
-            return redirect('article_details', slug=article.slug)
+        # Yorum nesnesini al
+        comment = get_object_or_404(Comment, id=comment_id)
+
+        # Kullanıcının yorum silme yetkisini kontrol et
+        if comment.user == request.user or request.user.is_superuser:
+            # Yorum sil
+            comment.delete()
+
+            content_url = comment.content_object.get_notifications_comment_context()['content_url']
+            # content_object üzerinden dinamik olarak yönlendirme yap
+            return redirect(content_url)  # Modelde get_absolute_url metodunu kullanarak yönlendiriyoruz
+
+        # Yetki yoksa bir yere yönlendir veya hata fırlat
+        return redirect('some_error_page')  # Hata sayfasına yönlendirme (örnek)
+
 
 class CommentCommentsView(View):
     model_comment = Comment

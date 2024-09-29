@@ -17,31 +17,28 @@
                   <span>{{profile.date_joined|date:" d F Y"}}</span>
                </li>
                <li class="d-flex align-items-center mb-4">
-                  <i class="ti ti-flag ti-lg"></i><span class="fw-medium mx-2">Ülke:</span>
-                  <span>{{profile.educationalinformationmodel.Country}}</span>
+                  <i class="ti ti-flag ti-lg"></i><span class="fw-medium mx-2">Yaşadığı Ülke:</span>
+                  <span>{{profile.additional_information.living_country}}</span>
                </li>
                <li class="d-flex align-items-center mb-4">
-                  <i class="ti ti-building-community ti-lg"></i><span class="fw-medium mx-2">Şehir:</span>
-                  <span></span>
-               </li>
-               <li class="d-flex align-items-center mb-4">
-                  <i class="ti ti-language ti-lg"></i><span class="fw-medium mx-2">Diller:</span> <span></span>
+                  <i class="ti ti-building-community ti-lg"></i><span class="fw-medium mx-2">Yaşadığı Şehir:</span>
+                  <span>{{profile.additional_information.living_city}}</span>
                </li>
                <li class="d-flex align-items-center mb-4">
                   <i class="ti ti-cake ti-lg"></i><span class="fw-medium mx-2">Doğum Tarihi:</span>
-                  <span></span>
+                  <span>{{profile.additional_information.date_of_birth|date:"Y"}}</span>
                </li>
                <li class="d-flex align-items-center mb-4">
                   <i class="ti ti-gender-bigender ti-lg"></i><span class="fw-medium mx-2">Cinsiyet:</span>
-                  <span></span>
+                  <span>{{profile.additional_information.gender}}</span>
                </li>
                <li class="d-flex align-items-center mb-4">
                   <i class="ti ti-heart ti-lg"></i><span class="fw-medium mx-2">İlişki:</span>
-                  <span></span>
+                  <span>{{profile.additional_information.relationship}}</span>
                </li>
-               <li class="d-flex align-items-center mb-0">
-                  <i class="ti ti-mail ti-lg"></i><span class="fw-medium mx-2">Mail:</span>
-                  <span></span>
+               <li class="d-flex align-items-center mb-4">
+                  <i class="ti ti-heart ti-lg"></i><span class="fw-medium mx-2">Hakkında:</span>
+                  <span>{{profile.additional_information.about}}</span>
                </li>
             </ul>
          </div>

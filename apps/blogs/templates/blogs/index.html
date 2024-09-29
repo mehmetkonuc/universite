@@ -8,42 +8,39 @@
 {% endblock extra_css%}
 {% block content %}
 <div class="d-flex bd-highlight mb-4">
-   <div class="p-2 flex-grow-1 bd-highlight">
+   <div class="flex-grow-1 bd-highlight">
+      <h3 class="mb-0 mt-0 fw-bold">Tüm Makaleler</h3>
+      <small>
+      {% if user_filter.category or user_filter.following_only or user_filter.university or user_filter.department or user_filter.status %}
+      {% if user_filter.following_only %}
+      <span class="badge rounded-pill bg-label-success">Takip Ettiklerim</span>
+      {% endif %}
+      {% if user_filter.category %}
+      <span class="badge rounded-pill bg-label-success">{{ user_filter.category }}</span>
+      {% endif %}
+      {% if user_filter.country %}
+      <span class="badge rounded-pill bg-label-success">{{ user_filter.country }}</span>
+      {% endif %}
+      {% if user_filter.university %}
+      <span class="badge rounded-pill bg-label-success">{{ user_filter.university }}</span>
+      {% endif %}
+      {% if user_filter.department %}
+      <span class="badge rounded-pill bg-label-success">{{ user_filter.department }}</span>
+      {% endif %}
+      {% if user_filter.status %}
+      <span class="badge rounded-pill bg-label-success">{{ user_filter.status }}</span>
+      {% endif %}
+      {%else%}
+      <span class="badge rounded-pill bg-label-success">Filtre Yok</span>
+      {% endif %}
+      </small>
    </div>
-   <div class="bd-highlight me-4">
+   <div class="bd-highlight me-2">
       <a href="{% url 'article_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
    </div>
    <div class="bd-highlight">
       <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
    </div>
-</div>
-<div  class="mb-4">
-   <h3 class="mb-0 fw-bold">Tüm Makaleler</h3>
-   <small>
-      {% if user_filter.category or user_filter.following_only or user_filter.university or user_filter.department or user_filter.status %}
-            {% if user_filter.following_only %}
-            <span class="badge rounded-pill bg-label-success">Takip Ettiklerim</span>
-            {% endif %}
-            {% if user_filter.category %}
-            <span class="badge rounded-pill bg-label-success">{{ user_filter.category }}</span>
-            {% endif %}
-            {% if user_filter.country %}
-            <span class="badge rounded-pill bg-label-success">{{ user_filter.country }}</span>
-            {% endif %}
-            {% if user_filter.university %}
-            <span class="badge rounded-pill bg-label-success">{{ user_filter.university }}</span>
-            {% endif %}
-            {% if user_filter.department %}
-            <span class="badge rounded-pill bg-label-success">{{ user_filter.department }}</span>
-            {% endif %}
-            {% if user_filter.status %}
-            <span class="badge rounded-pill bg-label-success">{{ user_filter.status }}</span>
-            {% endif %}
-               {%else%}
-               <span class="badge rounded-pill bg-label-success">Filtre Yok</span>
-
-               {% endif %}
-   </small>
 </div>
 <div class="row justify-content-center">
    <div class="col">
@@ -57,12 +54,9 @@
       {% endif %}
    </div>
 </div>
-
-
 <!--Articles Grid Card -->
 {% include 'blogs/article_list.html' %}
 <!-- End Articles Grid Card -->
- 
 <!-- Canvas -->
 <div
    class="offcanvas offcanvas-end"
@@ -80,7 +74,6 @@
    <div class="offcanvas-body mx-0 flex-grow-0">
       <form method="POST">
          {% csrf_token %}
-
          {{ filter.form|crispy}}
          <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
          <button type="submit" class="btn btn-danger mb-2 d-grid w-100" name="reset_filter">Filtreyi Temizle</button>

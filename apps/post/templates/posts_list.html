@@ -32,7 +32,7 @@
                 <i class="ti ti-dots-vertical ti-sm text-muted"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                   <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+                   <a class="dropdown-item" href="{% url 'file_complaint' 'post' 'PostsModel' post.id %}">Şikayet Et</a>
                    {% if post.user.username == user.username or user.is_superuser %}
                    <a class="dropdown-item text-danger delete-post-btn" href="#" data-id="{{ post.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Sil</a>
                    {% endif %}
@@ -40,7 +40,14 @@
              </div>
           </div>
           <div class="card-body">
-             <p class="text-black"> {{ post.content |linebreaks }} </p>
+
+            <div id="post-content-{{ post.id }}">
+               <span class="short-content"> {{ post.content|truncatewords:20 }}</span>
+               <span class="full-content d-none">{{ post.content | linebreaks }}</span>
+            </div>
+            {% if post.content|length > 100 %}
+               <a href="javascript:void(0);" class="show-more-btn" data-post-id="{{ post.id }}">Devamını oku...</a>
+            {% endif %}
              <div class="gallery-container mt-4">
                 {% for image in post.photos.all %}
                 <div class="gallery-item">

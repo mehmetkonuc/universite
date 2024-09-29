@@ -39,6 +39,13 @@ class EducationalInformationForm(forms.ModelForm):
         model = EducationalInformationModel
         fields = ['country', 'university', 'department', 'status']
 
+        labels = {
+            'country': 'Ülke',
+            'university' : 'Üniversite',
+            'department' : 'Bölüm',
+            'status' : 'Mezuniyet Durumu',
+
+        }
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:

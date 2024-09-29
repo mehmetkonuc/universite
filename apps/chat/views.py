@@ -8,6 +8,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from apps.follow.models import Follow
+from django.utils.html import escape
 
 def index(request):
     chats = Chat.objects.filter(
@@ -77,9 +78,14 @@ def chat(request, chat_id):
     # Chat'i ID'ye göre al, eğer yoksa 404 döndür
     chat_user = get_object_or_404(chats, id=chat_id)
 
-    # Mesajları al ve okunmamış mesajları işaretle
-    messages = Message.objects.filter(chat=chat_user)
-    messages.filter(receiver=request.user, is_read=False).update(is_read=True)
+
+    # Okunmamış mesajları güncelle
+    Message.objects.filter(chat=chat_user, receiver=request.user, is_read=False).select_related('receiver').update(is_read=True)
+
+    # En son 10 mesajı çek
+    messages = Message.objects.filter(chat=chat_user).order_by('-timestamp')[:20].select_related('receiver')
+    messages = messages[::-1]
+
 
     # Son mesaj zamanına göre sıralı chat listesini hazırla
     chats = chats.annotate(
@@ -99,7 +105,7 @@ def chat(request, chat_id):
     context = {
         'chats': chat_list,
         'chat': chat_user,
-        'messages': messages
+        'data': messages
     }
 
     return render(request, 'chat/index.html', context)
@@ -132,12 +138,24 @@ def get_messages(request):
             data = json.loads(request.body)
             chat_id = data.get('chat_id')
             chat = Chat.objects.get(id=chat_id)
-            messages = Message.objects.filter(chat=chat).order_by('timestamp')
-            read = messages.filter(receiver=request.user, is_read=False).update(is_read=True)
-            
+            # messages = Message.objects.filter(chat=chat).order_by('timestamp')
+            # En yeni 20 mesajı çek (örneğin)
+            # messages = Message.objects.filter(chat=chat).order_by('-timestamp')[:20]
+            # messages = messages[::-1]  # En son mesajı aşağıda göstermek için ters çeviriyoruz
+            # read = messages.filter(receiver=request.user, is_read=False).update(is_read=True)
+
+            # Okunmamış mesajları güncelle
+            Message.objects.filter(chat=chat, receiver=request.user, is_read=False).select_related('receiver').update(is_read=True)
+
+            # En son 10 mesajı çek
+            messages = Message.objects.filter(chat=chat).order_by('-timestamp')[:20].select_related('receiver')
+            messages = messages[::-1]
+
+
+
             context={
                 'chat':chat,
-                'messages': messages,
+                'data': messages,
                 'user': request.user,
             }
             # Render the messages to the template
@@ -164,3 +182,22 @@ def delete_chat(request, chat_id):
     messages.success(request, 'Sohbet Başarıyla silindi.')
 
     return redirect('chat_index')
+
+
+
+
+def get_older_messages(request):
+    chat_id = request.GET.get('chat_id')
+    last_message_id = request.GET.get('last_message_id')
+    chat = get_object_or_404(Chat, id=chat_id)
+    user = request.user
+
+    # last_message_id'den daha eski 20 mesajı çek
+    messages = Message.objects.filter(chat=chat, id__lt=last_message_id).order_by('-timestamp')[:20].select_related('receiver')
+    messages = messages[::-1]  # En eski mesajı yukarıda göstermek için ters çeviriyoruz
+    
+    # Eski mesajları HTML olarak render et
+    rendered_messages = render_to_string('chat/partial.html', {'data': messages, 'user':user})
+
+
+    return JsonResponse({'html': rendered_messages})

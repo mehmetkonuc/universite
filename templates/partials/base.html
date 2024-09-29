@@ -2,7 +2,7 @@
 <!doctype html>
 <html
    lang="en"
-   class="light-style layout-navbar-fixed layout-menu-fixed layout-compact"
+   class="light-style layout-navbar-fixed layout-menu-fixed layout-wide"
    dir="ltr"
    data-theme="theme-semi-dark"
    data-assets-path="{% static 'assets/' %}"
@@ -147,6 +147,11 @@
                     const messageList = $('#messages_content');
                     const messageCountElement = document.getElementById('message_count');
                     const noMessagesMessage = document.getElementById('no_notifications_messages');
+                    const userItem = document.getElementById(`user-${data.sender_user_id}`);
+                    if (userItem) {
+                        userItem.remove();
+                    };
+
                     messageList.prepend(data.html);
 
                     if (noMessagesMessage) {
@@ -162,7 +167,7 @@
                     }
 
                     // Okunmamış bildirim sayısını güncelle
-                    if (messageCountElement) {
+                    if (!userItem) {
                         let currentCount = parseInt(messageCountElement.textContent.split(' ')[0]);
                         messageCountElement.textContent = (currentCount + 1) + ' Okunmamış';
                     }

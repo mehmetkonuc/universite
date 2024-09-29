@@ -48,7 +48,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 profile_photo = messages.sender.profile_photo.profile_photo.url
             except:
                 profile_photo = None
-            sender_name = messages.sender.first_name + ' ' + messages.sender.last_name
+            sender_first_name = messages.sender.first_name
+            sender_last_name = messages.sender.last_name
             university = str(messages.sender.educational_information.university)
 
             # Mesajı alıcıya gönder
@@ -61,7 +62,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                     'chat_id' :chat_id,
                     'sender_id': sender_id,
                     'sender_profile_photo':profile_photo,
-                    'sender_name':sender_name,
+                    'sender_first_name':sender_first_name,
+                    'sender_last_name':sender_last_name,
                     'sender_university':university,
                 }
             )
@@ -77,17 +79,20 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         message = event['message']
         sender_id = event['sender_id']
         sender_profile_photo = event['sender_profile_photo']
-        sender_name = event['sender_name']
+        sender_first_name = event['sender_first_name']
+        sender_last_name = event['sender_last_name']
         sender_university = event['sender_university']
         chat_id = event['chat_id']
         type = 'chat_message'
+
         # Mesajı WebSocket üzerinden gönder
         await self.send(text_data=json.dumps({
             'type': type,
             'message': message,
             'sender_id': sender_id,
             'sender_profile_photo': sender_profile_photo,
-            'sender_name': sender_name,
+            'sender_first_name': sender_first_name,
+            'sender_last_name': sender_last_name,
             'sender_university': sender_university,
             'chat_id': chat_id,
         }))
@@ -102,17 +107,20 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'html': rendered_notification,
         }))
 
+
     # Bildirim alındığında tetiklenecek fonksiyon
     async def message_notification(self, event):
         rendered_notification = render_to_string('notifications/header_messages.html', {'message': event['message']})
+        sender_user_id = event['message']['sender_user_id']
         # Bildirimi WebSocket üzerinden gönderiyoruz
         await self.send(text_data=json.dumps({
             'type': 'message_notification',
             'html': rendered_notification,
+            'sender_user_id' : sender_user_id,
         }))
     
 
-        # Bildirim alındığında tetiklenecek fonksiyon
+    # Bildirim alındığında tetiklenecek fonksiyon
     async def follower_notification(self, event):
         rendered_notification = render_to_string('notifications/header_follow.html', {'message': event['message']})
         # Bildirimi WebSocket üzerinden gönderiyoruz

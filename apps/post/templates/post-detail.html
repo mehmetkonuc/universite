@@ -110,11 +110,23 @@
          {% include 'comments/form-comment.html' %}
       {% endblock comment-form %}
 
-      <div class="row justify-content-center">
-         <div class="col-lg-8">
-            <h4 class="fw-bold mb-4 mt-0" id="comments">Yorumlar</h4>
+      {% if comments %}
+         <div class="row justify-content-center">
+            <div class="col-lg-8">
+               <h4 class="fw-bold mb-4 mt-0" id="comments">Yorumlar</h4>
+            </div>
          </div>
-      </div>
+         {%else%}
+         <div class="row d-flex justify-content-center">
+            <div class="col-lg-8 d-flex justify-content-center">
+               <div class="col-12">
+               <div class="alert alert-success alert-dismissible d-flex justify-content-center" role="alert">
+                  <h5 class="alert-heading mb-2">Henüz Yorum Yapılmadı. İlk Yorum Yapan Sen Ol.</h5>
+               </div>
+               </div>
+            </div>
+         </div>
+      {%endif%}
 
       {% block comment %}
          {% include 'comments/comments.html' %}

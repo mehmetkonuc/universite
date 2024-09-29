@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name="chat_index"),
     path('get-messages/', views.get_messages, name='get_messages'),
+    path('get-older-messages/', views.get_older_messages, name='get_older_messages'),
     path('<int:chat_id>/', views.chat, name="chat"),
     path('send-message/', views.send_message, name="send_message"),
     path('start/<str:username>', views.start_chat, name="start_chat"),

@@ -6,14 +6,9 @@ from django.contrib.auth import logout
 import apps.profiles.models as models
 from django.contrib.auth import get_user_model
 from apps.post.models import PostsModel
-from apps.blogs.models import ArticlesModel
 from apps.likes.models import Likes
-from apps.marketplace.models import MarketPlaceModel
-from apps.documents.models import DocumentsModel
 from apps.confessions.models import ConfessionsModel
 from django.contrib.contenttypes.models import ContentType
-from PIL import Image
-import io
 from django.core.paginator import Paginator
 
 
@@ -397,7 +392,7 @@ class AdditionalInformationView(LoginRequiredMixin, View):
         form = self.form(request.POST, instance=instance) if instance else self.form(request.POST)
         if form.is_valid():
             form_save = form.save(commit=False)
-            form_save.User = request.user
+            form_save.user = request.user
             form_save.save()
         self.context.update({'form': form,})
 

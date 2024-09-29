@@ -62,18 +62,18 @@
             <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
                <li>
                   <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
-                  <span class="align-middle"><i class="ti ti-sun ti-md me-3"></i>Light</span>
+                  <span class="align-middle"><i class="ti ti-sun ti-md me-3"></i>Açık</span>
                   </a>
                </li>
                <li>
                   <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
-                  <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Dark</span>
+                  <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Koyu</span>
                   </a>
                </li>
                <li>
                   <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
                   <span class="align-middle"
-                     ><i class="ti ti-device-desktop-analytics ti-md me-3"></i>System</span
+                     ><i class="ti ti-device-desktop-analytics ti-md me-3"></i>Sistem Rengi</span
                      >
                   </a>
                </li>
@@ -224,50 +224,80 @@
                <li class="dropdown-notifications-list scrollable-container">
                   <ul class="list-group list-group-flush" id="messages_content">
                      {%for chat in chats_header %}
-                     <li class="list-group-item list-group-item-action dropdown-notifications-item d-flex align-items-center" id="message_content">
+                     <li class="list-group-item list-group-item-action dropdown-notifications-item d-flex align-items-center" id="user-{{chat.second_user.id}}">
                         {% if user == chat.first_user %}
-                        <div class="flex-shrink-0 avatar">
-                           <a href="{% url 'chat' chat.id %}">
-                              <img
-                                 src="{{ chat.second_user.profile_photo.profile_photo.url }}"
-                                 alt="Avatar"
-                                 class="rounded-circle"
-                                 />
-                           </a>
-                        </div>
-                        <div class="chat-contact-info flex-grow-1 ms-4">
-                           <a href="{% url 'chat' chat.id %}">
-                              <div class="d-flex justify-content-between align-items-center">
-                                 <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                                    {{ chat.second_user.first_name }} {{ chat.second_user.last_name }}
-                                 </h6>
+                        <div class="d-flex flex-wrap bd-highlight">
+                           <div class="d-flex align-items-start">
+                              <div class="bd-highlight me-2">
+                                 <a href="{% url 'chat' chat.id %}">
+                                    <div class="avatar avatar-md flex-shrink-0">
+                                       {% if chat.second_user.profile_photo.profile_photo %}
+                                       <img src="{{ chat.second_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                                       {% else %}
+                                       <span class="avatar-initial rounded-circle bg-label-primary">{{ chat.second_user.first_name|first }}{{ chat.second_user.last_name|first }}</span>
+                                       {% endif %}
+                                    </div>
+                                 </a>
                               </div>
-                              <small class="text-muted">
-                              {{ chat.second_user.educational_information.university }}
-                              </small>
-                           </a>
+
+                              <div class="bd-highlight">
+                                 <a href="{% url 'chat' chat.id %}">
+                                    <div class="me-2 h6 mb-0">
+                                       {{ chat.second_user.first_name }} {{ chat.second_user.last_name }}
+                                       <small class="text-muted">
+                                          mesaj gönderdi.
+                                       </small>
+                                    </div>
+                                    <small class="text-muted">
+                                       {{ chat.second_user.educational_information.university }}
+                                    </small>
+                                 <span class="mt-1 mb-1 d-block text-body">{{ chat.last_message_content }}</span>
+
+                                 </a>
+                              </div>
+                           </div>
+                           <div class="ms-auto bd-highlight">
+                              <div class="mb-1">
+                                 <small class="text-muted">{{ chat.last_message_time|date:"d M Y, H:i" }}</small>
+                              </div>
+                           </div>
                         </div>
                         {%else%}
-                        <div class="flex-shrink-0 avatar">
-                           <a href="{% url 'chat' chat.id %}">
-                              <img
-                                 src="{{ chat.first_user.profile_photo.profile_photo.url }}"
-                                 alt="Avatar"
-                                 class="rounded-circle"
-                              />
-                           </a>
-                        </div>
-                        <div class="chat-contact-info flex-grow-1 ms-4">
-                           <a href="{% url 'chat' chat.id %}">
-                              <div class="d-flex justify-content-between align-items-center">
-                                 <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                                    {{ chat.first_user.first_name }} {{ chat.first_user.last_name }}
-                                 </h6>
+                        <div class="d-flex flex-wrap bd-highlight">
+                           <div class="d-flex align-items-start">
+                              <div class="bd-highlight me-2">
+                                 <a href="{% url 'chat' chat.id %}">
+                                    <div class="avatar avatar-md flex-shrink-0">
+                                       {% if chat.first_user.profile_photo.profile_photo %}
+                                       <img src="{{ chat.first_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                                       {% else %}
+                                       <span class="avatar-initial rounded-circle bg-label-primary">{{ chat.first_user.first_name|first }}{{ chat.first_user.last_name|first }}</span>
+                                       {% endif %}
+                                    </div>
+                                 </a>
                               </div>
-                              <small class="text-muted">
-                              {{ chat.first_user.educational_information.university }}
-                              </small>
-                           </a>
+
+                              <div class="bd-highlight">
+                                 <a href="{% url 'chat' chat.id %}">
+                                    <div class="me-2 h6 mb-0">
+                                       {{ chat.first_user.first_name }} {{ chat.first_user.last_name }}
+                                       <small class="text-muted">
+                                          mesaj gönderdi.
+                                       </small>
+                                    </div>
+                                    <small class="text-muted">
+                                       {{ chat.first_user.educational_information.university }}
+                                    </small>
+                                 <span class="mt-1 mb-1 d-block text-body">Mesaj İçeriği</span>
+
+                                 </a>
+                              </div>
+                           </div>
+                           <div class="ms-auto bd-highlight">
+                              <div class="mb-1">
+                                 <small class="text-muted"> Tarih{{ notification.created_at|date:"d M Y, H:i" }}</small>
+                              </div>
+                           </div>
                         </div>
                         {%endif%}
                      </li>

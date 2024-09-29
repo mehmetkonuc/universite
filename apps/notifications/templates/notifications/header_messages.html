@@ -1,29 +1,39 @@
-<li class="list-group-item list-group-item-action dropdown-notifications-item d-flex" id="messages_content">
-  <div class="flex-shrink-0 avatar">
-   <a href="{{message.content_url}}">
-     <img
-        src="{{message.profile_photo_url}}"
-        alt="Avatar"
-        class="rounded-circle"
-        />
-   </a>
-  </div>
-  <div class="chat-contact-info flex-grow-1 ms-4">
-   <a href="{{message.content_url}}">
-     <div class="d-flex justify-content-between align-items-center">
-        <h6 class="chat-contact-name text-truncate fw-normal m-0">
-           {{message.sender_user}}
-        </h6>
-        <div id="message_alert">
-           <span
-              class="badge rounded-pill bg-danger badge-dot border"
-              id="message_badge"
-              ></span>
-        </div>
-     </div>
-     <small class="text-muted">
-     {{ message.sender_user_university }} | {{message.time}}
-     </small>
-   </a>
-  </div>
+
+<li class="list-group-item list-group-item-action dropdown-notifications-item d-flex align-items-center" id="user-{{message.sender_user_id}}">
+   <div class="d-flex flex-wrap bd-highlight">
+      <div class="d-flex align-items-start">
+         <div class="bd-highlight me-2">
+            <a href="{{message.content_url}}">
+               <div class="avatar avatar-md flex-shrink-0">
+                  {% if message.profile_photo_url %}
+                  <img src="{{message.profile_photo_url}}" alt="Avatar" class="rounded-circle" height="32" width="32" />
+                  {% else %}
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{ message.sender_user_first_name|first }}{{ message.sender_user_last_name|first }}</span>
+                  {% endif %}
+               </div>
+            </a>
+         </div>
+
+         <div class="bd-highlight">
+            <a href="{{message.content_url}}">
+               <div class="me-2 h6 mb-0">
+                  {{ message.sender_user_first_name }} {{ message.sender_user_last_name }}
+                  <small class="text-muted">
+                     mesaj gönderdi.
+                  </small>
+               </div>
+               <small class="text-muted">
+                  {{ message.sender_user_university }}
+               </small>
+            <span class="mt-1 mb-1 d-block text-body">{{ message.last_message }}</span>
+
+            </a>
+         </div>
+      </div>
+      <div class="ms-auto bd-highlight">
+         <div class="mb-1">
+            <small class="text-muted">{{message.time}}</small>
+         </div>
+      </div>
+   </div>
 </li>

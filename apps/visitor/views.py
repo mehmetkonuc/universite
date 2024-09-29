@@ -7,8 +7,8 @@ from django.contrib.auth.views import PasswordResetView, PasswordChangeView
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from apps.profiles.models import ProfilePictureModel, PrivacyModel , EducationalInformationModel
-from django.core.files.uploadedfile import InMemoryUploadedFile
-import io
+from django.db import transaction
+
 
 def register_step1(request):
     if request.method == 'POST':
@@ -22,6 +22,7 @@ def register_step1(request):
     
     return render(request, 'visitor/register.html', {'form': form})
 
+@transaction.atomic
 def register_step2(request):
     if 'register_data' not in request.session:
         return redirect('register')  # Eğer oturum verisi yoksa ilk adıma geri dön

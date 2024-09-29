@@ -1,0 +1,18 @@
+<ul class="list-unstyled chat-history">
+    {% for message in data %}
+    <li class="chat-message {% if user == message.sender %}chat-message-right{% endif %}" data-message-id="{{ message.id }}">
+      <div class="d-flex overflow-hidden">
+        <div class="chat-message-wrapper flex-grow-1">
+          <div class="chat-message-text">
+            <p class="mb-0">{{ message.content|safe }}</p>
+          </div>
+          <div class="text-end text-muted mt-1">
+            <i class="ti ti-check ti-16px me-1"></i>
+            <small>{{ message.timestamp }}</small>
+          </div>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  

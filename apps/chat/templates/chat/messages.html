@@ -24,13 +24,16 @@
           </div>
         </a>
         {% else %}
+        <div class="flex-shrink-0 avatar">
+            <a href="{% url 'profile' chat.first_user.username %}">
+              {% if chat.first_user.profile_photo.profile_photo %}
+              <img src="{{ chat.first_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
+              {%else%}
+              <span class="avatar-initial rounded-circle bg-label-primary">{{ chat.first_user.first_name|first }}{{ chat.first_user.last_name|first }}</span>
+              {%endif%}
+            </a>
+        </div>
         <a href="{% url 'profile' chat.first_user.username %}">
-          <div class="flex-shrink-0 avatar">
-            <img src="{{ chat.first_user.profile_photo.profile_photo.url }}" alt="Avatar" class="rounded-circle" />
-          </div>
-        </a>
-        <a href="{% url 'profile' chat.first_user.username %}">
-
           <div class="current-user chat-contact-info flex-grow-1 ms-4" data-user-id="{{chat.first_user.id}}">
               <h6 class="m-0 fw-normal">{{ chat.first_user.first_name }} {{ chat.first_user.last_name }}</h6>
               <small class="user-status text-body">{{ chat.first_user.educational_information.university }}</small>
@@ -46,7 +49,7 @@
             <i class="ti ti-dots-vertical ti-md"></i>
           </button>
           <div class="dropdown-menu dropdown-menu-end" aria-labelledby="chat-header-actions">
-            <a class="dropdown-item" href="javascript:void(0);">View Contact</a>
+            <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
             <a class="dropdown-item text-danger" href="#"
             data-bs-toggle="modal" data-bs-target="#modalCenter_{{chat.id}}">Sohbeti Sil</a>
           </div>
@@ -59,12 +62,12 @@
     {% if chat.id %}
     <div class="chat-history-body">
       <ul class="list-unstyled chat-history">
-        {% for message in messages %}
-        <li class="chat-message {% if user == message.sender %}chat-message-right{% endif %}">
+        {% for message in data %}
+        <li class="chat-message {% if user == message.sender %}chat-message-right{% endif %}" data-message-id="{{ message.id }}">
           <div class="d-flex overflow-hidden">
             <div class="chat-message-wrapper flex-grow-1">
               <div class="chat-message-text">
-                <p class="mb-0">{{ message.content }}</p>
+                <p class="mb-0">{{ message.content|safe }}</p>
               </div>
               <div class="text-end text-muted mt-1">
                 <i class="ti ti-check ti-16px me-1"></i>
@@ -95,6 +98,14 @@
     </div>
     {% else %}
     <!-- No chat selected -->
+    <div class="d-flex justify-content-center align-items-center h-50">
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <h5 class="alert-heading mb-2">Sohbet Seçilmedi</h5>
+        <p class="mb-0">
+          Lütfen Menüden Bir Sohbet Seçin veya Bir Sohbet Başlatın.
+        </p>
+      </div>
+    </div>
     {% endif %}
   </div>
 </div>

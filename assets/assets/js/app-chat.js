@@ -99,11 +99,21 @@ document.addEventListener('DOMContentLoaded', function () {
       // Bind click event to each chat contact list item
       chatContactListItem.addEventListener('click', e => {
         // Remove active class from chat contact list item
-        chatContactListItems.forEach(chatContactListItem => {
-          chatContactListItem.classList.remove('active');
-        });
-        // Add active class to current chat contact list item
-        e.currentTarget.classList.add('active');
+
+                // Send chat id to /chat/get-messages/ via AJAX
+                fetch('/chat/get-messages/', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Assuming you have a function to get CSRF token
+                  },
+                  body: JSON.stringify({ chat_id: chatId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                  // Handle the response data
+                  console.log(data);
+                })
       });
     });
 

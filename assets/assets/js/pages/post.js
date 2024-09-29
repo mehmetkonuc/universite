@@ -1,70 +1,157 @@
   document.addEventListener("DOMContentLoaded", function() {
-    const previewContainer = document.getElementById('preview-container');
-    const fileInput = document.getElementById('id_images');
-    const maxImages = 4;
-    let existingFiles = [];  // Saklamak için bir dizi
 
-    fileInput.addEventListener('change', function(event) {
-        const files = Array.from(event.target.files);
+    var previewsArea = document.getElementById('image-previews');
+    var uploadContainer = document.getElementById('upload-container');
 
-        // Yeni dosyalar mevcut dosyalarla birleştirilir
-        const newFiles = files.filter(file => !existingFiles.some(existingFile => existingFile.name === file.name));
-        if (newFiles.length + existingFiles.length > maxImages) {
-            alert(`Maksimum ${maxImages} resim yükleyebilirsiniz.`);
-            return;
-        }
+    // Daha önce yüklenmiş resimler varsa, upload-container gizlenmeli ve addIconDiv görünmeli
+    if (previewsArea.querySelectorAll('.image-preview').length > 0) {
+        previewsArea.style.display = 'flex';
+        uploadContainer.style.display = 'none';
+        showAddIconDiv(previewsArea);
+    }
 
-        existingFiles = existingFiles.concat(newFiles);
+    // Dosya seçimini tetiklemek için tıklama olayı ekleniyor
+    uploadContainer.addEventListener('click', function() {
+        document.getElementById('images').click();
+    });
 
-        // Mevcut thumbnail'ları temizle
-        previewContainer.innerHTML = '';
 
-        existingFiles.forEach(file => {
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
+// Post Silmek İçin Modal Yakala
 
-                reader.onload = function(e) {
-                    // Thumbnail container
-                    const div = document.createElement('div');
-                    div.classList.add('thumbnail-container');
-                    
-                    // Thumbnail image
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    div.appendChild(img);
+    var deleteModal = document.getElementById('deleteModal');
+    var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
-                    // Remove button
-                    const removeButton = document.createElement('button');
-                    removeButton.textContent = 'x';
-                    removeButton.classList.add('remove-button');
-                    removeButton.onclick = function() {
-                        // Silme işlemi
-                        previewContainer.removeChild(div);
-                        existingFiles = existingFiles.filter(existingFile => existingFile.name !== file.name);
+    function deletePost() {
+    // Her sil butonuna tıklanınca tetiklenecek
+    document.querySelectorAll('.delete-post-btn').forEach(function(button) {
+      button.addEventListener('click', function() {
+        var postId = this.getAttribute('data-id');
+        var deleteUrl = '/post/delete/' + postId + '/'; // Silme URL'sini oluşturun
+        confirmDeleteBtn.setAttribute('href', deleteUrl); // Modal'daki href'i güncelleyin
+      });
+    });
+    };
 
-                        // File input'ı güncelle
-                        updateFileInput();
-                    };
-                    div.appendChild(removeButton);
+    deletePost(confirmDeleteBtn)
 
-                    previewContainer.appendChild(div);
-                };
-
-                reader.readAsDataURL(file);
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1 && node.matches('#confirmDeleteBtn')) {
+                        deletePost([node]);
+                    } else if (node.nodeType === 1) {
+                        const confirmDeleteBtn = node.querySelectorAll('#confirmDeleteBtn');
+                        deletePost(confirmDeleteBtn);
+                    }
+                });
             }
         });
     });
 
-    // File input'ı güncelleme işlevi
-    function updateFileInput() {
-        const dataTransfer = new DataTransfer();
-        existingFiles.forEach(file => dataTransfer.items.add(file));
-        fileInput.files = dataTransfer.files;
+    // infinite-container içinde değişiklikleri izlemek için gözlemci başlat
+    const config = { childList: true, subtree: true };
+    const container = document.querySelector('.infinite-container');
+    observer.observe(container, config);
+});
+
+
+
+// Seçilen dosyaları takip eden array
+var selectedFiles = [];
+
+// Yeni dosya seçildiğinde önizleme yapma
+function previewImages(event) {
+    var files = Array.from(event.target.files);
+    var previewsArea = document.getElementById('image-previews');
+    var uploadContainer = document.getElementById('upload-container');
+
+    files.forEach(function(file) {
+        selectedFiles.push(file);
+
+        var reader = new FileReader();
+        reader.onload = function() {
+            var previewDiv = document.createElement('div');
+            previewDiv.className = 'image-preview';
+            previewDiv.innerHTML = `
+                <img src="${reader.result}" alt="Seçilen Resim">
+                <button type="button" class="delete-btn" onclick="removeImage(this, '${file.name}')">X</button>
+            `;
+            previewsArea.appendChild(previewDiv);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    uploadContainer.style.display = 'none';
+    previewsArea.style.display = 'flex';
+    
+    showAddIconDiv(previewsArea);
+
+    // Input'un değerini sıfırla, böylece aynı dosyayı tekrar seçebilirsin
+    event.target.value = '';
+}
+
+
+// addIconDiv'i gösteren fonksiyon
+function showAddIconDiv(previewsArea) {
+    if (!previewsArea.querySelector('.upload-icon-area')) {
+        var addIconDiv = document.createElement('div');
+        addIconDiv.className = 'image-preview';
+        addIconDiv.innerHTML = `
+            <div class="upload-icon-area">
+                <i class="ti ti-plus ti-32px mb-4"></i>
+            </div>
+        `;
+        previewsArea.insertBefore(addIconDiv, previewsArea.firstChild);
+
+        // addIconDiv'e tıklama olayı ekleniyor
+        addIconDiv.addEventListener('click', function() {
+            document.getElementById('images').click();
+        });
+    }
+}
+
+function removeImage(button, fileName) {
+    var previewDiv = button.parentElement;
+    var previewsArea = document.getElementById('image-previews');
+    var uploadContainer = document.getElementById('upload-container');
+    var imageId = previewDiv.dataset.imageId;
+    var deletedImagesInput = document.getElementById('deleted-images');
+
+    // Önizleme div'ini kaldır
+    previewDiv.remove();
+
+    // selectedFiles array'inden dosyayı kaldır (sadece yeni eklenen dosyalar için)
+    if (fileName) {
+        selectedFiles = selectedFiles.filter(function(file) {
+            return file.name !== fileName;
+        });
     }
 
-    // Form gönderiminde dosyaları güncelleme
-    const form = document.getElementById('post-form');
-    form.addEventListener('submit', function() {
-        updateFileInput();
+    // Resim ID'sini saklama (silinen resim ID'lerini saklamak için)
+    if (imageId) {
+        var currentValue = deletedImagesInput.value;
+        deletedImagesInput.value = currentValue ? currentValue + ',' + imageId : imageId;
+    }
+
+    // Görünüm güncelleme
+    if (previewsArea.querySelectorAll('.image-preview').length === 1) {  // Sadece addIconDiv kalmışsa
+        previewsArea.style.display = 'none';
+        uploadContainer.style.display = 'block';
+    }
+}
+
+// Form gönderildiğinde seçilen dosyaları input elementine ekleme
+document.querySelector('form').addEventListener('submit', function(event) {
+    var inputElement = document.getElementById('images');
+    var dataTransfer = new DataTransfer();
+
+    selectedFiles.forEach(function(file) {
+        dataTransfer.items.add(file);
     });
+
+    inputElement.files = dataTransfer.files;
+
+    // selectedFiles dizisini temizle
+    selectedFiles = [];
 });

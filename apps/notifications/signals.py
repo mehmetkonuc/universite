@@ -58,14 +58,17 @@ def create_message_notification(sender, instance, created, **kwargs):
         profile_photo_url= instance.sender.profile_photo.profile_photo.url
     except:
         profile_photo_url = None
+
     context = Message.get_notifications_message_context(instance)
     context.update({
+        'chat_id' : instance.chat.id,
         'sender_user_id': instance.sender.id,
-        'sender_user': instance.sender.first_name + ' ' + instance.sender.last_name,
+        'sender_user_first_name': instance.sender.first_name,
+        'sender_user_last_name' : instance.sender.last_name,
         'sender_user_university': str(instance.sender.educational_information.university),
+        'last_message': instance.content,
         'time': instance.timestamp.strftime("%d %b %Y, %H:%M"),
         'profile_photo_url': profile_photo_url,
-        # 'profile_photo_url': instance.sender.profile_photo.profile_photo.url if instance.sender.profile_photo.profile_photo else '/static/assets/img/avatars/1.png',
         })
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(

@@ -160,7 +160,7 @@
                {{form.is_published|as_crispy_field}}
             </div>
          </div>
-         <button type="submit" class="btn btn-label-primary">Gönder</button>
+         <button type="submit" class="btn btn-page-block-overlay btn-label-primary">Gönder</button>
       </form>
    </div>
 </div>
@@ -292,5 +292,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
 
 </script>
 <script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
-
+<script src="{% static 'assets/vendor/libs/block-ui/block-ui.js' %}"></script>
+<script src="{% static 'assets/js/extended-ui-blockui.js' %}"></script>
 {% endblock extra_javascript %}

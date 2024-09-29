@@ -1,23 +1,53 @@
 {% extends 'partials/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block extra_css %}
 {% endblock extra_css%}
 
 {% block content %}
 <div class="row">
-  <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
-     <div class="d-flex gap-4">
-        <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
-     </div>
+  <div class="d-flex justify-content-between align-items-between bd-highlight">
+    <div class="flex-grow-1 bd-highlight">
+      <h3 class="mb-0 mt-0 fw-bold">Üyeler</h3>
+      <small>
+         {% if user_filter.category or user_filter.following_only or user_filter.university or user_filter.department or user_filter.status %}
+               {% if user_filter.following_only %}
+               <span class="badge rounded-pill bg-label-success">Takip Ettiklerim</span>
+               {% endif %}
+               {% if user_filter.category %}
+               <span class="badge rounded-pill bg-label-success">{{ user_filter.category }}</span>
+               {% endif %}
+               {% if user_filter.country %}
+               <span class="badge rounded-pill bg-label-success">{{ user_filter.country }}</span>
+               {% endif %}
+               {% if user_filter.university %}
+               <span class="badge rounded-pill bg-label-success">{{ user_filter.university }}</span>
+               {% endif %}
+               {% if user_filter.department %}
+               <span class="badge rounded-pill bg-label-success">{{ user_filter.department }}</span>
+               {% endif %}
+               {% if user_filter.status %}
+               <span class="badge rounded-pill bg-label-success">{{ user_filter.status }}</span>
+               {% endif %}
+                  {%else%}
+                  <span class="badge rounded-pill bg-label-success">Filtre Yok</span>
+    
+                  {% endif %}
+      </small>
+    </div>
+    <div class="bd-highlight">
+       <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtrele</button>
+    </div>
   </div>
 </div>
+<div  class="mb-4">
 
+</div>
   <!-- Connection Cards -->
-  <div class="row g-6">
+  <div class="row g-6 infinite-container">
     {% for member in members %}
-    {% if user != member %}
-    <div class="col-xl-4 col-lg-6 col-md-6">
+    <div class="col-lg-4 mb-4 infinite-item">
       <div class="card card-border-shadow-primary h-100">
         <div class="card-body text-center">
           <div class="dropdown btn-pinned">
@@ -64,32 +94,35 @@
                <span class="badge bg-label-success" id="follower-count"><strong>{{member.followers.count}}</strong> Takipçi</span>
             </li>
             <li class="list-inline-item d-flex gap-2 align-items-center">
-               <span class="badge bg-label-primary"><strong>{{member.following.count}}</strong> Takip</span>
+               <span class="badge bg-label-info"><strong>{{member.following.count}}</strong> Takip</span>
             </li>
             </ul>
         </div>
         <div class="card-footer">
-          <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
-            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-building-bank"></i>{{member.educational_information.university}}</span>
-            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill"><i class="ti ti-address-book"></i>{{member.educational_information.department}}</span>
+          <div class="d-flex flex-wrap align-items-center justify-content-center mb-2 mt-2 gap-2">
+            <span class="badge bg-label-primary d-flex align-items-center rounded-pill"><i class="ti ti-building-bank"></i>{{member.educational_information.university}}</span>
+            <span class="badge bg-label-primary d-flex align-items-center rounded-pill"><i class="ti ti-address-book"></i>{{member.educational_information.department}}</span>
           </div>
           <div class="d-flex align-items-center justify-content-center mb-2 mt-2 gap-2">
-            <span class="badge bg-label-secondary d-flex align-items-center rounded-pill mb-3"><i class="ti ti-school me-1"></i>{{member.educational_information.status}}</span>
+            <span class="badge bg-label-primary d-flex align-items-center rounded-pill mb-3"><i class="ti ti-school me-1"></i>{{member.educational_information.status}}</span>
           </div>
             </div>
       </div>
     </div>
-    {% endif %}
-
     {% endfor %}
   </div>
-  <!--/ Connection Cards -->
+  <div class="col-lg-4 loading-container">
+    <div class="loading" style="display:none;">
+    </div>
+  </div>
 
-
-
-
-
-
+  <div class="row">
+    <div class="col-lg-8">
+       {% if members.has_next %}
+       <a class="infinite-more-link" href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}&{% endfor %}page={{ members.next_page_number }}">Sonraki</a>
+       {% endif %}
+    </div>
+ </div>
 <!-- Canvas -->
 <div
    class="offcanvas offcanvas-end"
@@ -104,20 +137,28 @@
          data-bs-dismiss="offcanvas"
          aria-label="Close"></button>
    </div>
-   <div class="offcanvas-body my-auto mx-0 flex-grow-0">
-      <button type="button" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
-      <button
-         type="button"
-         class="btn btn-label-secondary d-grid w-100"
-         data-bs-dismiss="offcanvas">
-      Vazgeç
-      </button>
+   <div class="offcanvas-body flex-grow-0">
+    <form method="POST">
+      {% csrf_token %}
+    {{ filter.form|crispy}}
+
+    <button type="submit" class="btn btn-primary mb-2 d-grid w-100">Filtrele</button>
+    <button type="submit" class="btn btn-danger mb-2 d-grid w-100" name="reset_filter">Filtreyi Temizle</button>
+    <button
+       type="button"
+       class="btn btn-label-secondary d-grid w-100"
+       data-bs-dismiss="offcanvas">
+    Vazgeç
+    </button>
+    </form>
    </div>
 </div>
 <!-- End Canvas -->
 {% endblock content %}
 
 {% block extra_javascript %}
-
+<script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>
+<script src="{% static 'assets/js/waypoints/custom.js' %}"></script>
 {% endblock extra_javascript %}
 
