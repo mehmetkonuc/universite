@@ -1,9 +1,10 @@
 import django_filters
 from .models import PostsModel
-from apps.inputs.models import UniversitiesModel, CountriesModel, DepartmentsModel, StatusModel
 from django import forms
 from apps.follow.models import Follow
 from django.db.models import Q
+from apps.inputs.helpers import get_cached_countries, get_cached_universities, get_cached_departments, get_cached_statuses
+
 
 class Filter(django_filters.FilterSet):
 
@@ -22,7 +23,7 @@ class Filter(django_filters.FilterSet):
     )
 
     country = django_filters.ModelChoiceFilter(
-        queryset=CountriesModel.objects.all(),
+        queryset = get_cached_countries(),
         field_name='user__educational_information__country',
         label='Ülke',
         help_text ='Yazarın Ülkesi',
@@ -33,8 +34,9 @@ class Filter(django_filters.FilterSet):
             'data-live-search': 'true'
         }),
     )
+
     university = django_filters.ModelChoiceFilter(
-        queryset=UniversitiesModel.objects.all(),
+        queryset = get_cached_universities(),
         field_name='user__educational_information__university',
         label='Üniversite',
         help_text ='Yazarın Üniversitesi',
@@ -47,7 +49,7 @@ class Filter(django_filters.FilterSet):
     )
 
     department = django_filters.ModelChoiceFilter(
-        queryset=DepartmentsModel.objects.all(),
+        queryset = get_cached_departments(),
         field_name='user__educational_information__department',
         label='Bölüm',
         help_text ='Yazarın Bölümü',
@@ -60,7 +62,7 @@ class Filter(django_filters.FilterSet):
     )
 
     status = django_filters.ModelChoiceFilter(
-        queryset=StatusModel.objects.all(),
+        queryset = get_cached_statuses(),
         field_name='user__educational_information__status',
         label='Durum',
         help_text ='Yazarın Mezuniyet Durumu',

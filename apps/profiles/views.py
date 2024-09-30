@@ -34,36 +34,66 @@ class ProfileView(LoginRequiredMixin, View):
     }
 
     def get(self, request, username):
-        users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
+        # Tek sorguda profile ile ilişkili user ve educational information verilerini çekiyoruz
+        users = get_user_model()
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'additional_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'comments',
+                'likes',
+                'posts',
+                'blogs',
+                'marketplace',
+                'documents',
+                'questions',
+            ), 
+            username=username
+        )
+
+        # İtiraf sayısını alıyoruz
         confessions = ConfessionsModel.objects.filter(user=profile, is_privacy=False).count()
 
+        # Profil ile ilişkili takipçi ve takip isteklerini alıyoruz
         followers = profile.followers.filter(follower=request.user)
         follow_requests = profile.follow_requests_received.filter(follower=request.user)
-        
-        self.context.update(
-            {
-            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Profil',
+
+        self.context.update({
             'profile': profile,
             'confessions': confessions,
-            'followers':followers,
-            'follow_requests':follow_requests,
-            }
-        )
+            'followers': followers,
+            'follow_requests': follow_requests,
+        })
         return render(request, self.template, self.context)
+
 
 
 class FollowersProfileView(LoginRequiredMixin, View):
     # model_marketplace = MarketPlaceModel
     template = 'profiles/followers.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=request.user.username)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+            ), 
+            username=request.user.username
+        )
         # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
         followers = profile.followers.all()
 
@@ -77,7 +107,7 @@ class FollowersProfileView(LoginRequiredMixin, View):
             {
             'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Takipçileri',
             'profile': profile,
-             'data':page_obj,
+            'data':page_obj,
             #  'followers':followers,
              }
         )
@@ -87,14 +117,23 @@ class FollowersProfileView(LoginRequiredMixin, View):
 class FollowingProfileView(LoginRequiredMixin, View):
     # model_marketplace = MarketPlaceModel
     template = 'profiles/following.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
     }
 
     def get(self, request):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=request.user.username)
-        # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'profile_photo',
+            ).prefetch_related(
+                'followers', 
+                'following', 
+            ), 
+            username=request.user.username
+        )
+
         following = profile.following.all()
 
         # marketplace = profile.marketplace.filter(is_published = True)
@@ -108,180 +147,273 @@ class FollowingProfileView(LoginRequiredMixin, View):
             'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Takip Ettikleri',
             'profile': profile,
             'data':page_obj,
-            #  'followers':followers,
              }
         )
         return render(request, self.template, self.context)
-
 
 
 class PostsProfileView(LoginRequiredMixin, View):
     model_posts = PostsModel
     model_like = Likes
-    paginate_by = 2
+    paginate_by = 12
     template = 'profiles/posts.html'
-    context = {
-
-    }
+    context = {}
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
-        posts = self.model_posts.objects.filter(user=profile).order_by('-create_at')
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'posts',
+            ), 
+            username=username
+        )
+
+        # posts ve ilişkili yorumlar, beğeniler
+        posts = profile.posts.all().order_by('-create_at').prefetch_related('likes', 'comments')
+
+        # Sayfalama işlemi
         paginator = Paginator(posts, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+        # Zaten page_obj'de postların ID'leri var, bunları kullanarak beğenilenleri alalım
+        post_ids = page_obj.object_list.values_list('id', flat=True)
+
+        # Kullanıcının beğendiği post'ları toplu olarak tek sorguda alıyoruz
         content_type = ContentType.objects.get_for_model(self.model_posts)
-        liked = self.model_like.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
+        liked = self.model_like.objects.filter(
+            content_type=content_type, user=request.user, object_id__in=post_ids
+        ).values_list('object_id', flat=True)
+        
+        # Kullanıcının takip ettiği kullanıcılar
         followers = profile.followers.filter(follower=request.user)
 
-
-        self.context.update(
-            {
-            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Gönderileri',
+        # Context verilerini güncelle
+        self.context.update({
+            'siteTitle': f'{profile.first_name} {profile.last_name} - Gönderileri',
             'profile': profile,
-            'data':page_obj,
-            'liked':liked,
-            'followers':followers
-             }
-        )
+            'data': page_obj,
+            'liked': liked,
+            'followers': followers
+        })
+
         return render(request, self.template, self.context)
+
 
 
 class ArticlesProfileView(LoginRequiredMixin, View):
     # model_articles = ArticlesModel
     template = 'profiles/articles.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
-        # articles = self.model_articles.objects.filter(user=profile)
-        articles = profile.blogs.filter(is_published = True)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'blogs',
+            ), 
+            username=username
+        )
+
+        articles = profile.blogs.filter(is_published = True).order_by('-create_at').prefetch_related('likes', 'comments')
+
         paginator = Paginator(articles, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         followers = profile.followers.filter(follower=request.user)
 
-        self.context.update(
-            {
-            'siteTitle' : str(profile.first_name) + ' ' + str(profile.last_name) + ' - ' + 'Makaleleri',    
+        self.context.update({
+            'siteTitle': f'{profile.first_name} {profile.last_name} - Makaleleri',
             'profile': profile,
-             'data':page_obj,
-             'followers':followers,
-             }
-        )
+            'data':page_obj,
+            'followers':followers
+        })
+
         return render(request, self.template, self.context)
 
 
 class MarketplaceProfileView(LoginRequiredMixin, View):
     # model_marketplace = MarketPlaceModel
     template = 'profiles/marketplace.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
-        # marketplace = self.model_marketplace.objects.filter(user=profile, is_published = True)
-        marketplace = profile.marketplace.filter(is_published = True)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'marketplace',
+            ), 
+            username=username
+        )
+
+        marketplace = profile.marketplace.filter(is_published = True).order_by('-create_at')
+
         paginator = Paginator(marketplace, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         followers = profile.followers.filter(follower=request.user)
 
-        self.context.update(
-            {'profile': profile,
-             'data':page_obj,
-             'followers':followers,
-             }
-        )
+        self.context.update({
+            'siteTitle': f'{profile.first_name} {profile.last_name} - İlanları',
+            'profile': profile,
+            'data':page_obj,
+            'followers':followers,
+        })
+        
         return render(request, self.template, self.context)
 
 
 class DocumentsProfileView(LoginRequiredMixin, View):
     # model_documents = DocumentsModel
     template = 'profiles/documents.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
-        # documents = self.model_documents.objects.filter(user=profile)
-        documents = profile.documents.filter(is_published = True)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'documents',
+            ), 
+            username=username
+        )
+
+        documents = profile.documents.filter(is_published = True).order_by('-create_at').prefetch_related('likes', 'comments')
+
         paginator = Paginator(documents, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         followers = profile.followers.filter(follower=request.user)
 
-        self.context.update(
-            {'profile': profile,
-             'data':page_obj,
-             'followers':followers,
-             }
-        )
+        self.context.update({
+            'siteTitle': f'{profile.first_name} {profile.last_name} - Dokümanları',
+            'profile': profile,
+            'data':page_obj,
+            'followers':followers
+        })
+
         return render(request, self.template, self.context)
 
 
 class ConfessionsProfileView(LoginRequiredMixin, View):
     # model_confessions = ConfessionsModel
     template = 'profiles/confessions.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
-        # data = self.model_confessions.objects.filter(user=profile, is_privacy=False)
-        data = profile.confessions.filter(is_privacy = False, is_published = True)
-        paginator = Paginator(data, self.paginate_by)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'confessions',
+            ), 
+            username=username
+        )
+
+        confessions = profile.confessions.filter(is_privacy = False, is_published = True).prefetch_related('likes', 'comments')
+
+        paginator = Paginator(confessions, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         followers = profile.followers.filter(follower=request.user)
 
-        self.context.update(
-            {'profile': profile,
-             'data':page_obj,
-             'followers':followers,
-             }
-        )
+        self.context.update({
+            'siteTitle': f'{profile.first_name} {profile.last_name} - İtirafları',
+            'profile': profile,
+            'data':page_obj,
+            'followers':followers,
+        })
+
         return render(request, self.template, self.context)
 
 
 class QuestionsProfileView(LoginRequiredMixin, View):
-    # model_confessions = QuestionsProfileView
     template = 'profiles/questions.html'
-    paginate_by = 2
+    paginate_by = 12
     context = {
         'siteTitle' : 'Profil',
     }
 
     def get(self, request, username):
         users = get_user_model()  # Varsayılan kullanıcı modelini al
-        profile = get_object_or_404(users, username=username)
-        data = profile.questions.filter()
-        # data = self.model_confessions.objects.filter(user=profile, is_privacy=False)
-        paginator = Paginator(data, self.paginate_by)
+        profile = get_object_or_404(
+            users.objects.select_related(
+                'educational_information', 
+                'privacy', 
+                'profile_photo'
+            ).prefetch_related(
+                'followers', 
+                'following', 
+                'follow_requests_received', 
+                'questions',
+            ), 
+            username=username
+        )
+
+        questions = profile.questions.filter(is_published = True).prefetch_related('likes', 'comments')
+
+        paginator = Paginator(questions, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         followers = profile.followers.filter(follower=request.user)
 
-        self.context.update(
-            {'profile': profile,
-             'data':page_obj,
-             'followers':followers,
-             }
-        )
+        self.context.update({
+            'siteTitle': f'{profile.first_name} {profile.last_name} - Soruları',
+            'profile': profile,
+            'data':page_obj,
+            'followers':followers,
+        })
+        
         return render(request, self.template, self.context)
 
 

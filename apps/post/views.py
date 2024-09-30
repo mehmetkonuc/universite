@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import PostsForm, FilterForm
-from . import models
+from .models import PostsModel, PostsFilterModel, PostsPhotos
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Likes
-from apps.photos.models import PhotosModel
 from apps.comments.views import CommentView
 from .filters import Filter
 from django.db.models import Count
@@ -15,12 +14,13 @@ from django.contrib import messages
 
 # Create your views here.
 class PostView(View):
-    model_post = models.PostsModel
+    model_post = PostsModel
+    model_like = Likes
     form_post = PostsForm
-    model_filter = models.PostsFilterModel
+    model_filter = PostsFilterModel
     filter_form = FilterForm
     filter = Filter
-    model_photos = models.PostsPhotos
+    model_photos = PostsPhotos
     template_name = 'post.html'
     context = {
         'siteTitle': 'Paylaşımlar',
@@ -49,8 +49,12 @@ class PostView(View):
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
 
+            post_ids = page_obj.object_list.values_list('id', flat=True)
+
             content_type = ContentType.objects.get_for_model(self.model_post)
-            liked = request.user.likes.filter(content_type=content_type).values_list('object_id', flat=True)
+            liked = self.model_like.objects.filter(
+                content_type=content_type, user = request.user, object_id__in=post_ids
+            ).values_list('object_id', flat=True)
 
             form = self.form_post()
 
@@ -120,8 +124,12 @@ class PostView(View):
                 page_number = request.GET.get('page')
                 page_obj = paginator.get_page(page_number)
 
+                post_ids = page_obj.object_list.values_list('id', flat=True)
+
                 content_type = ContentType.objects.get_for_model(self.model_post)
-                liked = request.user.likes.filter(content_type=content_type).values_list('object_id', flat=True)
+                liked = self.model_like.objects.filter(
+                    content_type=content_type, user = request.user, object_id__in=post_ids
+                ).values_list('object_id', flat=True)
 
                 self.context.update({
                     'data': page_obj,
@@ -135,7 +143,7 @@ class PostView(View):
 
 
 def delete_post(request, PostID):
-    delete_post = models.PostsModel.objects.get(id=PostID)
+    delete_post = PostsModel.objects.get(id=PostID)
     
     if delete_post.user == request.user or request.user.is_superuser:
         delete_post.delete()
@@ -143,7 +151,7 @@ def delete_post(request, PostID):
     return redirect('post')
 
 class PostDetails(View):
-    model_posts = models.PostsModel
+    model_posts = PostsModel
     model_likes = Likes
     paginate_by = 2
     template = 'post-detail.html'
@@ -151,15 +159,24 @@ class PostDetails(View):
         'siteTitle': 'Yorumlar',
     }
     def get(self, request, post_id):
-        post = self.model_posts.objects.filter(id=post_id).first()
+        post = self.model_posts.objects.filter(id=post_id).prefetch_related('likes', 'comments').first()
         liked = post.likes.filter(user=request.user)
         comments = post.comments.filter(parent__isnull=True)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-        form = CommentView.form_class()
 
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+        post_ids = page_obj.object_list.values_list('id', flat=True)
+
+        liked_comment = self.model_likes.objects.filter(
+            content_type=ContentType.objects.get_for_model(CommentView.model_comments),
+            user=request.user,
+            object_id__in=post_ids,
+            ).values_list('object_id', flat=True)
+        
+        form = CommentView.form_class()
+
 
         self.context.update({
             'form': form,
@@ -173,15 +190,24 @@ class PostDetails(View):
     def post(self, request, post_id):
         post = self.model_posts.objects.filter(id=post_id).first()
         liked = post.likes.filter(user=request.user)
+
         content_type = ContentType.objects.get_for_model(post)
         form = CommentView.comment_post(request=request, content_type=content_type, object_id=post_id)
-        #Direkt Post Modelinen Çekmek Gerekiyor Verileri Beğeni Sıralaması yapılabilmesi için
+
         comments = post.comments.filter(parent__isnull=True)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
 
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
+        post_ids = page_obj.object_list.values_list('id', flat=True)
+
+        liked_comment = self.model_likes.objects.filter(
+            content_type=ContentType.objects.get_for_model(CommentView.model_comments),
+            user=request.user,
+            object_id__in=post_ids,
+            ).values_list('object_id', flat=True)
+
 
         self.context.update({
             'form': form,

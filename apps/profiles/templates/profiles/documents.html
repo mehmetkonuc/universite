@@ -39,21 +39,21 @@
               <div class="d-flex align-items-center text-muted">
                <div class="avatar avatar-md me-2 flex-shrink-0">
 
-                    {% if item.user.profile_photo.profile_photo %}
-                       <img src="{{ item.user.profile_photo.profile_photo.url }}" 
+                    {% if profile.profile_photo.profile_photo %}
+                       <img src="{{ profile.profile_photo.profile_photo.url }}" 
                             alt="Yazar Profil Fotoğrafı" 
                             class="rounded-circle me-2" 
                             style="width: 40px; height: 40px;">
                     {% else %}
-                    <span class="avatar-initial rounded-circle bg-label-primary">{{ item.user.first_name|first }}{{ item.user.last_name|first }}</span>
+                    <span class="avatar-initial rounded-circle bg-label-primary">{{ profile.first_name|first }}{{ profile.last_name|first }}</span>
                     {% endif %}
                </div>
                     <div>
-                       <a href="{% url 'profile' item.user.username %}">
-                          <small class="text-body">{{ item.user.first_name }} {{ item.user.last_name }}</small>
+                       <a href="{% url 'profile' profile.username %}">
+                          <small class="text-body">{{ profile.first_name }} {{ profile.last_name }}</small>
                        </a>
                        <div>
-                          <small>{{ item.user.educational_information.university }}</small>
+                          <small>{{ profile.educational_information.university }}</small>
                        </div>
                     </div>
               </div>

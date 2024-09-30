@@ -1,13 +1,14 @@
 import django_filters
 from .models import ConfessionsModel
-from apps.inputs.models import UniversitiesModel, CountriesModel 
 from django import forms
+from apps.inputs.helpers import get_cached_countries, get_cached_universities
+
 
 class UserFilter(django_filters.FilterSet):
     title = django_filters.CharFilter(lookup_expr='icontains', label='Arama', help_text = 'Makale Başlıklarında Kelime Ara')
 
     country = django_filters.ModelChoiceFilter(
-        queryset=CountriesModel.objects.all(),
+        queryset=get_cached_countries(),
         label='Ülke',
         help_text ='Yazarın Ülkesi',
         empty_label='Tüm Ülkeler',
@@ -17,8 +18,9 @@ class UserFilter(django_filters.FilterSet):
             'data-live-search': 'true'
         }),
     )
+
     university = django_filters.ModelChoiceFilter(
-        queryset=UniversitiesModel.objects.all(),
+        queryset=get_cached_universities(),
         label='Üniversite',
         help_text ='Yazarın Üniversitesi',
         empty_label='Tüm Üniversiteler',

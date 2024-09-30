@@ -2,7 +2,8 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 from django import forms
 import apps.profiles.models as models
-import apps.inputs.models as inputsModel
+from apps.inputs.helpers import get_cached_countries, get_cached_universities, get_cached_departments, get_cached_statuses, get_cached_cities
+
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
@@ -23,10 +24,18 @@ class ProfileEditForm(UserChangeForm):
 
 
 class EducationalInformationForm(forms.ModelForm):
-
+    
     class Meta:
         model = models.EducationalInformationModel
         fields = ['country', 'university', 'department', 'status']
+    
+    def __init__(self, *args, **kwargs):
+        super(EducationalInformationForm, self).__init__(*args, **kwargs)
+        
+        self.fields['country'].queryset = get_cached_countries()
+        self.fields['university'].queryset = get_cached_universities()
+        self.fields['department'].queryset = get_cached_departments()
+        self.fields['status'].queryset = get_cached_statuses()
 
 
 class PrivacyForm(forms.ModelForm):
@@ -41,7 +50,6 @@ class PrivacyForm(forms.ModelForm):
     class Meta:
         model = models.PrivacyModel
         fields = ['is_private', 'message_privacy']
-
 
 
 class AdditionalInformationForm(forms.ModelForm):
@@ -60,7 +68,7 @@ class AdditionalInformationForm(forms.ModelForm):
     ]
 
     living_country = forms.ModelChoiceField(
-        queryset=inputsModel.CountriesModel.objects.all(),
+        queryset= get_cached_countries(),
         label='Yaşadığınız Ülke',
         help_text ='Yaşadığınız Ülkeyi Seçiniz',
         empty_label='Ülke Seçin',
@@ -73,7 +81,7 @@ class AdditionalInformationForm(forms.ModelForm):
     )
 
     living_city = forms.ModelChoiceField(
-        queryset=inputsModel.City.objects.all(),
+        queryset=get_cached_cities(),
         label='Yaşadığınız Şehir',
         help_text ='Yaşadığınız Şehri Seçiniz',
         empty_label='Şehir Seçin',

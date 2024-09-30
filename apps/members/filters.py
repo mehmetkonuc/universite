@@ -1,8 +1,8 @@
 import django_filters
 from django import forms
 from django.contrib.auth.models import User
-from apps.inputs.models import CountriesModel, UniversitiesModel, DepartmentsModel, StatusModel
 from django.db.models import Q
+from apps.inputs.helpers import get_cached_countries, get_cached_universities, get_cached_departments, get_cached_statuses
 
 
 class MemberFilter(django_filters.FilterSet):
@@ -14,7 +14,7 @@ class MemberFilter(django_filters.FilterSet):
     )
 
     country = django_filters.ModelChoiceFilter(
-        queryset=CountriesModel.objects.all(),
+        queryset = get_cached_countries(),
         field_name='educational_information__country',
         label='Ülke',
         help_text ='Üyenin Ülkesi',
@@ -26,9 +26,8 @@ class MemberFilter(django_filters.FilterSet):
         }),
     )
 
-
     university = django_filters.ModelChoiceFilter(
-        queryset=UniversitiesModel.objects.all(),
+        queryset = get_cached_universities(),
         field_name='educational_information__university',
         label='Üniversite',
         help_text ='Üyenin Üniversitesi',
@@ -41,7 +40,7 @@ class MemberFilter(django_filters.FilterSet):
     )
 
     department = django_filters.ModelChoiceFilter(
-        queryset=DepartmentsModel.objects.all(),
+        queryset = get_cached_departments(),
         field_name='educational_information__department',
         label='Bölüm',
         help_text ='Üyenin Bölümü',
@@ -54,7 +53,7 @@ class MemberFilter(django_filters.FilterSet):
     )
 
     status = django_filters.ModelChoiceFilter(
-        queryset=StatusModel.objects.all(),
+        queryset = get_cached_statuses(),
         field_name='educational_information__status',
         label='Durum',
         help_text ='Üyenin Mezuniyet Durumu',

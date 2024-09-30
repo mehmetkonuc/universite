@@ -17,25 +17,25 @@
        <div class="card card-border-shadow-primary">
           <div class="card-header d-flex justify-content-between mb-0">
              <div class="d-flex align-items-center">
-                <a href="{% url 'profile' post.user.username %}" class="d-flex text-decoration-none">
+                <a href="{% url 'profile' profile.username %}" class="d-flex text-decoration-none">
                    <div class="avatar avatar-md me-2 flex-shrink-0">
-                      {% if post.user.profile_photo.profile_photo %}
-                      <img src="{{ post.user.profile_photo.profile_photo.url }}" 
+                      {% if profile.profile_photo.profile_photo %}
+                      <img src="{{ profile.profile_photo.profile_photo.url }}" 
                          alt="Avatar" 
                          class="rounded-circle" 
                          />
                       {% else %}
-                      <span class="avatar-initial rounded-circle bg-label-primary">{{ post.user.first_name|first }}{{ post.user.last_name|first }}</span>
+                      <span class="avatar-initial rounded-circle bg-label-primary">{{ profile.first_name|first }}{{ profile.last_name|first }}</span>
                       {% endif %}
                    </div>
                    <div class="d-flex flex-column">
                       <div class="me-2 h5 mb-1" style="line-height: 1.2; margin-bottom: 0;">
-                         {{ post.user.first_name }} {{ post.user.last_name }} 
+                         {{ profile.first_name }} {{ profile.last_name }} 
                          <small class="text-muted h6">
                          bir gönderi paylaştı.
                          </small>
                       </div>
-                      <small class="text-muted">{{ post.user.educational_information.university }}</small>
+                      <small class="text-muted">{{ profile.educational_information.university }}</small>
                    </div>
                 </a>
              </div>
@@ -45,7 +45,7 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
                    <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                   {% if post.user.username == user.username or user.is_superuser %}
+                   {% if profile.username == user.username or user.is_superuser %}
                    <a class="dropdown-item text-danger delete-post-btn" href="#" data-id="{{ post.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Sil</a>
                    {% endif %}
                 </div>
