@@ -21,4 +21,7 @@ urlpatterns = [
     path('<str:username>/documents/', views.DocumentsProfileView.as_view(), name='documents_profile'),
     path('<str:username>/confessions/', views.ConfessionsProfileView.as_view(), name='confessions_profile'),
     path('<str:username>/questions/', views.QuestionsProfileView.as_view(), name='questions_profile'),
+
+    path('api/', include('apps.profiles.api.urls')),
+
 ]

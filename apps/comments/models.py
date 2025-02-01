@@ -4,7 +4,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from apps.likes.models import Likes
-from apps.photos.models import PhotosModel
 from django.urls import reverse
 from django.utils.timezone import now
 from django.core.files.storage import default_storage

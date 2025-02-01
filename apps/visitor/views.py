@@ -3,10 +3,10 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from . import forms
-from django.contrib.auth.views import PasswordResetView, PasswordChangeView
+from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from apps.profiles.models import ProfilePictureModel, PrivacyModel , EducationalInformationModel
+from apps.profiles.models import ProfilePictureModel, PrivacyModel 
 from django.db import transaction
 
 

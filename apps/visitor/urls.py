@@ -1,5 +1,5 @@
 
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
 from apps.post.views import PostView
@@ -20,4 +20,6 @@ urlpatterns = [
         template_name='visitor/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='visitor/password_reset_complete.html'), name='password_reset_complete'),
+
+    path('api/', include('apps.visitor.api.urls')),
 ]

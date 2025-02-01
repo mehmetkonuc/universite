@@ -5,12 +5,10 @@ from apps.profiles import forms
 from django.contrib.auth import logout
 import apps.profiles.models as models
 from django.contrib.auth import get_user_model
-from apps.post.models import PostsModel
 from apps.likes.models import Likes
-from apps.confessions.models import ConfessionsModel
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
-
+from apps.post.models import PostsModel
 
 def profile_photo(request):
     profile_picture, created = models.ProfilePictureModel.objects.get_or_create(user=request.user)
@@ -28,7 +26,6 @@ def profile_photo(request):
 
 class ProfileView(LoginRequiredMixin, View):
     model = models.EducationalInformationModel
-    model_posts = PostsModel
     template = 'profiles/index.html'
     context = {
     }
@@ -53,12 +50,13 @@ class ProfileView(LoginRequiredMixin, View):
                 'marketplace',
                 'documents',
                 'questions',
+                'confessions',
             ), 
             username=username
         )
 
-        # İtiraf sayısını alıyoruz
-        confessions = ConfessionsModel.objects.filter(user=profile, is_privacy=False).count()
+        # # İtiraf sayısını alıyoruz
+        # confessions = ConfessionsModel.objects.filter(user=profile, is_privacy=False).count()
 
         # Profil ile ilişkili takipçi ve takip isteklerini alıyoruz
         followers = profile.followers.filter(follower=request.user)
@@ -66,12 +64,10 @@ class ProfileView(LoginRequiredMixin, View):
 
         self.context.update({
             'profile': profile,
-            'confessions': confessions,
             'followers': followers,
             'follow_requests': follow_requests,
         })
         return render(request, self.template, self.context)
-
 
 
 class FollowersProfileView(LoginRequiredMixin, View):
@@ -153,8 +149,8 @@ class FollowingProfileView(LoginRequiredMixin, View):
 
 
 class PostsProfileView(LoginRequiredMixin, View):
-    model_posts = PostsModel
     model_like = Likes
+    model_posts = PostsModel
     paginate_by = 12
     template = 'profiles/posts.html'
     context = {}
@@ -205,7 +201,6 @@ class PostsProfileView(LoginRequiredMixin, View):
         })
 
         return render(request, self.template, self.context)
-
 
 
 class ArticlesProfileView(LoginRequiredMixin, View):
@@ -335,7 +330,6 @@ class DocumentsProfileView(LoginRequiredMixin, View):
 
 
 class ConfessionsProfileView(LoginRequiredMixin, View):
-    # model_confessions = ConfessionsModel
     template = 'profiles/confessions.html'
     paginate_by = 12
     context = {

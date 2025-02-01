@@ -47,6 +47,7 @@ class EducationalInformationForm(forms.ModelForm):
 
         }
 
+
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
         model = ProfilePictureModel

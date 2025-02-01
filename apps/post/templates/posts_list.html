@@ -58,20 +58,24 @@
                 {% endfor %}
              </div>
              <hr />
-             <div class="d-flex justify-content-center align-items-center">
-                <div class="d-flex justify-content-center align-items-center">
-                   <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
-                   <i class="ti ti-heart{% if post.id in liked %}-filled{% endif %} text-primary"></i>
-                   <span class="like-count">{% if post.id in liked %}Beğendin {% else %}Beğen{% endif %} ({{ post.likes.count }})</span>
-                   </a>
-                   <a href="{% url 'post_detail' post.id %}#comments" class="text-body me-3">
-                   <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ post.comments.count }})
-                   </a>
-                </div>
-                <div class="ms-auto">
-                   <small class="text-muted">{{ post.create_at }}</small>
-                </div>
+             <div class="d-flex bd-highlight">
+               <div class="bd-highlight">
+                  <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{post.likes.content_type.id}}" data-object-id="{{post.id}}">
+                     <i class="ti ti-heart{% if post.id in liked %}-filled{% endif %} text-primary"></i>
+                     <small><span class="like-count">{% if post.id in liked %}Beğendin {% else %}Beğen{% endif %} ({{ post.likes.count }})</span></small>
+                     </a>
+               </div>
+               <div class="bd-highlight">
+                  <a href="{% url 'post_detail' post.id %}#comments" class="text-body me-3">
+                     <small><i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ post.comments.count }})</small>
+                     </a>
+               </div>
+
              </div>
+             <div class="d-flex flex-row-reverse bd-highlight">
+
+               <small class="text-muted">{{ post.create_at }}</small>
+            </div>
           </div>
        </div>
     </div>

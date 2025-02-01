@@ -1,9 +1,6 @@
 from apps.comments.forms import CommentForm
 from apps.comments.models import Comment, CommentPhotos
-from apps.blogs.models import ArticlesModel
-from apps.documents.models import DocumentsModel
-from apps.photos.views import photos_save
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Likes

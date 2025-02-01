@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,10 @@ SECRET_KEY = 'django-insecure-sxr+=2n2z&t+x#+lerd2#(p6)yblk^fd%4xh9!agr9y%*4!-00
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['192.168.0.164', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -44,24 +49,30 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'mptt',
     'django_filters',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    # My Apps
     'apps.settings',
-    'apps.profiles',
-    'apps.comments',
-    'apps.post',
     'apps.inputs',
     'apps.likes',
-    'apps.photos',
+    'apps.comments',
+    'apps.profiles',
+    'apps.follow',
+    'apps.post',
+    # 'apps.photos',
     'apps.members',
     'apps.blogs',
     'apps.marketplace',
     'apps.confessions',
     'apps.questions',
     'apps.documents',
-    'apps.notifications',
     'apps.chat',
-    'apps.follow',
-    'apps.visitor',
+    'apps.notifications',
     'apps.complaints',
+    'apps.visitor',
+
+
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -73,9 +84,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # CORS middleware'i ekleyin
+
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:19006",  # Expo geliştirme sunucun veya uygulamanın eriştiği URL'yi ekleyin
+    "http://192.168.0.164:8000",
+]
 ROOT_URLCONF = 'core.urls'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:19006', 'http://127.0.0.1:8000', 'http://192.168.0.164:8000']  # Projeyi çalıştırdığınız adresi buraya ekleyin
 
 TEMPLATES = [
     {
@@ -170,3 +189,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = ['core.backends.EmailOrUsernameModelBackend']
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}

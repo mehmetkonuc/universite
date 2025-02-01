@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import ConfessionsModel, UserConfessionsFilterModel
 from .forms import ConfessionsForm, UserFilterForm
 from .filters import UserFilter, MyFilter
-from apps.photos.models import PhotosModel
 from django.views import View
 from django.contrib.contenttypes.models import ContentType
 from apps.likes.models import Likes
@@ -216,7 +215,6 @@ class ConfessionDetailView(View):
 
 class ConfessionsAddView(View):
     model_confessions = ConfessionsModel
-    model_photos = PhotosModel
     form_confessions = ConfessionsForm
     template = 'confessions/add.html'
     context = {
@@ -261,7 +259,6 @@ class ConfessionsAddView(View):
 
 class ConfessionsEditView(View):
     model_confessions = ConfessionsModel
-    model_photos = PhotosModel
     form_confessions = ConfessionsForm
     template = 'confessions/add.html'
     context = {

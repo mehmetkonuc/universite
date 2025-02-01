@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 from apps.likes.models import Likes
 from apps.comments.models import Comment
-from apps.photos.models import PhotosModel
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
@@ -66,11 +65,6 @@ class PostsModel(models.Model):
         'content_url' : reverse('post_detail', kwargs={'post_id': self.id}),
         }
         return context
-
-@receiver(post_delete, sender=PostsModel)
-def delete_related_photos(sender, instance, **kwargs):
-    content_type = ContentType.objects.get_for_model(instance)
-    PhotosModel.objects.filter(content_type=content_type, object_id=instance.id).delete()
 
 
 class PostsFilterModel(models.Model):
