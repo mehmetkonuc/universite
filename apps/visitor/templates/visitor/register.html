@@ -3,8 +3,20 @@
 {% load crispy_forms_tags %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-auth.css' %}" />
-<link rel="stylesheet" href="{% static 'assets/vendor/libs/@form-validation/umd/styles/index.min.css' %}" />
 <link rel="stylesheet" href="{% static 'assets/vendor/libs/bs-stepper/bs-stepper.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
+
+<style>
+  .position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.end-0 { right: 0; }
+.top-50 { top: 50%; }
+.translate-middle-y { transform: translateY(-50%); }
+.me-3 { margin-right: 1rem; }
+.fs-5 { font-size: 1.25rem; }
+.small { font-size: 0.875em; }
+.mt-1 { margin-top: 0.25rem; }
+</style>
 {% endblock %}
 
 
@@ -66,6 +78,11 @@
         <p class="mb-4">Hemen üyelik formunu doldurun ve tadını çıkarın!</p>
         <form class="mb-3" method="POST">
           {% csrf_token %}
+          <div class="form-group">
+            <div class="position-absolute end-0 top-50 translate-middle-y me-3" id="username-status"></div>
+
+            <div id="username-feedback" class="small mt-1"></div>
+          </div>
            {{ form|crispy}}
           <div class="mb-3">
               <label class="form-check-label" for="terms-conditions">
@@ -94,14 +111,60 @@
 <script src="{% static 'assets/vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
 <script src="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
 <script src="{% static 'assets/vendor/libs/select2/select2.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/@form-validation/umd/bundle/popular.min.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js' %}"></script>
-<script src="{% static 'assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js' %}"></script>
+
 
 <script src="{% static 'assets/js/pages-auth.js' %}"></script>
 <script src="{% static 'assets/js/form-wizard-numbered.js' %}"></script>
 <script src="{% static 'assets/js/form-wizard-validation.js' %}"></script>
-
+<script>
+  document.getElementById('id_username').addEventListener('input', function(e) {
+      const username = e.target.value;
+      const statusIcon = document.getElementById('username-status');
+      const feedbackDiv = document.getElementById('username-feedback');
+      
+      // Reset görünüm
+      statusIcon.innerHTML = '';
+      feedbackDiv.innerHTML = '';
+  
+      if(username.length > 0) {
+          // Django regex pattern
+          const djangoPattern = /^[\w.@+-]+$/;
+          const isFormatValid = djangoPattern.test(username);
+          const isLengthValid = username.length <= 150;
+  
+          // Format ve uzunluk kontrolü
+          if(!isFormatValid || !isLengthValid) {
+              statusIcon.innerHTML = '<i class="ti ti-x-circle text-danger fs-5"></i>';
+              feedbackDiv.className = 'text-danger small mt-1';
+              
+              if(!isFormatValid) {
+                  feedbackDiv.textContent = 'Sadece harf, rakam ve @/./+/-/_ kullanabilirsiniz.';
+              } else {
+                  feedbackDiv.textContent = 'Maksimum 150 karakter limiti.';
+              }
+              return;
+          }
+  
+          // Sunucu tarafı kontrol
+          fetch(`/check-username/?username=${encodeURIComponent(username)}`)
+              .then(response => response.json())
+              .then(data => {
+                  if(data.is_taken) {
+                      statusIcon.innerHTML = '<i class="ti ti-xbox text-danger"></i>';
+                      feedbackDiv.className = 'text-danger small mt-1';
+                      feedbackDiv.textContent = 'Bu kullanıcı adı kullanılıyor.';
+                  } else {
+                      statusIcon.innerHTML = '<i class="ti ti-check-circle text-success"></i>';
+                      feedbackDiv.className = 'text-success small mt-1';
+                      feedbackDiv.textContent = 'Kullanıcı adı uygun!';
+                  }
+              })
+              .catch(error => {
+                  console.error('Hata:', error);
+              });
+      }
+  });
+  </script>
 {% endblock %}
 
 

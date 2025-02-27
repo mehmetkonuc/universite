@@ -29,6 +29,13 @@
    <div class="card">
       <div class="card-header">
          <h5>Profil Fotoğrafı Yükle</h5>
+         <div class="card-action-element">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                <a href="javascript:void(0);" class="card-close"><i class="tf-icons ti ti-x ti-sm"></i></a>
+              </li>
+            </ul>
+          </div>
       </div>
       <div class="card-body">
          <form method="post" enctype="multipart/form-data" id="image-form">
@@ -58,6 +65,8 @@
 {% endblock content %}
 {% block extra_javascript %}
 <script src="{% static 'assets/cropper/cropper.js' %}"></script>
+<script src="{% static 'assets/js/cards-actions.js' %}"></script>
+
 <script>
    const imageBox = document.getElementById('image-box');
    const imageForm = document.getElementById('image-form');

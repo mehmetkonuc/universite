@@ -22,6 +22,8 @@
             <span class="ti-xs ti ti-chevron-left me-2"></span>Geri Dön
             </button>
          </div>
+         {% if user.is_authenticated %}
+
          <div class="flex-shrink-1 bd-highlight">
             <div class="dropdown">
                <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -37,6 +39,8 @@
                </div>
             </div>
          </div>
+         {%endif%}
+
       </div>
    </div>
 </div>
@@ -78,21 +82,29 @@
          <div class="card-body">
             {{ data.content | safe }}
             <hr />
-            <div class="d-flex align-items-center mt-4">
-               <div class="d-flex align-items-center">
+            <div class="d-flex bd-highlight">
+               <div class="bd-highlight">
+               {% if user.is_authenticated %}
                   <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
                   <i class="ti ti-heart{% if liked %}-filled{% endif %} text-primary"></i>
                   <span class="like-count text-body">{% if liked %}Beğendin {% else %}Beğen{% endif %} ({{ data.likes.count }})</span>
                   </a>
+               {%else%}
+                  <i class="ti ti-heart text-primary"></i>
+                  <span class="like-count text-body me-3">Beğeni ({{ data.likes.count }})</span>
+               {%endif%}
+                  </div>
+                  <div class="bd-highlight">
+
                   <a href="#comments" class="text-body me-3">
                   <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ data.comments.count }})
                   </a>
                </div>
-               <div class="ms-auto">
+            </div>
+               <div class="d-flex flex-row-reverse bd-highlight">
                   <small class="text-muted">{{ data.create_at }}</small>
                </div>
                
-            </div>
          </div>
       </div>
    </div>
@@ -128,11 +140,23 @@
 </div>
 
 <!-- Yorum Formu -->
-   <!-- Comment Form -->
-   {% block comment-form %}
-   {% include 'comments/form-comment.html' %}
-   {% endblock comment-form %}
-   <!-- End Comment Form -->
+   {% if user.is_authenticated %}
+      <!-- Comment Form -->
+      {% block comment-form %}
+         {% include 'comments/form-comment.html' %}
+      {% endblock comment-form %}
+      <!-- End Comment Form -->
+   {%else%}
+   <div class="row d-flex justify-content-center">
+      <div class="col-lg-8 d-flex justify-content-center">
+         <div class="col-12">
+         <div class="alert alert-danger alert-dismissible d-flex justify-content-center" role="alert">
+            <h6 class="alert-heading mb-2">Yorum Yapmak İçin Lütfen <a href="{% url 'login' %}">Giriş Yapın</a> veya <a href="{% url 'register' %}">Kayıt Olun</a>.</h6>
+         </div>
+         </div>
+      </div>
+   </div>
+   {%endif%}
 
    {% if comments %}
    <div class="row justify-content-center">
@@ -145,7 +169,7 @@
       <div class="col-lg-8 d-flex justify-content-center">
          <div class="col-12">
          <div class="alert alert-success alert-dismissible d-flex justify-content-center" role="alert">
-            <h5 class="alert-heading mb-2">Henüz Yorum Yapılmadı. İlk Yorum Yapan Sen Ol.</h5>
+            <h6 class="alert-heading mb-2">Henüz Yorum Yapılmadı. İlk Yorum Yapan Sen Ol.</h6>
          </div>
          </div>
       </div>

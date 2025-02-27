@@ -31,6 +31,7 @@ class MarketPlaceForm(forms.ModelForm):
     currency = forms.ModelChoiceField(
         queryset=Currency.objects.all(),  # Currency modelinden tüm seçenekleri alır
         widget=forms.Select(attrs={'class': 'form-select', 'style': 'max-width: 100px;'}),
+        empty_label='Seç',
         required=True,
     )
 

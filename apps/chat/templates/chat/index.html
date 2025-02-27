@@ -1,580 +1,577 @@
 {% extends 'partials/base.html' %} {% load static %} {% block extra_css %}
 <link
-  rel="stylesheet"
-  href="{% static 'assets/vendor/css/pages/app-chat.css' %}"
-/>
+   rel="stylesheet"
+   href="{% static 'assets/vendor/css/pages/app-chat.css' %}"
+   />
 {% endblock extra_css %} {% block content %}
 <div class="row justify-content-center">
-  <div class="col">
-     {% if messages %}
-     {% for message in messages %}
-     <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-     </div>
-     {% endfor %}
-     {% endif %}
-  </div>
+   <div class="col">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+         {{ message }}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+   </div>
 </div>
 <div class="app-chat card overflow-hidden">
-  <div class="row g-0">
-    <!-- Chat & Contacts -->
-    <div
-      class="col app-chat-contacts app-sidebar flex-grow-0 overflow-hidden border-end"
-      id="app-chat-contacts"
-    >
+   <div class="row g-0">
+      <!-- Chat & Contacts -->
       <div
-        class="sidebar-header h-px-75 px-5 border-bottom d-flex align-items-center"
-      >
-        <div class="d-flex align-items-center me-6 me-lg-0">
-          <div
-            class="flex-shrink-0 avatar me-4"
-            data-bs-toggle="sidebar"
-            data-overlay="app-overlay-ex"
-            data-target="#app-chat-sidebar-left"
-          >
-          {% if user.profile_photo.profile_photo %}
-            <img
-              class="user-avatar rounded-circle cursor-pointer"
-              src="{{ user.profile_photo.profile_photo.url }}"
-              alt="Avatar"
-            />
-          {%else%}
-          <span class="avatar-initial rounded-circle bg-label-primary">{{user.first_name|first}}{{user.last_name|first}}</span>
-
-          {%endif%}
-          </div>
-          <div class="flex-grow-1 input-group input-group-merge">
-            <span class="input-group-text" id="basic-addon-search31"
-              ><i class="ti ti-search"></i
-            ></span>
-            <input
-              type="text"
-              class="form-control chat-search-input"
-              placeholder="Arama..."
-              aria-label="Search..."
-              aria-describedby="basic-addon-search31"
-            />
-          </div>
-        </div>
-        <i
-          class="ti ti-x ti-lg cursor-pointer position-absolute top-50 end-0 translate-middle d-lg-none d-block"
-          data-overlay
-          data-bs-toggle="sidebar"
-          data-target="#app-chat-contacts"
-        ></i>
-      </div>
-      <div class="sidebar-body">
-        <!-- Chats -->
-        <h5 class="text-primary mb-0 mt-3 ms-6">Sohbetler</h5>
-        <ul class="list-unstyled chat-contact-list py-2 mb-0" id="chat-list">
-          <li class="chat-contact-list-item chat-list-item-0 d-none">
-            <h6 class="text-muted mb-0">Sohbet Bulunamadı!</h6>
-          </li>
-          {% for chat in chats %} {% if user == chat.chat.first_user %}
-          <li
-            class="chat-contact-list-item d-flex align-items-center mb-1"
-            data-chat-id="{{chat.chat.id}}"
-            data-user-id="{{chat.chat.second_user.id}}"
-            id="user-{{chat.chat.second_user.id}}"
-          >
-            <div class="flex-shrink-0 avatar">
-              {% if chat.chat.second_user.profile_photo.profile_photo %}
-                <img
-                  src="{{ chat.chat.second_user.profile_photo.profile_photo.url }}"
-                  alt="Avatar"
-                  class="rounded-circle"
-                />
-              {%else%}
-              <span class="avatar-initial rounded-circle bg-label-primary">{{chat.chat.second_user.first_name|first}}{{chat.chat.second_user.last_name|first}}</span>
-              {%endif%}
-            </div>
-            <div class="chat-contact-info flex-grow-1 ms-4">
-              <div class="d-flex justify-content-between align-items-center">
-                <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                  {{ chat.chat.second_user.first_name }} {{ chat.chat.second_user.last_name }}
-                </h6>
-                <div id="message_alert">
-                  {% if not chat.is_read %}
-                  <span
-                    class="badge rounded-pill bg-danger badge-dot border"
-                    id="message_badge"
-                  ></span>
+         class="col app-chat-contacts app-sidebar flex-grow-0 overflow-hidden border-end"
+         id="app-chat-contacts"
+         >
+         <div
+            class="sidebar-header h-px-75 px-5 border-bottom d-flex align-items-center"
+            >
+            <div class="d-flex align-items-center me-6 me-lg-0">
+               <div
+                  class="flex-shrink-0 avatar me-4"
+                  data-bs-toggle="sidebar"
+                  data-overlay="app-overlay-ex"
+                  data-target="#app-chat-sidebar-left"
+                  >
+                  {% if user.profile_photo.profile_photo %}
+                  <img
+                     class="user-avatar rounded-circle cursor-pointer"
+                     src="{{ user.profile_photo.profile_photo.url }}"
+                     alt="Avatar"
+                     />
+                  {%else%}
+                  <span class="avatar-initial rounded-circle bg-label-primary">{{user.first_name|first}}{{user.last_name|first}}</span>
                   {%endif%}
-                </div>
-              </div>
-              <small class="text-muted">
-                {{ chat.chat.second_user.educational_information.university }}
-                </small>
+               </div>
+               <div class="flex-grow-1 input-group input-group-merge">
+                  <span class="input-group-text" id="basic-addon-search31"
+                     ><i class="ti ti-search"></i
+                     ></span>
+                  <input
+                     type="text"
+                     class="form-control chat-search-input"
+                     placeholder="Arama..."
+                     aria-label="Search..."
+                     aria-describedby="basic-addon-search31"
+                     />
+               </div>
             </div>
-          </li>
-          {% else %}
-          <li
-            class="chat-contact-list-item d-flex align-items-center mb-1"
-            data-chat-id="{{chat.chat.id}}"
-            data-user-id="{{chat.chat.first_user.id}}"
-            id="user-{{chat.chat.first_user.id}}"
-          >
-            <div class="flex-shrink-0 avatar">
-              {% if chat.chat.first_user.profile_photo.profile_photo %}
-
-              <img
-                src="{{ chat.chat.first_user.profile_photo.profile_photo.url }}"
-                alt="Avatar"
-                class="rounded-circle"
-              />
-              {%else%}
-              <span class="avatar-initial rounded-circle bg-label-primary">{{chat.chat.first_user.first_name|first}}{{chat.chat.first_user.last_name|first}}</span>
-              {%endif%}
-            </div>
-            <div class="chat-contact-info flex-grow-1 ms-4">
-              <div class="d-flex justify-content-between align-items-center">
-                <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                  {{ chat.chat.first_user.first_name }} {{ chat.chat.first_user.last_name }}
-                </h6>
-                <div id="message_alert">
-                  {% if not chat.is_read %}
-                  <span
-                    class="badge rounded-pill bg-danger badge-dot border"
-                    id="message_badge"
-                  ></span>
-                  {%endif%}
-                </div>
-              </div>
-              <small class="text-muted"
-                >{{ chat.chat.first_user.educational_information.university }}</small
-              >
-            </div>
-          </li>
-          {% endif %}
-          {%empty%}
-          <li class="chat-contact-list-item" id="no_chat">
-            <h6 class="text-muted mb-0">Sohbet Bulunamadı!</h6>
-          </li>
-          {% endfor %}
-        </ul>
+            <i
+               class="ti ti-x ti-lg cursor-pointer position-absolute top-50 end-0 translate-middle d-lg-none d-block"
+               data-overlay
+               data-bs-toggle="sidebar"
+               data-target="#app-chat-contacts"
+               ></i>
+         </div>
+         <div class="sidebar-body">
+            <!-- Chats -->
+            <h5 class="text-primary mb-0 mt-3 ms-6">Sohbetler</h5>
+            <ul class="list-unstyled chat-contact-list py-2 mb-0" id="chat-list">
+               <li class="chat-contact-list-item chat-list-item-0 d-none">
+                  <h6 class="text-muted mb-0">Sohbet Bulunamadı!</h6>
+               </li>
+               {% for chat in chats %} {% if user == chat.chat.first_user %}
+               <li
+                  class="chat-contact-list-item d-flex align-items-center mb-1"
+                  data-chat-id="{{chat.chat.id}}"
+                  data-user-id="{{chat.chat.second_user.id}}"
+                  id="user-{{chat.chat.second_user.id}}"
+                  >
+                  <div class="flex-shrink-0 avatar">
+                     {% if chat.chat.second_user.profile_photo.profile_photo %}
+                     <img
+                        src="{{ chat.chat.second_user.profile_photo.profile_photo.url }}"
+                        alt="Avatar"
+                        class="rounded-circle"
+                        />
+                     {%else%}
+                     <span class="avatar-initial rounded-circle bg-label-primary">{{chat.chat.second_user.first_name|first}}{{chat.chat.second_user.last_name|first}}</span>
+                     {%endif%}
+                  </div>
+                  <div class="chat-contact-info flex-grow-1 ms-4">
+                     <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="chat-contact-name text-truncate fw-normal m-0">
+                           {{ chat.chat.second_user.first_name }} {{ chat.chat.second_user.last_name }}
+                        </h6>
+                        <div id="message_alert">
+                           {% if not chat.is_read %}
+                           <span
+                              class="badge rounded-pill bg-danger badge-dot border"
+                              id="message_badge"
+                              ></span>
+                           {%endif%}
+                        </div>
+                     </div>
+                     <small class="text-muted">
+                     {{ chat.chat.second_user.educational_information.university }}
+                     </small>
+                  </div>
+               </li>
+               {% else %}
+               <li
+                  class="chat-contact-list-item d-flex align-items-center mb-1"
+                  data-chat-id="{{chat.chat.id}}"
+                  data-user-id="{{chat.chat.first_user.id}}"
+                  id="user-{{chat.chat.first_user.id}}"
+                  >
+                  <div class="flex-shrink-0 avatar">
+                     {% if chat.chat.first_user.profile_photo.profile_photo %}
+                     <img
+                        src="{{ chat.chat.first_user.profile_photo.profile_photo.url }}"
+                        alt="Avatar"
+                        class="rounded-circle"
+                        />
+                     {%else%}
+                     <span class="avatar-initial rounded-circle bg-label-primary">{{chat.chat.first_user.first_name|first}}{{chat.chat.first_user.last_name|first}}</span>
+                     {%endif%}
+                  </div>
+                  <div class="chat-contact-info flex-grow-1 ms-4">
+                     <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="chat-contact-name text-truncate fw-normal m-0">
+                           {{ chat.chat.first_user.first_name }} {{ chat.chat.first_user.last_name }}
+                        </h6>
+                        <div id="message_alert">
+                           {% if not chat.is_read %}
+                           <span
+                              class="badge rounded-pill bg-danger badge-dot border"
+                              id="message_badge"
+                              ></span>
+                           {%endif%}
+                        </div>
+                     </div>
+                     <small class="text-muted"
+                        >{{ chat.chat.first_user.educational_information.university }}</small
+                        >
+                  </div>
+               </li>
+               {% endif %}
+               {%empty%}
+               <li class="chat-contact-list-item" id="no_chat">
+                  <h6 class="text-muted mb-0">Sohbet Bulunamadı!</h6>
+               </li>
+               {% endfor %}
+            </ul>
+         </div>
       </div>
-    </div>
-    <!-- /Chat contacts -->
-
-    <!-- Chat History -->
-    <div class="col app-chat-history">
-      {% include 'chat/messages.html' %}
-    </div>
-    <!-- /Chat History -->
-  </div>
+      <!-- /Chat contacts -->
+      <!-- Chat History -->
+      <div class="col app-chat-history">
+         {% include 'chat/messages.html' %}
+      </div>
+      <!-- /Chat History -->
+   </div>
 </div>
 {% endblock content %} {% block extra_javascript %}
 <!-- <script src="{% static 'assets/js/app-chat.js' %}"></script> -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.querySelector(".chat-search-input");
-    // const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
-
-    // Filter Chats
-    if (searchInput) {
-      searchInput.addEventListener("keyup", (e) => {
-        const searchValue = e.currentTarget.value.toLowerCase();
-        const chatListItems = document.querySelectorAll(
-          "#chat-list li:not(.chat-contact-list-item-title)"
-        );
-        const chatListItem0 = document.querySelector(".chat-list-item-0");
-
-        filterItems(chatListItems, searchValue, chatListItem0);
-      });
-    }
-
-    // Filter items function
-    function filterItems(items, searchValue, noResultItem) {
-      let matchCount = 0;
-
-      items.forEach((item) => {
-        const itemText = item.textContent.toLowerCase();
-
-        if (searchValue && itemText.includes(searchValue)) {
-          item.classList.add("d-flex");
-          item.classList.remove("d-none");
-          matchCount++;
-        } else if (!searchValue) {
-          item.classList.add("d-flex");
-          item.classList.remove("d-none");
-          matchCount++;
-        } else {
-          item.classList.add("d-none");
-        }
-      });
-
-      noResultItem.classList.toggle("d-none", matchCount > 0);
-    }
-
-    // Reinitialize Bootstrap components
-    function reinitializeBootstrapComponents() {
-      document
-        .querySelectorAll('[data-bs-toggle="sidebar"]')
-        .forEach((toggle) => {
-          const sidebar = document.querySelector(
-            toggle.getAttribute("data-target")
-          );
-          if (sidebar) {
-            toggle.addEventListener("click", () => {
-              sidebar.classList.toggle("show");
-            });
-          }
-        });
-
-      const closeIcon = document.querySelector(
-        '.ti-x[data-target="#app-chat-contacts"]'
-      );
-      if (closeIcon) {
-        closeIcon.addEventListener("click", () => {
-          const sidebar = document.querySelector(
-            closeIcon.getAttribute("data-target")
-          );
-          if (sidebar) sidebar.classList.remove("show");
-        });
-      }
-    }
-
-    // Close sidebar function
-    function closeSidebar() {
-      const sidebar = document.querySelector("#app-chat-contacts");
-      if (sidebar) sidebar.classList.remove("show");
-    }
-
-    // Scroll to bottom of chat
-    function scrollToBottom() {
-      const chatContactsBody = document.querySelector(
-        ".app-chat-contacts .sidebar-body"
-      );
-      const chatHistoryBody = document.querySelector(".chat-history-body");
-
-      // Chat contacts scrollbar
-      if (chatContactsBody) {
-        new PerfectScrollbar(chatContactsBody, {
-          wheelPropagation: false,
-          suppressScrollX: true,
-        });
-      }
-
-      // Chat history scrollbar
-      if (chatHistoryBody) {
-        new PerfectScrollbar(chatHistoryBody, {
-          wheelPropagation: false,
-          suppressScrollX: true,
-        });
-        chatHistoryBody.scrollTo(0, chatHistoryBody.scrollHeight);
-      }
-    }
-
-    // Send message form handling
-    function handleSendMessageForm() {
-      const formSendMessage = document.querySelector(".form-send-message");
-      const messageInput = document.querySelector(".message-input");
-      const messageText = document.querySelector(".chat-history");
-
-      if (formSendMessage && messageInput) {
-        formSendMessage.addEventListener("submit", (e) => {
-          e.preventDefault();
-          if (messageInput.value.trim()) {
-            const messageElement = document.createElement("li");
-            messageElement.classList.add("chat-message");
-            messageElement.classList.add("chat-message-right");
-            messageElement.innerHTML = `
-              <div class="d-flex overflow-hidden">
-              <div class="chat-message-wrapper flex-grow-1">
-                  <div class="chat-message-text">
-                      <p class="mb-0">${messageInput.value}</p>
-                  </div>
-                  <div class="text-end text-muted mt-1">
-                      <small>${new Date().toLocaleTimeString()}</small>
-                  </div>
-              </div>
-              </div>`;
-            messageText.appendChild(messageElement);
-            scrollToBottom();
-            document.querySelectorAll(".form-send-message").forEach((item) => {
-              const chatId = item.getAttribute("data-chat-id");
-              const userId = item.getAttribute("user-id");
-              socket.send(
-                JSON.stringify({
-                  type: "chat_message",
-                  chat_id: chatId,
-                  sender_id: userId,
-                  message: messageInput.value,
-                })
-              );
-            });
-            messageInput.value = "";
-          }
-        });
-      }
-    }
-
-    // Fetch chat messages and handle chat list item click
-    function handleChatListClicks() {
-      document.querySelectorAll(".chat-contact-list-item").forEach((item) => {
-        item.addEventListener("click", () => {
-          document
-            .querySelectorAll(".chat-contact-list-item")
-            .forEach((el) => el.classList.remove("active"));
-          item.classList.add("active");
-
-          const chatId = item.getAttribute("data-chat-id");
-          const currentChatUserId = item.getAttribute("data-user-id");
-          if (chatId) {
-            fetch("/chat/get-messages/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken"), // Assuming a function for CSRF token
-              },
-              body: JSON.stringify({
-                chat_id: chatId,
-              }),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                document.querySelector(".app-chat-history").innerHTML =
-                  data.html;
-                scrollToBottom();
-                initInfiniteScroll();
-
-                handleSendMessageForm();
-                reinitializeBootstrapComponents();
-                closeSidebar();
-                const badge = document.getElementById("message_badge");
-                if (badge) {
-                  badge.remove();
-                }
-              })
-              .catch((error) => console.error("Error:", error));
-          }
-          messageLive(currentChatUserId);
-
-        });
-      });
-    }
-
-    function messageLive(currentChatUserId) {
-      socket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        if (data.type == "chat_message") {
-          const message = data.message;
-          const senderId = data.sender_id;
-            // Eğer mesaj anlık konuşulan kişiden geldiyse, sağ sütundaki mesajları güncelle
-            if (senderId === currentChatUserId) {
-              const messageText = document.querySelector(".chat-history");
-              const messageElement = document.createElement("li");
-              messageElement.classList.add("chat-message");
-              messageElement.classList.add("chat-message");
-              messageElement.innerHTML = `
-                  <div class="d-flex overflow-hidden">
-                  <div class="chat-message-wrapper flex-grow-1">
-                      <div class="chat-message-text">
-                          <p class="mb-0">${message}</p>
-                      </div>
-                      <div class="text-end text-muted mt-1">
-                          <small>${new Date().toLocaleTimeString()}</small>
-                      </div>
-                  </div>
-                  </div>`;
-              messageText.appendChild(messageElement);
-              scrollToBottom();
-            } else {
-              const userItem = document.getElementById(`user-${senderId}`);
-              const userList = document.getElementById("chat-list");
-              if (!userItem) {
-                const chatElement = document.createElement("li");
-                chatElement.classList.add("chat-contact-list-item", "d-flex", "align-items-center", "mb-1");
-                chatElement.setAttribute("data-chat-id", `${data.chat_id}`);
-                chatElement.setAttribute("data-user-id", `${data.sender_id}`);
-                chatElement.setAttribute("id", `user-${data.sender_id}`);
-                let profilePhotoHtml = '';
-                const first_name_word = data.sender_first_name.charAt(0).toUpperCase();
-                const last_name_word = data.sender_last_name.charAt(0).toUpperCase();
-
-                if (data.sender_profile_photo) {
-                  profilePhotoHtml = `
-                    <div class="flex-shrink-0 avatar">
-                      <img
-                        src="${data.sender_profile_photo}"
-                        alt="Avatar"
-                        class="rounded-circle"
-                      />
-                    </div>
-                  `;
-                } else {
-                  profilePhotoHtml = `
-                    <div class="flex-shrink-0 avatar">
-
-                  <span class="avatar-initial rounded-circle bg-label-primary"> ${first_name_word}${last_name_word}</span>
-                    </div>
-                  `
-                };
-                chatElement.innerHTML = `
-                    ${profilePhotoHtml}
-                      <div class="chat-contact-info flex-grow-1 ms-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <h6 class="chat-contact-name text-truncate fw-normal m-0">
-                            ${data.sender_first_name} ${data.sender_last_name}
-                          </h6>
-                          <div id="message_alert">
-                            <span
-                              class="badge rounded-pill bg-danger badge-dot border"
-                              id="message_badge"
-                            ></span>
-                          </div>
-                        </div>
-                        <small class="text-muted">
-                          ${data.sender_university}
-                          </small>
-                      </div>`
-
-                // userList.appendChild(chatElement);
-                const noChat = document.getElementById("no_chat");
-                if (noChat) {
-                  noChat.remove()
-                }
-                userList.prepend(chatElement);
-                handleChatListClicks();
-              } else {
-                userList.prepend(userItem);
-              };
-
-              const badge = document.getElementById("message_badge");
-              const messageAlert = document.getElementById("message_alert");
-              if (!badge) {
-                const newBadge = document.createElement("span");
-                newBadge.className =
-                  "badge rounded-pill bg-danger badge-dot border";
-                newBadge.id = "message_badge";
-                messageAlert.appendChild(newBadge);
-              }
-            };
-          } else if (data.type == "send_notification") {
-            const notificationList = $('#notifications_content');
-            const notificationCountElement = document.getElementById('notifications_count');
-            const noNotificationsMessage = document.getElementById('no_notifications_message');
-
-            // Yeni bildirimi listeye ekliyoruz
-            notificationList.prepend(data.html);
-
-            // "Okunmamış bildiriminiz yok." mesajını gizle
-            if (noNotificationsMessage) {
-                noNotificationsMessage.style.display = 'none';
-            }
-
-            // Badge'i güncelle
-            const badge = document.getElementById('notifications_badge');
-            const notificationContainer = document.getElementById('notifications_alert');
-
-            if (!badge) { // Eğer badge yoksa
-                // Yeni badge oluştur ve container'a ekle
-                const newBadge = document.createElement('span');
-                newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
-                newBadge.id = 'notifications_badge';
-                notificationContainer.appendChild(newBadge);
-            }
-
-            // Okunmamış bildirim sayısını güncelle
-            if (notificationCountElement) {
-                let currentCount = parseInt(notificationCountElement.textContent.split(' ')[0]);
-                notificationCountElement.textContent = (currentCount + 1) + ' Okunmamış';
-            }
-          } else if (data.type == "follower_notification") {
-                    const followersList = $('#followers_content');
-                    const followCountElement = document.getElementById('followers_count');
-                    const noFollowerMessage = document.getElementById('no_notifications_followers');
-                    followersList.prepend(data.html);
-
-                    if (noFollowerMessage) {
-                        noFollowerMessage.style.display = 'none';
-                    }
-                    const badge = document.getElementById('followers_badge');
-                    const followerContainer = document.getElementById('followers_alert');
-                    if (!badge) { // Eğer badge yoksa
-                        const newBadge = document.createElement('span');
-                        newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
-                        newBadge.id = 'followers_badge';
-                        followerContainer.appendChild(newBadge);
-                    }
-
-                    // Okunmamış bildirim sayısını güncelle
-                    if (followCountElement) {
-                        let currentCount = parseInt(followCountElement.textContent.split(' ')[0]);
-                        followCountElement.textContent = (currentCount + 1) + ' Okunmamış';
-                    }
-                }
-      };
-    }
-
-    const currentUserElement = document.querySelector('.current-user');
-    if (currentUserElement) {
-        const currentChatUserId = currentUserElement.getAttribute('data-user-id');
-        messageLive(currentChatUserId);
-    } else {
-      messageLive();
-    }
-
-    // Yukarı doğru sonsuz kaydırma fonksiyonu
-    function initInfiniteScroll() {
-      const chatHistoryBody = document.querySelector('.chat-history-body');
-      const sentinel = document.createElement('div');
-      sentinel.className = 'sentinel';
-      chatHistoryBody.prepend(sentinel);
-
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          loadOlderMessages(); // Eski mesajları yükle
-        }
-      }, {
-        root: chatHistoryBody,
-        threshold: 1.0,
-      });
-
-      observer.observe(sentinel);
-    }
-
-    // Eski mesajları yükleme fonksiyonu
-    function loadOlderMessages() {
-      const chatHistoryBody = document.querySelector('.chat-history-body');
-      const chatHistory = document.querySelector('.chat-history');
-      
-      // 1. Şu anki scroll yüksekliğini kaydet
-      const currentScrollHeight = chatHistoryBody.scrollHeight;
-      
-      // 2. Şu anki scroll pozisyonunu kaydet
-      const currentScrollTop = chatHistoryBody.scrollTop;
-      
-      const chatId = document.querySelector('.form-send-message').getAttribute('data-chat-id');
-      const oldestMessage = chatHistory.querySelector('.chat-message'); // En eski mesajı bul
-      const lastMessageId = oldestMessage ? oldestMessage.getAttribute('data-message-id') : null;
-      
-      if (lastMessageId) {
-        fetch(`/chat/get-older-messages/?chat_id=${chatId}&last_message_id=${lastMessageId}`)
-          .then(response => response.json())
-          .then(data => {
-            // 3. Yeni mesajları en üste ekle
-            chatHistory.insertAdjacentHTML('afterbegin', data.html);
-
-            // 4. Yeni scroll yüksekliğini hesapla
-            const newScrollHeight = chatHistoryBody.scrollHeight;
-
-            // 5. Scroll'u eski pozisyonuna ayarla
-            chatHistoryBody.scrollTop = newScrollHeight - currentScrollHeight + currentScrollTop;
-          })
-          .catch(error => console.error('Error loading older messages:', error));
-      }
-    }
-
-    const chatHistoryBody = document.querySelector('.chat-history-body');
-    if (chatHistoryBody) {
-      initInfiniteScroll();
-    };
-
-    scrollToBottom(); // Initialize scroll
-    handleSendMessageForm(); // Initialize message form
-    handleChatListClicks(); // Initialize chat list click handlers
-  });
+   document.addEventListener("DOMContentLoaded", function () {
+     const searchInput = document.querySelector(".chat-search-input");
+     // const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
+   
+     // Filter Chats
+     if (searchInput) {
+       searchInput.addEventListener("keyup", (e) => {
+         const searchValue = e.currentTarget.value.toLowerCase();
+         const chatListItems = document.querySelectorAll(
+           "#chat-list li:not(.chat-contact-list-item-title)"
+         );
+         const chatListItem0 = document.querySelector(".chat-list-item-0");
+   
+         filterItems(chatListItems, searchValue, chatListItem0);
+       });
+     }
+   
+     // Filter items function
+     function filterItems(items, searchValue, noResultItem) {
+       let matchCount = 0;
+   
+       items.forEach((item) => {
+         const itemText = item.textContent.toLowerCase();
+   
+         if (searchValue && itemText.includes(searchValue)) {
+           item.classList.add("d-flex");
+           item.classList.remove("d-none");
+           matchCount++;
+         } else if (!searchValue) {
+           item.classList.add("d-flex");
+           item.classList.remove("d-none");
+           matchCount++;
+         } else {
+           item.classList.add("d-none");
+         }
+       });
+   
+       noResultItem.classList.toggle("d-none", matchCount > 0);
+     }
+   
+     // Reinitialize Bootstrap components
+     function reinitializeBootstrapComponents() {
+       document
+         .querySelectorAll('[data-bs-toggle="sidebar"]')
+         .forEach((toggle) => {
+           const sidebar = document.querySelector(
+             toggle.getAttribute("data-target")
+           );
+           if (sidebar) {
+             toggle.addEventListener("click", () => {
+               sidebar.classList.toggle("show");
+             });
+           }
+         });
+   
+       const closeIcon = document.querySelector(
+         '.ti-x[data-target="#app-chat-contacts"]'
+       );
+       if (closeIcon) {
+         closeIcon.addEventListener("click", () => {
+           const sidebar = document.querySelector(
+             closeIcon.getAttribute("data-target")
+           );
+           if (sidebar) sidebar.classList.remove("show");
+         });
+       }
+     }
+   
+     // Close sidebar function
+     function closeSidebar() {
+       const sidebar = document.querySelector("#app-chat-contacts");
+       if (sidebar) sidebar.classList.remove("show");
+     }
+   
+     // Scroll to bottom of chat
+     function scrollToBottom() {
+       const chatContactsBody = document.querySelector(
+         ".app-chat-contacts .sidebar-body"
+       );
+       const chatHistoryBody = document.querySelector(".chat-history-body");
+   
+       // Chat contacts scrollbar
+       if (chatContactsBody) {
+         new PerfectScrollbar(chatContactsBody, {
+           wheelPropagation: false,
+           suppressScrollX: true,
+         });
+       }
+   
+       // Chat history scrollbar
+       if (chatHistoryBody) {
+         new PerfectScrollbar(chatHistoryBody, {
+           wheelPropagation: false,
+           suppressScrollX: true,
+         });
+         chatHistoryBody.scrollTo(0, chatHistoryBody.scrollHeight);
+       }
+     }
+   
+     // Send message form handling
+     function handleSendMessageForm() {
+       const formSendMessage = document.querySelector(".form-send-message");
+       const messageInput = document.querySelector(".message-input");
+       const messageText = document.querySelector(".chat-history");
+   
+       if (formSendMessage && messageInput) {
+         formSendMessage.addEventListener("submit", (e) => {
+           e.preventDefault();
+           if (messageInput.value.trim()) {
+             const messageElement = document.createElement("li");
+             messageElement.classList.add("chat-message");
+             messageElement.classList.add("chat-message-right");
+             messageElement.innerHTML = `
+               <div class="d-flex overflow-hidden">
+               <div class="chat-message-wrapper flex-grow-1">
+                   <div class="chat-message-text">
+                       <p class="mb-0">${messageInput.value}</p>
+                   </div>
+                   <div class="text-end text-muted mt-1">
+                       <small>${new Date().toLocaleTimeString()}</small>
+                   </div>
+               </div>
+               </div>`;
+             messageText.appendChild(messageElement);
+             scrollToBottom();
+             document.querySelectorAll(".form-send-message").forEach((item) => {
+               const chatId = item.getAttribute("data-chat-id");
+               const userId = item.getAttribute("user-id");
+               socket.send(
+                 JSON.stringify({
+                   type: "chat_message",
+                   chat_id: chatId,
+                   sender_id: userId,
+                   message: messageInput.value,
+                 })
+               );
+             });
+             messageInput.value = "";
+           }
+         });
+       }
+     }
+   
+     // Fetch chat messages and handle chat list item click
+     function handleChatListClicks() {
+       document.querySelectorAll(".chat-contact-list-item").forEach((item) => {
+         item.addEventListener("click", () => {
+           document
+             .querySelectorAll(".chat-contact-list-item")
+             .forEach((el) => el.classList.remove("active"));
+           item.classList.add("active");
+   
+           const chatId = item.getAttribute("data-chat-id");
+           const currentChatUserId = item.getAttribute("data-user-id");
+           if (chatId) {
+             fetch("/chat/get-messages/", {
+               method: "POST",
+               headers: {
+                 "Content-Type": "application/json",
+                 "X-CSRFToken": getCookie("csrftoken"), // Assuming a function for CSRF token
+               },
+               body: JSON.stringify({
+                 chat_id: chatId,
+               }),
+             })
+               .then((response) => response.json())
+               .then((data) => {
+                 document.querySelector(".app-chat-history").innerHTML =
+                   data.html;
+                 scrollToBottom();
+                 initInfiniteScroll();
+   
+                 handleSendMessageForm();
+                 reinitializeBootstrapComponents();
+                 closeSidebar();
+                 const badge = document.getElementById("message_badge");
+                 if (badge) {
+                   badge.remove();
+                 }
+               })
+               .catch((error) => console.error("Error:", error));
+           }
+           messageLive(currentChatUserId);
+   
+         });
+       });
+     }
+   
+     function messageLive(currentChatUserId) {
+       socket.onmessage = function (e) {
+         const data = JSON.parse(e.data);
+         if (data.type == "chat_message") {
+           const message = data.message;
+           const senderId = data.sender_id;
+             // Eğer mesaj anlık konuşulan kişiden geldiyse, sağ sütundaki mesajları güncelle
+             if (senderId === currentChatUserId) {
+               const messageText = document.querySelector(".chat-history");
+               const messageElement = document.createElement("li");
+               messageElement.classList.add("chat-message");
+               messageElement.classList.add("chat-message");
+               messageElement.innerHTML = `
+                   <div class="d-flex overflow-hidden">
+                   <div class="chat-message-wrapper flex-grow-1">
+                       <div class="chat-message-text">
+                           <p class="mb-0">${message}</p>
+                       </div>
+                       <div class="text-end text-muted mt-1">
+                           <small>${new Date().toLocaleTimeString()}</small>
+                       </div>
+                   </div>
+                   </div>`;
+               messageText.appendChild(messageElement);
+               scrollToBottom();
+             } else {
+               const userItem = document.getElementById(`user-${senderId}`);
+               const userList = document.getElementById("chat-list");
+               if (!userItem) {
+                 const chatElement = document.createElement("li");
+                 chatElement.classList.add("chat-contact-list-item", "d-flex", "align-items-center", "mb-1");
+                 chatElement.setAttribute("data-chat-id", `${data.chat_id}`);
+                 chatElement.setAttribute("data-user-id", `${data.sender_id}`);
+                 chatElement.setAttribute("id", `user-${data.sender_id}`);
+                 let profilePhotoHtml = '';
+                 const first_name_word = data.sender_first_name.charAt(0).toUpperCase();
+                 const last_name_word = data.sender_last_name.charAt(0).toUpperCase();
+   
+                 if (data.sender_profile_photo) {
+                   profilePhotoHtml = `
+                     <div class="flex-shrink-0 avatar">
+                       <img
+                         src="${data.sender_profile_photo}"
+                         alt="Avatar"
+                         class="rounded-circle"
+                       />
+                     </div>
+                   `;
+                 } else {
+                   profilePhotoHtml = `
+                     <div class="flex-shrink-0 avatar">
+   
+                   <span class="avatar-initial rounded-circle bg-label-primary"> ${first_name_word}${last_name_word}</span>
+                     </div>
+                   `
+                 };
+                 chatElement.innerHTML = `
+                     ${profilePhotoHtml}
+                       <div class="chat-contact-info flex-grow-1 ms-4">
+                         <div class="d-flex justify-content-between align-items-center">
+                           <h6 class="chat-contact-name text-truncate fw-normal m-0">
+                             ${data.sender_first_name} ${data.sender_last_name}
+                           </h6>
+                           <div id="message_alert">
+                             <span
+                               class="badge rounded-pill bg-danger badge-dot border"
+                               id="message_badge"
+                             ></span>
+                           </div>
+                         </div>
+                         <small class="text-muted">
+                           ${data.sender_university}
+                           </small>
+                       </div>`
+   
+                 // userList.appendChild(chatElement);
+                 const noChat = document.getElementById("no_chat");
+                 if (noChat) {
+                   noChat.remove()
+                 }
+                 userList.prepend(chatElement);
+                 handleChatListClicks();
+               } else {
+                 userList.prepend(userItem);
+               };
+   
+               const badge = document.getElementById("message_badge");
+               const messageAlert = document.getElementById("message_alert");
+               if (!badge) {
+                 const newBadge = document.createElement("span");
+                 newBadge.className =
+                   "badge rounded-pill bg-danger badge-dot border";
+                 newBadge.id = "message_badge";
+                 messageAlert.appendChild(newBadge);
+               }
+             };
+           } else if (data.type == "send_notification") {
+             const notificationList = $('#notifications_content');
+             const notificationCountElement = document.getElementById('notifications_count');
+             const noNotificationsMessage = document.getElementById('no_notifications_message');
+   
+             // Yeni bildirimi listeye ekliyoruz
+             notificationList.prepend(data.html);
+   
+             // "Okunmamış bildiriminiz yok." mesajını gizle
+             if (noNotificationsMessage) {
+                 noNotificationsMessage.style.display = 'none';
+             }
+   
+             // Badge'i güncelle
+             const badge = document.getElementById('notifications_badge');
+             const notificationContainer = document.getElementById('notifications_alert');
+   
+             if (!badge) { // Eğer badge yoksa
+                 // Yeni badge oluştur ve container'a ekle
+                 const newBadge = document.createElement('span');
+                 newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
+                 newBadge.id = 'notifications_badge';
+                 notificationContainer.appendChild(newBadge);
+             }
+   
+             // Okunmamış bildirim sayısını güncelle
+             if (notificationCountElement) {
+                 let currentCount = parseInt(notificationCountElement.textContent.split(' ')[0]);
+                 notificationCountElement.textContent = (currentCount + 1) + ' Okunmamış';
+             }
+           } else if (data.type == "follower_notification") {
+                     const followersList = $('#followers_content');
+                     const followCountElement = document.getElementById('followers_count');
+                     const noFollowerMessage = document.getElementById('no_notifications_followers');
+                     followersList.prepend(data.html);
+   
+                     if (noFollowerMessage) {
+                         noFollowerMessage.style.display = 'none';
+                     }
+                     const badge = document.getElementById('followers_badge');
+                     const followerContainer = document.getElementById('followers_alert');
+                     if (!badge) { // Eğer badge yoksa
+                         const newBadge = document.createElement('span');
+                         newBadge.className = 'badge rounded-pill bg-danger badge-dot badge-notifications border';
+                         newBadge.id = 'followers_badge';
+                         followerContainer.appendChild(newBadge);
+                     }
+   
+                     // Okunmamış bildirim sayısını güncelle
+                     if (followCountElement) {
+                         let currentCount = parseInt(followCountElement.textContent.split(' ')[0]);
+                         followCountElement.textContent = (currentCount + 1) + ' Okunmamış';
+                     }
+                 }
+       };
+     }
+   
+     const currentUserElement = document.querySelector('.current-user');
+     if (currentUserElement) {
+         const currentChatUserId = currentUserElement.getAttribute('data-user-id');
+         messageLive(currentChatUserId);
+     } else {
+       messageLive();
+     }
+   
+     // Yukarı doğru sonsuz kaydırma fonksiyonu
+     function initInfiniteScroll() {
+       const chatHistoryBody = document.querySelector('.chat-history-body');
+       const sentinel = document.createElement('div');
+       sentinel.className = 'sentinel';
+       chatHistoryBody.prepend(sentinel);
+   
+       const observer = new IntersectionObserver((entries) => {
+         if (entries[0].isIntersecting) {
+           loadOlderMessages(); // Eski mesajları yükle
+         }
+       }, {
+         root: chatHistoryBody,
+         threshold: 1.0,
+       });
+   
+       observer.observe(sentinel);
+     }
+   
+     // Eski mesajları yükleme fonksiyonu
+     function loadOlderMessages() {
+       const chatHistoryBody = document.querySelector('.chat-history-body');
+       const chatHistory = document.querySelector('.chat-history');
+       
+       // 1. Şu anki scroll yüksekliğini kaydet
+       const currentScrollHeight = chatHistoryBody.scrollHeight;
+       
+       // 2. Şu anki scroll pozisyonunu kaydet
+       const currentScrollTop = chatHistoryBody.scrollTop;
+       
+       const chatId = document.querySelector('.form-send-message').getAttribute('data-chat-id');
+       const oldestMessage = chatHistory.querySelector('.chat-message'); // En eski mesajı bul
+       const lastMessageId = oldestMessage ? oldestMessage.getAttribute('data-message-id') : null;
+       
+       if (lastMessageId) {
+         fetch(`/chat/get-older-messages/?chat_id=${chatId}&last_message_id=${lastMessageId}`)
+           .then(response => response.json())
+           .then(data => {
+             // 3. Yeni mesajları en üste ekle
+             chatHistory.insertAdjacentHTML('afterbegin', data.html);
+   
+             // 4. Yeni scroll yüksekliğini hesapla
+             const newScrollHeight = chatHistoryBody.scrollHeight;
+   
+             // 5. Scroll'u eski pozisyonuna ayarla
+             chatHistoryBody.scrollTop = newScrollHeight - currentScrollHeight + currentScrollTop;
+           })
+           .catch(error => console.error('Error loading older messages:', error));
+       }
+     }
+   
+     const chatHistoryBody = document.querySelector('.chat-history-body');
+     if (chatHistoryBody) {
+       initInfiniteScroll();
+     };
+   
+     scrollToBottom(); // Initialize scroll
+     handleSendMessageForm(); // Initialize message form
+     handleChatListClicks(); // Initialize chat list click handlers
+   });
 </script>
 {% endblock extra_javascript %}

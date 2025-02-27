@@ -1,12 +1,11 @@
 {% extends 'profiles/partials/base.html' %}
 {% load static %}
 
-{% block extra_css %}
+{% block profile_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
 <link rel="stylesheet" href="{% static 'assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}" />
-<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/pages/post/index.css' %}" />
-{% endblock extra_css%}
+{% endblock profile_css%}
 
 {% block profile_content %}
 
@@ -155,7 +154,6 @@
 {% endblock %}
 
 {% block profile_javascript %}
-<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
 <script src="{% static 'assets/js/pages/likes/like.js' %}"></script>
 <script src="{% static 'assets/js/waypoints/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'assets/js/waypoints/infinite.min.js' %}"></script>

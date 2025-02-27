@@ -13,7 +13,7 @@
          <div class="nav-item navbar-search-wrapper mb-0">
             <a class="nav-item nav-link search-toggler d-flex align-items-center px-0" href="javascript:void(0);">
             <i class="ti ti-search ti-md me-2 me-lg-4 ti-lg"></i>
-            <span class="d-none d-md-inline-block text-muted fw-normal">Search (Ctrl+/)</span>
+            <span class="d-none d-md-inline-block text-muted fw-normal">Arama (Ctrl+/)</span>
             </a>
          </div>
       </div>
@@ -82,7 +82,6 @@
          <!-- / Style Switcher-->
          <!-- Friends  -->
          {% if user.is_authenticated %}
-
          <li class="nav-item dropdown-notifications navbar-dropdown dropdown">
             <a
                class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
@@ -522,6 +521,19 @@
             </ul>
          </li>
          <!--/ User -->
+         {%else%}
+         <li>
+            <a href="{% url 'login' %}" class="btn btn-primary me-2"
+              ><span class="tf-icons ti ti-login scaleX-n1-rtl me-md-1"></span
+              ><span class="d-none d-md-block">Giriş Yap</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'register' %}" class="btn btn-danger"
+              ><span class="tf-icons ti ti-user-plus scaleX-n1-rtl me-md-1"></span
+              ><span class="d-none d-md-block">Kayıt Ol</span></a
+            >
+          </li>
          {%endif%}
       </ul>
    </div>

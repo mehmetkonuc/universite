@@ -64,6 +64,7 @@
               <small>Tüm Makaleler</small>
             </a>
           </li>
+         {% if user.is_authenticated %}
           <li class="menu-item {% if current_page == 'my_articles' %} active{% endif %}">
             <a href="{% url 'my_articles' %}" class="menu-link">
               <small>Makalelerim</small>
@@ -79,6 +80,8 @@
               <small>Makale Yaz</small>
             </a>
           </li>
+         {%endif%}
+
         </ul>
       </li>
       <li class="menu-item {% if '/marketplace/' in request.path %} active open{% endif %}">
@@ -92,6 +95,7 @@
               <small>Tüm İlanlar</small>
             </a>
           </li>
+         {% if user.is_authenticated %}
           <li class="menu-item {% if current_page == 'my_marketplace' %} active{% endif %}">
             <a href="{% url 'my_marketplace' %}" class="menu-link">
               <small>İlanlarım</small>
@@ -107,6 +111,7 @@
               <small>İlan Oluştur</small>
             </a>
           </li>
+         {%endif%}
         </ul>
       </li>
       <li class="menu-item {% if '/documents/' in request.path %} active open{% endif %}">
@@ -120,6 +125,8 @@
               <small>Tüm Ders Notları</small>
             </a>
           </li>
+         {% if user.is_authenticated %}
+
           <li class="menu-item {% if current_page == 'my_documents' %} active{% endif %}">
             <a href="{% url 'my_documents' %}" class="menu-link">
               <small>Ders Notlarım</small>
@@ -146,13 +153,14 @@
                 </a>
               </li>
             </ul>
-
           </li>
           <li class="menu-item {% if current_page == 'documents_add' or current_page == 'documents_edit' %} active{% endif %}">
             <a href="{% url 'documents_add' %}" class="menu-link">
               <small>Ders Notu Yükle</small>
             </a>
           </li>
+         {%endif%}
+
           </ul>
       </li>
       <li class="menu-item {% if '/confessions/' in request.path %} active open{% endif %}">
@@ -166,6 +174,8 @@
               <small>Tüm İtiraflar</small>
             </a>
           </li>
+         {% if user.is_authenticated %}
+
           <li class="menu-item {% if current_page == 'my_confessions' %} active{% endif %}">
             <a href="{% url 'my_confessions' %}" class="menu-link">
               <small>İtiraflarım</small>
@@ -181,6 +191,8 @@
               <small>İtiraf Yaz</small>
             </a>
           </li>
+         {%endif%}
+
         </ul>
       </li>
       <li class="menu-item {% if '/questions/' in request.path %} active open{% endif %}">
@@ -194,6 +206,7 @@
               <small>Tüm Sorular</small>
             </a>
           </li>
+         {% if user.is_authenticated %}
           <li class="menu-item {% if current_page == 'my_questions' %} active{% endif %}">
             <a href="{% url 'my_questions' %}" class="menu-link">
               <small>Sorularım</small>
@@ -209,6 +222,7 @@
               <small>Soru Sor</small>
             </a>
           </li>
+         {%endif%}
         </ul>
       </li>
     </ul>

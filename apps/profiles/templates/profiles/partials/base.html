@@ -2,6 +2,9 @@
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/vendor/css/pages/page-profile.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/fancybox/jquery.fancybox.min.css' %}">
+{% block profile_css %}
+{% endblock %}
 {% endblock %}
 {% block content %}
 <!-- Header -->
@@ -12,10 +15,21 @@
             <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
                {% if profile.profile_photo.profile_photo %}
                {% with profile_photo_url=profile.profile_photo.profile_photo.url %}
-               <img
-                  src="{{ profile_photo_url }}"
-                  alt="user image"
-                  class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+
+               <div class="gallery-container">
+                  <div class="gallery-item">
+                     <a href="{{ profile_photo_url }}" data-fancybox="profile-photo-{{ profile.username }}">
+                        <img
+                        src="{{ profile_photo_url }}"
+                        alt="user image"
+                        class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+                        </a>
+                  </div>
+               </div>
+
+
+
+
                {% endwith %}
                {% else %}
                <!-- <span class="avatar-initial rounded-circle bg-warning">{{ user.first_name|first }}{{ user.last_name|first }}</span> -->
@@ -28,7 +42,7 @@
             <div class="flex-grow-1 mt-3 mt-lg-5">
                <div
                   class="d-flex align-items-md-end justify-content-md-between  mx-5 flex-md-row flex-column gap-4">
-                  <div class="user-profile-info">
+               <div class="user-profile-info">
                      <h4 class="mb-0 mt-lg-6">{{profile.first_name}} {{profile.last_name}} {% if profile.privacy.is_private %}<i class="ti ti-lock"></i>{%endif%}</h4>
                      <span data-bs-toggle="tooltip" data-bs-placement="top" title="Kullanıcı Adı">@{{profile.username}}</span>
                      <ul
@@ -130,6 +144,8 @@
 
 
 {% block extra_javascript %}
+<script src="{% static 'assets/fancybox/jquery.fancybox.min.js' %}"></script>
+
 {% block profile_javascript %}
 
 {%endblock%}

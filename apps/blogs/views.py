@@ -22,18 +22,21 @@ class ArticlesView(View):
     paginate_by = 2
 
     def get(self, request):
-        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
         data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
         # Annotate with like_count and comment_count
         data = data.annotate(
             like_count=Count('likes', distinct=True),
             comment_count=Count('comments', distinct=True)
         )
-        
-        # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
-        filtered_data = filter.qs
-        
+        if request.user.is_authenticated:
+            user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
+            # Apply filters
+            filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
+            filtered_data = filter.qs
+        else:
+            user_filter = {}
+            filter = {}
+            filtered_data = data
         # Apply sorting
         sorted_data = filtered_data
         
@@ -50,8 +53,11 @@ class ArticlesView(View):
         return render(request, self.template, self.context)
     
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+
         user_filter = self.user_filter_model.objects.get(user=request.user)
-        
+
         if 'reset_filter' in request.POST:
             # Tüm filtre alanlarını temizle
             for field in model_to_dict(user_filter).keys():
@@ -183,6 +189,9 @@ class ArticleAddView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+
         form = self.form_article(request.POST, request.FILES)
         
         if form.is_valid():
@@ -216,12 +225,15 @@ class ArticlesDetailsView(View):
 
     def get(self, request, slug):
         data = get_object_or_404(self.model_article, slug=slug)
-        liked = data.likes.filter(user=request.user)
         comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-        # comments = data.comments.filter(parent__isnull=True)
-        # liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-
+        if request.user.is_authenticated:
+            liked = data.likes.filter(user=request.user)
+            liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+            # comments = data.comments.filter(parent__isnull=True)
+            # liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        else:
+            liked = {}
+            liked_comment = {}
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -314,3 +326,9 @@ def delete_article(request, article_id):
         messages.success(request, 'Başarıyla silindi.')
 
     return redirect('my_articles')
+
+
+class EmptyView(View):
+    def get(self, request):
+
+        return render(request, 'blogs/empty.html')
