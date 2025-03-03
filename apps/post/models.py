@@ -65,7 +65,9 @@ class PostsModel(models.Model):
         'content_url' : reverse('post_detail', kwargs={'post_id': self.id}),
         }
         return context
-
+    
+    def get_absolute_url(self):
+        return reverse('post_detail', kwargs={'post_id': self.id})
 
 class PostsFilterModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='posts_filter')

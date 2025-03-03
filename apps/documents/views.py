@@ -10,6 +10,7 @@ from .filters import UserFilter, MyFilter
 from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
 from django.db.models import Count
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class DocumentsView(View):
@@ -22,17 +23,21 @@ class DocumentsView(View):
     paginate_by = 4
 
     def get(self, request):
-        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
         data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
         data = data.annotate(
             like_count=Count('likes', distinct=True),
             comment_count=Count('comments', distinct=True)
         )
-        
-        # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
-        filtered_data = filter.qs
-        
+        if request.user.is_authenticated:
+            user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
+            # Apply filters
+            filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
+            filtered_data = filter.qs
+        else:
+            user_filter = {}
+            filter = {}
+            filtered_data = data
+
         # Apply sorting
         sorted_data = filtered_data
         
@@ -49,6 +54,9 @@ class DocumentsView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+        
         user_filter = self.user_filter_model.objects.get(user=request.user)
 
         if 'reset_filter' in request.POST:
@@ -87,7 +95,7 @@ class DocumentsView(View):
             return render(request, self.template, self.context)
 
 
-class MyDocumentsView(View):
+class MyDocumentsView(LoginRequiredMixin, View):
     model_data = DocumentsModel
     filter_form = MyFilter
     template = 'documents/my.html'
@@ -123,7 +131,7 @@ class MyDocumentsView(View):
         return render(request, self.template, self.context)
 
 
-class MyDraftDocumentsView(View):
+class MyDraftDocumentsView(LoginRequiredMixin, View):
     model_data = DocumentsModel
     filter_form = MyFilter
     template = 'documents/draft.html'
@@ -159,7 +167,7 @@ class MyDraftDocumentsView(View):
         return render(request, self.template, self.context)
 
 
-class MyFoldersView(View):
+class MyFoldersView(LoginRequiredMixin, View):
     def get(self, request):
         data = DocumentsFolderModel.objects.filter(user=request.user)
         context = {'data':data}
@@ -168,16 +176,45 @@ class MyFoldersView(View):
 
 
 class MyFoldersDetailsView(View):
+    model_data = DocumentsModel
+    filter_form = MyFilter
+    template = 'documents/my_folder_details.html'
+    context = {'siteTitle': 'Dokümanlarım'}
+    paginate_by = 4
+
     def get(self, request, folder):
-        data = DocumentsModel.objects.filter(user=request.user, folder_id=folder)
-        folder = DocumentsFolderModel.objects.filter(id=folder).first()
-        context = {'data':data,
-                   'folder':folder}
+        data = DocumentsModel.objects.filter(folder_id=folder).order_by('-create_at')
+        data = data.annotate(
+            like_count=Count('likes', distinct=True),
+            comment_count=Count('comments', distinct=True)
+        )
+        # Apply filters
+        if 'reset_filter' in request.GET:
+            filter = self.filter_form(queryset=data)
+        else:
+            filter = self.filter_form(request.GET, queryset=data)
+
+        filtered_data = filter.qs
         
-        return render(request, 'documents/my_folder_details.html', context)
+        # Apply sorting
+        sorted_data = filtered_data
+
+        # Pagination
+        paginator = Paginator(sorted_data, self.paginate_by)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        folder = DocumentsFolderModel.objects.filter(id=folder).first()
+        self.context.update({
+            'data': page_obj,
+            'filter': filter,
+            'folder': folder,
+        })
+        
+        return render(request, 'documents/my_folder_details.html', self.context)
 
 
-class FolderAddView(View):
+class FolderAddView(LoginRequiredMixin, View):
     model_folder = DocumentsFolderModel
     form_class = FolderForm
     template = 'documents/folder_add.html'
@@ -207,7 +244,7 @@ class FolderAddView(View):
         return render(request, self.template, self.context)
 
 
-class FolderEditView(View):
+class FolderEditView(LoginRequiredMixin, View):
     model_folder = DocumentsFolderModel
     form_class = FolderForm
     template = 'documents/folder_add.html'
@@ -239,7 +276,7 @@ class FolderEditView(View):
         return render(request, self.template, self.context)
     
     
-class DocumentsAddView(View):
+class DocumentsAddView(LoginRequiredMixin, View):
     model_documents = DocumentsModel
     model_upload_documents = DocumentsUploadModel
     form_class = DocumentAddForm
@@ -288,7 +325,7 @@ class DocumentsAddView(View):
         return render(request, self.template, self.context)
         
 
-class DocumentsEditView(View):
+class DocumentsEditView(LoginRequiredMixin, View):
     model_documents = DocumentsModel
     model_upload_documents = DocumentsUploadModel
     form_class = DocumentAddForm
@@ -350,14 +387,13 @@ class DocumentDetailsView(View):
 
     def get(self, request, slug):
         data = get_object_or_404(self.model_document, slug=slug)
-        liked = data.likes.filter(user=request.user)
         comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-
-        # content_type = ContentType.objects.get_for_model(data)
-        # liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        # comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
-        # liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        if request.user.is_authenticated:
+            liked = data.likes.filter(user=request.user)
+            liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        else:
+            liked = {}
+            liked_comment = {}
 
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')

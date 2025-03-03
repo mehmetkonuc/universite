@@ -28,12 +28,14 @@
 <div class="row justify-content-center">
    <div class="col-lg-8 d-flex justify-content-between">
       <h1 class="fw-bold mb-0 mt-0">{{ data.title }}</h1>
+      {% if user.is_authenticated %}
+
       <div class="dropdown">
          <button class="btn btn-text-primary rounded-pill border-1 p-2 me-n1 bg-label-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          <i class="ti ti-dots-vertical ti-sm"></i>
          </button>
          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-            <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+            <a class="dropdown-item" href="{% url 'create_complaint' 'marketplace' 'MarketPlaceModel' data.id %}">Şikayet Et</a>
             {% if data.user.username == user.username or user.is_superuser %}
             <a class="dropdown-item" href="{% url 'marketplace_edit' slug=data.slug %}">Düzenle</a>
             <a class="dropdown-item text-danger" href="#"
@@ -41,6 +43,8 @@
             {%endif%}
          </div>
       </div>
+      {% endif %}
+
    </div>
 </div>
 <!-- İlan Fotoğrafları -->
@@ -120,7 +124,7 @@
             <h5 class="text-white mb-0 fw-bold">Açıklama</h5>
          </div>
          <div class="card-body">
-            <p class="card-text">{{ data.description | safe }}</p>
+            <p class="card-text mt-4">{{ data.description | safe }}</p>
          </div>
       </div>
    </div>

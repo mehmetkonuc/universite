@@ -1,0 +1,177 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css%}
+{% block content %}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-admin-primary py-3 mb-4">
+        <h2 class="h4 mb-0 text-white"><i class="ti ti-alert-triangle me-2"></i>Şikayet Yönetim Paneli</h2>
+      </div>
+      
+      <div class="card-body">
+        <!-- Filtreleme Formu -->
+        <form method="get" class="mb-4 border-bottom pb-3">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <select name="status" class="form-select">
+                <option value="">Tüm Durumlar</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if value == current_status %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select name="category" class="form-select">
+                <option value="">Tüm Kategoriler</option>
+                {% for value, label in category_choices %}
+                <option value="{{ value }}" {% if value == current_category %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="ti ti-filter me-2"></i>Filtrele
+              </button>
+            </div>
+          </div>
+        </form>
+  
+        <!-- Şikayet Tablosu -->
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>İçerik</th>
+                <th>Kategori</th>
+                <th>Kullanıcı</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for complaint in page_obj %}
+              <tr class="{% if complaint.status == 'resolved' %}table-success{% elif complaint.status == 'rejected' %}table-danger{% endif %}">
+                <td>
+                  <a href="{{ complaint.content_object.get_absolute_url }}" 
+                     class="text-truncate d-block" 
+                     style="max-width: 250px;"
+                     target="_blank"
+                     title="{{ complaint.content_object }}">
+                    {{ complaint.content_object|truncatechars:40 }}
+                  </a>
+                  <small class="text-muted">{{ complaint.content_type.model|title }}</small>
+                </td>
+                <td>{{ complaint.get_category_display }}</td>
+                <td>
+                  <a href="{% url 'profile' complaint.user.username %}" 
+                     class="text-decoration-none">
+                    {{ complaint.user.get_full_name }}
+                  </a>
+                </td>
+                <td>
+                  <span class="badge bg-status-{{ complaint.status }}">
+                    {{ complaint.get_status_display }}
+                  </span>
+                </td>
+                <td>{{ complaint.created_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                  <button type="button" 
+                          class="btn btn-sm btn-outline-primary" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#detailModal{{ complaint.id }}">
+                    <i class="ti ti-edit"></i>
+                  </button>
+                </td>
+              </tr>
+              
+              <!-- Detay Modal -->
+              <div class="modal fade" id="detailModal{{ complaint.id }}" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <form method="post" action="{% url 'update_complaint_status' complaint.id %}">
+                      {% csrf_token %}
+                      <div class="modal-header">
+                        <h5 class="modal-title">Şikayet Detayları</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label class="form-label">Açıklama</label>
+                          <p class="form-control-plaintext">{{ complaint.description }}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label class="form-label">Durum</label>
+                          <select name="status" class="form-select">
+                            {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if complaint.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label class="form-label">Yönetici Notları</label>
+                          <textarea name="admin_notes" class="form-control" rows="3">{{ complaint.admin_notes|default:'' }}</textarea>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center py-4 text-muted">Gösterilecek şikayet bulunamadı</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+  
+        <!-- Sayfalama -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}&category={{ current_category }}">Önceki</a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}&status={{ current_status }}&category={{ current_category }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ current_status }}&category={{ current_category }}">Sonraki</a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .bg-status-pending { background-color: #ffc107!important; }
+    .bg-status-under_review { background-color: #0dcaf0!important; }
+    .bg-status-resolved { background-color: #198754!important; }
+    .bg-status-rejected { background-color: #dc3545!important; }
+    .bg-admin-primary { background-color: #2c3e50!important; }
+  </style>
+
+{% endblock content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}

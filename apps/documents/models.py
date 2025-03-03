@@ -77,9 +77,12 @@ class DocumentsModel(models.Model):
     is_published = models.BooleanField(default=False)
     comments = GenericRelation(Comment)
     likes = GenericRelation(Likes)
-    
+
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('document_details', kwargs={'slug': self.slug})
     
     def get_notifications_comment_context(self):
         context = {

@@ -6,13 +6,13 @@
     {% csrf_token %}
 
 <div class="card">
-    <h5 class="card-header">Delete Account</h5>
+    <h5 class="card-header">Hesabı Sil</h5>
     <hr class="my-0">
     <div class="card-body">
         <div class="mb-3 col-12 mb-0">
             <div class="alert alert-warning">
-                <h5 class="alert-heading mb-1">Are you sure you want to delete your account?</h5>
-                <p class="mb-0">Once you delete your account, there is no going back. Please be certain.</p>
+                <h5 class="alert-heading mb-1">Hesabınızı Silmek İstediğinizden Emin Misiniz?</h5>
+                <p class="mb-0">Eğer hesabınızı silerseniz bütün verileriniz geri getirelemeyecek şekilde silinecektir.</p>
             </div>
         </div>
             <div class="form-check mb-4">
@@ -23,10 +23,10 @@
                     id="accountActivation" required
                 >
                 <label class="form-check-label" for="accountActivation">
-                    I confirm my account deactivation
+                    Hesabımın silinmesini onaylıyorum
                 </label>
             </div>
-            <button type="button" data-bs-toggle="modal" data-bs-target="#delete" class="btn btn-danger deactivate-account">Delete Account</button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#delete" class="btn btn-danger deactivate-account"><i class="ti ti-trash ti-xs me-2"></i>Hesabı Sil</button>
     </div>
 </div>
 

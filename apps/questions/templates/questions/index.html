@@ -36,7 +36,7 @@
       </small>
    </div>
    <div class="bd-highlight me-2">
-      <a href="{% url 'confessions_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
+      <a href="{% url 'questions_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
    </div>
    <div class="bd-highlight">
       <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
@@ -74,6 +74,8 @@
          aria-label="Close"></button>
    </div>
    <div class="offcanvas-body mx-0 flex-grow-0">
+      {% if user.is_authenticated %}
+
       <form method="POST">
          {% csrf_token %}
 
@@ -87,6 +89,11 @@
          Vazgeç
          </button>
       </form>
+      {%else%}
+         <div class="alert alert-danger alert-dismissible d-flex justify-content-center" role="alert">
+            <h6 class="alert-heading mb-2">Filtreleme Yapmak İçin Lütfen <a href="{% url 'login' %}">Giriş Yapın</a> veya <a href="{% url 'register' %}">Kayıt Olun</a>.</h6>
+         </div>
+      {%endif%}
    </div>
 </div>
 {% endblock content %}

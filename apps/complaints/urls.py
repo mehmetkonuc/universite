@@ -1,7 +1,12 @@
+# complaints/urls.py
 from django.urls import path
-from .views import file_complaint, view_complaints
+from . import views
 
 urlpatterns = [
-    path('file-complaint/<str:app_label>/<str:model>/<int:object_id>/', file_complaint, name='file_complaint'),
-    path('view-complaints/', view_complaints, name='view_complaints'),
+    path('create/<str:app_name>/<str:model_name>/<int:object_id>/', views.create_complaint, name='create_complaint'),
+    path('admin/', views.complaint_dashboard, name='complaint_dashboard'),
+    path('admin/update/<int:pk>/', views.update_complaint_status, name='update_complaint_status'),
+    path('my-complaints/', views.my_complaints, name='my_complaints'),
+    path('delete/<int:pk>/', views.delete_complaint, name='delete_complaint'),
+
 ]

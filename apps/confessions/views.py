@@ -10,9 +10,9 @@ from django.contrib import messages
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-# Create your views here.
 class ConfessionsView(View):
     model_data = ConfessionsModel
     user_filter_model = UserConfessionsFilterModel
@@ -23,18 +23,22 @@ class ConfessionsView(View):
     paginate_by = 2
 
     def get(self, request):
-        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
         data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
         # Annotate with like_count and comment_count
         data = data.annotate(
             like_count=Count('likes', distinct=True),
             comment_count=Count('comments', distinct=True)
         )
-        
-        # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data)
-        filtered_data = filter.qs
-        
+        if request.user.is_authenticated:
+            user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
+            # Apply filters
+            filter = self.filter_form(model_to_dict(user_filter), queryset=data)
+            filtered_data = filter.qs
+        else:
+            user_filter = {}
+            filter = {}
+            filtered_data = data
+
         # Apply sorting
         sorted_data = filtered_data
         
@@ -51,6 +55,9 @@ class ConfessionsView(View):
         return render(request, self.template, self.context)
     
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+        
         user_filter = self.user_filter_model.objects.get(user=request.user)
         
         if 'reset_filter' in request.POST:
@@ -89,7 +96,7 @@ class ConfessionsView(View):
             return render(request, self.template, self.context)
 
 
-class MyConfessionsView(View):
+class MyConfessionsView(LoginRequiredMixin, View):
     model_data = ConfessionsModel
     filter_form = MyFilter
     template = 'confessions/my.html'
@@ -126,7 +133,7 @@ class MyConfessionsView(View):
         return render(request, self.template, self.context)
 
 
-class DraftConfessionsView(View):
+class DraftConfessionsView(LoginRequiredMixin, View):
     model_data = ConfessionsModel
     filter_form = MyFilter
     template = 'confessions/draft.html'
@@ -173,9 +180,14 @@ class ConfessionDetailView(View):
 
     def get(self, request, slug):
         confession = get_object_or_404(self.model_confessions, slug=slug)
-        liked = confession.likes.filter(user=request.user)
         comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(confession), object_id=confession.id)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+
+        if request.user.is_authenticated:
+            liked = confession.likes.filter(user=request.user)
+            liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        else:
+            liked = {}
+            liked_comment = {}
 
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')
@@ -192,6 +204,9 @@ class ConfessionDetailView(View):
         return render(request, self.template, self.context)
 
     def post(self, request, slug):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+        
         confession = get_object_or_404(self.model_confessions, slug=slug)
         content_type = ContentType.objects.get_for_model(confession)
         form = CommentView.comment_post(request=request, content_type=content_type, object_id=confession.id)
@@ -213,7 +228,7 @@ class ConfessionDetailView(View):
         return render(request, self.template, self.context)
 
 
-class ConfessionsAddView(View):
+class ConfessionsAddView(LoginRequiredMixin, View):
     model_confessions = ConfessionsModel
     form_confessions = ConfessionsForm
     template = 'confessions/add.html'
@@ -222,10 +237,13 @@ class ConfessionsAddView(View):
     }
 
     def get(self, request):
-        
-        initial = {'country': request.user.educational_information.country,
-                   'university': request.user.educational_information.university,
-                   }
+        if request.user.is_authenticated:
+            initial = {'country': request.user.educational_information.country,
+                    'university': request.user.educational_information.university,
+                    }
+        else:
+            initial = {}
+
         form = self.form_confessions(initial = initial)
 
         self.context.update({
@@ -257,7 +275,7 @@ class ConfessionsAddView(View):
         return render(request, self.template, self.context)
 
 
-class ConfessionsEditView(View):
+class ConfessionsEditView(LoginRequiredMixin, View):
     model_confessions = ConfessionsModel
     form_confessions = ConfessionsForm
     template = 'confessions/add.html'

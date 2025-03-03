@@ -32,7 +32,7 @@
                 <i class="ti ti-dots-vertical ti-sm text-muted"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                   <a class="dropdown-item" href="{% url 'file_complaint' 'post' 'PostsModel' post.id %}">Şikayet Et</a>
+                   <a class="dropdown-item" href="{% url 'create_complaint' 'post' 'PostsModel' post.id %}">Şikayet Et</a>
                    {% if post.user.username == user.username or user.is_superuser %}
                    <a class="dropdown-item text-danger delete-post-btn" href="#" data-id="{{ post.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Sil</a>
                    {% endif %}

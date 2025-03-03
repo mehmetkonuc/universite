@@ -77,7 +77,12 @@ class MarketPlaceModel(models.Model):
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
 
-
+    def get_absolute_url(self):
+        return reverse('marketplace_details', kwargs={'slug': self.slug}) 
+    
+    def __str__(self):
+        return self.title
+    
 @receiver(pre_save, sender=MarketPlaceModel)
 def pre_save_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

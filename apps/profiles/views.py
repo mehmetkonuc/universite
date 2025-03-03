@@ -63,6 +63,7 @@ class ProfileView(LoginRequiredMixin, View):
         follow_requests = profile.follow_requests_received.filter(follower=request.user)
 
         self.context.update({
+            'siteTitle' : f'{profile.first_name} {profile.last_name}',
             'profile': profile,
             'followers': followers,
             'follow_requests': follow_requests,

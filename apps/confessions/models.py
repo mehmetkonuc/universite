@@ -37,7 +37,12 @@ class ConfessionsModel(models.Model):
     is_privacy = models.BooleanField(default=True)
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
-
+    def __str__(self):
+        return self.title
+    
+    def get_absolute_url(self):
+        return reverse('confession_details', kwargs={'slug': self.slug}) 
+    
     def get_notifications_comment_context(self):
         context = {
         'message' : 'itirafınıza yorum yaptı.',

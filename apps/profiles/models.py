@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 import apps.inputs.models as inputs
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Create your models here.
 
@@ -29,7 +30,12 @@ class EducationalInformationModel(models.Model):
     status = models.ForeignKey(inputs.StatusModel,
                              on_delete=models.CASCADE, db_index=True)
     
-
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'username': self.user.username}) 
+    
+    def __str__(self):
+        return f"@{self.user.username}"
+    
 class AdditionalInformationModel(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE, related_name='additional_information', db_index=True)

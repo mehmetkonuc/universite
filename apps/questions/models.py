@@ -53,7 +53,10 @@ class QuestionsModel(models.Model):
 
     def __str__(self):
         return self.title
-
+    
+    def get_absolute_url(self):
+        return reverse('question_details', kwargs={'slug': self.slug}) 
+    
     def get_notifications_comment_context(self):
         context = {
         'message' : 'sorunuza cevap verdi.',

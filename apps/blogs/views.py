@@ -10,6 +10,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from apps.blogs.filters import UserFilter, MyFilter
 from django.forms.models import model_to_dict
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ArticlesView(View):
@@ -96,7 +97,7 @@ class ArticlesView(View):
             return render(request, self.template, self.context)
 
 
-class MyArticlesView(View):
+class MyArticlesView(LoginRequiredMixin, View):
     model_data = ArticlesModel
     filter_form = MyFilter
     template = 'blogs/my.html'
@@ -133,7 +134,7 @@ class MyArticlesView(View):
         return render(request, self.template, self.context)
  
         
-class DraftArticlesView(View):
+class DraftArticlesView(LoginRequiredMixin, View):
     model_data = ArticlesModel
     filter_form = MyFilter
     template = 'blogs/draft.html'
@@ -170,7 +171,7 @@ class DraftArticlesView(View):
         return render(request, self.template, self.context)
 
 
-class ArticleAddView(View):
+class ArticleAddView(LoginRequiredMixin, View):
     model_categories = Category
     form_article = ArticleAddForm
     template = 'blogs/add.html'
@@ -189,9 +190,6 @@ class ArticleAddView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
-        if not request.user.is_authenticated:
-            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
-
         form = self.form_article(request.POST, request.FILES)
         
         if form.is_valid():
@@ -226,6 +224,7 @@ class ArticlesDetailsView(View):
     def get(self, request, slug):
         data = get_object_or_404(self.model_article, slug=slug)
         comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
+
         if request.user.is_authenticated:
             liked = data.likes.filter(user=request.user)
             liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
@@ -234,6 +233,7 @@ class ArticlesDetailsView(View):
         else:
             liked = {}
             liked_comment = {}
+            
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -271,7 +271,7 @@ class ArticlesDetailsView(View):
         return render(request, self.template, self.context)
 
 
-class ArticleEditView(View):
+class ArticleEditView(LoginRequiredMixin, View):
     model_categories = Category
     model_article = ArticlesModel
     form_article = ArticleAddForm

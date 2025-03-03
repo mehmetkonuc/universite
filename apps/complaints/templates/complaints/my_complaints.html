@@ -1,0 +1,213 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css%}
+
+{% block content %}
+
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-danger mb-4">
+      <h5 class="text-white mb-0"><i class="ti ti-history me-2"></i>Şikayet Geçmişim</h5>
+    </div>
+    
+    <div class="card-body">
+      <!-- Filtreleme -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <form method="get">
+            <div class="input-group">
+              <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="">Tüm Durumlar</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if value == current_status %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Şikayet Listesi -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr class="table-light">
+              <th>İçerik</th>
+              <th>Kategori</th>
+              <th>Durum</th>
+              <th>Tarih</th>
+              <th>Detay</th>
+              <th>Sil</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for complaint in page_obj %}
+            <tr class="{% cycle '' 'table-light' %}">
+              <td>
+                <div class="d-flex align-items-center">
+                  <a href="{{ complaint.content_object.get_absolute_url }}" 
+                     class="text-truncate" 
+                     style="max-width: 200px;"
+                     target="_blank">
+                    {{ complaint.content_object|truncatechars:30 }}
+                  </a>
+                </div>
+              </td>
+              <td>{{ complaint.get_category_display }}</td>
+              <td>
+                <span class="badge bg-status-{{ complaint.status }}">
+                  {{ complaint.get_status_display }}
+                </span>
+              </td>
+              <td>{{ complaint.created_at|date:"d.m.Y H:i" }}</td>
+              <td>
+                <button type="button" 
+                        class="btn btn-sm btn-outline-primary" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#detailModal{{ complaint.id }}">
+                  <i class="ti ti-info-circle"></i>
+                </button>
+              </td>
+              <td>
+                <button type="button" 
+                        class="btn btn-sm btn-outline-danger" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#deleteModal{{ complaint.id }}">
+                  <i class="ti ti-trash"></i>
+                </button>
+              </td>
+            </tr>
+<!-- Tabloya Silme Onay Modalı Ekle -->
+<div class="modal fade" id="deleteModal{{ complaint.id }}" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Silme Onayı</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bu şikayeti kalıcı olarak silmek istediğinize emin misiniz?</p>
+          <small class="text-muted">İşlem geri alınamaz!</small>
+        </div>
+        <div class="modal-footer">
+          <form method="post" action="{% url 'delete_complaint' complaint.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Evet, Sil</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        </div>
+      </div>
+    </div>
+  </div>
+            <!-- Detay Modal -->
+            <div class="modal fade" id="detailModal{{ complaint.id }}" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Şikayet Detayları</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label class="form-label">Kategori:</label>
+                      <p class="fw-bold">{{ complaint.get_category_display }}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label class="form-label">Açıklamanız:</label>
+                      <p class="fst-italic">{{ complaint.description }}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label class="form-label">Yönetici Yanıtı:</label>
+                      <div class="alert alert-light border">
+                        {{ complaint.admin_notes|default:"Henüz yanıt verilmedi"|linebreaks }}
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-6">
+                        <small class="text-muted">Oluşturulma: {{ complaint.created_at|date:"d.m.Y H:i" }}</small>
+                      </div>
+                      <div class="col-6 text-end">
+                        <small class="text-muted">Son Güncelleme: {{ complaint.updated_at|date:"d.m.Y H:i" }}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted">
+                <i class="ti ti-mood-smile me-2"></i>Henüz şikayet kaydınız bulunmamaktadır
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sayfalama -->
+      {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}">&laquo;</a>
+          </li>
+          {% endif %}
+          
+          {% for num in page_obj.paginator.page_range %}
+          <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}&status={{ current_status }}">{{ num }}</a>
+          </li>
+          {% endfor %}
+          
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ current_status }}">&raquo;</a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-status-pending { background-color: #ffc107!important; }
+  .bg-status-under_review { background-color: #0dcaf0!important; }
+  .bg-status-resolved { background-color: #198754!important; }
+  .bg-status-rejected { background-color: #dc3545!important; }
+  
+  /* Model ikonları */
+  [class*="ti-post"]:before { content: "\ea4d"; }
+  [class*="ti-blog"]:before { content: "\eb2d"; }
+  [class*="ti-announcement"]:before { content: "\eab7"; }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+

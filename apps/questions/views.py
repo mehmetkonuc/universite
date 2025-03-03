@@ -10,8 +10,9 @@ from django.contrib import messages
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
+
 class QuestionsView(View):
     model_data = QuestionsModel
     user_filter_model = UserQuestionsFilterModel
@@ -22,17 +23,21 @@ class QuestionsView(View):
     paginate_by = 4
 
     def get(self, request):
-        user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
         data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
         # Annotate with like_count and comment_count
         data = data.annotate(
             like_count=Count('likes', distinct=True),
             comment_count=Count('comments', distinct=True)
         )
-        
-        # Apply filters
-        filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
-        filtered_data = filter.qs
+        if request.user.is_authenticated:
+            user_filter, created = self.user_filter_model.objects.get_or_create(user=request.user)
+            # Apply filters
+            filter = self.filter_form(model_to_dict(user_filter), queryset=data, request=request)
+            filtered_data = filter.qs
+        else:
+            user_filter = {}
+            filter = {}
+            filtered_data = data
         
         # Apply sorting
         sorted_data = filtered_data
@@ -50,6 +55,9 @@ class QuestionsView(View):
         return render(request, self.template, self.context)
     
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+        
         user_filter = self.user_filter_model.objects.get(user=request.user)
         
         if 'reset_filter' in request.POST:
@@ -88,7 +96,7 @@ class QuestionsView(View):
             return render(request, self.template, self.context)
 
 
-class MyQuestionsView(View):
+class MyQuestionsView(LoginRequiredMixin, View):
     model_data = QuestionsModel
     filter_form = MyFilter
     template = 'questions/my.html'
@@ -125,7 +133,7 @@ class MyQuestionsView(View):
         return render(request, self.template, self.context)
 
 
-class DraftQuestionsView(View):
+class DraftQuestionsView(LoginRequiredMixin, View):
     model_data = QuestionsModel
     filter_form = MyFilter
     template = 'questions/draft.html'
@@ -172,13 +180,14 @@ class QuestionsDetailsView(View):
 
     def get(self, request, slug):
         data = get_object_or_404(self.model_questions, slug=slug)
-        liked = data.likes.filter(user=request.user)
         comments =CommentView.comment_get(content_type=ContentType.objects.get_for_model(data), object_id=data.id)
-        liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
-        # content_type = ContentType.objects.get_for_model(data)
-        # liked = self.model_likes.objects.filter(content_type=content_type, user=request.user).values_list('object_id', flat=True)
-        # comments =CommentView.comment_get(content_type=content_type, object_id=data.id)
-        # liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        
+        if request.user.is_authenticated:
+            liked = data.likes.filter(user=request.user)
+            liked_comment = self.model_likes.objects.filter(content_type=ContentType.objects.get_for_model(CommentView.model_comments), user=request.user).values_list('object_id', flat=True)
+        else:
+            liked = {}
+            liked_comment = {}
 
         paginator = Paginator(comments, self.paginate_by)
         page_number = request.GET.get('page')
@@ -216,7 +225,7 @@ class QuestionsDetailsView(View):
         return render(request, self.template, self.context)
 
 
-class QuestionsAddView(View):
+class QuestionsAddView(LoginRequiredMixin, View):
     model_categories = Category
     form_questions = QuestionsAddForm
     template = 'questions/add.html'
@@ -235,6 +244,9 @@ class QuestionsAddView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
+        
         form = self.form_questions(request.POST)
         if form.is_valid():
             form_data = form.save(commit=False)
@@ -253,7 +265,7 @@ class QuestionsAddView(View):
         return render(request, self.template, self.context)
 
 
-class QuestionsEditView(View):
+class QuestionsEditView(LoginRequiredMixin, View):
     model_questions = QuestionsModel
     model_categories = Category
     form_questions = QuestionsAddForm

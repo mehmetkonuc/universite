@@ -46,7 +46,10 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
 
     def __str__(self):
-        return f'Comment by {self.user} on {self.content_object}'
+        return self.text[:50]  # Özet gösterimi
+
+    def get_absolute_url(self):
+        return reverse('comment_detail', kwargs={'comment_id': self.id})
     
     def is_parent(self):
         return self.parent is None

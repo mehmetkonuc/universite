@@ -25,34 +25,46 @@
                      <h1 class="card-title mb-0">{{data.title}}</h1>
                      <small class="card-text text-muted">{{data.category}}</small>
                   </div>
-                  <div class="dropdown">
-                     <button class="btn rounded-pill border-1 p-2 me-n1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     <i class="ti ti-dots-vertical ti-sm"></i>
-                     </button>
-                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-                        <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
-                        {% if data.user.username == user.username or user.is_superuser %}
-                        <a class="dropdown-item" href="{% url 'questions_edit' slug=data.slug %}">Düzenle</a>
-                        <a class="dropdown-item text-danger" href="#"
-                           data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
-                        {%endif%}
+                  {% if user.is_authenticated %}
+                     <div class="dropdown">
+                        <button class="btn rounded-pill border-1 p-2 me-n1" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ti ti-dots-vertical ti-sm"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
+                           <a class="dropdown-item" href="{% url 'create_complaint' 'questions' 'QuestionsModel' data.id %}">Şikayet Et</a>
+                           {% if data.user.username == user.username or user.is_superuser %}
+                           <a class="dropdown-item" href="{% url 'questions_edit' slug=data.slug %}">Düzenle</a>
+                           <a class="dropdown-item text-danger" href="#"
+                              data-bs-toggle="modal" data-bs-target="#modalCenter_{{data.id}}">Sil</a>
+                           {%endif%}
+                        </div>
                      </div>
-                  </div>
+                  {%endif%}
                </div>
                <p>{{ data.content|safe }}</p>
                <hr />
-               <div class="d-flex align-items-center">
-                  <div class="d-flex align-items-center">
+               <div class="d-flex bd-highlight">
+                  <div class="bd-highlight">
+                  {% if user.is_authenticated %}
                      <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{data.likes.content_type.id}}" data-object-id="{{data.id}}">
                      <i class="ti ti-heart{% if liked %}-filled{% endif %} text-primary"></i>
                      <span class="like-count text-body">{% if liked %}Beğendin {% else %}Beğen{% endif %} ({{ data.likes.count }})</span>
                      </a>
-                     <i class="ti ti-message-filled text-danger me-1"></i> Cevap Yaz ({{ data.comments.count }})
-                  </div>
-                  <div class="ms-auto">
-                     <small class="card-text text-muted">{{data.create_at}}</small>
+                  {%else%}
+                     <i class="ti ti-heart text-primary"></i>
+                     <span class="like-count text-body me-3">Beğeni ({{ data.likes.count }})</span>
+                  {%endif%}
+                     </div>
+                     <div class="bd-highlight">
+   
+                     <a href="#comments" class="text-body me-3">
+                     <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ data.comments.count }})
+                     </a>
                   </div>
                </div>
+                  <div class="d-flex flex-row-reverse bd-highlight">
+                     <small class="text-muted">{{ data.create_at }}</small>
+                  </div>
             </div>
          </div>
       </div>
@@ -86,28 +98,48 @@
          </div>
       </div>
    </div>
-   <!-- Yorum Formu -->
-
-   <!-- Comment Form -->
-   {% block comment-form %}
+<!-- Yorum Formu -->
+{% if user.is_authenticated %}
+<!-- Comment Form -->
+{% block comment-form %}
    {% include 'comments/form-comment.html' %}
-   {% endblock comment-form %}
-   <!-- End Comment Form -->
-
-   {%if comments %}
-   <div class="row justify-content-center">
-      <div class="col-lg-8">
-         <h4 class="fw-bold mb-4 mt-0" id="comments">Cevaplar ({{data.comments.count}})</h4>
-      </div>
+{% endblock comment-form %}
+<!-- End Comment Form -->
+{%else%}
+<div class="row d-flex justify-content-center">
+<div class="col-lg-8 d-flex justify-content-center">
+   <div class="col-12">
+   <div class="alert alert-danger alert-dismissible d-flex justify-content-center" role="alert">
+      <h6 class="alert-heading mb-2">Yorum Yapmak İçin Lütfen <a href="{% url 'login' %}">Giriş Yapın</a> veya <a href="{% url 'register' %}">Kayıt Olun</a>.</h6>
    </div>
+   </div>
+</div>
+</div>
 {%endif%}
-   <!-- Comments -->
 
-   {% block comment %}
-   {% include 'comments/comments.html' %}
-   {% endblock comment %}
+{% if comments %}
+<div class="row justify-content-center">
+<div class="col-lg-8">
+   <h4 class="fw-bold mb-4 mt-0" id="comments">Yorumlar</h4>
+</div>
+</div>
+{%else%}
+<div class="row d-flex justify-content-center">
+<div class="col-lg-8 d-flex justify-content-center">
+   <div class="col-12">
+   <div class="alert alert-success alert-dismissible d-flex justify-content-center" role="alert">
+      <h6 class="alert-heading mb-2">Henüz Yorum Yapılmadı. İlk Yorum Yapan Sen Ol.</h6>
+   </div>
+   </div>
+</div>
+</div>
+{%endif%}
 
-   <!-- End Comments -->
+<!-- Comments -->
+{% block comment %}
+{% include 'comments/comments.html' %}
+{% endblock comment %}
+<!-- End Comments -->
 
 <!-- Delete Questions Modal -->
 <div class="modal fade" id="modalCenter_{{data.id}}" tabindex="-1" aria-hidden="true">

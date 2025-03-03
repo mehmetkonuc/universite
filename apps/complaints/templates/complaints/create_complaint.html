@@ -1,0 +1,65 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{% endblock extra_css%}
+
+{% block content %}
+<div class="container mt-5">
+        <div class="card card-border-shadow-primary">
+            <div class="card-header bg-danger mb-4">
+               <h5 class="text-white mb-0 fw-bold"><i class="ti ti-flag me-2"></i>Şikayet Oluştur</h5>
+            </div>
+        <div class="card-body mt-4">
+            <!-- İçerik Önizleme -->
+            <div class="alert alert-light border mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-muted">Şikayet edilen içerik:</small>
+                </div>
+                <a href="{{ content_object.get_absolute_url }}" 
+                   class="text-decoration-none d-block text-truncate"
+                   >
+                    <i class="ti ti-external-link me-1"></i>
+                    <span class="text-primary">{{ content_object }}</span>
+                </a>
+            </div>
+
+            <!-- Form Alanı -->
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    {{ form.category.label_tag }}
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="text-danger mt-1">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                    <small class="form-text text-muted">Maksimum 1000 karakter</small>
+                    {% if form.description.errors %}
+                        <div class="text-danger mt-1">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="ti ti-send me-2"></i>Şikayeti Gönder
+                    </button>
+                    <a onclick="history.back()"
+                       class="btn btn-outline-secondary btn-lg">
+                        <i class="ti ti-arrow-back me-2"></i>İçeriğe Dön
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+

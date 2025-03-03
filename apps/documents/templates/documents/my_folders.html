@@ -22,14 +22,15 @@
 {% endblock extra_css%}
 
 {% block content %}
-<div class="row">
-    <div class="d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-end mb-6 row-gap-4">
-       <div class="d-flex gap-4">
-          <a href="{% url 'folder_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
-          <button class="btn btn-sm btn-label-danger rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#filter-canvas" aria-controls="offcanvasEnd"><i class="ti ti-filter-check me-1"></i>Filtre</button>
-       </div>
+<div class="d-flex bd-highlight mb-4">
+    <div class="flex-grow-1 bd-highlight">
+       <h3 class="mb-0 mt-0 fw-bold">Klasörlerim</h3>
+    </div>
+    <div class="bd-highlight me-2">
+       <a href="{% url 'folder_add' %}" class="btn btn-sm btn-label-primary rounded-pill" ><i class="ti ti-plus me-1"></i>Oluştur</a>
     </div>
  </div>
+
  {% if messages %}
  {% for message in messages %}
  <div class="row justify-content-center">

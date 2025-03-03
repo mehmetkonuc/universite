@@ -56,6 +56,9 @@ class ArticlesModel(models.Model):
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
     is_published = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, max_length=160, blank=True, editable=False)
+
+    def get_absolute_url(self):
+        return reverse('article_details', kwargs={'slug': self.slug}) 
     
     def get_notifications_comment_context(self):
         context = {

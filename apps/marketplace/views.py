@@ -8,8 +8,9 @@ from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
+
 class MarketPlaceView(View):
     model_data = MarketPlaceModel
     filter_model = MarketPlaceFilterModel
@@ -20,13 +21,18 @@ class MarketPlaceView(View):
     paginate_by = 4
 
     def get(self, request):
-        user_filter, created = self.filter_model.objects.get_or_create(user=request.user)
         data = self.model_data.objects.filter(is_published=True).order_by('-create_at')
-        
-        # Apply filters
-        filter = self.filter(model_to_dict(user_filter), queryset=data, request=request)
-        filtered_data = filter.qs
-        
+
+        if request.user.is_authenticated:
+            user_filter, created = self.filter_model.objects.get_or_create(user=request.user)
+            # Apply filters
+            filter = self.filter(model_to_dict(user_filter), queryset=data, request=request)
+            filtered_data = filter.qs
+        else:
+            user_filter = {}
+            filter = {}
+            filtered_data = data
+
         # Apply sorting
         sorted_data = filtered_data
         
@@ -43,6 +49,8 @@ class MarketPlaceView(View):
         return render(request, self.template, self.context)
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')  # Misafir kullanıcılar için giriş sayfasına yönlendirme
         user_filter = self.filter_model.objects.get(user=request.user)
         
         if 'reset_filter' in request.POST:
@@ -78,7 +86,7 @@ class MarketPlaceView(View):
             return render(request, self.template, self.context)
 
 
-class MyMarketPlaceView(View):
+class MyMarketPlaceView(LoginRequiredMixin, View):
     model_data = MarketPlaceModel
     filter_form = MyFilter
     template = 'marketplace/my.html'
@@ -111,7 +119,7 @@ class MyMarketPlaceView(View):
         return render(request, self.template, self.context)
 
 
-class DraftMarketPlaceView(View):
+class DraftMarketPlaceView(LoginRequiredMixin, View):
     model_data = MarketPlaceModel
     filter_form = MyFilter
     template = 'marketplace/draft.html'
@@ -144,7 +152,7 @@ class DraftMarketPlaceView(View):
         return render(request, self.template, self.context)
 
 
-class MarketPlaceAddView(View):
+class MarketPlaceAddView(LoginRequiredMixin, View):
     model_marketplace = MarketPlaceModel
     model_images = MarketPlaceImagesModel
     form_marketplace = MarketPlaceForm
@@ -210,7 +218,7 @@ class MarketPlaceDetailsView(View):
         return render(request, self.template, self.context)
 
 
-class MarketPlaceEditView(View):
+class MarketPlaceEditView(LoginRequiredMixin, View):
     model_marketplace = MarketPlaceModel
     model_images = MarketPlaceImagesModel
     model_category = Category

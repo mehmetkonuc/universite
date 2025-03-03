@@ -225,6 +225,17 @@
          {%endif%}
         </ul>
       </li>
+      {% if user.is_superuser %}
+      <li class="menu-header small">
+        <span class="menu-header-text">Yönetici Alanı</span>
+      </li>
+      <li class="menu-item {% if '/complaints/' in request.path %} active open{% endif %}">
+        <a href="{% url 'complaint_dashboard' %}" class="menu-link">
+          <i class="menu-icon ti-icons ti ti-message-report"></i>
+          <div>Şikayetler</div>
+        </a>
+      </li>
+      {%endif%}
     </ul>
     {% endwith %}
   </aside>

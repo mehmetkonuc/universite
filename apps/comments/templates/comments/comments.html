@@ -28,17 +28,21 @@
             </div>
          </a>
       </div>
+      {% if user.is_authenticated %}
+
       <div class="dropdown">
          <button class="btn p-0" type="button" data-id="{{ comment.id }}" id="MonthlyCampaign" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          <i class="ti ti-dots-vertical ti-sm text-muted"></i>
          </button>
          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="MonthlyCampaign">
-            <a class="dropdown-item" href="javascript:void(0);">Şikayet Et</a>
+            <a class="dropdown-item" href="{% url 'create_complaint' 'comments' 'Comment' comment.id %}">Şikayet Et</a>
             {% if comment.user.username == user.username or user.is_superuser %}
             <a class="dropdown-item text-danger delete-post-btn" href="#" data-id="{{ comment.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Sil</a>
             {% endif %}
          </div>
       </div>
+      {% endif %}
+      
    </div>
    <div class="card-body">
       <p class="text-body"> {{ comment.text }} </p>
@@ -52,19 +56,28 @@
          {% endfor %}
       </div>
       <hr />
-      <div class="d-flex justify-content-center align-items-center">
-         <div class="d-flex justify-content-center align-items-center">
+
+
+      <div class="d-flex bd-highlight">
+         <div class="bd-highlight">
+         {% if user.is_authenticated %}
             <a href="javascript:void(0);" class="text-body me-3 like-btn" data-content-type-id="{{comment.likes.content_type.id}}" data-object-id="{{comment.id}}">
-            <i class="ti ti-heart{% if comment.id in liked_comment %}-filled{% endif %} text-primary"></i>
-            <span class="like-count">{% if comment.id in liked_comment %}Beğendin {% else %}Beğen{% endif %} ({{ comment.likes.count }})</span>
+               <i class="ti ti-heart{% if comment.id in liked_comment %}-filled{% endif %} text-primary"></i>
+               <span class="like-count">{% if comment.id in liked_comment %}Beğendin {% else %}Beğen{% endif %} ({{ comment.likes.count }})</span>
             </a>
+         {%else%}
+            <i class="ti ti-heart text-primary"></i>
+            <span class="like-count text-body me-3">Beğeni ({{ comment.likes.count }})</span>
+         {%endif%}
+         </div>
+         <div class="bd-highlight">
             <a href="{% url 'comment_detail' comment.id %}" class="text-body me-3">
-            <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ comment.replies.count }})
+               <i class="ti ti-message-filled text-danger"></i> Yorum Yap ({{ comment.replies.count }})
             </a>
          </div>
-         <div class="ms-auto">
-            <small class="text-muted">{{ comment.created_at }}</small>
-         </div>
+      </div>
+      <div class="d-flex flex-row-reverse bd-highlight">
+         <small class="text-muted">{{ comment.created_at }}</small>
       </div>
    </div>
 </div>
